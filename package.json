@@ -1,0 +1,19 @@
+{
+  "name": "ontime",
+  "version": "1.0.0",
+  "description": "Companion module for ontime",
+  "main": "scr/index.js",
+  "repository": "https://github.com/bitfocus/companion-module-getontime-ontime.git",
+  "keywords": [
+    "ontime",
+    "companion"
+  ],
+  "author": "ontime <mail@ontime.no>",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^2.7.1"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.5.1"
+  }
+}
