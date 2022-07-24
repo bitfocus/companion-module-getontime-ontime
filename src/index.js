@@ -1,14 +1,20 @@
 const instance_skel = require('../../../instance_skel')
+
+const actions = require('./actions')
+
 const { io } = require('socket.io-client')
-const { getActions } = require('./actions')
 
 class instance extends instance_skel {
   constructor(system, id, config) {
     super(system, id, config)
 
+    Object.assign(this,  {
+      ...actions,
+    })
+
     this.config = config
     this.socket = null
-    this.status = this.STATUS_UNKNOWN
+    this.status(this.STATUS_UNKNOWN)
   }
 
   /**
@@ -53,31 +59,32 @@ class instance extends instance_skel {
       this.socket.disconnect()
     }
     this.socket = null
-    this.status = this.STATUS_UNKNOWN
+    this.status(this.STATUS_UNKNOWN)
   }
 
   /**
    * @description Main initialization function called once the module is OK to start doing things.
    */
   init() {
-    this.setActions()
     if (this.config.host && this.config.port) {
       const serverURL = `http://${this.config.host}:${this.config.port}`
+      this.log('info','Connecting to ' + serverURL);
       this.socket = io(serverURL, {
         reconnection: true,
         transports: ['websocket']
       })
 
       this.socket.on('connect', () => {
-        this.status = STATUS_OK
+        this.status(this.STATUS_OK)
+        this.log('info','Connected to ' + serverURL);
       })
 
       this.socket.on('disconnected', () => {
-        this.status = this.STATUS_WARNING
+        this.status(this.STATUS_WARNING)
+        this.log('info','Disconnected from ' + serverURL);
       })
-
-      // Todo: add listeners for feedback
     }
+    this.initActions()
   }
 
   /**
@@ -87,13 +94,6 @@ class instance extends instance_skel {
   updateConfig(config) {
     this.config = config
     this.init()
-  }
-
-  /**
-   * @description Initialise module actions
-   */
-  initActions() {
-    this.setActions = getActions()
   }
 
   /**

@@ -1,63 +1,74 @@
 module.exports = {
-  getActions() {
+  initActions() {
     const actions = {}
     // Todo: confirm action without option or type
-    actions['start'] = {
+    actions.start = {
       label: 'Start selected event',
       id: 'start'
     }
 
-    actions['start-id'] = {
+    actions.start_id = {
       label: 'Start event with given ID',
       type: 'textinput',
       required: true
     }
 
-    actions['start-index'] = {
+    actions.start_index = {
       label: 'Start event at position (1-256)',
-      type: 'number',
-      default: 1,
-      min: 1,
-      max: 256,
-      step: 1,
-      required: true
+      options: [
+        {
+          type: 'number',
+          default: 1,
+          min: 1,
+          max: 256,
+          step: 1,
+          required: true    
+        }
+      ]
     }
 
-    actions['pause'] = {
+    actions.pause = {
       label: 'Pauses running timer'
     }
 
-    actions['reload'] = {
+    actions.reload = {
       label: 'Reloads selected event'
     }
 
-    actions['previous'] = {
+    actions.previous = {
       label: 'Selects previous event'
     }
 
-    actions['next'] = {
+    actions.next = {
       label: 'Selects next event'
     }
 
-    actions['roll'] = {
+    actions.roll = {
       label: 'Starts roll mode'
     }
 
-    actions['delay'] = {
+    actions.delay = {
       label: 'Add / remove time (min) to running timer',
-      type: 'number',
-      default: 0,
-      min: -60,
-      max: 60,
-      step: 1,
-      required: true
+      options: [
+        {
+          type: 'number',
+          default: 0,
+          min: -60,
+          max: 60,
+          step: 1,
+          required: true    
+        }
+      ]
     }
 
-    actions['set-onAir'] = {
+    actions.set_onAir = {
       label: 'Toggle On Air',
-      type: 'checkbox'
+      options: [
+        {
+          type: 'checkbox'
+        }
+      ]
     }
-
-    return actions
-  }
+    this.setActions(actions)
+ },
 }
