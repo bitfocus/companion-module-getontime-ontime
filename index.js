@@ -12,45 +12,45 @@ function instance(system, id, config) {
   return self
 }
 
-instance.prototype.init = function () {
-	var self = this
+instance.prototype.init = function() {
+  var self = this
 
-	debug = self.debug
-	log = self.log
+  debug = self.debug
+  log = self.log
 
-	self.status(self.STATUS_WARNING, 'connecting')
+  self.status(self.STATUS_WARNING, 'connecting')
 
-	self.initModule()
+  self.initModule()
 }
 
-instance.prototype.updateConfig = function (config) {
-	var self = this
-	self.config = config
+instance.prototype.updateConfig = function(config) {
+  var self = this
+  self.config = config
 
-	self.status(self.STATUS_WARNING, 'connecting')
+  self.status(self.STATUS_WARNING, 'connecting')
 
-	self.initModule()
+  self.initModule()
 }
 
-instance.prototype.initModule = function () {
-	var self = this
+instance.prototype.initModule = function() {
+  var self = this
 
-  if (self.config.host) {		
+  if (self.config.host) {
     const serverUrl = self.config.host + ':' + self.config.port
-		socket = io.connect('http://' + serverUrl, {
+    socket = io.connect('http://' + serverUrl, {
       reconnection: true,
       transports: ['websocket']
     })
-		self.log('info', 'Connecting to Ontime at ' + serverUrl)
+    self.log('info', 'Connecting to Ontime at ' + serverUrl)
 
-    socket.on('connect', function() { 
-			self.status(self.STATUS_OK)
-			self.log('info', 'Connected. Retrieving data.')
-		})
+    socket.on('connect', function() {
+      self.status(self.STATUS_OK)
+      self.log('info', 'Connected. Retrieving data.')
+    })
 
     socket.on('disconnected', () => {
       self.status(self.STATUS_WARNING)
-      self.log('info','Disconnected from ' + serverURL)
+      self.log('info', 'Disconnected from ' + serverURL)
     })
 
     socket.on('playstate', (data) => {
@@ -59,7 +59,7 @@ instance.prototype.initModule = function () {
   }
 }
 
-instance.prototype.destroy = function () {
+instance.prototype.destroy = function() {
   var self = this
   if (socket) {
     socket.disconnect()
@@ -67,11 +67,11 @@ instance.prototype.destroy = function () {
   }
   socket = null
   self.status(self.STATUS_UNKNOWN)
-  debug('destroy',self.id)
+  debug('destroy', self.id)
 }
 
-instance.prototype.config_fields = function () {
-	var self = this
+instance.prototype.config_fields = function() {
+  var self = this
   return [
     {
       label: 'Information',
@@ -100,12 +100,12 @@ instance.prototype.config_fields = function () {
   ]
 }
 
-instance.prototype.actions = function (system) {
-	var self = this
+instance.prototype.actions = function(system) {
+  var self = this
 
   self.OntimeActions = {
     'start': {
-      label: 'Start selected event',
+      label: 'Start selected event'
     },
     'startId': {
       label: 'Start event with given ID',
@@ -113,7 +113,7 @@ instance.prototype.actions = function (system) {
         type: 'textinput',
         label: 'Event ID',
         id: 'value',
-        required: true  
+        required: true
       }]
     },
     'startIndex': {
@@ -128,34 +128,28 @@ instance.prototype.actions = function (system) {
           max: 256,
           step: 1,
           range: true,
-          required: true    
+          required: true
         }
       ]
     },
     'pause': {
       label: 'Pauses running timer'
     },
-
     'stop': {
       label: 'Stops running timer'
     },
-
     'reload': {
       label: 'Reloads selected event'
     },
-
     'previous': {
       label: 'Selects previous event'
     },
-
     'next': {
       label: 'Selects next event'
     },
-
     'roll': {
       label: 'Starts roll mode'
     },
-
     'delay': {
       label: 'Add / remove time (min) to running timer',
       options: [
@@ -172,7 +166,6 @@ instance.prototype.actions = function (system) {
         }
       ]
     },
-
     'setOnAir': {
       label: 'Toggle On Air',
       options: [
@@ -187,12 +180,12 @@ instance.prototype.actions = function (system) {
   self.setActions(self.OntimeActions)
 }
 
-instance.prototype.action = function (action) {
-	var self = this
+instance.prototype.action = function(action) {
+  var self = this
   var id = action.action
   var options = action.options
 
-  if(socket) {
+  if (socket) {
     switch (id) {
       case 'start':
         action = 'set-start'
@@ -201,12 +194,12 @@ instance.prototype.action = function (action) {
       case 'startId':
         action = 'set-startid'
         value = options.value
-        socket.emit(action,value)
+        socket.emit(action, value)
         break
       case 'startIndex':
         action = 'set-startindex'
         value = options.value - 1
-        socket.emit(action,value)
+        socket.emit(action, value)
         break
       case 'pause':
         action = 'set-pause'
@@ -235,13 +228,13 @@ instance.prototype.action = function (action) {
       case 'delay':
         action = 'set-delay'
         value = options.value
-        socket.emit(action,value)
+        socket.emit(action, value)
         break
       case 'setOnAir':
         action = 'set-onAir'
         value = options.value
-        socket.emit(action,value)
-        break  
+        socket.emit(action, value)
+        break
     }
   }
 }
