@@ -81,7 +81,7 @@ instance.prototype.config_fields = function() {
       width: 12
     },
     {
-      label: 'Target IP',
+      label: 'Ontime server IP',
       id: 'host',
       type: 'textinput',
       default: '127.0.0.1',
@@ -133,22 +133,22 @@ instance.prototype.actions = function(system) {
       ]
     },
     'pause': {
-      label: 'Pauses running timer'
+      label: 'Pause running timer'
     },
     'stop': {
-      label: 'Stops running timer'
+      label: 'Stop running timer'
     },
     'reload': {
-      label: 'Reloads selected event'
+      label: 'Reload selected event'
     },
     'previous': {
-      label: 'Selects previous event'
+      label: 'Select previous event'
     },
     'next': {
-      label: 'Selects next event'
+      label: 'Select next event'
     },
     'roll': {
-      label: 'Starts roll mode'
+      label: 'Start roll mode'
     },
     'delay': {
       label: 'Add / remove time (min) to running timer',

@@ -6,9 +6,7 @@ This module is created for use with [Ontime App](https://www.getontime.no/)
 - [Follow on github](https://github.com/cpvalente/ontime)
 
 ## Help
-### Available actions
-
-### Available feedback
+See [HELP.md](./HELP.md)
 
 ## License
 [MIT License](./LICENSE)
