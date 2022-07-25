@@ -1,18 +1,29 @@
 {
-  "name": "ontime",
+  "name": "getontime-ontime",
   "version": "1.0.0",
-  "description": "Companion module for ontime",
-  "main": "scr/index.js",
-  "repository": "https://github.com/bitfocus/companion-module-getontime-ontime.git",
+  "api_version": "1.0.0",
+  "manufacturer": "GetOntime",
+  "product": "Ontime",
+  "shortname": "ontime",
   "keywords": [
     "ontime",
     "companion"
   ],
-  "author": "ontime <mail@ontime.no>",
-  "license": "MIT",
-  "devDependencies": {
-    "prettier": "^2.7.1"
+  "description": "Companion module for ontime",
+  "homepage": "https://github.com/bitfocus/companion-module-getontime-ontime",
+  "bugs": {
+    "url": "https://github.com/bitfocus/companion-module-getontime-ontime/issues"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bitfocus/companion-module-getontime-ontime.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Carlos Valente <mail@ontime.no>",
+  "license": "MIT",
   "dependencies": {
     "socket.io-client": "^4.5.1"
   }
