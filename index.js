@@ -132,6 +132,31 @@ instance.prototype.actions = function(system) {
         }
       ]
     },
+    'loadId': {
+      label: 'Load event with given ID',
+      options: [{
+        type: 'textinput',
+        label: 'Event ID',
+        id: 'value',
+        required: true
+      }]
+    },
+    'loadIndex': {
+      label: 'Load event at position (1-256)',
+      options: [
+        {
+          type: 'number',
+          label: 'Position',
+          id: 'value',
+          default: 1,
+          min: 1,
+          max: 256,
+          step: 1,
+          range: true,
+          required: true
+        }
+      ]
+    },
     'pause': {
       label: 'Pause running timer'
     },
@@ -175,6 +200,65 @@ instance.prototype.actions = function(system) {
           label: 'On Air'
         }
       ]
+    'setTimerMessageVisibility': {
+      label: 'Toggle visibility of Stage Timer message',
+      options: [
+        {
+          type: 'checkbox',
+          id: 'value',
+          label: 'Show Message'
+        }
+      ]
+    },
+    'setTimerMessage': {
+      label: 'Set text for Stage Timer message',
+      options: [{
+        type: 'textinput',
+        label: 'Stage Timer message',
+        placeholder: 'Only the Presenter sees this',
+        id: 'value',
+        required: true
+      }]
+    },
+    'setPublicMessageVisibility': {
+      label: 'Toggle visibility of Public screens message',
+      options: [
+        {
+          type: 'checkbox',
+          id: 'value',
+          label: 'Show Message'
+        }
+      ]
+    },
+    'setPublicMessage': {
+      label: 'Set text for Public screens message',
+      options: [{
+        type: 'textinput',
+        label: 'Stage Timer message',
+        placeholder: 'Only the Presenter sees this',
+        id: 'value',
+        required: true
+      }]
+    },
+    'setLowerMessageVisibility': {
+      label: 'Toggle visibility of Lower Third message',
+      options: [
+        {
+          type: 'checkbox',
+          id: 'value',
+          label: 'Show Message'
+        }
+      ]
+    },
+    'setLowerMessage': {
+      label: 'Set text for Lower Third message',
+      options: [{
+        type: 'textinput',
+        label: 'Stage Timer message',
+        placeholder: 'Only the Presenter sees this',
+        id: 'value',
+        required: true
+      }]
     }
   }
   self.setActions(self.OntimeActions)
@@ -198,6 +282,16 @@ instance.prototype.action = function(action) {
         break
       case 'startIndex':
         action = 'set-startindex'
+        value = options.value - 1
+        socket.emit(action, value)
+        break
+      case 'loadId':
+        action = 'set-loadid'
+        value = options.value
+        socket.emit(action, value)
+        break
+      case 'loadIndex':
+        action = 'set-loadindex'
         value = options.value - 1
         socket.emit(action, value)
         break
@@ -234,6 +328,39 @@ instance.prototype.action = function(action) {
         action = 'set-onAir'
         value = options.value
         socket.emit(action, value)
+        break
+      case 'setTimerMessage':
+        action = 'set-timer-message-text'
+        value = options.value
+        socket.emit(action, value)
+        break
+      case 'setTimerMessageVisibility':
+        action = 'set-timer-message-visible'
+        value = options.value
+        socket.emit(action, value)
+        break
+      case 'setPublicMessage':
+        action = 'set-public-message-text'
+        value = options.value
+        socket.emit(action, value)
+        break
+      case 'setPublicMessageVisibility':
+        action = 'set-public-message-visible'
+        value = options.value
+        socket.emit(action, value)
+        break
+      case 'setLowerMessage':
+        action = 'set-lower-message-text'
+        value = options.value
+        socket.emit(action, value)
+        break
+      case 'setLowerMessageVisibility':
+        action = 'set-lower-message-visible'
+        value = options.value
+        socket.emit(action, value)
+        break
+      default:
+        self.log('info', `Unhandled action: ${action}`)
         break
     }
   }
