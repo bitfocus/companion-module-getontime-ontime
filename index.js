@@ -950,18 +950,6 @@ instance.prototype.init_feedbacks = function () {
         id: 'roll_bg',
         default: this.rgb(43, 108, 176),
       },
-      {
-        type: 'colorpicker',
-        label: 'Negative: Foreground color',
-        id: 'negative_fg',
-        default: this.rgb(255, 255, 255),
-      },
-      {
-        type: 'colorpicker',
-        label: 'Negative: Background color',
-        id: 'negative_bg',
-        default: this.rgb(255, 0, 0),
-      },
     ],
     callback: (feedback, bank) => {
       if (timer.state == 'start') {
@@ -983,11 +971,6 @@ instance.prototype.init_feedbacks = function () {
         return {
           color: feedback.options.roll_fg,
           bgcolor: feedback.options.roll_bg,
-        }
-      } else if (timer.isNegative == true) {
-        return {
-          color: feedback.options.negative_fg,
-          bgcolor: feedback.options.negative_bg,
         }
       }
     },
