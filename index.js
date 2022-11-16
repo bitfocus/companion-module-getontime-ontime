@@ -4,6 +4,7 @@ const presets = require('./presets')
 const variables = require('./variables')
 const feedback = require('./feedback')
 const io = require('socket.io-client')
+const utilities = require('./utilities')
 
 let debug
 let log
@@ -151,7 +152,7 @@ class instance extends instance_skel {
       //this.log('info', JSON.stringify(data))
       timer = data
 
-      let readable = this.toReadableTime(timer.running)
+      let readable = utilities.toReadableTime(timer.running, timer.isNegative)
       this.setVariables({
         time: readable.hours + ':' + readable.minutes + ':' + readable.seconds,
         time_hm: readable.hours + ':' + readable.minutes,
@@ -174,44 +175,6 @@ class instance extends instance_skel {
       this.setVariable('state', data)
       this.checkFeedbacks('state_color')
     })
-  }
-
-  toReadableTime(secondsfrommidnight) {
-    const SECONDS_IN_DAY = 86400
-
-    secondsfrommidnight = Number(secondsfrommidnight) % SECONDS_IN_DAY
-    if (secondsfrommidnight < 0) {
-      secondsfrommidnight = secondsfrommidnight * -1
-    }
-
-    let hours = Math.floor(secondsfrommidnight / 60 / 60)
-    let minutes = Math.floor((secondsfrommidnight - hours * 60 * 60) / 60)
-    let seconds = Math.floor(secondsfrommidnight - hours * 60 * 60 - minutes * 60)
-
-    // deal with hours
-    if (hours < 10) {
-      hours = '0' + hours
-    }
-
-    if (timer.isNegative) {
-      hours = '-' + hours
-    }
-
-    if (minutes < 10) {
-      // deal with minutes
-      minutes = '0' + minutes
-    }
-
-    // deal with seconds
-    if (seconds < 10) {
-      seconds = '0' + seconds
-    }
-
-    return {
-      hours: String(hours),
-      minutes: String(minutes),
-      seconds: String(seconds),
-    }
   }
 
   init_actions(system) {
