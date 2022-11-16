@@ -1,6 +1,6 @@
 {
   "name": "getontime-ontime",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "api_version": "1.0.0",
   "manufacturer": "GetOntime",
   "product": "Ontime",
@@ -23,6 +23,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Carlos Valente <mail@ontime.no>",
+  "contributors": [
+		"Fabian Posenau"
+	],
   "license": "MIT",
   "dependencies": {
     "socket.io-client": "^4.5.1"
