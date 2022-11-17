@@ -1,6 +1,6 @@
 module.exports = {
   getActions() {
-    const actions = {
+    let actions = {
       start: {
         label: 'Start selected event',
       },

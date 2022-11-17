@@ -194,22 +194,22 @@ class instance extends instance_skel {
 
   feedback(feedback) {
     if (feedback.type === 'state_color') {
-      if (timer.state == 'start') {
+      if (status.state == 'start') {
         return {
           color: feedback.options.run_fg,
           bgcolor: feedback.options.run_bg,
         }
-      } else if (timer.state == 'pause') {
+      } else if (status.state == 'pause') {
         return {
           color: feedback.options.pause_fg,
           bgcolor: feedback.options.pause_bg,
         }
-      } else if (timer.state == 'stop') {
+      } else if (status.state == 'stop') {
         return {
           color: feedback.options.stop_fg,
           bgcolor: feedback.options.stop_bg,
         }
-      } else if (timer.state == 'roll') {
+      } else if (status.state == 'roll') {
         return {
           color: feedback.options.roll_fg,
           bgcolor: feedback.options.roll_bg,
@@ -219,8 +219,9 @@ class instance extends instance_skel {
   }
 
   action(action) {
-    var id = action.action
-    var options = action.options
+    let id = action.action
+    let options = action.options
+    let value = null
 
     if (socket) {
       switch (id) {
