@@ -169,6 +169,9 @@ class instance extends instance_skel {
 
       let timer_finish = utilities.toReadableTime(status.expectedFinish, false, 'ms')
       this.setVariable('timer_finish', timer_finish.hours + ':' + timer_finish.minutes + ':' + timer_finish.seconds)
+
+      this.checkFeedbacks('timer_negative')
+
     })
 
     socket.on('playstate', (data) => {
