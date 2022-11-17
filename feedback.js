@@ -55,5 +55,23 @@ exports.getFeedbacks = function () {
       },
     ],
   }
+  feedbacks['onAir'] = {
+    label: 'Change color from onAir',
+    description: 'Change the colors of a bank if onAir is turned on',
+    options: [
+      {
+        type: 'colorpicker',
+        label: 'OnAir: Foreground color',
+        id: 'onAir_fg',
+        default: this.rgb(255, 255, 255),
+      },
+      {
+        type: 'colorpicker',
+        label: 'OnAir: Background color',
+        id: 'onAir_bg',
+        default: this.rgb(255, 0, 0),
+      },
+    ],
+  }
   return feedbacks
 }

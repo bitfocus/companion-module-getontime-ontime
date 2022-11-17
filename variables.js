@@ -33,6 +33,42 @@ module.exports = {
             label: 'Current timer state Seconds',
             name: 'time_s',
           },
+          {
+            label: 'Title of current event',
+            name: 'titleNow',
+          },
+          {
+            label: 'Subitle of current event',
+            name: 'subtitleNow',
+          },
+          {
+            label: 'Name of current speaker',
+            name: 'speakerNow',
+          },
+          {
+            label: 'Note of current event',
+            name: 'noteNow',
+          },
+          {
+            label: 'Title of next event',
+            name: 'titleNext',
+          },
+          {
+            label: 'Subitle of next event',
+            name: 'subtitleNext',
+          },
+          {
+            label: 'Name of next speaker',
+            name: 'speakerNext',
+          },
+          {
+            label: 'Note of next event',
+            name: 'noteNext',
+          },
+          {
+            label: 'On Air',
+            name: 'onAir',
+          },
         ]
 
         return variables

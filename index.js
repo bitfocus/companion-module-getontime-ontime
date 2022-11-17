@@ -174,6 +174,27 @@ class instance extends instance_skel {
       this.setVariable('state', data)
       this.checkFeedbacks('state_color')
     })
+
+    socket.on('titles', (data) => {
+      status.titles = data
+      this.setVariables({
+        titleNow: status.titles.titleNow,
+        subtitleNow: status.titles.subtitleNow,
+        speakerNow: status.titles.presenterNow,
+        noteNow: status.titles.noteNow,
+        titleNext: status.titles.titleNext,
+        subtitleNext: status.titles.subtitleNext,
+        speakerNext: status.titles.presenterNext,
+        noteNext: status.titles.noteNext,
+        //log('info', JSON.stringify(status))
+      })
+    })
+
+    socket.on('onAir', (data) => {
+      status.onAir = data
+      this.setVariable('onAir', status.onAir)
+      this.checkFeedbacks('onAir')
+    })
   }
 
   init_actions(system) {
@@ -213,6 +234,14 @@ class instance extends instance_skel {
         return {
           color: feedback.options.roll_fg,
           bgcolor: feedback.options.roll_bg,
+        }
+      }
+    }
+    if (feedback.type === 'onAir') {
+      if (status.onAir) {
+        return {
+          color: feedback.options.onAir_fg,
+          bgcolor: feedback.options.onAir_bg,
         }
       }
     }
