@@ -169,12 +169,6 @@ class instance extends instance_skel {
       this.checkFeedbacks('state_color')
     })
 
-    socket.on('playstate', (data) => {
-      //this.log('info', data)
-      timer.state = data
-      this.setVariable('state', data)
-      this.checkFeedbacks('state_color')
-    })
   }
 
   init_actions(system) {
