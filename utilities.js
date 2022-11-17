@@ -1,15 +1,24 @@
 module.exports = {
-  toReadableTime(secondsfrommidnight, isNegative) {
-    const SECONDS_IN_DAY = 86400
+  /**
+   *
+   * @param {number} time - time in format s or ms
+   * @param {boolean} isNegative - true when time is negative
+   * @param {string} format - format of time (s or ms)
+   * @returns - returns an object with hours, minutes and seconds
+   */
 
-    secondsfrommidnight = Number(secondsfrommidnight) % SECONDS_IN_DAY
-    if (secondsfrommidnight < 0) {
-      secondsfrommidnight = secondsfrommidnight * -1
+  toReadableTime(time, isNegative, format) {
+    time = Number(time)
+    if (time < 0) {
+      time = time * -1
     }
 
-    let hours = Math.floor(secondsfrommidnight / 60 / 60)
-    let minutes = Math.floor((secondsfrommidnight - hours * 60 * 60) / 60)
-    let seconds = Math.floor(secondsfrommidnight - hours * 60 * 60 - minutes * 60)
+    if (format === 'ms') {
+      time = time / 1000
+    }
+    let hours = Math.floor(time / 60 / 60)
+    let minutes = Math.floor((time - hours * 60 * 60) / 60)
+    let seconds = Math.floor(time - hours * 60 * 60 - minutes * 60)
 
     // deal with hours
     if (hours < 10) {
@@ -20,8 +29,8 @@ module.exports = {
       hours = '-' + hours
     }
 
-    // deal with minutes
     if (minutes < 10) {
+      // deal with minutes
       minutes = '0' + minutes
     }
 
