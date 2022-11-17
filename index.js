@@ -162,10 +162,13 @@ class instance extends instance_skel {
       })
 
       let clock = utilities.toReadableTime(status.clock, false, 'ms')
-      this.setVariables({
-        clock: clock.hours + ':' + clock.minutes + ':' + clock.seconds,
-        clock_hm: clock.hours + ':' + clock.minutes,
-      })
+      this.setVariable('clock', clock.hours + ':' + clock.minutes + ':' + clock.seconds)
+
+      let timer_start = utilities.toReadableTime(status.startedAt, false, 'ms')
+      this.setVariable('timer_start', timer_start.hours + ':' + timer_start.minutes + ':' + timer_start.seconds)
+
+      let timer_finish = utilities.toReadableTime(status.expectedFinish, false, 'ms')
+      this.setVariable('timer_finish', timer_finish.hours + ':' + timer_finish.minutes + ':' + timer_finish.seconds)
     })
 
     socket.on('playstate', (data) => {
@@ -186,8 +189,9 @@ class instance extends instance_skel {
         subtitleNext: status.titles.subtitleNext,
         speakerNext: status.titles.presenterNext,
         noteNext: status.titles.noteNext,
-        //log('info', JSON.stringify(status))
       })
+      //log('info', JSON.stringify(status))
+
     })
 
     socket.on('onAir', (data) => {
@@ -234,15 +238,24 @@ class instance extends instance_skel {
         return {
           color: feedback.options.roll_fg,
           bgcolor: feedback.options.roll_bg,
-        }
+        } 
+      } else {
+        return false
+      }
+    }
+    if (feedback.type === 'timer_negative') {
+      log('info', status.isNegative)
+      if (status.isNegative) {
+        return true
+      } else {
+        return false
       }
     }
     if (feedback.type === 'onAir') {
       if (status.onAir) {
-        return {
-          color: feedback.options.onAir_fg,
-          bgcolor: feedback.options.onAir_bg,
-        }
+        return true
+      } else {
+        return false
       }
     }
   }

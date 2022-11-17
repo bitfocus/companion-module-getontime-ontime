@@ -2,7 +2,7 @@ module.exports = {
     getVariables() {
         const variables = [
           {
-            label: 'State of timer (Running, Paused, Stopped)',
+            label: 'State of timer (Running, Paused, Stopped, Roll)',
             name: 'state',
           },
           {
@@ -10,8 +10,12 @@ module.exports = {
             name: 'clock',
           },
           {
-            label: 'Clock (hh:mm)',
-            name: 'clock_hm',
+            label: 'Start of timer (hh:mm:ss)',
+            name: 'timer_start',
+          },
+          {
+            label: 'Expected finish of timer (hh:mm:ss)',
+            name: 'timer_finish',
           },
           {
             label: 'Current time of timer (hh:mm:ss)',

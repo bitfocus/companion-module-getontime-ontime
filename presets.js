@@ -162,6 +162,15 @@ exports.getPresets = function () {
         options: { value: false },
       },
     ],
+    feedbacks: [
+      {
+        type: 'onAir',
+        style: {
+          color: this.rgb(255, 255, 255),
+          bgcolor: this.rgb(255, 0, 0),
+        },
+      },
+    ],
   })
   presets.push({
     category: 'Commands',
@@ -335,6 +344,13 @@ exports.getPresets = function () {
           negative_bg: this.rgb(255, 0, 0),
         },
       },
+      {
+        type: 'timer_negative',
+        style: {
+          color: this.rgb(255, 255, 255),
+          bgcolor: this.rgb(255, 0, 0),
+        },
+      },
     ],
   })
   presets.push({
@@ -361,6 +377,13 @@ exports.getPresets = function () {
           roll_bg: this.rgb(43, 108, 176),
           negative_fg: this.rgb(255, 255, 255),
           negative_bg: this.rgb(255, 0, 0),
+        },
+      },
+      {
+        type: 'timer_negative',
+        style: {
+          color: this.rgb(255, 255, 255),
+          bgcolor: this.rgb(255, 0, 0),
         },
       },
     ],
@@ -390,6 +413,13 @@ exports.getPresets = function () {
           negative_bg: this.rgb(255, 0, 0),
         },
       },
+      {
+        type: 'timer_negative',
+        style: {
+          color: this.rgb(255, 255, 255),
+          bgcolor: this.rgb(255, 0, 0),
+        },
+      },
     ],
   })
   presets.push({
@@ -417,6 +447,13 @@ exports.getPresets = function () {
           negative_bg: this.rgb(255, 0, 0),
         },
       },
+      {
+        type: 'timer_negative',
+        style: {
+          color: this.rgb(255, 255, 255),
+          bgcolor: this.rgb(255, 0, 0),
+        },
+      },
     ],
   })
   presets.push({
@@ -442,6 +479,13 @@ exports.getPresets = function () {
           roll_bg: this.rgb(43, 108, 176),
           negative_fg: this.rgb(255, 255, 255),
           negative_bg: this.rgb(255, 0, 0),
+        },
+      },
+      {
+        type: 'timer_negative',
+        style: {
+          color: this.rgb(255, 255, 255),
+          bgcolor: this.rgb(255, 0, 0),
         },
       },
     ],
