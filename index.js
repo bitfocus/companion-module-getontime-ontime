@@ -11,7 +11,7 @@ let log
 
 let socket = null
 
-let timer = {}
+let status = {}
 
 class instance extends instance_skel {
   constructor(system, id, config) {
@@ -150,25 +150,30 @@ class instance extends instance_skel {
 
     socket.on('timer', (data) => {
       //this.log('info', JSON.stringify(data))
-      timer = data
+      status = data
 
-      let readable = utilities.toReadableTime(timer.running, timer.isNegative)
+      let timer = utilities.toReadableTime(status.running, status.isNegative, 's')
       this.setVariables({
-        time: readable.hours + ':' + readable.minutes + ':' + readable.seconds,
-        time_hm: readable.hours + ':' + readable.minutes,
-        time_h: readable.hours,
-        time_m: readable.minutes,
-        time_s: readable.seconds,
+        time: timer.hours + ':' + timer.minutes + ':' + timer.seconds,
+        time_hm: timer.hours + ':' + timer.minutes,
+        time_h: timer.hours,
+        time_m: timer.minutes,
+        time_s: timer.seconds,
+      })
+
+      let clock = utilities.toReadableTime(status.clock, false, 'ms')
+      this.setVariables({
+        clock: clock.hours + ':' + clock.minutes + ':' + clock.seconds,
+        clock_hm: clock.hours + ':' + clock.minutes,
       })
     })
 
     socket.on('playstate', (data) => {
       //this.log('info', data)
-      timer.state = data
+      status.state = data
       this.setVariable('state', data)
       this.checkFeedbacks('state_color')
     })
-
   }
 
   init_actions(system) {

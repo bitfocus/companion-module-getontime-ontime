@@ -6,6 +6,14 @@ module.exports = {
             name: 'state',
           },
           {
+            label: 'Clock (hh:mm:ss)',
+            name: 'clock',
+          },
+          {
+            label: 'Clock (hh:mm)',
+            name: 'clock_hm',
+          },
+          {
             label: 'Current time of timer (hh:mm:ss)',
             name: 'time',
           },
