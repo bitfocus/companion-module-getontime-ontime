@@ -1,7 +1,6 @@
 const { combineRgb } = require('@companion-module/base')
-const { states } = require('./index')
 
-exports.getFeedbacks = function () {
+export function getFeedbacks(self) {
 	const feedbacks = {}
 
 	feedbacks['state_color'] = {
@@ -59,7 +58,7 @@ exports.getFeedbacks = function () {
 			},
 		],
 		callback: (feedback) => {
-			if (status.state == 'start') {
+			if (states.playstate == 'start') {
 				return {
 					color: feedback.options.run_fg,
 					bgcolor: feedback.options.run_bg,
@@ -94,7 +93,7 @@ exports.getFeedbacks = function () {
 		},
 		options: [],
 		callback: (feedback) => {
-			if (states.isNegative) {
+			if (this.states.isNegative) {
 				return true
 			} else {
 				return false
@@ -111,7 +110,7 @@ exports.getFeedbacks = function () {
 		},
 		options: [],
 		callback: (feedback) => {
-			if (states.onAir) {
+			if (self.states.onAir) {
 				return true
 			} else {
 				return false
