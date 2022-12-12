@@ -24,11 +24,6 @@
 		"entrypoint": "..\\index.js"
 	},
 	"manufacturer": "GetOntime",
-	"products": [
-		"Ontime"
-	],
-	"keywords": [
-		"ontime",
-		"companion"
-	]
+	"products": ["Ontime"],
+	"keywords": ["ontime", "companion"]
 }
