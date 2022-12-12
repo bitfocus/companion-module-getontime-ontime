@@ -7,7 +7,10 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier -w .",
+    "lint:raw": "eslint --ext .ts --ext .js --ignore-pattern dist --ignore-pattern pkg",
+    "lint": "yarn lint:raw ."
   },
   "license": "MIT",
   "dependencies": {
@@ -16,5 +19,6 @@
   },
   "devDependencies": {
     "@companion-module/tools": "^0.5.1"
-  }
+  },
+  "prettier": "@companion-module/tools/.prettierrc.json"
 }
