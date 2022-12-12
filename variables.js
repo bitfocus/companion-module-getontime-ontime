@@ -2,76 +2,76 @@ module.exports = {
 	getVariables() {
 		const variables = [
 			{
-				label: 'State of timer (Running, Paused, Stopped, Roll)',
-				name: 'state',
+				name: 'State of timer (Running, Paused, Stopped, Roll)',
+				variableId: 'state',
 			},
 			{
-				label: 'Clock (hh:mm:ss)',
-				name: 'clock',
+				name: 'Clock (hh:mm:ss)',
+				variableId: 'clock',
 			},
 			{
-				label: 'Start of timer (hh:mm:ss)',
-				name: 'timer_start',
+				name: 'Start of timer (hh:mm:ss)',
+				variableId: 'timer_start',
 			},
 			{
-				label: 'Expected finish of timer (hh:mm:ss)',
-				name: 'timer_finish',
+				name: 'Expected finish of timer (hh:mm:ss)',
+				variableId: 'timer_finish',
 			},
 			{
-				label: 'Current time of timer (hh:mm:ss)',
-				name: 'time',
+				name: 'Current time of timer (hh:mm:ss)',
+				variableId: 'time',
 			},
 			{
-				label: 'Current time of timer (hh:mm)',
-				name: 'time_hm',
+				name: 'Current time of timer (hh:mm)',
+				variableId: 'time_hm',
 			},
 			{
-				label: 'Current timer state Hours',
-				name: 'time_h',
+				name: 'Current timer state Hours',
+				variableId: 'time_h',
 			},
 			{
-				label: 'Current timer state Minutes',
-				name: 'time_m',
+				name: 'Current timer state Minutes',
+				variableId: 'time_m',
 			},
 			{
-				label: 'Current timer state Seconds',
-				name: 'time_s',
+				name: 'Current timer state Seconds',
+				variableId: 'time_s',
 			},
 			{
-				label: 'Title of current event',
-				name: 'titleNow',
+				name: 'Title of current event',
+				variableId: 'titleNow',
 			},
 			{
-				label: 'Subitle of current event',
-				name: 'subtitleNow',
+				name: 'Subitle of current event',
+				variableId: 'subtitleNow',
 			},
 			{
-				label: 'Name of current speaker',
-				name: 'speakerNow',
+				name: 'variableId of current speaker',
+				variableId: 'speakerNow',
 			},
 			{
-				label: 'Note of current event',
-				name: 'noteNow',
+				name: 'Note of current event',
+				variableId: 'noteNow',
 			},
 			{
-				label: 'Title of next event',
-				name: 'titleNext',
+				name: 'Title of next event',
+				variableId: 'titleNext',
 			},
 			{
-				label: 'Subitle of next event',
-				name: 'subtitleNext',
+				name: 'Subitle of next event',
+				variableId: 'subtitleNext',
 			},
 			{
-				label: 'Name of next speaker',
-				name: 'speakerNext',
+				name: 'variableId of next speaker',
+				variableId: 'speakerNext',
 			},
 			{
-				label: 'Note of next event',
-				name: 'noteNext',
+				name: 'Note of next event',
+				variableId: 'noteNext',
 			},
 			{
-				label: 'On Air',
-				name: 'onAir',
+				name: 'On Air',
+				variableId: 'onAir',
 			},
 		]
 

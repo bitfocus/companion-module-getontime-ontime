@@ -151,8 +151,8 @@ class instance extends instance_skel {
 			//this.log('info', JSON.stringify(data))
 			states.timer = data
 
-			let timer = utilities.toReadableTime(status.running, status.isNegative, 's')
-			this.setVariables({
+			let timer = utilities.toReadableTime(states.running, states.isNegative, 's')
+			this.setVariableValues({
 				time: timer.hours + ':' + timer.minutes + ':' + timer.seconds,
 				time_hm: timer.hours + ':' + timer.minutes,
 				time_h: timer.hours,
@@ -160,14 +160,20 @@ class instance extends instance_skel {
 				time_s: timer.seconds,
 			})
 
-			let clock = utilities.toReadableTime(status.clock, false, 'ms')
-			this.setVariable('clock', clock.hours + ':' + clock.minutes + ':' + clock.seconds)
+			let clock = utilities.toReadableTime(states.clock, false, 'ms')
+			this.setVariableValues({
+				clock: clock.hours + ':' + clock.minutes + ':' + clock.seconds,
+			})
 
-			let timer_start = utilities.toReadableTime(status.startedAt, false, 'ms')
-			this.setVariable('timer_start', timer_start.hours + ':' + timer_start.minutes + ':' + timer_start.seconds)
+			let timer_start = utilities.toReadableTime(states.startedAt, false, 'ms')
+			this.setVariableValues({
+				timer_start: timer_start.hours + ':' + timer_start.minutes + ':' + timer_start.seconds,
+			})
 
-			let timer_finish = utilities.toReadableTime(status.expectedFinish, false, 'ms')
-			this.setVariable('timer_finish', timer_finish.hours + ':' + timer_finish.minutes + ':' + timer_finish.seconds)
+			let timer_finish = utilities.toReadableTime(states.expectedFinish, false, 'ms')
+			this.setVariableValues({
+				timer_finish: timer_finish.hours + ':' + timer_finish.minutes + ':' + timer_finish.seconds,
+			})
 
 			this.checkFeedbacks('timer_negative')
 		})
@@ -175,28 +181,32 @@ class instance extends instance_skel {
 		socket.on('playstate', (data) => {
 			//this.log('info', data)
 			states.playsstate = data
-			this.setVariable('state', data)
+			this.setVariableValues({
+				state: data,
+			})
 			this.checkFeedbacks('state_color')
 		})
 
 		socket.on('titles', (data) => {
 			states.titles = data
-			this.setVariables({
-				titleNow: status.titles.titleNow,
-				subtitleNow: status.titles.subtitleNow,
-				speakerNow: status.titles.presenterNow,
-				noteNow: status.titles.noteNow,
-				titleNext: status.titles.titleNext,
-				subtitleNext: status.titles.subtitleNext,
-				speakerNext: status.titles.presenterNext,
-				noteNext: status.titles.noteNext,
+			this.setVariableValues({
+				titleNow: states.titles.titleNow,
+				subtitleNow: states.titles.subtitleNow,
+				speakerNow: states.titles.presenterNow,
+				noteNow: states.titles.noteNow,
+				titleNext: states.titles.titleNext,
+				subtitleNext: states.titles.subtitleNext,
+				speakerNext: states.titles.presenterNext,
+				noteNext: states.titles.noteNext,
 			})
-			//log('info', JSON.stringify(status))
+			//log('info', JSON.stringify(states))
 		})
 
 		socket.on('onAir', (data) => {
-			status.onAir = data
-			this.setVariable('onAir', status.onAir)
+			states.onAir = data
+			this.setVariableValues({
+				onAir: states.onAir,
+			})
 			this.checkFeedbacks('onAir')
 		})
 	}
