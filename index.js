@@ -1,4 +1,4 @@
-var instance_skel = require('../../instance_skel')
+const { InstanceBase } = require('@companion-module/base')
 const actions = require('./actions')
 const presets = require('./presets')
 const variables = require('./variables')
@@ -6,15 +6,14 @@ const feedback = require('./feedback')
 const io = require('socket.io-client')
 const utilities = require('./utilities')
 
-let debug
 let log
 
 let socket = null
 
 let states = {}
-class instance extends instance_skel {
-	constructor(system, id, config) {
-		super(system, id, config)
+class instance extends InstanceBase {
+	constructor(internal) {
+		super(internal)
 
 		Object.assign(this, {
 			...actions,
@@ -24,11 +23,10 @@ class instance extends instance_skel {
 		})
 	}
 
-	init() {
-		debug = this.debug
+	async init() {
 		log = this.log
 
-		this.status(this.STATUS_WARNING, 'Connecting')
+		this.updateStatus('connecting')
 
 		this.initModule()
 		this.init_actions()
@@ -43,11 +41,11 @@ class instance extends instance_skel {
 			socket.close()
 		}
 		socket = null
-		this.STATUS_UNKNOWN
-		debug('destroy', this.id)
+		this.updateStatus('disconnected')
+		log('destroy', this.id)
 	}
 
-	config_fields() {
+	getConfigFields() {
 		return [
 			{
 				label: 'Information',
@@ -77,9 +75,9 @@ class instance extends instance_skel {
 		]
 	}
 
-	updateConfig(config) {
+	configUpdated(config) {
 		this.config = config
-		this.status(this.STATUS_WARNING, 'Connecting')
+		this.updateStatus('connecting')
 
 		this.initModule()
 		this.init_actions()
@@ -103,48 +101,48 @@ class instance extends instance_skel {
 		})
 
 		socket.on('connect', () => {
-			this.status(this.STATUS_OK)
-			debug('Socket connected')
+			this.updateStatus('ok')
+			log('Socket connected')
 		})
 
 		socket.on('disconnect', () => {
-			this.status(this.STATUS_WARNING, 'Connecting')
-			debug('Socket disconnected')
+			this.updateStatus('disconnected')
+			log('Socket disconnected')
 		})
 
 		socket.on('connect_error', () => {
-			this.status(this.STATUS_ERROR, 'Connect error')
-			debug('Socket connect error')
+			this.updateStatus('connection_failure', 'Connect error')
+			log('Socket connect error')
 		})
 
 		socket.on('error', () => {
-			this.status(this.STATUS_ERROR, 'Error')
-			debug('Socket error')
+			this.updateStatus('unknown_error', 'Error')
+			log('Socket error')
 		})
 
 		socket.on('reconnect', () => {
-			this.status(this.STATUS_OK)
-			debug('Socket reconnected')
+			this.updateStatus('ok')
+			log('Socket reconnected')
 		})
 
 		socket.on('reconnect_attempt', () => {
-			this.status(this.STATUS_WARNING, 'Reconnecting')
-			debug('Socket reconnecting')
+			this.updateStatus('disconnected', 'Reconnecting')
+			log('Socket reconnecting')
 		})
 
 		socket.on('reconnecting', () => {
-			this.status(this.STATUS_WARNING, 'Reconnecting')
-			debug('Socket reconnecting')
+			this.updateStatus('disconnected', 'Reconnecting')
+			log('Socket reconnecting')
 		})
 
 		socket.on('reconnect_error', () => {
-			this.status(this.STATUS_ERROR, 'Reconnect error')
-			debug('Socket reconnect error')
+			this.updateStatus('connection_failure', 'Reconnect error')
+			log('Socket reconnect error')
 		})
 
 		socket.on('reconnect_failed', () => {
-			this.status(this.STATUS_ERROR, 'Reconnect failed')
-			debug('Socket reconnect failed')
+			this.updateStatus('connection_failure', 'Reconnect failed')
+			log('Socket reconnect failed')
 		})
 
 		socket.on('timer', (data) => {
@@ -228,4 +226,4 @@ class instance extends instance_skel {
 	}
 }
 
-exports = module.exports = instance
+run(instance, [])
