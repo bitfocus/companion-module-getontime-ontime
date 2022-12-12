@@ -11,7 +11,7 @@ let log
 
 let socket = null
 
-let status = {}
+let states = {}
 class instance extends instance_skel {
   constructor(system, id, config) {
     super(system, id, config)
@@ -149,7 +149,7 @@ class instance extends instance_skel {
 
     socket.on('timer', (data) => {
       //this.log('info', JSON.stringify(data))
-      status = data
+      states.timer = data
 
       let timer = utilities.toReadableTime(status.running, status.isNegative, 's')
       this.setVariables({
@@ -174,13 +174,13 @@ class instance extends instance_skel {
 
     socket.on('playstate', (data) => {
       //this.log('info', data)
-      status.state = data
+      states.playsstate = data
       this.setVariable('state', data)
       this.checkFeedbacks('state_color')
     })
 
     socket.on('titles', (data) => {
-      status.titles = data
+      states.titles = data
       this.setVariables({
         titleNow: status.titles.titleNow,
         subtitleNow: status.titles.subtitleNow,
@@ -215,49 +215,6 @@ class instance extends instance_skel {
 
   init_variables(system) {
     this.setVariableDefinitions(this.getVariables())
-  }
-
-  feedback(feedback) {
-    if (feedback.type === 'state_color') {
-      if (status.state == 'start') {
-        return {
-          color: feedback.options.run_fg,
-          bgcolor: feedback.options.run_bg,
-        }
-      } else if (status.state == 'pause') {
-        return {
-          color: feedback.options.pause_fg,
-          bgcolor: feedback.options.pause_bg,
-        }
-      } else if (status.state == 'stop') {
-        return {
-          color: feedback.options.stop_fg,
-          bgcolor: feedback.options.stop_bg,
-        }
-      } else if (status.state == 'roll') {
-        return {
-          color: feedback.options.roll_fg,
-          bgcolor: feedback.options.roll_bg,
-        }
-      } else {
-        return false
-      }
-    }
-    if (feedback.type === 'timer_negative') {
-      log('info', status.isNegative)
-      if (status.isNegative) {
-        return true
-      } else {
-        return false
-      }
-    }
-    if (feedback.type === 'onAir') {
-      if (status.onAir) {
-        return true
-      } else {
-        return false
-      }
-    }
   }
 }
 
