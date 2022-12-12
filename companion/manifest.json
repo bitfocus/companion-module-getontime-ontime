@@ -1,0 +1,34 @@
+{
+	"id": "getontime-ontime",
+	"name": "getontime-ontime",
+	"shortname": "ontime",
+	"description": "Companion module for ontime",
+	"version": "0.0.0",
+	"license": "MIT",
+	"repository": "git+https://github.com/bitfocus/companion-module-getontime-ontime.git",
+	"bugs": "https://github.com/bitfocus/companion-module-getontime-ontime/issues",
+	"maintainers": [
+		{
+			"name": "Carlos Valente",
+			"email": "mail@ontime.no"
+		},
+		{
+			"name": "Fabian Posenau"
+		}
+	],
+	"legacyIds": [],
+	"runtime": {
+		"type": "node18",
+		"api": "nodejs-ipc",
+		"apiVersion": "0.0.0",
+		"entrypoint": "..\\index.js"
+	},
+	"manufacturer": "GetOntime",
+	"products": [
+		"Ontime"
+	],
+	"keywords": [
+		"ontime",
+		"companion"
+	]
+}
