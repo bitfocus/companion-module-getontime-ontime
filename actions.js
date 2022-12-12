@@ -5,7 +5,7 @@ exports.getActions = function () {
 		name: 'Start selected event',
 		options: [],
 		callback: (action) => {
-			socket.emit('set-start')
+			this.sendcmd('set-start')
 		},
 	}
 	actions['startId'] = {
@@ -19,7 +19,7 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			socket.emit('set-startid', action.options.value)
+			this.sendcmd('set-startid', action.options.value)
 		},
 	}
 	actions['startIndex'] = {
@@ -38,7 +38,7 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			socket.emit('set-startindex', action.options.value - 1)
+			this.sendcmd('set-startindex', action.options.value - 1)
 		},
 	}
 	actions['loadId'] = {
@@ -52,7 +52,7 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			socket.emit('set-loadid', action.options.value)
+			this.sendcmd('set-loadid', action.options.value)
 		},
 	}
 	actions['loadIndex'] = {
@@ -71,49 +71,49 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			socket.emit('set-loadindex', action.options.value - 1)
+			this.sendcmd('set-loadindex', action.options.value - 1)
 		},
 	}
 	actions['pause'] = {
 		name: 'Pause running timer',
 		options: [],
 		callback: (action) => {
-			socket.emit('set-pause')
+			this.sendcmd('set-pause')
 		},
 	}
 	actions['stop'] = {
 		name: 'Stop running timer',
 		options: [],
 		callback: (action) => {
-			socket.emit('set-stop')
+			this.sendcmd('set-stop')
 		},
 	}
 	actions['reload'] = {
 		name: 'Reload selected event',
 		options: [],
 		callback: (action) => {
-			socket.emit('set-reload')
+			this.sendcmd('set-reload')
 		},
 	}
 	actions['previous'] = {
 		name: 'Select previous event',
 		options: [],
 		callback: (action) => {
-			socket.emit('set-previous')
+			this.sendcmd('set-previous')
 		},
 	}
 	actions['next'] = {
 		name: 'Select next event',
 		options: [],
 		callback: (action) => {
-			socket.emit('set-next')
+			this.sendcmd('set-next')
 		},
 	}
 	actions['roll'] = {
 		name: 'Start roll mode',
 		options: [],
 		callback: (action) => {
-			socket.emit('set-roll')
+			this.sendcmd('set-roll')
 		},
 	}
 	actions['delay'] = {
@@ -132,7 +132,7 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			socket.emit('set-delay', action.options.value)
+			this.sendcmd('set-delay', action.options.value)
 		},
 	}
 	actions['setOnAir'] = {
@@ -145,7 +145,7 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			socket.emit('set-onAir', action.options.value)
+			this.sendcmd('set-onAir', action.options.value)
 		},
 	}
 	actions['setTimerMessageVisibility'] = {
@@ -158,7 +158,7 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			socket.emit('set-timer-message-visible', action.options.value)
+			this.sendcmd('set-timer-message-visible', action.options.value)
 		},
 	}
 	actions['setTimerMessage'] = {
@@ -173,7 +173,7 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			socket.emit('set-timer-message-text', action.options.value)
+			this.sendcmd('set-timer-message-text', action.options.value)
 		},
 	}
 	actions['setPublicMessageVisibility'] = {
@@ -186,7 +186,7 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			socket.emit('set-public-message-visible', action.options.value)
+			this.sendcmd('set-public-message-visible', action.options.value)
 		},
 	}
 	actions['setPublicMessage'] = {
@@ -201,7 +201,7 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			socket.emit('set-public-message-text', action.options.value)
+			this.sendcmd('set-public-message-text', action.options.value)
 		},
 	}
 	actions['setLowerMessageVisibility'] = {
@@ -214,7 +214,7 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			socket.emit('set-lower-message-visible', action.options.value)
+			this.sendcmd('set-lower-message-visible', action.options.value)
 		},
 	}
 	actions['setLowerMessage'] = {
@@ -229,7 +229,7 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			socket.emit('set-lower-message-text', action.options.value)
+			this.sendcmd('set-lower-message-text', action.options.value)
 		},
 	}
 	return actions

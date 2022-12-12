@@ -190,13 +190,15 @@ exports.getPresets = function () {
 			{
 				down: [
 					{
-						actionId: 'onAir',
+						actionId: 'setOnAir',
 						options: { value: true },
 					},
 				],
-				up: [
+			},
+			{
+				down: [
 					{
-						actionId: 'onAir',
+						actionId: 'setOnAir',
 						options: { value: false },
 					},
 				],
@@ -325,7 +327,9 @@ exports.getPresets = function () {
 						options: { value: true },
 					},
 				],
-				up: [
+			},
+			{
+				down: [
 					{
 						actionId: 'setTimerMessageVisibility',
 						options: { value: false },
@@ -356,7 +360,9 @@ exports.getPresets = function () {
 						options: { value: true },
 					},
 				],
-				up: [
+			},
+			{
+				down: [
 					{
 						actionId: 'setPublicMessageVisibility',
 						options: { value: false },
@@ -387,7 +393,9 @@ exports.getPresets = function () {
 						options: { value: true },
 					},
 				],
-				up: [
+			},
+			{
+				down: [
 					{
 						actionId: 'setLowerMessageVisibility',
 						options: { value: false },

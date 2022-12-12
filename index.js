@@ -6,10 +6,12 @@ const variables = require('./variables')
 const feedbacks = require('./feedback')
 const utilities = require('./utilities')
 
+let socket = null
 let states = {}
 class OnTimeInstance extends InstanceBase {
 	constructor(internal) {
 		super(internal)
+
 		Object.assign(this, {
 			...actions,
 			...feedbacks,
@@ -86,7 +88,7 @@ class OnTimeInstance extends InstanceBase {
 	initConnection() {
 		this.log('debug', 'Initializing connection')
 
-		const socket = io.connect(`http://${this.config.host}:${this.config.port}`, {
+		socket = io.connect(`http://${this.config.host}:${this.config.port}`, {
 			reconnection: true,
 			reconnectionDelay: 1000,
 			reconnectionDelayMax: 5000,
@@ -140,10 +142,11 @@ class OnTimeInstance extends InstanceBase {
 		})
 
 		socket.on('timer', (data) => {
-			//this.this.log('info', JSON.stringify(data))
-			states.timer = data
+			// this.log('debug', JSON.stringify(data))
+			states = data
 
 			let timer = utilities.toReadableTime(states.running, states.isNegative, 's')
+			// this.log('info', states.running)
 			this.setVariableValues({
 				time: timer.hours + ':' + timer.minutes + ':' + timer.seconds,
 				time_hm: timer.hours + ':' + timer.minutes,
@@ -203,24 +206,29 @@ class OnTimeInstance extends InstanceBase {
 		})
 	}
 
-	init_actions(system) {
+	init_actions() {
 		this.log('debug', 'Initializing actions')
-		this.setActionDefinitions(this.getActions())
+		this.setActionDefinitions(this.getActions(this))
 	}
 
-	init_feedbacks(system) {
+	init_feedbacks() {
 		this.log('debug', 'Initializing feedbacks')
-		this.setFeedbackDefinitions(this.getFeedbacks())
+		this.setFeedbackDefinitions(this.getFeedbacks(this))
 	}
 
-	init_presets(system) {
+	init_presets() {
 		this.log('debug', 'Initializing presets')
-		this.setPresetDefinitions(this.getPresets())
+		this.setPresetDefinitions(this.getPresets(this))
 	}
 
-	init_variables(system) {
+	init_variables() {
 		this.log('debug', 'Initializing variables')
-		this.setVariableDefinitions(this.getVariables())
+		this.setVariableDefinitions(this.getVariables(this))
+	}
+
+	sendcmd(cmd, opt) {
+		this.log('debug', 'Sending command: ' + cmd + ', ' + opt)
+		socket.emit(cmd, opt)
 	}
 }
 
