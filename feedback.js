@@ -1,4 +1,4 @@
-const { splitRgb } = require('@companion-module/base')
+const { combineRgb } = require('@companion-module/base')
 import { states } from './index'
 
 exports.getFeedbacks = function () {
