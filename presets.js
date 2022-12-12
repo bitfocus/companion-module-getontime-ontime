@@ -29,6 +29,7 @@ exports.getPresets = function () {
 		feedbacks: [],
 	}
 	presets['pause_selecetd_timer'] = {
+		type: 'button',
 		category: 'Commands',
 		name: 'Pauses selected timer',
 		style: {
@@ -52,6 +53,7 @@ exports.getPresets = function () {
 		feedbacks: [],
 	}
 	presets['pasue_selected_timer'] = {
+		type: 'button',
 		category: 'Commands',
 		name: 'Stops selected timer',
 		style: {
@@ -75,6 +77,7 @@ exports.getPresets = function () {
 		feedbacks: [],
 	}
 	presets['reload_selected_timer'] = {
+		type: 'button',
 		category: 'Commands',
 		name: 'Reload selected timer',
 		style: {
@@ -98,6 +101,7 @@ exports.getPresets = function () {
 		feedbacks: [],
 	}
 	presets['select_previous_timer'] = {
+		type: 'button',
 		category: 'Commands',
 		name: 'Selects previous timer',
 		style: {
@@ -121,6 +125,7 @@ exports.getPresets = function () {
 		feedbacks: [],
 	}
 	presets['select_next_timer'] = {
+		type: 'button',
 		category: 'Commands',
 		name: 'Selects next timer',
 		style: {
@@ -144,6 +149,7 @@ exports.getPresets = function () {
 		feedbacks: [],
 	}
 	presets['start_roll_mode'] = {
+		type: 'button',
 		category: 'Commands',
 		name: 'Starts Roll Mode',
 		style: {
@@ -167,6 +173,7 @@ exports.getPresets = function () {
 		feedbacks: [],
 	}
 	presets['toggle_on_air'] = {
+		type: 'button',
 		category: 'Commands',
 		name: 'Toggle On Air state',
 		style: {
@@ -206,6 +213,7 @@ exports.getPresets = function () {
 		],
 	}
 	presets['delay_add_1'] = {
+		type: 'button',
 		category: 'Commands',
 		name: 'Adds 1 min to running timer',
 		style: {
@@ -228,6 +236,7 @@ exports.getPresets = function () {
 		feedbacks: [],
 	}
 	presets['delay_add_5'] = {
+		type: 'button',
 		category: 'Commands',
 		name: 'Adds 5 min to running timer',
 		style: {
@@ -250,6 +259,7 @@ exports.getPresets = function () {
 		feedbacks: [],
 	}
 	presets['delay_subtract_1'] = {
+		type: 'button',
 		category: 'Commands',
 		name: 'Subtracts 1 min to running timer',
 		style: {
@@ -271,7 +281,8 @@ exports.getPresets = function () {
 		],
 		feedbacks: [],
 	}
-	presets[delay_subtract_1] = {
+	presets['delay_subtract_5'] = {
+		type: 'button',
 		category: 'Commands',
 		name: 'Subtracts 5 min to running timer',
 		style: {
@@ -294,6 +305,7 @@ exports.getPresets = function () {
 		feedbacks: [],
 	}
 	presets['toggle_timer_message_visibility'] = {
+		type: 'button',
 		category: 'Commands',
 		name: 'Toggle visibility of Speaker message',
 		style: {
@@ -324,6 +336,7 @@ exports.getPresets = function () {
 		feedbacks: [],
 	}
 	presets['toggle_public_message_visibility'] = {
+		type: 'button',
 		category: 'Commands',
 		name: 'Toggle visibility of Public screens message',
 		style: {
@@ -354,6 +367,7 @@ exports.getPresets = function () {
 		feedbacks: [],
 	}
 	presets['toggle_lower_message_visibility'] = {
+		type: 'button',
 		category: 'Commands',
 		name: 'Toggle visibility of Lower Third message',
 		style: {
@@ -384,6 +398,7 @@ exports.getPresets = function () {
 		feedbacks: [],
 	}
 	presets['display_timer_hhmmss'] = {
+		type: 'button',
 		category: 'Display',
 		name: 'Time',
 		style: {
@@ -419,6 +434,7 @@ exports.getPresets = function () {
 		],
 	}
 	presets['display_timer_hhmm'] = {
+		type: 'button',
 		category: 'Display',
 		name: 'Hours:Minutes',
 		style: {
@@ -455,6 +471,7 @@ exports.getPresets = function () {
 		],
 	}
 	presets['display_timer_hh'] = {
+		type: 'button',
 		category: 'Display',
 		name: 'Hours',
 		style: {
@@ -490,6 +507,7 @@ exports.getPresets = function () {
 		],
 	}
 	presets['display_timer_mm'] = {
+		type: 'button',
 		category: 'Display',
 		name: 'Minutes',
 		style: {
@@ -525,6 +543,7 @@ exports.getPresets = function () {
 		],
 	}
 	presets['display_timer_ss'] = {
+		type: 'button',
 		category: 'Display',
 		name: 'Seconds',
 		style: {

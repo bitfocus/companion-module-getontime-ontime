@@ -1,10 +1,10 @@
 const { combineRgb } = require('@companion-module/base')
-import { states } from './index'
+const { states } = require('./index')
 
 exports.getFeedbacks = function () {
-  const feedbacks = {}
+	const feedbacks = {}
 
-  feedbacks['state_color'] = {
+	feedbacks['state_color'] = {
 		type: 'advanced',
 		name: 'Change color from state',
 		description: 'Change the colors of a bank according to the timer state',
@@ -92,6 +92,7 @@ exports.getFeedbacks = function () {
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(255, 0, 0),
 		},
+		options: [],
 		callback: (feedback) => {
 			if (states.isNegative) {
 				return true
@@ -108,6 +109,7 @@ exports.getFeedbacks = function () {
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(255, 0, 0),
 		},
+		options: [],
 		callback: (feedback) => {
 			if (states.onAir) {
 				return true
@@ -116,5 +118,5 @@ exports.getFeedbacks = function () {
 			}
 		},
 	}
-  return feedbacks
+	return feedbacks
 }

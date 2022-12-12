@@ -1,81 +1,48 @@
-const { InstanceBase } = require('@companion-module/base')
+const { InstanceBase, runEntrypoint, Regex } = require('@companion-module/base')
+const { io } = require('socket.io-client')
 const actions = require('./actions')
 const presets = require('./presets')
 const variables = require('./variables')
-const feedback = require('./feedback')
-const io = require('socket.io-client')
+const feedbacks = require('./feedback')
 const utilities = require('./utilities')
 
-let log
-
-let socket = null
-
 let states = {}
-class instance extends InstanceBase {
+class OnTimeInstance extends InstanceBase {
 	constructor(internal) {
 		super(internal)
-
 		Object.assign(this, {
 			...actions,
-			...feedback,
+			...feedbacks,
 			...presets,
 			...variables,
 		})
 	}
 
-	async init() {
-		log = this.log
+	async init(config) {
+		this.config = config
+
+		this.log('debug', 'Initializing module')
 
 		this.updateStatus('connecting')
 
-		this.initModule()
+		this.initConnection()
 		this.init_actions()
 		this.init_feedbacks()
 		this.init_variables()
 		this.init_presets()
 	}
 
-	destroy() {
+	async destroy() {
 		if (socket) {
 			socket.disconnect()
 			socket.close()
 		}
 		socket = null
 		this.updateStatus('disconnected')
-		log('destroy', this.id)
+		this.log('debug', 'destroy' + this.id)
 	}
 
-	getConfigFields() {
-		return [
-			{
-				label: 'Information',
-				id: 'info',
-				type: 'text',
-				value: 'This module will establish a connection to ontime server at a given IP',
-				width: 12,
-			},
-			{
-				label: 'Ontime server IP',
-				id: 'host',
-				type: 'textinput',
-				default: '127.0.0.1',
-				regex: this.REGEX_IP,
-				width: 6,
-			},
-			{
-				label: 'Ontime server port (always 4001)',
-				id: 'port',
-				type: 'number',
-				min: 1,
-				max: 65535,
-				default: 4001,
-				required: true,
-				regex: this.REGEX_PORT,
-			},
-		]
-	}
-
-	configUpdated(config) {
+	async configUpdated(config) {
 		this.config = config
 		this.updateStatus('connecting')
 
@@ -86,13 +53,40 @@ class instance extends InstanceBase {
 		this.init_presets()
 	}
 
-	initModule() {
-		if (socket) {
-			socket.disconnect()
-			socket.close()
-		}
+	getConfigFields() {
+		return [
+			{
+				label: 'Information',
+				id: 'info',
+				type: 'static-text',
+				value: 'This module will establish a connection to ontime server at a given IP',
+				width: 12,
+			},
+			{
+				label: 'Ontime server IP',
+				id: 'host',
+				type: 'textinput',
+				default: '127.0.0.1',
+				regex: Regex.IP,
+				width: 6,
+			},
+			{
+				label: 'Ontime server port (always 4001)',
+				id: 'port',
+				type: 'number',
+				min: 1,
+				max: 65535,
+				default: 4001,
+				required: true,
+				regex: Regex.PORT,
+			},
+		]
+	}
 
-		socket = io.connect(`http://${this.config.host}:${this.config.port}`, {
+	initConnection() {
+		this.log('debug', 'Initializing connection')
+
+		const socket = io.connect(`http://${this.config.host}:${this.config.port}`, {
 			reconnection: true,
 			reconnectionDelay: 1000,
 			reconnectionDelayMax: 5000,
@@ -102,51 +96,51 @@ class instance extends InstanceBase {
 
 		socket.on('connect', () => {
 			this.updateStatus('ok')
-			log('Socket connected')
+			this.log('debug', 'Socket connected')
 		})
 
 		socket.on('disconnect', () => {
 			this.updateStatus('disconnected')
-			log('Socket disconnected')
+			this.log('debug', 'Socket disconnected')
 		})
 
 		socket.on('connect_error', () => {
 			this.updateStatus('connection_failure', 'Connect error')
-			log('Socket connect error')
+			this.log('debug', 'Socket connect error')
 		})
 
 		socket.on('error', () => {
 			this.updateStatus('unknown_error', 'Error')
-			log('Socket error')
+			this.log('debug', 'Socket error')
 		})
 
 		socket.on('reconnect', () => {
 			this.updateStatus('ok')
-			log('Socket reconnected')
+			this.log('debug', 'Socket reconnected')
 		})
 
 		socket.on('reconnect_attempt', () => {
 			this.updateStatus('disconnected', 'Reconnecting')
-			log('Socket reconnecting')
+			this.log('debug', 'Socket reconnecting')
 		})
 
 		socket.on('reconnecting', () => {
 			this.updateStatus('disconnected', 'Reconnecting')
-			log('Socket reconnecting')
+			this.log('debug', 'Socket reconnecting')
 		})
 
 		socket.on('reconnect_error', () => {
 			this.updateStatus('connection_failure', 'Reconnect error')
-			log('Socket reconnect error')
+			this.log('debug', 'Socket reconnect error')
 		})
 
 		socket.on('reconnect_failed', () => {
 			this.updateStatus('connection_failure', 'Reconnect failed')
-			log('Socket reconnect failed')
+			this.log('debug', 'Socket reconnect failed')
 		})
 
 		socket.on('timer', (data) => {
-			//this.log('info', JSON.stringify(data))
+			//this.this.log('info', JSON.stringify(data))
 			states.timer = data
 
 			let timer = utilities.toReadableTime(states.running, states.isNegative, 's')
@@ -177,7 +171,7 @@ class instance extends InstanceBase {
 		})
 
 		socket.on('playstate', (data) => {
-			//this.log('info', data)
+			//this.this.log('info', data)
 			states.playsstate = data
 			this.setVariableValues({
 				state: data,
@@ -197,7 +191,7 @@ class instance extends InstanceBase {
 				speakerNext: states.titles.presenterNext,
 				noteNext: states.titles.noteNext,
 			})
-			//log('info', JSON.stringify(states))
+			//this.log('info', JSON.stringify(states))
 		})
 
 		socket.on('onAir', (data) => {
@@ -210,20 +204,24 @@ class instance extends InstanceBase {
 	}
 
 	init_actions(system) {
+		this.log('debug', 'Initializing actions')
 		this.setActionDefinitions(this.getActions())
 	}
 
 	init_feedbacks(system) {
+		this.log('debug', 'Initializing feedbacks')
 		this.setFeedbackDefinitions(this.getFeedbacks())
 	}
 
 	init_presets(system) {
+		this.log('debug', 'Initializing presets')
 		this.setPresetDefinitions(this.getPresets())
 	}
 
 	init_variables(system) {
+		this.log('debug', 'Initializing variables')
 		this.setVariableDefinitions(this.getVariables())
 	}
 }
 
-run(instance, [])
+runEntrypoint(OnTimeInstance, [])
