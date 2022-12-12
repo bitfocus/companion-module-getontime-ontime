@@ -12,7 +12,6 @@ let log
 let socket = null
 
 let status = {}
-
 class instance extends instance_skel {
   constructor(system, id, config) {
     super(system, id, config)
@@ -171,7 +170,6 @@ class instance extends instance_skel {
       this.setVariable('timer_finish', timer_finish.hours + ':' + timer_finish.minutes + ':' + timer_finish.seconds)
 
       this.checkFeedbacks('timer_negative')
-
     })
 
     socket.on('playstate', (data) => {
@@ -194,7 +192,6 @@ class instance extends instance_skel {
         noteNext: status.titles.noteNext,
       })
       //log('info', JSON.stringify(status))
-
     })
 
     socket.on('onAir', (data) => {
@@ -205,7 +202,7 @@ class instance extends instance_skel {
   }
 
   init_actions(system) {
-    this.setActions(this.getActions())
+    this.setActionDefinitions(this.getActions())
   }
 
   init_feedbacks(system) {
@@ -241,7 +238,7 @@ class instance extends instance_skel {
         return {
           color: feedback.options.roll_fg,
           bgcolor: feedback.options.roll_bg,
-        } 
+        }
       } else {
         return false
       }
@@ -259,108 +256,6 @@ class instance extends instance_skel {
         return true
       } else {
         return false
-      }
-    }
-  }
-
-  action(action) {
-    let id = action.action
-    let options = action.options
-    let value = null
-
-    if (socket) {
-      switch (id) {
-        case 'start':
-          action = 'set-start'
-          socket.emit(action)
-          break
-        case 'startId':
-          action = 'set-startid'
-          value = options.value
-          socket.emit(action, value)
-          break
-        case 'startIndex':
-          action = 'set-startindex'
-          value = options.value - 1
-          socket.emit(action, value)
-          break
-        case 'loadId':
-          action = 'set-loadid'
-          value = options.value
-          socket.emit(action, value)
-          break
-        case 'loadIndex':
-          action = 'set-loadindex'
-          value = options.value - 1
-          socket.emit(action, value)
-          break
-        case 'pause':
-          action = 'set-pause'
-          socket.emit(action)
-          break
-        case 'stop':
-          action = 'set-stop'
-          socket.emit(action)
-          break
-        case 'reload':
-          action = 'set-reload'
-          socket.emit(action)
-          break
-        case 'previous':
-          action = 'set-previous'
-          socket.emit(action)
-          break
-        case 'next':
-          action = 'set-next'
-          socket.emit(action)
-          break
-        case 'roll':
-          action = 'set-roll'
-          socket.emit(action)
-          break
-        case 'delay':
-          action = 'set-delay'
-          value = options.value
-          socket.emit(action, value)
-          break
-        case 'setOnAir':
-          action = 'set-onAir'
-          value = options.value
-          socket.emit(action, value)
-          break
-        case 'setTimerMessage':
-          action = 'set-timer-message-text'
-          value = options.value
-          socket.emit(action, value)
-          break
-        case 'setTimerMessageVisibility':
-          action = 'set-timer-message-visible'
-          value = options.value
-          socket.emit(action, value)
-          break
-        case 'setPublicMessage':
-          action = 'set-public-message-text'
-          value = options.value
-          socket.emit(action, value)
-          break
-        case 'setPublicMessageVisibility':
-          action = 'set-public-message-visible'
-          value = options.value
-          socket.emit(action, value)
-          break
-        case 'setLowerMessage':
-          action = 'set-lower-message-text'
-          value = options.value
-          socket.emit(action, value)
-          break
-        case 'setLowerMessageVisibility':
-          action = 'set-lower-message-visible'
-          value = options.value
-          socket.emit(action, value)
-          break
-        default:
-          this.log('info', `Unhandled action: ${action}`)
-          break
       }
     }
   }

@@ -2,25 +2,31 @@ module.exports = {
   getActions() {
     let actions = {
       start: {
-        label: 'Start selected event',
+        name: 'Start selected event',
+        callback: (action) => {
+          socket.emit('set-start')
+        },
       },
       startId: {
-        label: 'Start event with given ID',
+        name: 'Start event with given ID',
         options: [
           {
             type: 'textinput',
-            label: 'Event ID',
+            name: 'Event ID',
             id: 'value',
             required: true,
           },
         ],
+        callback: (action) => {
+          socket.emit('set-startid', action.options.value)
+        },
       },
       startIndex: {
-        label: 'Start event at position (1-256)',
+        name: 'Start event at position (1-256)',
         options: [
           {
             type: 'number',
-            label: 'Position',
+            name: 'Position',
             id: 'value',
             default: 1,
             min: 1,
@@ -30,24 +36,30 @@ module.exports = {
             required: true,
           },
         ],
+        callback: (action) => {
+          socket.emit('set-startindex', action.options.value - 1)
+        },
       },
       loadId: {
-        label: 'Load event with given ID',
+        name: 'Load event with given ID',
         options: [
           {
             type: 'textinput',
-            label: 'Event ID',
+            name: 'Event ID',
             id: 'value',
             required: true,
           },
         ],
+        callback: (action) => {
+          socket.emit('set-loadid', action.options.value)
+        },
       },
       loadIndex: {
-        label: 'Load event at position (1-256)',
+        name: 'Load event at position (1-256)',
         options: [
           {
             type: 'number',
-            label: 'Position',
+            name: 'Position',
             id: 'value',
             default: 1,
             min: 1,
@@ -57,32 +69,53 @@ module.exports = {
             required: true,
           },
         ],
+        callback: (action) => {
+          socket.emit('set-loadindex', action.options.value - 1)
+        }
       },
       pause: {
-        label: 'Pause running timer',
+        name: 'Pause running timer',
+        callback: (action) => {
+          socket.emit('set-pause')
+        },
       },
       stop: {
-        label: 'Stop running timer',
+        name: 'Stop running timer',
+        callback: (action) => {
+          socket.emit('set-stop')
+        },
       },
       reload: {
-        label: 'Reload selected event',
+        name: 'Reload selected event',
+        callback: (action) => {
+          socket.emit('set-reload')
+        },
       },
       previous: {
-        label: 'Select previous event',
+        name: 'Select previous event',
+        callback: (action) => {
+          socket.emit('set-previous')
+        }
       },
       next: {
-        label: 'Select next event',
+        name: 'Select next event',
+        callback: (action) => {
+          socket.emit('set-next')
+        }
       },
       roll: {
-        label: 'Start roll mode',
+        name: 'Start roll mode',
+        callback: (action) => {
+          socket.emit('set-roll')
+        }
       },
       delay: {
-        label: 'Add / remove time (min) to running timer',
+        name: 'Add / remove time (min) to running timer',
         options: [
           {
             type: 'number',
             id: 'value',
-            label: 'Time',
+            name: 'Time',
             default: 0,
             min: -60,
             max: 60,
@@ -91,82 +124,106 @@ module.exports = {
             range: true,
           },
         ],
+        callback: (action) => {
+          socket.emit('set-delay', action.options.value)
+        }
       },
       setOnAir: {
-        label: 'Toggle On Air',
+        name: 'Toggle On Air',
         options: [
           {
             type: 'checkbox',
             id: 'value',
-            label: 'On Air',
+            name: 'On Air',
           },
         ],
+        callback: (action) => {
+          socket.emit('set-onAir', action.options.value)
+        }
       },
       setTimerMessageVisibility: {
-        label: 'Toggle visibility of Stage Timer message',
+        name: 'Toggle visibility of Stage Timer message',
         options: [
           {
             type: 'checkbox',
             id: 'value',
-            label: 'Show Message',
+            name: 'Show Message',
           },
         ],
+        callback: (action) => {
+          socket.emit('set-timer-message-visible', action.options.value)
+        }
       },
       setTimerMessage: {
-        label: 'Set text for Stage Timer message',
+        name: 'Set text for Stage Timer message',
         options: [
           {
             type: 'textinput',
-            label: 'Stage Timer message',
+            name: 'Stage Timer message',
             placeholder: 'Only the Presenter sees this',
             id: 'value',
             required: true,
           },
         ],
+        callback: (action) => {
+          socket.emit('set-timer-message-text', action.options.value)
+        }
       },
       setPublicMessageVisibility: {
-        label: 'Toggle visibility of Public screens message',
+        name: 'Toggle visibility of Public screens message',
         options: [
           {
             type: 'checkbox',
             id: 'value',
-            label: 'Show Message',
+            name: 'Show Message',
           },
         ],
+        callback: (action) => {
+          socket.emit('set-public-message-visible', action.options.value)
+        }
       },
       setPublicMessage: {
-        label: 'Set text for Public screens message',
+        name: 'Set text for Public screens message',
         options: [
           {
             type: 'textinput',
-            label: 'Stage Timer message',
+            name: 'Stage Timer message',
             placeholder: 'Only the Presenter sees this',
             id: 'value',
             required: true,
           },
         ],
+        callback: (action) => {
+          socket.emit('set-public-message-text', action.options.value)
+        }
       },
       setLowerMessageVisibility: {
-        label: 'Toggle visibility of Lower Third message',
+        name: 'Toggle visibility of Lower Third message',
         options: [
           {
             type: 'checkbox',
             id: 'value',
-            label: 'Show Message',
+            name: 'Show Message',
           },
         ],
+        callback: (action) => {
+          socket.emit('set-lower-message-visible', action.options.value)
+        }
       },
       setLowerMessage: {
-        label: 'Set text for Lower Third message',
+        name: 'Set text for Lower Third message',
         options: [
           {
             type: 'textinput',
-            label: 'Stage Timer message',
+            name: 'Stage Timer message',
             placeholder: 'Only the Presenter sees this',
             id: 'value',
             required: true,
           },
         ],
+        callback: (action) => {
+          socket.emit('set-lower-message-text', action.options.value)
+        }
       },
     }
     return actions
