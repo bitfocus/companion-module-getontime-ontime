@@ -1,9 +1,9 @@
-const { InstanceBase, runEntrypoint, Regex } = require('@companion-module/base')
+const { runEntrypoint, InstanceBase, Regex } = require('@companion-module/base')
 const { io } = require('socket.io-client')
 const actions = require('./actions')
 const presets = require('./presets')
 const variables = require('./variables')
-const feedbacks = require('./feedback')
+import { getFeedbackDefinitions } from './feedback'
 const utilities = require('./utilities')
 
 let socket = null
@@ -11,13 +11,6 @@ let states = {}
 class OnTimeInstance extends InstanceBase {
 	constructor(internal) {
 		super(internal)
-
-		Object.assign(this, {
-			...actions,
-			...feedbacks,
-			...presets,
-			...variables,
-		})
 	}
 
 	async init(config) {
@@ -48,7 +41,7 @@ class OnTimeInstance extends InstanceBase {
 		this.config = config
 		this.updateStatus('connecting')
 
-		this.initModule()
+		this.initConnection()
 		this.init_actions()
 		this.init_feedbacks()
 		this.init_variables()
@@ -208,22 +201,22 @@ class OnTimeInstance extends InstanceBase {
 
 	init_actions() {
 		this.log('debug', 'Initializing actions')
-		this.setActionDefinitions(this.getActions(this))
+		this.setActionDefinitions(this.getActions())
 	}
 
 	init_feedbacks() {
 		this.log('debug', 'Initializing feedbacks')
-		this.setFeedbackDefinitions(this.getFeedbacks(this))
+		this.setFeedbackDefinitions(getFeedbackDefinitions(this))
 	}
 
 	init_presets() {
 		this.log('debug', 'Initializing presets')
-		this.setPresetDefinitions(this.getPresets(this))
+		this.setPresetDefinitions(this.getPresets())
 	}
 
 	init_variables() {
 		this.log('debug', 'Initializing variables')
-		this.setVariableDefinitions(this.getVariables(this))
+		this.setVariableDefinitions(this.getVariables())
 	}
 
 	sendcmd(cmd, opt) {
