@@ -5,7 +5,7 @@ import { setVariables } from './variables.js'
 import { getFeedbackDefinitions } from './feedback.js'
 import { getPresetsDefentions } from './presets.js'
 import { toReadableTime } from './utilities.js'
-
+import { ConfigFields } from './config.js'
 let socket = null
 class OnTimeInstance extends InstanceBase {
 	async init(config) {
@@ -48,33 +48,7 @@ class OnTimeInstance extends InstanceBase {
 	}
 
 	getConfigFields() {
-		return [
-			{
-				label: 'Information',
-				id: 'info',
-				type: 'static-text',
-				value: 'This module will establish a connection to ontime server at a given IP',
-				width: 12,
-			},
-			{
-				label: 'Ontime server IP',
-				id: 'host',
-				type: 'textinput',
-				default: '127.0.0.1',
-				regex: Regex.IP,
-				width: 6,
-			},
-			{
-				label: 'Ontime server port (always 4001)',
-				id: 'port',
-				type: 'number',
-				min: 1,
-				max: 65535,
-				default: 4001,
-				required: true,
-				regex: Regex.PORT,
-			},
-		]
+		return ConfigFields
 	}
 
 	initConnection() {
