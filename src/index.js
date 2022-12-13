@@ -1,20 +1,17 @@
-const { runEntrypoint, InstanceBase, Regex } = require('@companion-module/base')
-const { io } = require('socket.io-client')
-const actions = require('./actions')
-const presets = require('./presets')
-const variables = require('./variables')
-import { getFeedbackDefinitions } from './feedback'
-const utilities = require('./utilities')
+import { runEntrypoint, InstanceBase, Regex } from '@companion-module/base'
+import * as io from 'socket.io-client'
+import { getActionDefinitions } from './actions.js'
+import { setVariables } from './variables.js'
+import { getFeedbackDefinitions } from './feedback.js'
+import { getPresetsDefentions } from './presets.js'
+import { toReadableTime } from './utilities.js'
 
 let socket = null
-let states = {}
 class OnTimeInstance extends InstanceBase {
-	constructor(internal) {
-		super(internal)
-	}
-
 	async init(config) {
 		this.config = config
+
+		this.states = {}
 
 		this.log('debug', 'Initializing module')
 
@@ -22,9 +19,10 @@ class OnTimeInstance extends InstanceBase {
 
 		this.initConnection()
 		this.init_actions()
-		this.init_feedbacks()
 		this.init_variables()
+		this.init_feedbacks()
 		this.init_presets()
+		this.checkFeedbacks()
 	}
 
 	async destroy() {
@@ -43,9 +41,10 @@ class OnTimeInstance extends InstanceBase {
 
 		this.initConnection()
 		this.init_actions()
-		this.init_feedbacks()
 		this.init_variables()
+		this.init_feedbacks()
 		this.init_presets()
+		this.checkFeedbacks()
 	}
 
 	getConfigFields() {
@@ -135,11 +134,9 @@ class OnTimeInstance extends InstanceBase {
 		})
 
 		socket.on('timer', (data) => {
-			// this.log('debug', JSON.stringify(data))
-			states = data
+			this.states = data
 
-			let timer = utilities.toReadableTime(states.running, states.isNegative, 's')
-			// this.log('info', states.running)
+			let timer = toReadableTime(this.states.running, this.states.isNegative, 's')
 			this.setVariableValues({
 				time: timer.hours + ':' + timer.minutes + ':' + timer.seconds,
 				time_hm: timer.hours + ':' + timer.minutes,
@@ -148,17 +145,17 @@ class OnTimeInstance extends InstanceBase {
 				time_s: timer.seconds,
 			})
 
-			let clock = utilities.toReadableTime(states.clock, false, 'ms')
+			let clock = toReadableTime(this.states.clock, false, 'ms')
 			this.setVariableValues({
 				clock: clock.hours + ':' + clock.minutes + ':' + clock.seconds,
 			})
 
-			let timer_start = utilities.toReadableTime(states.startedAt, false, 'ms')
+			let timer_start = toReadableTime(this.states.startedAt, false, 'ms')
 			this.setVariableValues({
 				timer_start: timer_start.hours + ':' + timer_start.minutes + ':' + timer_start.seconds,
 			})
 
-			let timer_finish = utilities.toReadableTime(states.expectedFinish, false, 'ms')
+			let timer_finish = toReadableTime(this.states.expectedFinish, false, 'ms')
 			this.setVariableValues({
 				timer_finish: timer_finish.hours + ':' + timer_finish.minutes + ':' + timer_finish.seconds,
 			})
@@ -167,33 +164,31 @@ class OnTimeInstance extends InstanceBase {
 		})
 
 		socket.on('playstate', (data) => {
-			//this.this.log('info', data)
-			states.playsstate = data
+			this.states.playstate = data
 			this.setVariableValues({
-				state: data,
+				playstate: data,
 			})
-			this.checkFeedbacks('state_color')
+			this.checkFeedbacks('state_color_running', 'state_color_paused', 'state_color_stopped', 'state_color_roll')
 		})
 
 		socket.on('titles', (data) => {
-			states.titles = data
+			this.states.titles = data
 			this.setVariableValues({
-				titleNow: states.titles.titleNow,
-				subtitleNow: states.titles.subtitleNow,
-				speakerNow: states.titles.presenterNow,
-				noteNow: states.titles.noteNow,
-				titleNext: states.titles.titleNext,
-				subtitleNext: states.titles.subtitleNext,
-				speakerNext: states.titles.presenterNext,
-				noteNext: states.titles.noteNext,
+				titleNow: this.states.titles.titleNow,
+				subtitleNow: this.states.titles.subtitleNow,
+				speakerNow: this.states.titles.presenterNow,
+				noteNow: this.states.titles.noteNow,
+				titleNext: this.states.titles.titleNext,
+				subtitleNext: this.states.titles.subtitleNext,
+				speakerNext: this.states.titles.presenterNext,
+				noteNext: this.states.titles.noteNext,
 			})
-			//this.log('info', JSON.stringify(states))
 		})
 
 		socket.on('onAir', (data) => {
-			states.onAir = data
+			this.states.onAir = data
 			this.setVariableValues({
-				onAir: states.onAir,
+				onAir: this.states.onAir,
 			})
 			this.checkFeedbacks('onAir')
 		})
@@ -201,7 +196,12 @@ class OnTimeInstance extends InstanceBase {
 
 	init_actions() {
 		this.log('debug', 'Initializing actions')
-		this.setActionDefinitions(this.getActions())
+		this.setActionDefinitions(getActionDefinitions(this))
+	}
+
+	init_variables() {
+		this.log('debug', 'Initializing variables')
+		this.setVariableDefinitions(setVariables())
 	}
 
 	init_feedbacks() {
@@ -211,12 +211,7 @@ class OnTimeInstance extends InstanceBase {
 
 	init_presets() {
 		this.log('debug', 'Initializing presets')
-		this.setPresetDefinitions(this.getPresets())
-	}
-
-	init_variables() {
-		this.log('debug', 'Initializing variables')
-		this.setVariableDefinitions(this.getVariables())
+		this.setPresetDefinitions(getPresetsDefentions(this))
 	}
 
 	sendcmd(cmd, opt) {

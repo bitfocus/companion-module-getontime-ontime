@@ -1,8 +1,8 @@
-exports.getVariables = function () {
+export function setVariables() {
 	const variables = [
 		{
 			name: 'State of timer (Running, Paused, Stopped, Roll)',
-			variableId: 'state',
+			variableId: 'playstate',
 		},
 		{
 			name: 'Clock (hh:mm:ss)',

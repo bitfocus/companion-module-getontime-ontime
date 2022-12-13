@@ -1,7 +1,7 @@
-const { combineRgb } = require('@companion-module/base')
-const icons = require('./assets/icons')
+import { combineRgb } from '@companion-module/base'
+import * as icons from './assets/icons.js'
 
-exports.getPresets = function () {
+export function getPresetsDefentions(self) {
 	const presets = {}
 
 	presets['start_selecetd_timer'] = {
@@ -418,18 +418,31 @@ exports.getPresets = function () {
 		steps: [],
 		feedbacks: [
 			{
-				feedbackId: 'state_color',
-				options: {
-					run_fg: combineRgb(255, 255, 255),
-					run_bg: combineRgb(0, 204, 0),
-					pause_fg: combineRgb(255, 255, 255),
-					pause_bg: combineRgb(237, 137, 54),
-					stop_fg: combineRgb(255, 255, 255),
-					stop_bg: combineRgb(0, 0, 0),
-					roll_fg: combineRgb(255, 255, 255),
-					roll_bg: combineRgb(43, 108, 176),
-					negative_fg: combineRgb(255, 255, 255),
-					negative_bg: combineRgb(255, 0, 0),
+				feedbackId: 'state_color_running',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(0, 204, 0),
+				},
+			},
+			{
+				feedbackId: 'state_color_paused',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(237, 137, 54),
+				},
+			},
+			{
+				feedbackId: 'state_color_stopped',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(0, 0, 0),
+				},
+			},
+			{
+				feedbackId: 'state_color_roll',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(43, 108, 176),
 				},
 			},
 			{
@@ -455,18 +468,31 @@ exports.getPresets = function () {
 		steps: [],
 		feedbacks: [
 			{
-				feedbackId: 'state_color',
-				options: {
-					run_fg: combineRgb(255, 255, 255),
-					run_bg: combineRgb(0, 204, 0),
-					pause_fg: combineRgb(255, 255, 255),
-					pause_bg: combineRgb(237, 137, 54),
-					stop_fg: combineRgb(255, 255, 255),
-					stop_bg: combineRgb(0, 0, 0),
-					roll_fg: combineRgb(255, 255, 255),
-					roll_bg: combineRgb(43, 108, 176),
-					negative_fg: combineRgb(255, 255, 255),
-					negative_bg: combineRgb(255, 0, 0),
+				feedbackId: 'state_color_running',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(0, 204, 0),
+				},
+			},
+			{
+				feedbackId: 'state_color_paused',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(237, 137, 54),
+				},
+			},
+			{
+				feedbackId: 'state_color_stopped',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(0, 0, 0),
+				},
+			},
+			{
+				feedbackId: 'state_color_roll',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(43, 108, 176),
 				},
 			},
 			{
@@ -491,18 +517,31 @@ exports.getPresets = function () {
 		steps: [],
 		feedbacks: [
 			{
-				feedbackId: 'state_color',
-				options: {
-					run_fg: combineRgb(255, 255, 255),
-					run_bg: combineRgb(0, 204, 0),
-					pause_fg: combineRgb(255, 255, 255),
-					pause_bg: combineRgb(237, 137, 54),
-					stop_fg: combineRgb(255, 255, 255),
-					stop_bg: combineRgb(0, 0, 0),
-					roll_fg: combineRgb(255, 255, 255),
-					roll_bg: combineRgb(43, 108, 176),
-					negative_fg: combineRgb(255, 255, 255),
-					negative_bg: combineRgb(255, 0, 0),
+				feedbackId: 'state_color_running',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(0, 204, 0),
+				},
+			},
+			{
+				feedbackId: 'state_color_paused',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(237, 137, 54),
+				},
+			},
+			{
+				feedbackId: 'state_color_stopped',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(0, 0, 0),
+				},
+			},
+			{
+				feedbackId: 'state_color_roll',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(43, 108, 176),
 				},
 			},
 			{
@@ -527,18 +566,31 @@ exports.getPresets = function () {
 		steps: [],
 		feedbacks: [
 			{
-				feedbackId: 'state_color',
-				options: {
-					run_fg: combineRgb(255, 255, 255),
-					run_bg: combineRgb(0, 204, 0),
-					pause_fg: combineRgb(255, 255, 255),
-					pause_bg: combineRgb(237, 137, 54),
-					stop_fg: combineRgb(255, 255, 255),
-					stop_bg: combineRgb(0, 0, 0),
-					roll_fg: combineRgb(255, 255, 255),
-					roll_bg: combineRgb(43, 108, 176),
-					negative_fg: combineRgb(255, 255, 255),
-					negative_bg: combineRgb(255, 0, 0),
+				feedbackId: 'state_color_running',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(0, 204, 0),
+				},
+			},
+			{
+				feedbackId: 'state_color_paused',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(237, 137, 54),
+				},
+			},
+			{
+				feedbackId: 'state_color_stopped',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(0, 0, 0),
+				},
+			},
+			{
+				feedbackId: 'state_color_roll',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(43, 108, 176),
 				},
 			},
 			{
@@ -563,18 +615,31 @@ exports.getPresets = function () {
 		steps: [],
 		feedbacks: [
 			{
-				feedbackId: 'state_color',
-				options: {
-					run_fg: combineRgb(255, 255, 255),
-					run_bg: combineRgb(0, 204, 0),
-					pause_fg: combineRgb(255, 255, 255),
-					pause_bg: combineRgb(237, 137, 54),
-					stop_fg: combineRgb(255, 255, 255),
-					stop_bg: combineRgb(0, 0, 0),
-					roll_fg: combineRgb(255, 255, 255),
-					roll_bg: combineRgb(43, 108, 176),
-					negative_fg: combineRgb(255, 255, 255),
-					negative_bg: combineRgb(255, 0, 0),
+				feedbackId: 'state_color_running',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(0, 204, 0),
+				},
+			},
+			{
+				feedbackId: 'state_color_paused',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(237, 137, 54),
+				},
+			},
+			{
+				feedbackId: 'state_color_stopped',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(0, 0, 0),
+				},
+			},
+			{
+				feedbackId: 'state_color_roll',
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(43, 108, 176),
 				},
 			},
 			{

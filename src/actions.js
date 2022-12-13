@@ -1,11 +1,11 @@
-exports.getActions = function () {
+export function getActionDefinitions(self) {
 	const actions = {}
 
 	actions['start'] = {
 		name: 'Start selected event',
 		options: [],
 		callback: (action) => {
-			this.sendcmd('set-start')
+			self.sendcmd('set-start')
 		},
 	}
 	actions['startId'] = {
@@ -19,7 +19,7 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			this.sendcmd('set-startid', action.options.value)
+			self.sendcmd('set-startid', action.options.value)
 		},
 	}
 	actions['startIndex'] = {
@@ -38,7 +38,7 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			this.sendcmd('set-startindex', action.options.value - 1)
+			self.sendcmd('set-startindex', action.options.value - 1)
 		},
 	}
 	actions['loadId'] = {
@@ -52,7 +52,7 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			this.sendcmd('set-loadid', action.options.value)
+			self.sendcmd('set-loadid', action.options.value)
 		},
 	}
 	actions['loadIndex'] = {
@@ -71,49 +71,49 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			this.sendcmd('set-loadindex', action.options.value - 1)
+			self.sendcmd('set-loadindex', action.options.value - 1)
 		},
 	}
 	actions['pause'] = {
 		name: 'Pause running timer',
 		options: [],
 		callback: (action) => {
-			this.sendcmd('set-pause')
+			self.sendcmd('set-pause')
 		},
 	}
 	actions['stop'] = {
 		name: 'Stop running timer',
 		options: [],
 		callback: (action) => {
-			this.sendcmd('set-stop')
+			self.sendcmd('set-stop')
 		},
 	}
 	actions['reload'] = {
 		name: 'Reload selected event',
 		options: [],
 		callback: (action) => {
-			this.sendcmd('set-reload')
+			self.sendcmd('set-reload')
 		},
 	}
 	actions['previous'] = {
 		name: 'Select previous event',
 		options: [],
 		callback: (action) => {
-			this.sendcmd('set-previous')
+			self.sendcmd('set-previous')
 		},
 	}
 	actions['next'] = {
 		name: 'Select next event',
 		options: [],
 		callback: (action) => {
-			this.sendcmd('set-next')
+			self.sendcmd('set-next')
 		},
 	}
 	actions['roll'] = {
 		name: 'Start roll mode',
 		options: [],
 		callback: (action) => {
-			this.sendcmd('set-roll')
+			self.sendcmd('set-roll')
 		},
 	}
 	actions['delay'] = {
@@ -132,7 +132,7 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			this.sendcmd('set-delay', action.options.value)
+			self.sendcmd('set-delay', action.options.value)
 		},
 	}
 	actions['setOnAir'] = {
@@ -145,7 +145,7 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			this.sendcmd('set-onAir', action.options.value)
+			self.sendcmd('set-onAir', action.options.value)
 		},
 	}
 	actions['setTimerMessageVisibility'] = {
@@ -158,7 +158,7 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			this.sendcmd('set-timer-message-visible', action.options.value)
+			self.sendcmd('set-timer-message-visible', action.options.value)
 		},
 	}
 	actions['setTimerMessage'] = {
@@ -167,13 +167,13 @@ exports.getActions = function () {
 			{
 				type: 'textinput',
 				name: 'Stage Timer message',
-				placeholder: 'Only the Presenter sees this',
+				placeholder: 'Only the Presenter sees self',
 				id: 'value',
 				required: true,
 			},
 		],
 		callback: (action) => {
-			this.sendcmd('set-timer-message-text', action.options.value)
+			self.sendcmd('set-timer-message-text', action.options.value)
 		},
 	}
 	actions['setPublicMessageVisibility'] = {
@@ -186,7 +186,7 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			this.sendcmd('set-public-message-visible', action.options.value)
+			self.sendcmd('set-public-message-visible', action.options.value)
 		},
 	}
 	actions['setPublicMessage'] = {
@@ -195,13 +195,13 @@ exports.getActions = function () {
 			{
 				type: 'textinput',
 				name: 'Stage Timer message',
-				placeholder: 'Only the Presenter sees this',
+				placeholder: 'Only the Presenter sees self',
 				id: 'value',
 				required: true,
 			},
 		],
 		callback: (action) => {
-			this.sendcmd('set-public-message-text', action.options.value)
+			self.sendcmd('set-public-message-text', action.options.value)
 		},
 	}
 	actions['setLowerMessageVisibility'] = {
@@ -214,7 +214,7 @@ exports.getActions = function () {
 			},
 		],
 		callback: (action) => {
-			this.sendcmd('set-lower-message-visible', action.options.value)
+			self.sendcmd('set-lower-message-visible', action.options.value)
 		},
 	}
 	actions['setLowerMessage'] = {
@@ -223,13 +223,13 @@ exports.getActions = function () {
 			{
 				type: 'textinput',
 				name: 'Stage Timer message',
-				placeholder: 'Only the Presenter sees this',
+				placeholder: 'Only the Presenter sees self',
 				id: 'value',
 				required: true,
 			},
 		],
 		callback: (action) => {
-			this.sendcmd('set-lower-message-text', action.options.value)
+			self.sendcmd('set-lower-message-text', action.options.value)
 		},
 	}
 	return actions
