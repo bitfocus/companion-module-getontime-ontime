@@ -1,7 +1,7 @@
 export function setVariables() {
 	const variables = [
 		{
-			name: 'State of timer (Running, Paused, Stopped, Roll)',
+			name: 'State of event (Running, Paused, Stopped, Roll)',
 			variableId: 'playstate',
 		},
 		{
@@ -9,31 +9,31 @@ export function setVariables() {
 			variableId: 'clock',
 		},
 		{
-			name: 'Start of timer (hh:mm:ss)',
+			name: 'Start of event (hh:mm:ss)',
 			variableId: 'timer_start',
 		},
 		{
-			name: 'Expected finish of timer (hh:mm:ss)',
+			name: 'Expected finish of event (hh:mm:ss)',
 			variableId: 'timer_finish',
 		},
 		{
-			name: 'Current time of timer (hh:mm:ss)',
+			name: 'Current time of event (hh:mm:ss)',
 			variableId: 'time',
 		},
 		{
-			name: 'Current time of timer (hh:mm)',
+			name: 'Current time of event (hh:mm)',
 			variableId: 'time_hm',
 		},
 		{
-			name: 'Current timer state Hours',
+			name: 'Current event state Hours',
 			variableId: 'time_h',
 		},
 		{
-			name: 'Current timer state Minutes',
+			name: 'Current event state Minutes',
 			variableId: 'time_m',
 		},
 		{
-			name: 'Current timer state Seconds',
+			name: 'Current event state Seconds',
 			variableId: 'time_s',
 		},
 		{
