@@ -32,7 +32,7 @@ class OnTimeInstance extends InstanceBase {
 		}
 		socket = null
 		this.updateStatus('disconnected')
-		this.log('debug', 'destroy' + this.id)
+		this.log('debug', 'destroy ' + this.id)
 	}
 
 	async configUpdated(config) {

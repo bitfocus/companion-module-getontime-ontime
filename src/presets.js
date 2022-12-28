@@ -4,10 +4,10 @@ import * as icons from './assets/icons.js'
 export function getPresetsDefentions(self) {
 	const presets = {}
 
-	presets['start_selecetd_timer'] = {
+	presets['start_selecetd_event'] = {
 		type: 'button',
 		category: 'Commands',
-		name: 'Starts selected timer',
+		name: 'Starts selected event',
 		style: {
 			png64: icons.PlaybackStart,
 			pngalignment: 'center:top',
@@ -28,10 +28,10 @@ export function getPresetsDefentions(self) {
 		],
 		feedbacks: [],
 	}
-	presets['pause_selecetd_timer'] = {
+	presets['pause_selecetd_event'] = {
 		type: 'button',
 		category: 'Commands',
-		name: 'Pauses selected timer',
+		name: 'Pauses selected event',
 		style: {
 			png64: icons.PlaybackPause,
 			pngalignment: 'center:top',
@@ -52,10 +52,10 @@ export function getPresetsDefentions(self) {
 		],
 		feedbacks: [],
 	}
-	presets['pasue_selected_timer'] = {
+	presets['pasue_selected_event'] = {
 		type: 'button',
 		category: 'Commands',
-		name: 'Stops selected timer',
+		name: 'Stops selected event',
 		style: {
 			png64: icons.PlaybackStop,
 			pngalignment: 'center:top',
@@ -76,10 +76,10 @@ export function getPresetsDefentions(self) {
 		],
 		feedbacks: [],
 	}
-	presets['reload_selected_timer'] = {
+	presets['reload_selected_event'] = {
 		type: 'button',
 		category: 'Commands',
-		name: 'Reload selected timer',
+		name: 'Reload selected event',
 		style: {
 			png64: icons.PlaybackReload,
 			pngalignment: 'center:top',
@@ -100,10 +100,10 @@ export function getPresetsDefentions(self) {
 		],
 		feedbacks: [],
 	}
-	presets['select_previous_timer'] = {
+	presets['select_previous_event'] = {
 		type: 'button',
 		category: 'Commands',
-		name: 'Selects previous timer',
+		name: 'Selects previous event',
 		style: {
 			png64: icons.PlaybackPrevious,
 			pngalignment: 'center:top',
@@ -124,10 +124,10 @@ export function getPresetsDefentions(self) {
 		],
 		feedbacks: [],
 	}
-	presets['select_next_timer'] = {
+	presets['select_next_event'] = {
 		type: 'button',
 		category: 'Commands',
-		name: 'Selects next timer',
+		name: 'Selects next event',
 		style: {
 			png64: icons.PlaybackNext,
 			pngalignment: 'center:top',
@@ -217,7 +217,7 @@ export function getPresetsDefentions(self) {
 	presets['delay_add_1'] = {
 		type: 'button',
 		category: 'Commands',
-		name: 'Adds 1 min to running timer',
+		name: 'Adds 1 min to running event',
 		style: {
 			style: 'text',
 			text: '+1 MIN',
@@ -240,7 +240,7 @@ export function getPresetsDefentions(self) {
 	presets['delay_add_5'] = {
 		type: 'button',
 		category: 'Commands',
-		name: 'Adds 5 min to running timer',
+		name: 'Adds 5 min to running event',
 		style: {
 			style: 'text',
 			text: '+5 MIN',
@@ -263,7 +263,7 @@ export function getPresetsDefentions(self) {
 	presets['delay_subtract_1'] = {
 		type: 'button',
 		category: 'Commands',
-		name: 'Subtracts 1 min to running timer',
+		name: 'Subtracts 1 min from running event',
 		style: {
 			style: 'text',
 			text: '-1 MIN',
@@ -286,7 +286,7 @@ export function getPresetsDefentions(self) {
 	presets['delay_subtract_5'] = {
 		type: 'button',
 		category: 'Commands',
-		name: 'Subtracts 5 min to running timer',
+		name: 'Subtracts 5 min from running event',
 		style: {
 			style: 'text',
 			text: '-5 MIN',
@@ -306,7 +306,7 @@ export function getPresetsDefentions(self) {
 		],
 		feedbacks: [],
 	}
-	presets['toggle_timer_message_visibility'] = {
+	presets['toggle_speaker_message_visibility'] = {
 		type: 'button',
 		category: 'Commands',
 		name: 'Toggle visibility of Speaker message',
@@ -323,7 +323,7 @@ export function getPresetsDefentions(self) {
 			{
 				down: [
 					{
-						actionId: 'setTimerMessageVisibility',
+						actionId: 'setSpeakerMessageVisibility',
 						options: { value: true },
 					},
 				],
@@ -331,7 +331,7 @@ export function getPresetsDefentions(self) {
 			{
 				down: [
 					{
-						actionId: 'setTimerMessageVisibility',
+						actionId: 'setSpeakerMessageVisibility',
 						options: { value: false },
 					},
 				],

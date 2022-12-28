@@ -148,7 +148,7 @@ export function getActionDefinitions(self) {
 			self.sendcmd('set-onAir', action.options.value)
 		},
 	}
-	actions['setTimerMessageVisibility'] = {
+	actions['setSpeakerMessageVisibility'] = {
 		name: 'Toggle visibility of Stage Timer message',
 		options: [
 			{
@@ -161,7 +161,7 @@ export function getActionDefinitions(self) {
 			self.sendcmd('set-timer-message-visible', action.options.value)
 		},
 	}
-	actions['setTimerMessage'] = {
+	actions['setSpeakerMessage'] = {
 		name: 'Set text for Stage Timer message',
 		options: [
 			{
