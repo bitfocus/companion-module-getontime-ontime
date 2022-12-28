@@ -1,21 +1,23 @@
 /**
- *
- * @typedef {Object} ReadableTime
- * @property {string} hours - hours in format hh
- * @property {string} minutes - minutes in format mm
- * @property {string} seconds - seconds in format ss
- */
-
-/**
- *
- * @param {number} time - time in format s or ms
- * @param {string} [format=ms] - format of time (s or ms)
- * @return {ReadableTime} - object with hours, minutes and seconds
+ * @param {number} number - number to pad
+ * @return {string} - padded number
  */
 
 function padTo2Digits(number) {
 	return number.toString().padStart(2, '0')
 }
+
+/**
+ *
+ * @typedef {Object} ReadableTime
+ * @property {string} hours - hours in format hh
+ * @property {string} minutes - minutes in format mm
+ * @property {string} seconds - seconds in format ss
+ *
+ * @param {number} time - time in format s or ms
+ * @param {string} [format=ms] - format of time (s or ms)
+ * @return {ReadableTime} - object with hours, minutes and seconds
+ */
 
 export function toReadableTime(time, format = 'ms') {
 	let negative = false
