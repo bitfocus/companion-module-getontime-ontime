@@ -4,7 +4,7 @@ import * as icons from './assets/icons.js'
 export function getPresetsDefentions(self) {
 	const presets = {}
 
-	presets['start_selecetd_event'] = {
+	presets['start_selected_event'] = {
 		type: 'button',
 		category: 'Commands',
 		name: 'Starts selected event',
@@ -28,7 +28,7 @@ export function getPresetsDefentions(self) {
 		],
 		feedbacks: [],
 	}
-	presets['pause_selecetd_event'] = {
+	presets['pause_selected_event'] = {
 		type: 'button',
 		category: 'Commands',
 		name: 'Pauses selected event',
@@ -52,7 +52,7 @@ export function getPresetsDefentions(self) {
 		],
 		feedbacks: [],
 	}
-	presets['pasue_selected_event'] = {
+	presets['stop_selected_event'] = {
 		type: 'button',
 		category: 'Commands',
 		name: 'Stops selected event',
