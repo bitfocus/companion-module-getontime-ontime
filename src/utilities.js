@@ -1,9 +1,17 @@
 /**
  *
+ * @typedef {Object} ReadableTime
+ * @property {string} hours - hours in format hh
+ * @property {string} minutes - minutes in format mm
+ * @property {string} seconds - seconds in format ss
+ */
+
+/**
+ *
  * @param {number} time - time in format s or ms
  * @param {boolean} isNegative - true when time is negative
  * @param {string} format - format of time (s or ms)
- * @returns - returns an object with hours, minutes and seconds
+ * @return {ReadableTime} - object with hours, minutes and seconds
  */
 
 export function toReadableTime(time, isNegative, format) {
