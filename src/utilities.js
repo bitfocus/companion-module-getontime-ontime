@@ -13,6 +13,10 @@
  * @return {ReadableTime} - object with hours, minutes and seconds
  */
 
+function padTo2Digits(number) {
+	return number.toString().padStart(2, '0')
+}
+
 export function toReadableTime(time, format = 'ms') {
 	let negative = false
 	time = Number(time)
@@ -23,30 +27,20 @@ export function toReadableTime(time, format = 'ms') {
 		negative = false
 	}
 
-	if (format === 'ms') {
-		time = time / 1000
+	if (format === 's') {
+		time = time * 1000
 	}
-	let hours = Math.floor(time / 60 / 60)
-	let minutes = Math.floor((time - hours * 60 * 60) / 60)
-	let seconds = Math.floor(time - hours * 60 * 60 - minutes * 60)
 
-	// deal with hours
-	if (hours < 10) {
-		hours = '0' + hours
-	}
+	let seconds = Math.floor(time / 1000)
+	let minutes = Math.floor(seconds / 60)
+	let hours = Math.floor(minutes / 60)
+
+	seconds = padTo2Digits(seconds % 60)
+	minutes = padTo2Digits(minutes % 60)
+	hours = padTo2Digits(hours % 24)
 
 	if (negative) {
 		hours = '-' + hours
-	}
-
-	if (minutes < 10) {
-		// deal with minutes
-		minutes = '0' + minutes
-	}
-
-	// deal with seconds
-	if (seconds < 10) {
-		seconds = '0' + seconds
 	}
 
 	return {
