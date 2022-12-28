@@ -9,15 +9,18 @@
 /**
  *
  * @param {number} time - time in format s or ms
- * @param {boolean} isNegative - true when time is negative
- * @param {string} format - format of time (s or ms)
+ * @param {string} [format=ms] - format of time (s or ms)
  * @return {ReadableTime} - object with hours, minutes and seconds
  */
 
-export function toReadableTime(time, isNegative, format) {
+export function toReadableTime(time, format = 'ms') {
+	let negative = false
 	time = Number(time)
 	if (time < 0) {
 		time = time * -1
+		negative = true
+	} else {
+		negative = false
 	}
 
 	if (format === 'ms') {
@@ -32,7 +35,7 @@ export function toReadableTime(time, isNegative, format) {
 		hours = '0' + hours
 	}
 
-	if (isNegative) {
+	if (negative) {
 		hours = '-' + hours
 	}
 

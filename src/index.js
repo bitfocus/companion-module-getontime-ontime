@@ -110,7 +110,8 @@ class OnTimeInstance extends InstanceBase {
 		socket.on('timer', (data) => {
 			this.states = data
 
-			let timer = toReadableTime(this.states.running, this.states.isNegative, 's')
+			let timer = toReadableTime(this.states.running, 's')
+			this.log('debug', 'running: ' + this.states.running)
 			this.setVariableValues({
 				time: timer.hours + ':' + timer.minutes + ':' + timer.seconds,
 				time_hm: timer.hours + ':' + timer.minutes,
@@ -119,17 +120,17 @@ class OnTimeInstance extends InstanceBase {
 				time_s: timer.seconds,
 			})
 
-			let clock = toReadableTime(this.states.clock, false, 'ms')
+			let clock = toReadableTime(this.states.clock)
 			this.setVariableValues({
 				clock: clock.hours + ':' + clock.minutes + ':' + clock.seconds,
 			})
 
-			let timer_start = toReadableTime(this.states.startedAt, false, 'ms')
+			let timer_start = toReadableTime(this.states.startedAt)
 			this.setVariableValues({
 				timer_start: timer_start.hours + ':' + timer_start.minutes + ':' + timer_start.seconds,
 			})
 
-			let timer_finish = toReadableTime(this.states.expectedFinish, false, 'ms')
+			let timer_finish = toReadableTime(this.states.expectedFinish)
 			this.setVariableValues({
 				timer_finish: timer_finish.hours + ':' + timer_finish.minutes + ':' + timer_finish.seconds,
 			})
