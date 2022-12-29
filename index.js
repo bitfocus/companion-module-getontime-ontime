@@ -5,6 +5,7 @@ const variables = require('./variables')
 const feedback = require('./feedback')
 const io = require('socket.io-client')
 const utilities = require('./utilities')
+const axios = require('axios')
 
 let debug
 let log
@@ -12,6 +13,8 @@ let log
 let socket = null
 
 let status = {}
+
+/** @typedef {{ label: string, id: string }} EventChoice */
 
 class instance extends instance_skel {
   constructor(system, id, config) {
@@ -29,6 +32,9 @@ class instance extends instance_skel {
     debug = this.debug
     log = this.log
 
+    /** @type {EventChoice[]} */
+    this.events = []
+
     this.status(this.STATUS_WARNING, 'Connecting')
 
     this.initModule()
@@ -36,6 +42,7 @@ class instance extends instance_skel {
     this.init_feedbacks()
     this.init_variables()
     this.init_presets()
+    this.init_events()
   }
 
   destroy() {
@@ -87,6 +94,7 @@ class instance extends instance_skel {
     this.init_feedbacks()
     this.init_variables()
     this.init_presets()
+    this.init_events()
   }
 
   initModule() {
@@ -171,7 +179,6 @@ class instance extends instance_skel {
       this.setVariable('timer_finish', timer_finish.hours + ':' + timer_finish.minutes + ':' + timer_finish.seconds)
 
       this.checkFeedbacks('timer_negative')
-
     })
 
     socket.on('playstate', (data) => {
@@ -194,7 +201,6 @@ class instance extends instance_skel {
         noteNext: status.titles.noteNext,
       })
       //log('info', JSON.stringify(status))
-
     })
 
     socket.on('onAir', (data) => {
@@ -220,6 +226,22 @@ class instance extends instance_skel {
     this.setVariableDefinitions(this.getVariables())
   }
 
+  init_events() {
+    axios
+      .get('http://' + this.config.host + ':' + this.config.port + '/events', { responseType: 'json' })
+      .then((res) => {
+        this.debug('Received %o ontime events', res.data.length)
+        this.events = res.data.map((evt) => ({
+          id: evt.id,
+          label: evt.title,
+        }))
+        this.init_actions()
+      })
+      .catch((err) => {
+        this.debug('Error fetching events %o', err)
+      })
+  }
+
   feedback(feedback) {
     if (feedback.type === 'state_color') {
       if (status.state == 'start') {
@@ -241,7 +263,7 @@ class instance extends instance_skel {
         return {
           color: feedback.options.roll_fg,
           bgcolor: feedback.options.roll_bg,
-        } 
+        }
       } else {
         return false
       }
@@ -275,6 +297,7 @@ class instance extends instance_skel {
           socket.emit(action)
           break
         case 'startId':
+        case 'startSelect':
           action = 'set-startid'
           value = options.value
           socket.emit(action, value)

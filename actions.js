@@ -1,8 +1,21 @@
 module.exports = {
+  /** @type {(this: import("."))} */
   getActions() {
     let actions = {
       start: {
         label: 'Start selected event',
+      },
+      startSelect: {
+        label: 'Start event',
+        options: [
+          {
+            type: 'dropdown',
+            label: 'Event',
+            id: 'value',
+            required: true,
+            choices: this.events,
+          },
+        ],
       },
       startId: {
         label: 'Start event with given ID',
