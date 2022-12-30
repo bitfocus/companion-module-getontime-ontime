@@ -1,23 +1,28 @@
 import { runEntrypoint, InstanceBase, Regex } from '@companion-module/base'
 import * as io from 'socket.io-client'
+import axios from 'axios'
 import { getActionDefinitions } from './actions.js'
 import { setVariables } from './variables.js'
 import { getFeedbackDefinitions } from './feedback.js'
 import { getPresetsDefentions } from './presets.js'
 import { toReadableTime } from './utilities.js'
 import { ConfigFields } from './config.js'
+
 let socket = null
 class OnTimeInstance extends InstanceBase {
 	async init(config) {
 		this.config = config
 
 		this.states = {}
+		/** @type {{ label: string, id: string }[]} */
+		this.events = []
 
 		this.log('debug', 'Initializing module')
 
 		this.updateStatus('connecting')
 
 		this.initConnection()
+		await this.initEvents()
 		this.init_actions()
 		this.init_variables()
 		this.init_feedbacks()
@@ -40,6 +45,7 @@ class OnTimeInstance extends InstanceBase {
 		this.updateStatus('connecting')
 
 		this.initConnection()
+		await this.initEvents()
 		this.init_actions()
 		this.init_variables()
 		this.init_feedbacks()
@@ -167,6 +173,21 @@ class OnTimeInstance extends InstanceBase {
 			})
 			this.checkFeedbacks('onAir')
 		})
+	}
+
+	async initEvents() {
+		this.log('debug', 'fetching events from ontime')
+		try {
+			const res = await axios.get(`http://${this.config.host}:${this.config.port}/events`, { responseType: 'json' })
+			this.log('debug', `fetched ${res.data.length} events`)
+			this.events = res.data.map((evt) => ({
+				id: evt.id,
+				label: evt.title,
+			}))
+		} catch (e) {
+			this.log('error', 'failed to fetch events from ontime')
+			this.log('error', e)
+		}
 	}
 
 	init_actions() {

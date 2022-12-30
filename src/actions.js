@@ -1,4 +1,5 @@
 export function getActionDefinitions(self) {
+	/** @type {import("@companion-module/base").CompanionActionDefinitions} */
 	const actions = {}
 
 	actions['start'] = {
@@ -6,6 +7,21 @@ export function getActionDefinitions(self) {
 		options: [],
 		callback: (action) => {
 			self.sendcmd('set-start')
+		},
+	}
+	actions['startSelect'] = {
+		name: 'Start event',
+		options: [
+			{
+				type: 'dropdown',
+				choices: self.events,
+				id: 'value',
+				label: 'Event',
+				required: true,
+			},
+		],
+		callback: (action) => {
+			self.sendcmd('set-startid', action.options.value)
 		},
 	}
 	actions['startId'] = {

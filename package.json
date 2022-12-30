@@ -17,6 +17,7 @@
 	},
 	"dependencies": {
 		"@companion-module/base": "~1.0.0",
+		"axios": "^1.2.2",
 		"socket.io-client": "^4.5.1"
 	},
 	"devDependencies": {
