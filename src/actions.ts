@@ -1,5 +1,5 @@
-import { OnTimeInstance } from "./index"
-import { CompanionActionDefinition, CompanionActionDefinitions, InstanceBase } from "@companion-module/base"
+import { OnTimeInstance } from './index'
+import { CompanionActionDefinition, CompanionActionDefinitions } from '@companion-module/base'
 
 export enum ActionId {
 	Start = 'start',
@@ -43,7 +43,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 			options: [
 				{
 					type: 'textinput',
-					name: 'Event ID',
+					label: 'Event ID',
 					id: 'value',
 					required: true,
 				},
@@ -57,7 +57,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 			options: [
 				{
 					type: 'number',
-					name: 'Position',
+					label: 'Position',
 					id: 'value',
 					default: 1,
 					min: 1,
@@ -68,7 +68,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-startindex', action.options.value - 1)
+				self.sendcmd('set-startindex', Number(action.options.value) - 1)
 			},
 		},
 		[ActionId.LoadId]: {
@@ -76,7 +76,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 			options: [
 				{
 					type: 'textinput',
-					name: 'Event ID',
+					label: 'Event ID',
 					id: 'value',
 					required: true,
 				},
@@ -90,7 +90,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 			options: [
 				{
 					type: 'number',
-					name: 'Position',
+					label: 'Position',
 					id: 'value',
 					default: 1,
 					min: 1,
@@ -101,9 +101,9 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-loadindex', action.options.value - 1)
+				self.sendcmd('set-loadindex', Number(action.options.value) - 1)
 			},
-	},
+		},
 		[ActionId.Pause]: {
 			name: 'Pause running timer',
 			options: [],
@@ -152,7 +152,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				{
 					type: 'number',
 					id: 'value',
-					name: 'Time',
+					label: 'Time',
 					default: 0,
 					min: -60,
 					max: 60,
@@ -170,8 +170,9 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 			options: [
 				{
 					type: 'checkbox',
+					default: true,
 					id: 'value',
-					name: 'On Air',
+					label: 'On Air',
 				},
 			],
 			callback: (action) => {
@@ -183,8 +184,9 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 			options: [
 				{
 					type: 'checkbox',
+					default: true,
 					id: 'value',
-					name: 'Show Message',
+					label: 'Show Message',
 				},
 			],
 			callback: (action) => {
@@ -196,8 +198,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 			options: [
 				{
 					type: 'textinput',
-					name: 'Stage Timer message',
-					placeholder: 'Only the Presenter sees self',
+					label: 'Stage Timer message',
 					id: 'value',
 					required: true,
 				},
@@ -212,7 +213,8 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				{
 					type: 'checkbox',
 					id: 'value',
-					name: 'Show Message',
+					label: 'Show Message',
+					default: true,
 				},
 			],
 			callback: (action) => {
@@ -224,8 +226,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 			options: [
 				{
 					type: 'textinput',
-					name: 'Stage Timer message',
-					placeholder: 'Only the Presenter sees self',
+					label: 'Stage Timer message',
 					id: 'value',
 					required: true,
 				},
@@ -240,7 +241,8 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				{
 					type: 'checkbox',
 					id: 'value',
-					name: 'Show Message',
+					label: 'Show Message',
+					default: true,
 				},
 			],
 			callback: (action) => {
@@ -252,8 +254,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 			options: [
 				{
 					type: 'textinput',
-					name: 'Stage Timer message',
-					placeholder: 'Only the Presenter sees self',
+					label: 'Stage Timer message',
 					id: 'value',
 					required: true,
 				},
@@ -261,7 +262,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 			callback: (action) => {
 				self.sendcmd('set-lower-message-text', action.options.value)
 			},
-		}
+		},
 	}		
 	return actions
 }

@@ -1,17 +1,17 @@
 import { runEntrypoint, InstanceBase, InstanceStatus, SomeCompanionConfigField, InputValue } from '@companion-module/base'
 import * as io from 'socket.io-client'
-import { getActionDefinitions } from './actions.js'
-import { setVariables } from './variables.js'
-import { getFeedbackDefinitions } from './feedback.js'
-import { getPresetsDefentions } from './presets.js'
-import { toReadableTime } from './utilities.js'
-import { OntimeConfig, GetConfigFields } from './config.js'
+import { getActionDefinitions } from './actions'
+import { setVariables } from './variables'
+import { GetFeedbacks } from './feedback'
+import { GetPresetList } from './presets'
+import { toReadableTime } from './utilities'
+import { OntimeConfig, GetConfigFields } from './config'
 
 export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 
 	public config!: OntimeConfig
 	public states! :any
-	public socket: io.Socket | null| undefined
+	public socket!: io.Socket
 
 	async init(config: OntimeConfig):Promise<void> {
 		this.log('debug', 'Initializing module')
@@ -33,7 +33,6 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 			this.socket.disconnect()
 			this.socket.close()
 		}
-		this.socket = null
 		this.updateStatus(InstanceStatus.Disconnected)
 		this.log('debug', 'destroy ' + this.id)
 	}
@@ -184,12 +183,12 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 
 	init_feedbacks() {
 		this.log('debug', 'Initializing feedbacks')
-		this.setFeedbackDefinitions(getFeedbackDefinitions(this))
+		this.setFeedbackDefinitions(GetFeedbacks(this))
 	}
 
 	init_presets() {
 		this.log('debug', 'Initializing presets')
-		this.setPresetDefinitions(getPresetsDefentions())
+		this.setPresetDefinitions(GetPresetList(this))
 	}
 
 	sendcmd(cmd:string, opt?:InputValue) {

@@ -1,8 +1,8 @@
-import { CompanionButtonPresetDefinition, CompanionPresetDefinitions, InstanceBase, combineRgb } from '@companion-module/base'
+import { CompanionButtonPresetDefinition, CompanionPresetDefinitions, combineRgb } from '@companion-module/base'
 import * as icons from './assets/icons'
-import { OntimeConfig } from './config'
+import { OnTimeInstance } from './index'
 
-export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionPresetDefinitions {
+export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinitions {
 	const presets:{[id: string]: CompanionButtonPresetDefinition | undefined }= {}
 
 	presets['start_selected_event'] = {
@@ -23,6 +23,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 				down: [
 					{
 						actionId: 'start',
+						options: {},
 					},
 				],
 				up : [],
@@ -48,8 +49,10 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 				down: [
 					{
 						actionId: 'pause',
+						options: {},
 					},
 				],
+				up : [],
 			},
 		],
 		feedbacks: [],
@@ -72,8 +75,10 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 				down: [
 					{
 						actionId: 'stop',
+						options: {},
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -96,8 +101,10 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 				down: [
 					{
 						actionId: 'reload',
+						options: {},
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -120,8 +127,10 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 				down: [
 					{
 						actionId: 'previous',
+						options: {},
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -144,8 +153,10 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 				down: [
 					{
 						actionId: 'next',
+						options: {},
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -168,8 +179,10 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 				down: [
 					{
 						actionId: 'roll',
+						options: {},
 					},
 				],
+				up:	[],
 			},
 		],
 		feedbacks: [],
@@ -178,6 +191,9 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 		type: 'button',
 		category: 'Commands',
 		name: 'Toggle On Air state',
+		options: {
+			stepAutoProgress: false,
+		},
 		style: {
 			png64: icons.OnAir,
 			pngalignment: 'center:top',
@@ -186,7 +202,6 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 			size: '7',
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),
-			latch: true,
 		},
 		steps: [
 			{
@@ -196,9 +211,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 						options: { value: true },
 					},
 				],
-			},
-			{
-				down: [
+				up: [
 					{
 						actionId: 'setOnAir',
 						options: { value: false },
@@ -209,6 +222,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 		feedbacks: [
 			{
 				feedbackId: 'onAir',
+				options: {},
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(255, 0, 0),
@@ -221,7 +235,6 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 		category: 'Commands',
 		name: 'Adds 1 min to running event',
 		style: {
-			style: 'text',
 			text: '+1 MIN',
 			size: '18',
 			color: combineRgb(221, 107, 32),
@@ -235,6 +248,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 						options: { value: 1 },
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -244,7 +258,6 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 		category: 'Commands',
 		name: 'Adds 5 min to running event',
 		style: {
-			style: 'text',
 			text: '+5 MIN',
 			size: '18',
 			color: combineRgb(221, 107, 32),
@@ -258,6 +271,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 						options: { value: 5 },
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -267,7 +281,6 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 		category: 'Commands',
 		name: 'Subtracts 1 min from running event',
 		style: {
-			style: 'text',
 			text: '-1 MIN',
 			size: '18',
 			color: combineRgb(221, 107, 32),
@@ -281,6 +294,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 						options: { value: -1 },
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -290,7 +304,6 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 		category: 'Commands',
 		name: 'Subtracts 5 min from running event',
 		style: {
-			style: 'text',
 			text: '-5 MIN',
 			size: '18',
 			color: combineRgb(221, 107, 32),
@@ -304,6 +317,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 						options: { value: -5 },
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -312,6 +326,9 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 		type: 'button',
 		category: 'Commands',
 		name: 'Toggle visibility of Speaker message',
+		options: {
+			stepAutoProgress: false,
+		},
 		style: {
 			png64: icons.MessageSpeaker,
 			pngalignment: 'center:top',
@@ -329,9 +346,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 						options: { value: true },
 					},
 				],
-			},
-			{
-				down: [
+				up: [
 					{
 						actionId: 'setSpeakerMessageVisibility',
 						options: { value: false },
@@ -345,6 +360,9 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 		type: 'button',
 		category: 'Commands',
 		name: 'Toggle visibility of Public screens message',
+		options: {
+			stepAutoProgress: false,
+		},
 		style: {
 			png64: icons.MessagePublic,
 			pngalignment: 'center:top',
@@ -362,9 +380,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 						options: { value: true },
 					},
 				],
-			},
-			{
-				down: [
+				up: [
 					{
 						actionId: 'setPublicMessageVisibility',
 						options: { value: false },
@@ -378,6 +394,9 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 		type: 'button',
 		category: 'Commands',
 		name: 'Toggle visibility of Lower Third message',
+		options: {
+			stepAutoProgress: false,
+		},
 		style: {
 			png64: icons.MessageLower,
 			pngalignment: 'center:top',
@@ -395,9 +414,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 						options: { value: true },
 					},
 				],
-			},
-			{
-				down: [
+				up: [
 					{
 						actionId: 'setLowerMessageVisibility',
 						options: { value: false },
@@ -425,6 +442,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_paused',
@@ -432,6 +450,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_stopped',
@@ -439,6 +458,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_roll',
@@ -446,6 +466,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'timer_negative',
@@ -453,6 +474,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(255, 0, 0),
 				},
+				options: {},
 			},
 		],
 	}
@@ -461,7 +483,6 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 		category: 'Display',
 		name: 'Hours:Minutes',
 		style: {
-			style: 'text',
 			text: '$(timer:time_hm)',
 			size: '24',
 			color: combineRgb(255, 255, 255),
@@ -475,6 +496,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_paused',
@@ -482,6 +504,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_stopped',
@@ -489,6 +512,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_roll',
@@ -496,6 +520,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'timer_negative',
@@ -503,6 +528,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(255, 0, 0),
 				},
+				options: {},
 			},
 		],
 	}
@@ -511,8 +537,8 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 		category: 'Display',
 		name: 'Hours',
 		style: {
-			style: 'text',
 			text: '$(timer:time_h)',
+			size: '24',
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),
 		},
@@ -524,6 +550,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_paused',
@@ -531,6 +558,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_stopped',
@@ -538,6 +566,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_roll',
@@ -545,6 +574,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'timer_negative',
@@ -552,6 +582,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(255, 0, 0),
 				},
+				options: {},
 			},
 		],
 	}
@@ -560,8 +591,8 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 		category: 'Display',
 		name: 'Minutes',
 		style: {
-			style: 'text',
 			text: '$(timer:time_m)',
+			size: '24',
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),
 		},
@@ -573,6 +604,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_paused',
@@ -580,6 +612,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_stopped',
@@ -587,6 +620,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_roll',
@@ -594,6 +628,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'timer_negative',
@@ -601,6 +636,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(255, 0, 0),
 				},
+				options: {},
 			},
 		],
 	}
@@ -609,8 +645,8 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 		category: 'Display',
 		name: 'Seconds',
 		style: {
-			style: 'text',
 			text: '$(timer:time_s)',
+			size: '24',
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),
 		},
@@ -622,6 +658,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_paused',
@@ -629,6 +666,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_stopped',
@@ -636,6 +674,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_roll',
@@ -643,6 +682,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'timer_negative',
@@ -650,6 +690,7 @@ export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionP
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(255, 0, 0),
 				},
+				options: {},
 			},
 		],
 	}
