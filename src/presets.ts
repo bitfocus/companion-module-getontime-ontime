@@ -3,7 +3,7 @@ import * as icons from './assets/icons'
 import { OnTimeInstance } from './index'
 
 export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinitions {
-	const presets:{[id: string]: CompanionButtonPresetDefinition | undefined }= {}
+	const presets: { [id: string]: CompanionButtonPresetDefinition | undefined } = {}
 
 	presets['start_selected_event'] = {
 		type: 'button',
@@ -26,7 +26,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 						options: {},
 					},
 				],
-				up : [],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -52,7 +52,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 						options: {},
 					},
 				],
-				up : [],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -182,7 +182,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 						options: {},
 					},
 				],
-				up:	[],
+				up: [],
 			},
 		],
 		feedbacks: [],

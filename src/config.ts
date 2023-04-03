@@ -5,7 +5,7 @@ export interface OntimeConfig {
 	port: string
 }
 
-export function GetConfigFields():SomeCompanionConfigField[] {
+export function GetConfigFields(): SomeCompanionConfigField[] {
 	return [
 		{
 			label: 'Information',

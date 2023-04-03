@@ -1,4 +1,10 @@
-import { runEntrypoint, InstanceBase, InstanceStatus, SomeCompanionConfigField, InputValue } from '@companion-module/base'
+import {
+	runEntrypoint,
+	InstanceBase,
+	InstanceStatus,
+	SomeCompanionConfigField,
+	InputValue,
+} from '@companion-module/base'
 import * as io from 'socket.io-client'
 import { getActionDefinitions } from './actions'
 import { setVariables } from './variables'
@@ -8,12 +14,11 @@ import { toReadableTime } from './utilities'
 import { OntimeConfig, GetConfigFields } from './config'
 
 export class OnTimeInstance extends InstanceBase<OntimeConfig> {
-
 	public config!: OntimeConfig
-	public states! :any
+	public states!: any
 	public socket!: io.Socket
 
-	async init(config: OntimeConfig):Promise<void> {
+	async init(config: OntimeConfig): Promise<void> {
 		this.log('debug', 'Initializing module')
 		this.updateStatus(InstanceStatus.Disconnected)
 
@@ -191,7 +196,7 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 		this.setPresetDefinitions(GetPresetList(this))
 	}
 
-	sendcmd(cmd:string, opt?:InputValue) {
+	sendcmd(cmd: string, opt?: InputValue) {
 		this.log('debug', 'Sending command: ' + cmd + ', ' + opt)
 		this.socket.emit(cmd, opt)
 	}

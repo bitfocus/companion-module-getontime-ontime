@@ -263,6 +263,6 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				self.sendcmd('set-lower-message-text', action.options.value)
 			},
 		},
-	}		
+	}
 	return actions
 }

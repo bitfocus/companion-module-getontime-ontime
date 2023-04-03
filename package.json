@@ -16,6 +16,8 @@
 		"build:main": "tsc -p tsconfig.build.json",
 		"build:watch": "tsc -p tsconfig.build.json --watch",
 		"lint": "eslint ./src --ext .ts",
+		"lint:raw": "eslint --ext .ts --ext .js --ignore-pattern dist --ignore-pattern pkg",
+		"format": "prettier -w .",
 		"postinstall": "yarn build"
 	},
 	"engines": {
