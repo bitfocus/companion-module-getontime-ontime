@@ -1,21 +1,24 @@
-import { runEntrypoint, InstanceBase, Regex } from '@companion-module/base'
+import { runEntrypoint, InstanceBase, InstanceStatus, SomeCompanionConfigField, InputValue } from '@companion-module/base'
 import * as io from 'socket.io-client'
 import { getActionDefinitions } from './actions.js'
 import { setVariables } from './variables.js'
 import { getFeedbackDefinitions } from './feedback.js'
 import { getPresetsDefentions } from './presets.js'
 import { toReadableTime } from './utilities.js'
-import { ConfigFields } from './config.js'
-let socket = null
-class OnTimeInstance extends InstanceBase {
-	async init(config) {
-		this.config = config
+import { OntimeConfig, GetConfigFields } from './config.js'
 
-		this.states = {}
+export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 
+	public config!: OntimeConfig
+	public states! :any
+	public socket: io.Socket | null| undefined
+
+	async init(config: OntimeConfig):Promise<void> {
 		this.log('debug', 'Initializing module')
+		this.updateStatus(InstanceStatus.Disconnected)
 
-		this.updateStatus('connecting')
+		this.config = config
+		this.states = {}
 
 		this.initConnection()
 		this.init_actions()
@@ -26,18 +29,22 @@ class OnTimeInstance extends InstanceBase {
 	}
 
 	async destroy() {
-		if (socket) {
-			socket.disconnect()
-			socket.close()
+		if (this.socket) {
+			this.socket.disconnect()
+			this.socket.close()
 		}
-		socket = null
-		this.updateStatus('disconnected')
+		this.socket = null
+		this.updateStatus(InstanceStatus.Disconnected)
 		this.log('debug', 'destroy ' + this.id)
 	}
 
-	async configUpdated(config) {
+	getConfigFields(): SomeCompanionConfigField[] {
+		return GetConfigFields()
+	}
+
+	async configUpdated(config: OntimeConfig) {
 		this.config = config
-		this.updateStatus('connecting')
+		this.updateStatus(InstanceStatus.Disconnected)
 
 		this.initConnection()
 		this.init_actions()
@@ -47,14 +54,10 @@ class OnTimeInstance extends InstanceBase {
 		this.checkFeedbacks()
 	}
 
-	getConfigFields() {
-		return ConfigFields
-	}
-
 	initConnection() {
 		this.log('debug', 'Initializing connection')
 
-		socket = io.connect(`http://${this.config.host}:${this.config.port}`, {
+		this.socket = io.connect(`http://${this.config.host}:${this.config.port}`, {
 			reconnection: true,
 			reconnectionDelay: 1000,
 			reconnectionDelayMax: 5000,
@@ -62,52 +65,52 @@ class OnTimeInstance extends InstanceBase {
 			transports: ['websocket'],
 		})
 
-		socket.on('connect', () => {
-			this.updateStatus('ok')
+		this.socket.on('connect', () => {
+			this.updateStatus(InstanceStatus.Ok)
 			this.log('debug', 'Socket connected')
 		})
 
-		socket.on('disconnect', () => {
-			this.updateStatus('disconnected')
+		this.socket.on('disconnect', () => {
+			this.updateStatus(InstanceStatus.Disconnected, 'Disconnected')
 			this.log('debug', 'Socket disconnected')
 		})
 
-		socket.on('connect_error', () => {
-			this.updateStatus('connection_failure', 'Connect error')
+		this.socket.on('connect_error', () => {
+			this.updateStatus(InstanceStatus.ConnectionFailure, 'Connection error')
 			this.log('debug', 'Socket connect error')
 		})
 
-		socket.on('error', () => {
-			this.updateStatus('unknown_error', 'Error')
+		this.socket.on('error', () => {
+			this.updateStatus(InstanceStatus.UnknownError, 'Error')
 			this.log('debug', 'Socket error')
 		})
 
-		socket.on('reconnect', () => {
-			this.updateStatus('ok')
+		this.socket.on('reconnect', () => {
+			this.updateStatus(InstanceStatus.Ok, 'Reconnected')
 			this.log('debug', 'Socket reconnected')
 		})
 
-		socket.on('reconnect_attempt', () => {
-			this.updateStatus('disconnected', 'Reconnecting')
+		this.socket.on('reconnect_attempt', () => {
+			this.updateStatus(InstanceStatus.Connecting, 'Reconnecting')
 			this.log('debug', 'Socket reconnecting')
 		})
 
-		socket.on('reconnecting', () => {
-			this.updateStatus('disconnected', 'Reconnecting')
+		this.socket.on('reconnecting', () => {
+			this.updateStatus(InstanceStatus.Connecting, 'Reconnecting')
 			this.log('debug', 'Socket reconnecting')
 		})
 
-		socket.on('reconnect_error', () => {
-			this.updateStatus('connection_failure', 'Reconnect error')
+		this.socket.on('reconnect_error', () => {
+			this.updateStatus(InstanceStatus.ConnectionFailure, 'Reconnect error')
 			this.log('debug', 'Socket reconnect error')
 		})
 
-		socket.on('reconnect_failed', () => {
-			this.updateStatus('connection_failure', 'Reconnect failed')
+		this.socket.on('reconnect_failed', () => {
+			this.updateStatus(InstanceStatus.ConnectionFailure, 'Reconnect failed')
 			this.log('debug', 'Socket reconnect failed')
 		})
 
-		socket.on('timer', (data) => {
+		this.socket.on('timer', (data) => {
 			this.states = data
 
 			let timer = toReadableTime(this.states.running, 's')
@@ -138,7 +141,7 @@ class OnTimeInstance extends InstanceBase {
 			this.checkFeedbacks('timer_negative')
 		})
 
-		socket.on('playstate', (data) => {
+		this.socket.on('playstate', (data) => {
 			this.states.playstate = data
 			this.setVariableValues({
 				playstate: data,
@@ -146,7 +149,7 @@ class OnTimeInstance extends InstanceBase {
 			this.checkFeedbacks('state_color_running', 'state_color_paused', 'state_color_stopped', 'state_color_roll')
 		})
 
-		socket.on('titles', (data) => {
+		this.socket.on('titles', (data) => {
 			this.states.titles = data
 			this.setVariableValues({
 				titleNow: this.states.titles.titleNow,
@@ -160,7 +163,7 @@ class OnTimeInstance extends InstanceBase {
 			})
 		})
 
-		socket.on('onAir', (data) => {
+		this.socket.on('onAir', (data) => {
 			this.states.onAir = data
 			this.setVariableValues({
 				onAir: this.states.onAir,
@@ -186,12 +189,12 @@ class OnTimeInstance extends InstanceBase {
 
 	init_presets() {
 		this.log('debug', 'Initializing presets')
-		this.setPresetDefinitions(getPresetsDefentions(this))
+		this.setPresetDefinitions(getPresetsDefentions())
 	}
 
-	sendcmd(cmd, opt) {
+	sendcmd(cmd:string, opt?:InputValue) {
 		this.log('debug', 'Sending command: ' + cmd + ', ' + opt)
-		socket.emit(cmd, opt)
+		this.socket.emit(cmd, opt)
 	}
 }
 

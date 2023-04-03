@@ -1,8 +1,9 @@
-import { combineRgb } from '@companion-module/base'
-import * as icons from './assets/icons.js'
+import { CompanionButtonPresetDefinition, CompanionPresetDefinitions, InstanceBase, combineRgb } from '@companion-module/base'
+import * as icons from './assets/icons'
+import { OntimeConfig } from './config'
 
-export function getPresetsDefentions(self) {
-	const presets = {}
+export function GetPresetList(_instance: InstanceBase<OntimeConfig>): CompanionPresetDefinitions {
+	const presets:{[id: string]: CompanionButtonPresetDefinition | undefined }= {}
 
 	presets['start_selected_event'] = {
 		type: 'button',
@@ -24,6 +25,7 @@ export function getPresetsDefentions(self) {
 						actionId: 'start',
 					},
 				],
+				up : [],
 			},
 		],
 		feedbacks: [],

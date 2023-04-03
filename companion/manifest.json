@@ -21,7 +21,7 @@
 		"type": "node18",
 		"api": "nodejs-ipc",
 		"apiVersion": "0.0.0",
-		"entrypoint": "../src/index.js"
+		"entrypoint": "../dist/index.js"
 	},
 	"manufacturer": "GetOntime",
 	"products": ["Ontime"],

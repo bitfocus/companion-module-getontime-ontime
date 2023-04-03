@@ -3,7 +3,7 @@
  * @return {string} - padded number
  */
 
-function padTo2Digits(number) {
+function padTo2Digits(number:Number) {
 	return number.toString().padStart(2, '0')
 }
 
@@ -21,7 +21,7 @@ function padTo2Digits(number) {
  * @return {ReadableTime} - object with hours, minutes and seconds
  */
 
-export function toReadableTime(time, format = 'ms') {
+export function toReadableTime(time:number, format:string = 'ms') {
 	let negative = false
 	time = Number(time)
 	if (time < 0) {
@@ -35,13 +35,13 @@ export function toReadableTime(time, format = 'ms') {
 		time = time * 1000
 	}
 
-	let seconds = Math.floor(time / 1000)
-	let minutes = Math.floor(seconds / 60)
-	let hours = Math.floor(minutes / 60)
+	const s = Math.floor(time / 1000)
+	const m = Math.floor(s / 60)
+	const h = Math.floor(m / 60)
 
-	seconds = padTo2Digits(seconds % 60)
-	minutes = padTo2Digits(minutes % 60)
-	hours = padTo2Digits(hours % 24)
+	const seconds = padTo2Digits(s % 60)
+	const minutes = padTo2Digits(m % 60)
+	let hours = padTo2Digits(h % 24)
 
 	if (negative) {
 		hours = '-' + hours
