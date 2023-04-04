@@ -176,27 +176,27 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 		})
 	}
 
-	init_actions() {
+	init_actions(): void {
 		this.log('debug', 'Initializing actions')
 		this.setActionDefinitions(getActionDefinitions(this))
 	}
 
-	init_variables() {
+	init_variables(): void {
 		this.log('debug', 'Initializing variables')
 		this.setVariableDefinitions(setVariables())
 	}
 
-	init_feedbacks() {
+	init_feedbacks(): void {
 		this.log('debug', 'Initializing feedbacks')
 		this.setFeedbackDefinitions(GetFeedbacks(this))
 	}
 
-	init_presets() {
+	init_presets(): void {
 		this.log('debug', 'Initializing presets')
 		this.setPresetDefinitions(GetPresetList(this))
 	}
 
-	sendcmd(cmd: string, opt?: InputValue) {
+	sendcmd(cmd: string, opt?: InputValue): void {
 		this.log('debug', 'Sending command: ' + cmd + ', ' + opt)
 		this.socket.emit(cmd, opt)
 	}
