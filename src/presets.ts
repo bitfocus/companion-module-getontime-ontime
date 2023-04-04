@@ -192,7 +192,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 		category: 'Commands',
 		name: 'Toggle On Air state',
 		options: {
-			stepAutoProgress: false,
+			stepAutoProgress: true,
 		},
 		style: {
 			png64: icons.OnAir,
@@ -211,12 +211,16 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 						options: { value: true },
 					},
 				],
-				up: [
+				up: [],
+			},
+			{
+				down: [
 					{
 						actionId: 'setOnAir',
 						options: { value: false },
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [
@@ -327,7 +331,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 		category: 'Commands',
 		name: 'Toggle visibility of Speaker message',
 		options: {
-			stepAutoProgress: false,
+			stepAutoProgress: true,
 		},
 		style: {
 			png64: icons.MessageSpeaker,
@@ -346,12 +350,16 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 						options: { value: true },
 					},
 				],
-				up: [
+				up: [],
+			},
+			{
+				down: [
 					{
 						actionId: 'setSpeakerMessageVisibility',
 						options: { value: false },
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -361,7 +369,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 		category: 'Commands',
 		name: 'Toggle visibility of Public screens message',
 		options: {
-			stepAutoProgress: false,
+			stepAutoProgress: true,
 		},
 		style: {
 			png64: icons.MessagePublic,
@@ -380,12 +388,16 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 						options: { value: true },
 					},
 				],
-				up: [
+				up: [],
+			},
+			{
+				down: [
 					{
 						actionId: 'setPublicMessageVisibility',
 						options: { value: false },
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -395,7 +407,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 		category: 'Commands',
 		name: 'Toggle visibility of Lower Third message',
 		options: {
-			stepAutoProgress: false,
+			stepAutoProgress: true,
 		},
 		style: {
 			png64: icons.MessageLower,
@@ -414,12 +426,16 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 						options: { value: true },
 					},
 				],
-				up: [
+				up: [],
+			},
+			{
+				down: [
 					{
 						actionId: 'setLowerMessageVisibility',
 						options: { value: false },
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -427,10 +443,10 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 	presets['display_timer_hhmmss'] = {
 		type: 'button',
 		category: 'Display',
-		name: 'Time',
+		name: 'Hours:Minutes:Seconds',
 		style: {
 			text: '$(timer:time)',
-			size: '18',
+			size: '14',
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),
 		},
@@ -538,7 +554,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 		name: 'Hours',
 		style: {
 			text: '$(timer:time_h)',
-			size: '24',
+			size: '44',
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),
 		},
@@ -592,7 +608,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 		name: 'Minutes',
 		style: {
 			text: '$(timer:time_m)',
-			size: '24',
+			size: '44',
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),
 		},
@@ -646,7 +662,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 		name: 'Seconds',
 		style: {
 			text: '$(timer:time_s)',
-			size: '24',
+			size: '44',
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),
 		},

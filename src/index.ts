@@ -33,7 +33,7 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 		this.checkFeedbacks()
 	}
 
-	async destroy() {
+	async destroy(): Promise<void> {
 		if (this.socket) {
 			this.socket.disconnect()
 			this.socket.close()
@@ -46,7 +46,7 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 		return GetConfigFields()
 	}
 
-	async configUpdated(config: OntimeConfig) {
+	async configUpdated(config: OntimeConfig): Promise<void> {
 		this.config = config
 		this.updateStatus(InstanceStatus.Disconnected)
 
@@ -58,7 +58,7 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 		this.checkFeedbacks()
 	}
 
-	initConnection() {
+	initConnection(): void {
 		this.log('debug', 'Initializing connection')
 
 		this.socket = io.connect(`http://${this.config.host}:${this.config.port}`, {
@@ -117,7 +117,7 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 		this.socket.on('timer', (data) => {
 			this.states = data
 
-			let timer = toReadableTime(this.states.running, 's')
+			const timer = toReadableTime(this.states.running, 's')
 			this.log('debug', 'running: ' + this.states.running)
 			this.setVariableValues({
 				time: timer.hours + ':' + timer.minutes + ':' + timer.seconds,
@@ -127,17 +127,17 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 				time_s: timer.seconds,
 			})
 
-			let clock = toReadableTime(this.states.clock)
+			const clock = toReadableTime(this.states.clock)
 			this.setVariableValues({
 				clock: clock.hours + ':' + clock.minutes + ':' + clock.seconds,
 			})
 
-			let timer_start = toReadableTime(this.states.startedAt)
+			const timer_start = toReadableTime(this.states.startedAt)
 			this.setVariableValues({
 				timer_start: timer_start.hours + ':' + timer_start.minutes + ':' + timer_start.seconds,
 			})
 
-			let timer_finish = toReadableTime(this.states.expectedFinish)
+			const timer_finish = toReadableTime(this.states.expectedFinish)
 			this.setVariableValues({
 				timer_finish: timer_finish.hours + ':' + timer_finish.minutes + ':' + timer_finish.seconds,
 			})

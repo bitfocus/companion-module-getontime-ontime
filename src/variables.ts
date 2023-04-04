@@ -1,5 +1,7 @@
-export function setVariables() {
-	const variables = [
+import { CompanionVariableDefinition } from '@companion-module/base'
+
+export function setVariables(): CompanionVariableDefinition[] {
+	const variables: CompanionVariableDefinition[] = [
 		{
 			name: 'State of event (Running, Paused, Stopped, Roll)',
 			variableId: 'playstate',

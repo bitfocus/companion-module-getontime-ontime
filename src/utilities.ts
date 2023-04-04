@@ -3,7 +3,7 @@
  * @return {string} - padded number
  */
 
-function padTo2Digits(number: Number) {
+function padTo2Digits(number: number) {
 	return number.toString().padStart(2, '0')
 }
 
@@ -21,7 +21,13 @@ function padTo2Digits(number: Number) {
  * @return {ReadableTime} - object with hours, minutes and seconds
  */
 
-export function toReadableTime(time: number, format: string = 'ms') {
+interface ReadableTime {
+	hours: string
+	minutes: string
+	seconds: string
+}
+
+export function toReadableTime(time: number, format = 'ms'): ReadableTime {
 	let negative = false
 	time = Number(time)
 	if (time < 0) {
