@@ -66,7 +66,7 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 			this.socket.close()
 		}
 
-		const pattern = /^((http|https):\/\/)/;
+		const pattern = /^((http|https):\/\/)/
 
 		if (!pattern.test(this.config.host)) {
 			this.config.host = 'http://' + this.config.host
