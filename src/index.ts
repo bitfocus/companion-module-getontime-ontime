@@ -61,7 +61,18 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 	initConnection(): void {
 		this.log('debug', 'Initializing connection')
 
-		this.socket = io.connect(`http://${this.config.host}:${this.config.port}`, {
+		if (this.socket) {
+			this.socket.disconnect()
+			this.socket.close()
+		}
+
+		const pattern = /^((http|https):\/\/)/;
+
+		if (!pattern.test(this.config.host)) {
+			this.config.host = 'http://' + this.config.host
+		}
+
+		this.socket = io.connect(`${this.config.host}:${this.config.port}`, {
 			reconnection: true,
 			reconnectionDelay: 1000,
 			reconnectionDelayMax: 5000,
