@@ -13,7 +13,7 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 			bgcolor: combineRgb(0, 204, 0),
 		},
 		options: [],
-		callback: (_feedback) => {
+		callback: () => {
 			if (self.states.playstate == 'start') {
 				return true
 			} else {
@@ -30,7 +30,7 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 			bgcolor: combineRgb(237, 137, 54),
 		},
 		options: [],
-		callback: (_feedback) => {
+		callback: () => {
 			if (self.states.playstate == 'pause') {
 				return true
 			} else {
@@ -47,7 +47,7 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 			bgcolor: combineRgb(0, 0, 0),
 		},
 		options: [],
-		callback: (_feedback) => {
+		callback: () => {
 			if (self.states.playstate == 'stop') {
 				return true
 			} else {
@@ -64,7 +64,7 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 			bgcolor: combineRgb(43, 108, 176),
 		},
 		options: [],
-		callback: (_feedback) => {
+		callback: () => {
 			if (self.states.playstate == 'roll') {
 				return true
 			} else {
@@ -81,7 +81,7 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 			bgcolor: combineRgb(255, 0, 0),
 		},
 		options: [],
-		callback: (_feedback) => {
+		callback: () => {
 			if (self.states.isNegative) {
 				return true
 			} else {
@@ -98,7 +98,7 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 			bgcolor: combineRgb(255, 0, 0),
 		},
 		options: [],
-		callback: (_feedback) => {
+		callback: () => {
 			if (self.states.onAir) {
 				return true
 			} else {
