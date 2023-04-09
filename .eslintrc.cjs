@@ -12,7 +12,7 @@ module.exports = {
 				'@typescript-eslint/ban-ts-ignore': 'off',
 				'@typescript-eslint/explicit-function-return-type': 'off',
 				'@typescript-eslint/no-explicit-any': 'off',
-				'prettier/prettier': ['warn', { endOfLine: 'lf' }],
+				'prettier/prettier': ['warn', { endOfLine: 'auto' }],
 			},
 		},
 	],

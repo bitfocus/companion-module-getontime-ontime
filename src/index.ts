@@ -1,22 +1,20 @@
-import {
-	runEntrypoint,
-	InstanceBase,
-	InstanceStatus,
-	SomeCompanionConfigField,
-	InputValue,
-} from '@companion-module/base'
-import * as io from 'socket.io-client'
-import { getActionDefinitions } from './actions'
-import { setVariables } from './variables'
-import { GetFeedbacks } from './feedback'
-import { GetPresetList } from './presets'
-import { toReadableTime } from './utilities'
+import { runEntrypoint, InstanceBase, InstanceStatus, SomeCompanionConfigField } from '@companion-module/base'
 import { OntimeConfig, GetConfigFields } from './config'
+import * as connection_v1 from './v1/connection'
+import * as connection_v2 from './v2/connection'
+import * as actions_v1 from './v1/actions'
+import * as actions_v2 from './v2/actions'
+import * as feedbacks_v1 from './v1/feedback'
+import * as feedbacks_v2 from './v2/feedback'
+import * as presets_v1 from './v1/presets'
+import * as presets_v2 from './v2/presets'
+import * as variables_v1 from './v1/variables'
+import * as variables_v2 from './v2/variables'
 
 export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 	public config!: OntimeConfig
 	public states!: any
-	public socket!: io.Socket
+	public events: Array<any> = [{ id: 'noEvents', label: 'No events found' }]
 
 	async init(config: OntimeConfig): Promise<void> {
 		this.log('debug', 'Initializing module')
@@ -25,7 +23,7 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 		this.config = config
 		this.states = {}
 
-		this.initConnection()
+		await this.initConnection()
 		this.init_actions()
 		this.init_variables()
 		this.init_feedbacks()
@@ -34,9 +32,10 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 	}
 
 	async destroy(): Promise<void> {
-		if (this.socket) {
-			this.socket.disconnect()
-			this.socket.close()
+		if (this.config.version === 'v1') {
+			connection_v1.disconnectSocket()
+		} else if (this.config.version === 'v2') {
+			connection_v2.disconnectSocket()
 		}
 		this.updateStatus(InstanceStatus.Disconnected)
 		this.log('debug', 'destroy ' + this.id)
@@ -47,10 +46,15 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 	}
 
 	async configUpdated(config: OntimeConfig): Promise<void> {
-		this.config = config
+		if (this.config.version === 'v1') {
+			connection_v1.disconnectSocket()
+		} else if (this.config.version === 'v2') {
+			connection_v2.disconnectSocket()
+		}
 		this.updateStatus(InstanceStatus.Disconnected)
+		this.config = config
 
-		this.initConnection()
+		await this.initConnection()
 		this.init_actions()
 		this.init_variables()
 		this.init_feedbacks()
@@ -58,158 +62,50 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 		this.checkFeedbacks()
 	}
 
-	initConnection(): void {
+	async initConnection(): Promise<void> {
 		this.log('debug', 'Initializing connection')
-
-		if (this.socket) {
-			this.socket.disconnect()
-			this.socket.close()
+		if (this.config.version === 'v1') {
+			connection_v1.connect(this)
+		} else if (this.config.version === 'v2') {
+			connection_v2.connect(this)
+			await connection_v2.initEvents(this)
 		}
-
-		const pattern = /^((http|https):\/\/)/
-
-		if (!pattern.test(this.config.host)) {
-			this.config.host = 'http://' + this.config.host
-		}
-
-		this.socket = io.connect(`${this.config.host}:${this.config.port}`, {
-			reconnection: true,
-			reconnectionDelay: 1000,
-			reconnectionDelayMax: 5000,
-			reconnectionAttempts: 99999,
-			transports: ['websocket'],
-		})
-
-		this.socket.on('connect', () => {
-			this.updateStatus(InstanceStatus.Ok)
-			this.log('debug', 'Socket connected')
-		})
-
-		this.socket.on('disconnect', () => {
-			this.updateStatus(InstanceStatus.Disconnected, 'Disconnected')
-			this.log('debug', 'Socket disconnected')
-		})
-
-		this.socket.on('connect_error', () => {
-			this.updateStatus(InstanceStatus.ConnectionFailure, 'Connection error')
-			this.log('debug', 'Socket connect error')
-		})
-
-		this.socket.on('error', () => {
-			this.updateStatus(InstanceStatus.UnknownError, 'Error')
-			this.log('debug', 'Socket error')
-		})
-
-		this.socket.on('reconnect', () => {
-			this.updateStatus(InstanceStatus.Ok, 'Reconnected')
-			this.log('debug', 'Socket reconnected')
-		})
-
-		this.socket.on('reconnect_attempt', () => {
-			this.updateStatus(InstanceStatus.Connecting, 'Reconnecting')
-			this.log('debug', 'Socket reconnecting')
-		})
-
-		this.socket.on('reconnecting', () => {
-			this.updateStatus(InstanceStatus.Connecting, 'Reconnecting')
-			this.log('debug', 'Socket reconnecting')
-		})
-
-		this.socket.on('reconnect_error', () => {
-			this.updateStatus(InstanceStatus.ConnectionFailure, 'Reconnect error')
-			this.log('debug', 'Socket reconnect error')
-		})
-
-		this.socket.on('reconnect_failed', () => {
-			this.updateStatus(InstanceStatus.ConnectionFailure, 'Reconnect failed')
-			this.log('debug', 'Socket reconnect failed')
-		})
-
-		this.socket.on('timer', (data) => {
-			this.states = data
-
-			const timer = toReadableTime(this.states.running, 's')
-			this.log('debug', 'running: ' + this.states.running)
-			this.setVariableValues({
-				time: timer.hours + ':' + timer.minutes + ':' + timer.seconds,
-				time_hm: timer.hours + ':' + timer.minutes,
-				time_h: timer.hours,
-				time_m: timer.minutes,
-				time_s: timer.seconds,
-			})
-
-			const clock = toReadableTime(this.states.clock)
-			this.setVariableValues({
-				clock: clock.hours + ':' + clock.minutes + ':' + clock.seconds,
-			})
-
-			const timer_start = toReadableTime(this.states.startedAt)
-			this.setVariableValues({
-				timer_start: timer_start.hours + ':' + timer_start.minutes + ':' + timer_start.seconds,
-			})
-
-			const timer_finish = toReadableTime(this.states.expectedFinish)
-			this.setVariableValues({
-				timer_finish: timer_finish.hours + ':' + timer_finish.minutes + ':' + timer_finish.seconds,
-			})
-
-			this.checkFeedbacks('timer_negative')
-		})
-
-		this.socket.on('playstate', (data) => {
-			this.states.playstate = data
-			this.setVariableValues({
-				playstate: data,
-			})
-			this.checkFeedbacks('state_color_running', 'state_color_paused', 'state_color_stopped', 'state_color_roll')
-		})
-
-		this.socket.on('titles', (data) => {
-			this.states.titles = data
-			this.setVariableValues({
-				titleNow: this.states.titles.titleNow,
-				subtitleNow: this.states.titles.subtitleNow,
-				speakerNow: this.states.titles.presenterNow,
-				noteNow: this.states.titles.noteNow,
-				titleNext: this.states.titles.titleNext,
-				subtitleNext: this.states.titles.subtitleNext,
-				speakerNext: this.states.titles.presenterNext,
-				noteNext: this.states.titles.noteNext,
-			})
-		})
-
-		this.socket.on('onAir', (data) => {
-			this.states.onAir = data
-			this.setVariableValues({
-				onAir: this.states.onAir,
-			})
-			this.checkFeedbacks('onAir')
-		})
 	}
 
 	init_actions(): void {
 		this.log('debug', 'Initializing actions')
-		this.setActionDefinitions(getActionDefinitions(this))
+		if (this.config.version === 'v1') {
+			this.setActionDefinitions(actions_v1.getActions(this))
+		} else if (this.config.version === 'v2') {
+			this.setActionDefinitions(actions_v2.getActions(this))
+		}
 	}
 
 	init_variables(): void {
 		this.log('debug', 'Initializing variables')
-		this.setVariableDefinitions(setVariables())
+		if (this.config.version === 'v1') {
+			this.setVariableDefinitions(variables_v1.setVariables())
+		} else if (this.config.version === 'v2') {
+			this.setVariableDefinitions(variables_v2.setVariables())
+		}
 	}
 
 	init_feedbacks(): void {
 		this.log('debug', 'Initializing feedbacks')
-		this.setFeedbackDefinitions(GetFeedbacks(this))
+		if (this.config.version === 'v1') {
+			this.setFeedbackDefinitions(feedbacks_v1.GetFeedbacks(this))
+		} else if (this.config.version === 'v2') {
+			this.setFeedbackDefinitions(feedbacks_v2.GetFeedbacks(this))
+		}
 	}
 
 	init_presets(): void {
 		this.log('debug', 'Initializing presets')
-		this.setPresetDefinitions(GetPresetList(this))
-	}
-
-	sendcmd(cmd: string, opt?: InputValue): void {
-		this.log('debug', 'Sending command: ' + cmd + ', ' + opt)
-		this.socket.emit(cmd, opt)
+		if (this.config.version === 'v1') {
+			this.setPresetDefinitions(presets_v1.GetPresetList())
+		} else if (this.config.version === 'v2') {
+			this.setPresetDefinitions(presets_v2.GetPresetList())
+		}
 	}
 }
 

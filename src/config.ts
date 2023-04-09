@@ -3,6 +3,7 @@ import { SomeCompanionConfigField, Regex } from '@companion-module/base'
 export interface OntimeConfig {
 	host: string
 	port: string
+	version: string
 }
 
 export function GetConfigFields(): SomeCompanionConfigField[] {
@@ -11,11 +12,19 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			label: 'Information',
 			id: 'info',
 			type: 'static-text',
-			value: 'This module will establish a connection to ontime server at a given IP',
+			value:
+				'This module will establish a connection to the ontime server Version 1 and Version 2. Beware that Ontime Version 2 is still in the Beta phase.',
 			width: 12,
 		},
 		{
-			label: 'Ontime server',
+			label: 'Ontime server address.',
+			id: 'info',
+			type: 'static-text',
+			value: 'Ontime server address. Valid are IP or URL',
+			width: 6,
+		},
+		{
+			label: 'Ontime server address',
 			id: 'host',
 			type: 'textinput',
 			default: '127.0.0.1',
@@ -25,6 +34,13 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			required: true,
 		},
 		{
+			label: 'Ontime server port',
+			id: 'info',
+			type: 'static-text',
+			value: 'Ontime server port. Default is 4001',
+			width: 6,
+		},
+		{
 			label: 'Ontime server port ',
 			id: 'port',
 			type: 'textinput',
@@ -32,6 +48,24 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			required: true,
 			width: 6,
 			regex: Regex.PORT,
+		},
+		{
+			label: 'Ontime Version',
+			id: 'info',
+			type: 'static-text',
+			value: 'Choose wich version of Ontime you are connecting to. Ontime V2 is still Beta!!!',
+			width: 6,
+		},
+		{
+			label: 'Ontime Version',
+			id: 'version',
+			type: 'dropdown',
+			default: 'v1',
+			choices: [
+				{ id: 'v1', label: 'Ontime V1' },
+				{ id: 'v2', label: 'Ontime V2' },
+			],
+			width: 6,
 		},
 	]
 }

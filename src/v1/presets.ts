@@ -1,8 +1,8 @@
 import { CompanionButtonPresetDefinition, CompanionPresetDefinitions, combineRgb } from '@companion-module/base'
-import * as icons from './assets/icons'
-import { OnTimeInstance } from './index'
+import * as icons from '../assets/icons'
+import { ActionId, feedbackId } from '../enums'
 
-export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinitions {
+export function GetPresetList(): CompanionPresetDefinitions {
 	const presets: { [id: string]: CompanionButtonPresetDefinition | undefined } = {}
 
 	presets['start_selected_event'] = {
@@ -22,7 +22,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 			{
 				down: [
 					{
-						actionId: 'start',
+						actionId: ActionId.Start,
 						options: {},
 					},
 				],
@@ -48,7 +48,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 			{
 				down: [
 					{
-						actionId: 'pause',
+						actionId: ActionId.Pause,
 						options: {},
 					},
 				],
@@ -74,7 +74,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 			{
 				down: [
 					{
-						actionId: 'stop',
+						actionId: ActionId.Stop,
 						options: {},
 					},
 				],
@@ -100,7 +100,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 			{
 				down: [
 					{
-						actionId: 'reload',
+						actionId: ActionId.Reload,
 						options: {},
 					},
 				],
@@ -126,7 +126,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 			{
 				down: [
 					{
-						actionId: 'previous',
+						actionId: ActionId.Previous,
 						options: {},
 					},
 				],
@@ -152,7 +152,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 			{
 				down: [
 					{
-						actionId: 'next',
+						actionId: ActionId.Next,
 						options: {},
 					},
 				],
@@ -178,7 +178,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 			{
 				down: [
 					{
-						actionId: 'roll',
+						actionId: ActionId.Roll,
 						options: {},
 					},
 				],
@@ -207,7 +207,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 			{
 				down: [
 					{
-						actionId: 'setOnAir',
+						actionId: ActionId.SetOnAir,
 						options: { value: true },
 					},
 				],
@@ -216,7 +216,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 			{
 				down: [
 					{
-						actionId: 'setOnAir',
+						actionId: ActionId.SetOnAir,
 						options: { value: false },
 					},
 				],
@@ -248,7 +248,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 			{
 				down: [
 					{
-						actionId: 'delay',
+						actionId: ActionId.Delay,
 						options: { value: 1 },
 					},
 				],
@@ -271,7 +271,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 			{
 				down: [
 					{
-						actionId: 'delay',
+						actionId: ActionId.Delay,
 						options: { value: 5 },
 					},
 				],
@@ -294,7 +294,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 			{
 				down: [
 					{
-						actionId: 'delay',
+						actionId: ActionId.Delay,
 						options: { value: -1 },
 					},
 				],
@@ -317,7 +317,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 			{
 				down: [
 					{
-						actionId: 'delay',
+						actionId: ActionId.Delay,
 						options: { value: -5 },
 					},
 				],
@@ -346,7 +346,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 			{
 				down: [
 					{
-						actionId: 'setSpeakerMessageVisibility',
+						actionId: ActionId.SetSpeakerMessageVisibility,
 						options: { value: true },
 					},
 				],
@@ -355,7 +355,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 			{
 				down: [
 					{
-						actionId: 'setSpeakerMessageVisibility',
+						actionId: ActionId.SetSpeakerMessageVisibility,
 						options: { value: false },
 					},
 				],
@@ -384,7 +384,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 			{
 				down: [
 					{
-						actionId: 'setPublicMessageVisibility',
+						actionId: ActionId.SetPublicMessageVisibility,
 						options: { value: true },
 					},
 				],
@@ -393,7 +393,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 			{
 				down: [
 					{
-						actionId: 'setPublicMessageVisibility',
+						actionId: ActionId.SetPublicMessageVisibility,
 						options: { value: false },
 					},
 				],
@@ -422,7 +422,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 			{
 				down: [
 					{
-						actionId: 'setLowerMessageVisibility',
+						actionId: ActionId.SetLowerMessageVisibility,
 						options: { value: true },
 					},
 				],
@@ -431,7 +431,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 			{
 				down: [
 					{
-						actionId: 'setLowerMessageVisibility',
+						actionId: ActionId.SetLowerMessageVisibility,
 						options: { value: false },
 					},
 				],
@@ -453,7 +453,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 		steps: [],
 		feedbacks: [
 			{
-				feedbackId: 'state_color_running',
+				feedbackId: feedbackId.ColorRunning,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
@@ -461,7 +461,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'state_color_paused',
+				feedbackId: feedbackId.ColorPaused,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
@@ -469,7 +469,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'state_color_stopped',
+				feedbackId: feedbackId.ColorStopped,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
@@ -477,7 +477,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'state_color_roll',
+				feedbackId: feedbackId.ColorRoll,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
@@ -485,7 +485,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'timer_negative',
+				feedbackId: feedbackId.ColorNegative,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(255, 0, 0),
@@ -507,7 +507,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 		steps: [],
 		feedbacks: [
 			{
-				feedbackId: 'state_color_running',
+				feedbackId: feedbackId.ColorRunning,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
@@ -515,7 +515,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'state_color_paused',
+				feedbackId: feedbackId.ColorPaused,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
@@ -523,7 +523,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'state_color_stopped',
+				feedbackId: feedbackId.ColorStopped,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
@@ -531,7 +531,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'state_color_roll',
+				feedbackId: feedbackId.ColorRoll,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
@@ -539,7 +539,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'timer_negative',
+				feedbackId: feedbackId.ColorNegative,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(255, 0, 0),
@@ -561,7 +561,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 		steps: [],
 		feedbacks: [
 			{
-				feedbackId: 'state_color_running',
+				feedbackId: feedbackId.ColorRunning,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
@@ -569,7 +569,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'state_color_paused',
+				feedbackId: feedbackId.ColorPaused,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
@@ -577,7 +577,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'state_color_stopped',
+				feedbackId: feedbackId.ColorStopped,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
@@ -585,7 +585,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'state_color_roll',
+				feedbackId: feedbackId.ColorRoll,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
@@ -593,7 +593,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'timer_negative',
+				feedbackId: feedbackId.ColorNegative,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(255, 0, 0),
@@ -615,7 +615,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 		steps: [],
 		feedbacks: [
 			{
-				feedbackId: 'state_color_running',
+				feedbackId: feedbackId.ColorRunning,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
@@ -623,7 +623,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'state_color_paused',
+				feedbackId: feedbackId.ColorPaused,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
@@ -631,7 +631,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'state_color_stopped',
+				feedbackId: feedbackId.ColorStopped,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
@@ -639,7 +639,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'state_color_roll',
+				feedbackId: feedbackId.ColorRoll,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
@@ -647,7 +647,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'timer_negative',
+				feedbackId: feedbackId.ColorNegative,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(255, 0, 0),
@@ -669,7 +669,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 		steps: [],
 		feedbacks: [
 			{
-				feedbackId: 'state_color_running',
+				feedbackId: feedbackId.ColorRunning,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
@@ -677,7 +677,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'state_color_paused',
+				feedbackId: feedbackId.ColorPaused,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
@@ -685,7 +685,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'state_color_stopped',
+				feedbackId: feedbackId.ColorStopped,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
@@ -693,7 +693,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'state_color_roll',
+				feedbackId: feedbackId.ColorRoll,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
@@ -701,7 +701,7 @@ export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinit
 				options: {},
 			},
 			{
-				feedbackId: 'timer_negative',
+				feedbackId: feedbackId.ColorNegative,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(255, 0, 0),

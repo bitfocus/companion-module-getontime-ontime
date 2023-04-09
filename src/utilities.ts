@@ -59,3 +59,18 @@ export function toReadableTime(time: number, format = 'ms'): ReadableTime {
 		seconds: String(seconds),
 	}
 }
+
+export function mstoTime(time: number): string {
+	let negative = false
+	if (time < 0) {
+		time = time * -1
+		negative = true
+	} else {
+		negative = false
+	}
+	const seconds = padTo2Digits(Math.floor((time / 1000) % 60))
+	const minutes = padTo2Digits(Math.floor((time / (1000 * 60)) % 60))
+	const hours = padTo2Digits(Math.floor((time / (1000 * 60 * 60)) % 24))
+
+	return negative ? '-' + hours + ':' + minutes + ':' + seconds : hours + ':' + minutes + ':' + seconds
+}

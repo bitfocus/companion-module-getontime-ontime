@@ -1,10 +1,11 @@
 import { CompanionFeedbackDefinition, CompanionFeedbackDefinitions, combineRgb } from '@companion-module/base'
-import { OnTimeInstance } from './index'
+import { OnTimeInstance } from '../index'
+import { feedbackId } from '../enums'
 
 export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 	const feedbacks: { [id: string]: CompanionFeedbackDefinition | undefined } = {}
 
-	feedbacks['state_color_running'] = {
+	feedbacks[feedbackId.ColorRunning] = {
 		type: 'boolean',
 		name: 'Change color from timer state running',
 		description: 'Change the colors of a bank according if the timer is running',
@@ -14,14 +15,14 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 		},
 		options: [],
 		callback: (_feedback) => {
-			if (self.states.playstate == 'start') {
+			if (self.states.playback === 'play') {
 				return true
 			} else {
 				return false
 			}
 		},
 	}
-	feedbacks['state_color_paused'] = {
+	feedbacks[feedbackId.ColorPaused] = {
 		type: 'boolean',
 		name: 'Change color from timer state paused',
 		description: 'Change the colors of a bank according if the timer is paused',
@@ -31,14 +32,14 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 		},
 		options: [],
 		callback: (_feedback) => {
-			if (self.states.playstate == 'pause') {
+			if (self.states.playback == 'pause') {
 				return true
 			} else {
 				return false
 			}
 		},
 	}
-	feedbacks['state_color_stopped'] = {
+	feedbacks[feedbackId.ColorStopped] = {
 		type: 'boolean',
 		name: 'Change color from timer state stopped',
 		description: 'Change the colors of a bank according if the timer is stopped',
@@ -48,14 +49,14 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 		},
 		options: [],
 		callback: (_feedback) => {
-			if (self.states.playstate == 'stop') {
+			if (self.states.playback == 'stop') {
 				return true
 			} else {
 				return false
 			}
 		},
 	}
-	feedbacks['state_color_roll'] = {
+	feedbacks[feedbackId.ColorRoll] = {
 		type: 'boolean',
 		name: 'Change color from timer state roll',
 		description: 'Change the colors of a bank according if the timer is in roll',
@@ -65,14 +66,14 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 		},
 		options: [],
 		callback: (_feedback) => {
-			if (self.states.playstate == 'roll') {
+			if (self.states.playback == 'roll') {
 				return true
 			} else {
 				return false
 			}
 		},
 	}
-	feedbacks['timer_negative'] = {
+	feedbacks[feedbackId.ColorNegative] = {
 		type: 'boolean',
 		name: 'Change color from timer negative',
 		description: 'Change the colors of a bank according if the timer runs into negative time',
@@ -89,7 +90,7 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 			}
 		},
 	}
-	feedbacks['onAir'] = {
+	feedbacks[feedbackId.OnAir] = {
 		type: 'boolean',
 		name: 'Change color from onAir',
 		description: 'Change the colors of a bank if onAir is turned on',
@@ -100,6 +101,57 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 		options: [],
 		callback: (_feedback) => {
 			if (self.states.onAir) {
+				return true
+			} else {
+				return false
+			}
+		},
+	}
+	feedbacks[feedbackId.SpeakerMessageVisible] = {
+		type: 'boolean',
+		name: 'Change color from speaker message visibility',
+		description: 'Change the colors of a bank if speaker message is visible',
+		defaultStyle: {
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(255, 0, 0),
+		},
+		options: [],
+		callback: () => {
+			if (self.states.timerMessage.visible) {
+				return true
+			} else {
+				return false
+			}
+		},
+	}
+	feedbacks[feedbackId.PublicMessageVisible] = {
+		type: 'boolean',
+		name: 'Change color from public message visibility',
+		description: 'Change the colors of a bank if public message is visible',
+		defaultStyle: {
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(255, 0, 0),
+		},
+		options: [],
+		callback: () => {
+			if (self.states.publicMessage.visible) {
+				return true
+			} else {
+				return false
+			}
+		},
+	}
+	feedbacks[feedbackId.LowerMessageVisible] = {
+		type: 'boolean',
+		name: 'Change color from lower message visibility',
+		description: 'Change the colors of a bank if lower message is visible',
+		defaultStyle: {
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(255, 0, 0),
+		},
+		options: [],
+		callback: () => {
+			if (self.states.lowerMessage.visible) {
 				return true
 			} else {
 				return false

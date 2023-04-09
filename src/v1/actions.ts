@@ -1,26 +1,28 @@
-import { OnTimeInstance } from './index'
+import { OnTimeInstance } from '../index'
 import { CompanionActionDefinition, CompanionActionDefinitions } from '@companion-module/base'
+import { sendCommand } from './connection'
+import { ActionId } from '../enums'
 
-export enum ActionId {
-	Start = 'start',
-	StartId = 'startId',
-	StartIndex = 'startIndex',
-	LoadId = 'loadId',
-	LoadIndex = 'loadIndex',
-	Pause = 'pause',
-	Stop = 'stop',
-	Reload = 'reload',
-	Next = 'next',
-	Previous = 'previous',
-	Roll = 'roll',
-	Delay = 'delay',
-	SetOnAir = 'setOnAir',
-	SetSpeakerMessageVisibility = 'setSpeakerMessageVisibility',
-	SetSpeakerMessage = 'setSpeakerMessage',
-	SetPublicMessageVisibility = 'setPublicMessageVisibility',
-	SetPublicMessage = 'setPublicMessage',
-	SetLowerMessageVisibility = 'setLowerMessageVisibility',
-	SetLowerMessage = 'setLowerMessage',
+enum ActionCommand {
+	Start = 'set-start',
+	StartId = 'set-startid',
+	StartIndex = 'set-startindex',
+	LoadId = 'set-loadid',
+	LoadIndex = 'set-loadindex',
+	Pause = 'set-pause',
+	Stop = 'set-stop',
+	Reload = 'set-reload',
+	Next = 'set-next',
+	Previous = 'set-previous',
+	Roll = 'set-roll',
+	Delay = 'set-delay',
+	SetOnAir = 'set-onAir',
+	SetSpeakerMessageVisibility = 'set-timer-message-visible',
+	SetSpeakerMessage = 'set-timer-message-text',
+	SetPublicMessageVisibility = 'set-public-message-visible',
+	SetPublicMessage = 'set-public-message-text',
+	SetLowerMessageVisibility = 'set-lower-message-visible',
+	SetLowerMessage = 'set-lower-message-text',
 }
 
 /**
@@ -29,13 +31,13 @@ export enum ActionId {
  * @constructor
  * @returns CompanionActions
  */
-export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefinitions {
-	const actions: { [id in ActionId]: CompanionActionDefinition | undefined } = {
+export function getActions(_self: OnTimeInstance): CompanionActionDefinitions {
+	const actions: { [id: string]: CompanionActionDefinition | undefined } = {
 		[ActionId.Start]: {
 			name: 'Start selected event',
 			options: [],
 			callback: () => {
-				self.sendcmd('set-start')
+				sendCommand(ActionCommand.Start)
 			},
 		},
 		[ActionId.StartId]: {
@@ -49,7 +51,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-startid', action.options.value)
+				sendCommand(ActionCommand.StartId, action.options.value)
 			},
 		},
 		[ActionId.StartIndex]: {
@@ -68,7 +70,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-startindex', Number(action.options.value) - 1)
+				sendCommand(ActionCommand.StartIndex, Number(action.options.value) - 1)
 			},
 		},
 		[ActionId.LoadId]: {
@@ -82,7 +84,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-loadid', action.options.value)
+				sendCommand(ActionCommand.LoadId, action.options.value)
 			},
 		},
 		[ActionId.LoadIndex]: {
@@ -101,49 +103,49 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-loadindex', Number(action.options.value) - 1)
+				sendCommand(ActionCommand.LoadIndex, Number(action.options.value) - 1)
 			},
 		},
 		[ActionId.Pause]: {
 			name: 'Pause running timer',
 			options: [],
 			callback: () => {
-				self.sendcmd('set-pause')
+				sendCommand(ActionCommand.Pause)
 			},
 		},
 		[ActionId.Stop]: {
 			name: 'Stop running timer',
 			options: [],
 			callback: () => {
-				self.sendcmd('set-stop')
+				sendCommand(ActionCommand.Stop)
 			},
 		},
 		[ActionId.Reload]: {
 			name: 'Reload selected event',
 			options: [],
 			callback: () => {
-				self.sendcmd('set-reload')
+				sendCommand(ActionCommand.Reload)
 			},
 		},
 		[ActionId.Next]: {
 			name: 'Select next event',
 			options: [],
 			callback: () => {
-				self.sendcmd('set-next')
+				sendCommand(ActionCommand.Next)
 			},
 		},
 		[ActionId.Previous]: {
 			name: 'Select previous event',
 			options: [],
 			callback: () => {
-				self.sendcmd('set-previous')
+				sendCommand(ActionCommand.Previous)
 			},
 		},
 		[ActionId.Roll]: {
 			name: 'Start roll mode',
 			options: [],
 			callback: () => {
-				self.sendcmd('set-roll')
+				sendCommand(ActionCommand.Roll)
 			},
 		},
 		[ActionId.Delay]: {
@@ -162,7 +164,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-delay', action.options.value)
+				sendCommand(ActionCommand.Delay, action.options.value)
 			},
 		},
 		[ActionId.SetOnAir]: {
@@ -176,7 +178,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-onAir', action.options.value)
+				sendCommand(ActionCommand.SetOnAir, action.options.value)
 			},
 		},
 		[ActionId.SetSpeakerMessageVisibility]: {
@@ -190,7 +192,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-timer-message-visible', action.options.value)
+				sendCommand(ActionCommand.SetSpeakerMessageVisibility, action.options.value)
 			},
 		},
 		[ActionId.SetSpeakerMessage]: {
@@ -204,7 +206,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-timer-message-text', action.options.value)
+				sendCommand(ActionCommand.SetSpeakerMessage, action.options.value)
 			},
 		},
 		[ActionId.SetPublicMessageVisibility]: {
@@ -218,7 +220,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-public-message-visible', action.options.value)
+				sendCommand(ActionCommand.SetPublicMessageVisibility, action.options.value)
 			},
 		},
 		[ActionId.SetPublicMessage]: {
@@ -232,7 +234,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-public-message-text', action.options.value)
+				sendCommand(ActionCommand.SetPublicMessage, action.options.value)
 			},
 		},
 		[ActionId.SetLowerMessageVisibility]: {
@@ -246,7 +248,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-lower-message-visible', action.options.value)
+				sendCommand(ActionCommand.SetLowerMessageVisibility, action.options.value)
 			},
 		},
 		[ActionId.SetLowerMessage]: {
@@ -260,7 +262,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-lower-message-text', action.options.value)
+				sendCommand(ActionCommand.SetLowerMessage, action.options.value)
 			},
 		},
 	}
