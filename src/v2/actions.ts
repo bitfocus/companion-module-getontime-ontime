@@ -7,6 +7,7 @@ enum ActionCommand {
 	Start = 'start',
 	StartId = 'startid',
 	StartIndex = 'startindex',
+	StartNext = 'start-next',
 	LoadId = 'loadid',
 	LoadIndex = 'loadindex',
 	Pause = 'pause',
@@ -71,6 +72,13 @@ export function getActions(self: OnTimeInstance): CompanionActionDefinitions {
 			],
 			callback: (action) => {
 				socketSendJson(ActionCommand.StartIndex, action.options.value)
+			},
+		},
+		[ActionId.StartNext]: {
+			name: 'Start next event',
+			options: [],
+			callback: () => {
+				socketSendJson(ActionCommand.StartNext)
 			},
 		},
 		[ActionId.StartSelect]: {

@@ -3,6 +3,7 @@ export enum ActionId {
 	StartId = 'startId',
 	StartSelect = 'startSelect',
 	StartIndex = 'startIndex',
+	StartNext = 'startNext',
 	LoadId = 'loadId',
 	LoadSelect = 'loadSelect',
 	LoadIndex = 'loadIndex',
