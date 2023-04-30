@@ -20,7 +20,9 @@
 		"postinstall": "yarn build"
 	},
 	"engines": {
-		"node": ">=18.12.0"
+		"node": ">=18.12.0",
+		"format": "prettier -w .",
+		"postinstall": "yarn build"
 	},
 	"dependencies": {
 		"@companion-module/base": "~1.2.1",
