@@ -1,7 +1,8 @@
 node_modules/
+dist/
 package-lock.json
+.DS_STORE
 
 .idea
-yarn-error.log
 /pkg
 /pkg.tgz

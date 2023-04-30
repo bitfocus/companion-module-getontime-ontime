@@ -1,8 +1,9 @@
-import { combineRgb } from '@companion-module/base'
-import * as icons from './assets/icons.js'
+import { CompanionButtonPresetDefinition, CompanionPresetDefinitions, combineRgb } from '@companion-module/base'
+import * as icons from './assets/icons'
+import { OnTimeInstance } from './index'
 
-export function getPresetsDefentions(self) {
-	const presets = {}
+export function GetPresetList(_instance: OnTimeInstance): CompanionPresetDefinitions {
+	const presets: { [id: string]: CompanionButtonPresetDefinition | undefined } = {}
 
 	presets['start_selected_event'] = {
 		type: 'button',
@@ -22,8 +23,10 @@ export function getPresetsDefentions(self) {
 				down: [
 					{
 						actionId: 'start',
+						options: {},
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -46,8 +49,10 @@ export function getPresetsDefentions(self) {
 				down: [
 					{
 						actionId: 'pause',
+						options: {},
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -70,8 +75,10 @@ export function getPresetsDefentions(self) {
 				down: [
 					{
 						actionId: 'stop',
+						options: {},
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -94,8 +101,10 @@ export function getPresetsDefentions(self) {
 				down: [
 					{
 						actionId: 'reload',
+						options: {},
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -118,8 +127,10 @@ export function getPresetsDefentions(self) {
 				down: [
 					{
 						actionId: 'previous',
+						options: {},
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -142,8 +153,10 @@ export function getPresetsDefentions(self) {
 				down: [
 					{
 						actionId: 'next',
+						options: {},
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -166,8 +179,10 @@ export function getPresetsDefentions(self) {
 				down: [
 					{
 						actionId: 'roll',
+						options: {},
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -176,6 +191,9 @@ export function getPresetsDefentions(self) {
 		type: 'button',
 		category: 'Commands',
 		name: 'Toggle On Air state',
+		options: {
+			stepAutoProgress: true,
+		},
 		style: {
 			png64: icons.OnAir,
 			pngalignment: 'center:top',
@@ -184,7 +202,6 @@ export function getPresetsDefentions(self) {
 			size: '7',
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),
-			latch: true,
 		},
 		steps: [
 			{
@@ -194,6 +211,7 @@ export function getPresetsDefentions(self) {
 						options: { value: true },
 					},
 				],
+				up: [],
 			},
 			{
 				down: [
@@ -202,11 +220,13 @@ export function getPresetsDefentions(self) {
 						options: { value: false },
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [
 			{
 				feedbackId: 'onAir',
+				options: {},
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(255, 0, 0),
@@ -219,7 +239,6 @@ export function getPresetsDefentions(self) {
 		category: 'Commands',
 		name: 'Adds 1 min to running event',
 		style: {
-			style: 'text',
 			text: '+1 MIN',
 			size: '18',
 			color: combineRgb(221, 107, 32),
@@ -233,6 +252,7 @@ export function getPresetsDefentions(self) {
 						options: { value: 1 },
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -242,7 +262,6 @@ export function getPresetsDefentions(self) {
 		category: 'Commands',
 		name: 'Adds 5 min to running event',
 		style: {
-			style: 'text',
 			text: '+5 MIN',
 			size: '18',
 			color: combineRgb(221, 107, 32),
@@ -256,6 +275,7 @@ export function getPresetsDefentions(self) {
 						options: { value: 5 },
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -265,7 +285,6 @@ export function getPresetsDefentions(self) {
 		category: 'Commands',
 		name: 'Subtracts 1 min from running event',
 		style: {
-			style: 'text',
 			text: '-1 MIN',
 			size: '18',
 			color: combineRgb(221, 107, 32),
@@ -279,6 +298,7 @@ export function getPresetsDefentions(self) {
 						options: { value: -1 },
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -288,7 +308,6 @@ export function getPresetsDefentions(self) {
 		category: 'Commands',
 		name: 'Subtracts 5 min from running event',
 		style: {
-			style: 'text',
 			text: '-5 MIN',
 			size: '18',
 			color: combineRgb(221, 107, 32),
@@ -302,6 +321,7 @@ export function getPresetsDefentions(self) {
 						options: { value: -5 },
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -310,6 +330,9 @@ export function getPresetsDefentions(self) {
 		type: 'button',
 		category: 'Commands',
 		name: 'Toggle visibility of Speaker message',
+		options: {
+			stepAutoProgress: true,
+		},
 		style: {
 			png64: icons.MessageSpeaker,
 			pngalignment: 'center:top',
@@ -327,6 +350,7 @@ export function getPresetsDefentions(self) {
 						options: { value: true },
 					},
 				],
+				up: [],
 			},
 			{
 				down: [
@@ -335,6 +359,7 @@ export function getPresetsDefentions(self) {
 						options: { value: false },
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -343,6 +368,9 @@ export function getPresetsDefentions(self) {
 		type: 'button',
 		category: 'Commands',
 		name: 'Toggle visibility of Public screens message',
+		options: {
+			stepAutoProgress: true,
+		},
 		style: {
 			png64: icons.MessagePublic,
 			pngalignment: 'center:top',
@@ -360,6 +388,7 @@ export function getPresetsDefentions(self) {
 						options: { value: true },
 					},
 				],
+				up: [],
 			},
 			{
 				down: [
@@ -368,6 +397,7 @@ export function getPresetsDefentions(self) {
 						options: { value: false },
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -376,6 +406,9 @@ export function getPresetsDefentions(self) {
 		type: 'button',
 		category: 'Commands',
 		name: 'Toggle visibility of Lower Third message',
+		options: {
+			stepAutoProgress: true,
+		},
 		style: {
 			png64: icons.MessageLower,
 			pngalignment: 'center:top',
@@ -393,6 +426,7 @@ export function getPresetsDefentions(self) {
 						options: { value: true },
 					},
 				],
+				up: [],
 			},
 			{
 				down: [
@@ -401,6 +435,7 @@ export function getPresetsDefentions(self) {
 						options: { value: false },
 					},
 				],
+				up: [],
 			},
 		],
 		feedbacks: [],
@@ -408,10 +443,10 @@ export function getPresetsDefentions(self) {
 	presets['display_timer_hhmmss'] = {
 		type: 'button',
 		category: 'Display',
-		name: 'Time',
+		name: 'Hours:Minutes:Seconds',
 		style: {
 			text: '$(timer:time)',
-			size: '18',
+			size: '14',
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),
 		},
@@ -423,6 +458,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_paused',
@@ -430,6 +466,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_stopped',
@@ -437,6 +474,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_roll',
@@ -444,6 +482,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'timer_negative',
@@ -451,6 +490,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(255, 0, 0),
 				},
+				options: {},
 			},
 		],
 	}
@@ -459,7 +499,6 @@ export function getPresetsDefentions(self) {
 		category: 'Display',
 		name: 'Hours:Minutes',
 		style: {
-			style: 'text',
 			text: '$(timer:time_hm)',
 			size: '24',
 			color: combineRgb(255, 255, 255),
@@ -473,6 +512,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_paused',
@@ -480,6 +520,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_stopped',
@@ -487,6 +528,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_roll',
@@ -494,6 +536,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'timer_negative',
@@ -501,6 +544,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(255, 0, 0),
 				},
+				options: {},
 			},
 		],
 	}
@@ -509,8 +553,8 @@ export function getPresetsDefentions(self) {
 		category: 'Display',
 		name: 'Hours',
 		style: {
-			style: 'text',
 			text: '$(timer:time_h)',
+			size: '44',
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),
 		},
@@ -522,6 +566,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_paused',
@@ -529,6 +574,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_stopped',
@@ -536,6 +582,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_roll',
@@ -543,6 +590,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'timer_negative',
@@ -550,6 +598,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(255, 0, 0),
 				},
+				options: {},
 			},
 		],
 	}
@@ -558,8 +607,8 @@ export function getPresetsDefentions(self) {
 		category: 'Display',
 		name: 'Minutes',
 		style: {
-			style: 'text',
 			text: '$(timer:time_m)',
+			size: '44',
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),
 		},
@@ -571,6 +620,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_paused',
@@ -578,6 +628,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_stopped',
@@ -585,6 +636,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_roll',
@@ -592,6 +644,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'timer_negative',
@@ -599,6 +652,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(255, 0, 0),
 				},
+				options: {},
 			},
 		],
 	}
@@ -607,8 +661,8 @@ export function getPresetsDefentions(self) {
 		category: 'Display',
 		name: 'Seconds',
 		style: {
-			style: 'text',
 			text: '$(timer:time_s)',
+			size: '44',
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),
 		},
@@ -620,6 +674,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_paused',
@@ -627,6 +682,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_stopped',
@@ -634,6 +690,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'state_color_roll',
@@ -641,6 +698,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
 				},
+				options: {},
 			},
 			{
 				feedbackId: 'timer_negative',
@@ -648,6 +706,7 @@ export function getPresetsDefentions(self) {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(255, 0, 0),
 				},
+				options: {},
 			},
 		],
 	}

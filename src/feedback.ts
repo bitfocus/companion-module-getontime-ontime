@@ -1,8 +1,9 @@
-import { combineRgb } from '@companion-module/base'
+import { CompanionFeedbackDefinition, CompanionFeedbackDefinitions, combineRgb } from '@companion-module/base'
+import { OnTimeInstance } from './index'
 
-export function getFeedbackDefinitions(self) {
-	const feedbacks = {}
-	
+export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
+	const feedbacks: { [id: string]: CompanionFeedbackDefinition | undefined } = {}
+
 	feedbacks['state_color_running'] = {
 		type: 'boolean',
 		name: 'Change color from timer state running',
@@ -12,7 +13,7 @@ export function getFeedbackDefinitions(self) {
 			bgcolor: combineRgb(0, 204, 0),
 		},
 		options: [],
-		callback: (feedback) => {
+		callback: () => {
 			if (self.states.playstate == 'start') {
 				return true
 			} else {
@@ -29,7 +30,7 @@ export function getFeedbackDefinitions(self) {
 			bgcolor: combineRgb(237, 137, 54),
 		},
 		options: [],
-		callback: (feedback) => {
+		callback: () => {
 			if (self.states.playstate == 'pause') {
 				return true
 			} else {
@@ -46,7 +47,7 @@ export function getFeedbackDefinitions(self) {
 			bgcolor: combineRgb(0, 0, 0),
 		},
 		options: [],
-		callback: (feedback) => {
+		callback: () => {
 			if (self.states.playstate == 'stop') {
 				return true
 			} else {
@@ -63,7 +64,7 @@ export function getFeedbackDefinitions(self) {
 			bgcolor: combineRgb(43, 108, 176),
 		},
 		options: [],
-		callback: (feedback) => {
+		callback: () => {
 			if (self.states.playstate == 'roll') {
 				return true
 			} else {
@@ -80,7 +81,7 @@ export function getFeedbackDefinitions(self) {
 			bgcolor: combineRgb(255, 0, 0),
 		},
 		options: [],
-		callback: (feedback) => {
+		callback: () => {
 			if (self.states.isNegative) {
 				return true
 			} else {
@@ -97,7 +98,7 @@ export function getFeedbackDefinitions(self) {
 			bgcolor: combineRgb(255, 0, 0),
 		},
 		options: [],
-		callback: (feedback) => {
+		callback: () => {
 			if (self.states.onAir) {
 				return true
 			} else {
