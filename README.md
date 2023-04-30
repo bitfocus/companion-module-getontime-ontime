@@ -8,7 +8,7 @@ This module is created for use with [Ontime App](https://www.getontime.no/)
 
 ## Help
 
-See [HELP.md](./HELP.md)
+See [HELP.md](./companion/HELP.md)
 
 ## License
 

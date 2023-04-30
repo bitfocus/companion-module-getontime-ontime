@@ -1,0 +1,18 @@
+{
+	"extends": "@companion-module/tools/tsconfig/node18/recommended",
+	"compilerOptions": {
+		"sourceMap": true,
+		"paths": {
+			"*": ["../node_modules/*"]
+		},
+		"declaration": true,
+		"importHelpers": true,
+		"types": ["node"],
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitReturns": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitAny": false
+	},
+	"compileOnSave": false
+}
