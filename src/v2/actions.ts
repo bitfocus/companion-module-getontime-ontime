@@ -33,7 +33,7 @@ enum ActionCommand {
  * @returns CompanionActions
  */
 export function getActions(self: OnTimeInstance): CompanionActionDefinitions {
-	const actions: { [id: string]: CompanionActionDefinition | undefined } = {
+	const actions: { [id: string]: CompanionActionDefinition } = {
 		[ActionId.Start]: {
 			name: 'Start selected event',
 			options: [],

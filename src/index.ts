@@ -1,5 +1,15 @@
-import { runEntrypoint, InstanceBase, InstanceStatus, SomeCompanionConfigField } from '@companion-module/base'
+import {
+	runEntrypoint,
+	InstanceBase,
+	InstanceStatus,
+	SomeCompanionConfigField,
+	CompanionActionDefinitions,
+	CompanionPresetDefinitions,
+	CompanionVariableDefinition,
+	CompanionFeedbackDefinitions,
+} from '@companion-module/base'
 import { OntimeConfig, GetConfigFields } from './config'
+import { OntimeV2 } from './v2/connection'
 import * as connection_v1 from './v1/connection'
 import * as connection_v2 from './v2/connection'
 import * as actions_v1 from './v1/actions'
@@ -11,12 +21,27 @@ import * as presets_v2 from './v2/presets'
 import * as variables_v1 from './v1/variables'
 import * as variables_v2 from './v2/variables'
 
+export interface OntimeClient {
+	// init: () => void // a way to change the code after initialising
+	// shutdown: () => void // a way to close it
+	// instance: OnTimeInstance
+	// actions: CompanionActionDefinitions
+	// presets: CompanionPresetDefinitions
+	// variables: CompanionVariableDefinition[]
+	// feedbacks: CompanionFeedbackDefinitions
+}
+
+export class OntimeBaseClient {}
+
 export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 	public config!: OntimeConfig
+	public ontime!: OntimeClient
 	public states!: any
 	public events: Array<any> = [{ id: 'noEvents', label: 'No events found' }]
 
 	async init(config: OntimeConfig): Promise<void> {
+		this.ontime = new OntimeV2(this)
+
 		this.log('debug', 'Initializing module')
 		this.updateStatus(InstanceStatus.Disconnected)
 

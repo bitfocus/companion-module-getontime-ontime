@@ -1,5 +1,5 @@
 import { InputValue, InstanceStatus } from '@companion-module/base'
-import { OnTimeInstance } from '..'
+import { OnTimeInstance, OntimeBaseClient, OntimeClient } from '..'
 import Websocket from 'ws'
 import { mstoTime, toReadableTime } from '../utilities'
 import axios from 'axios'
@@ -9,6 +9,23 @@ let ws: Websocket | null = null
 let reconnectionTimeout: NodeJS.Timeout | null = null
 const reconnectInterval = 1000
 let shouldReconnect = true
+
+import { getActions } from './actions'
+import { GetPresetList } from './presets'
+import { setVariables } from './variables'
+import { GetFeedbacks } from './feedback'
+
+export class OntimeV2 extends OntimeBaseClient implements OntimeClient {
+	constructor(instance: OnTimeInstance) {
+		super()
+		this.instance = instance
+	}
+
+	actions = getActions(this.instance)
+	presets = GetPresetList()
+	variables = setVariables()
+	feedbacks = GetFeedbacks(this.instance)
+}
 
 export function connect(self: OnTimeInstance): void {
 	const host = self.config.host
