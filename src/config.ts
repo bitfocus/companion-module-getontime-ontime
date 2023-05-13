@@ -56,7 +56,7 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			label: 'Ontime Version',
 			id: 'info_version',
 			type: 'static-text',
-			value: 'Choose wich version of Ontime you are connecting to. Ontime V2 is still Beta!!!',
+			value: 'Choose wich version of Ontime you are connecting to.',
 			width: 8,
 		},
 		{

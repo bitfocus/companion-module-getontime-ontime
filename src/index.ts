@@ -14,7 +14,7 @@ import { OntimeV2 } from './v2/ontimev2'
 export interface OntimeClient {
 	instance: OnTimeInstance
 
-	connect(): Promise<void>
+	connect(): void
 	disconnectSocket(): void
 
 	getVariables(): CompanionVariableDefinition[]
@@ -40,11 +40,11 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 			this.ontime = new OntimeV2(this)
 		}
 
-		await this.initConnection()
+		this.initConnection()
 		this.init_variables()
+		this.init_actions()
 		this.init_feedbacks()
 		this.init_presets()
-		this.init_actions()
 		this.checkFeedbacks()
 	}
 
@@ -69,17 +69,17 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 			this.ontime = new OntimeV2(this)
 		}
 
-		await this.initConnection()
+		this.initConnection()
 		this.init_variables()
+		this.init_actions()
 		this.init_feedbacks()
 		this.init_presets()
-		this.init_actions()
 		this.checkFeedbacks()
 	}
 
-	async initConnection(): Promise<void> {
+	initConnection(): void {
 		this.log('debug', 'Initializing connection')
-		await this.ontime.connect()
+		this.ontime.connect()
 	}
 
 	init_variables(): void {

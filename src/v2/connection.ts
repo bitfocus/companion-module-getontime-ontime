@@ -10,7 +10,7 @@ let reconnectionTimeout: NodeJS.Timeout | null = null
 let reconnectInterval: number
 let shouldReconnect = false
 
-export async function connect(self: OnTimeInstance): Promise<void> {
+export function connect(self: OnTimeInstance): void {
 	reconnectInterval = self.config.reconnectInterval * 1000
 	shouldReconnect = self.config.reconnect
 
@@ -161,13 +161,16 @@ export function socketSendJson(type: string, payload?: InputValue): void {
 export async function fetchEvents(self: OnTimeInstance): Promise<void> {
 	self.log('debug', 'fetching events from ontime')
 	try {
-		const res = await axios.get(`http://${self.config.host}:${self.config.port}/events`, { responseType: 'json' })
-		self.log('debug', `fetched ${res.data.length} events`)
+		const result = await axios.get(`http://${self.config.host}:${self.config.port}/events`, { responseType: 'json' })
+		self.log('debug', `fetched ${result.data.length} events`)
 		self.states.events = []
-		self.states.events = res.data.map((evt: any) => ({
-			id: evt.id,
-			label: evt.title,
-		}))
+		self.states.events = result.data
+			.filter((event: any) => event.type === 'event')
+			.map((event: any) => ({
+				id: event.id,
+				label: event.title,
+			}))
+		self.init_actions()
 	} catch (e: any) {
 		self.states.events = [{ id: 'noEvents', label: 'No events found' }]
 		self.log('error', 'failed to fetch events from ontime')

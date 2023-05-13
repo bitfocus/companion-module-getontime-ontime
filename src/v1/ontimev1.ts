@@ -35,7 +35,7 @@ export class OntimeV1 implements OntimeClient {
 		return presets()
 	}
 
-	async connect(): Promise<void> {
+	connect(): void {
 		connect(this.instance)
 	}
 
