@@ -86,10 +86,10 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 			options: [
 				{
 					type: 'dropdown',
-					choices: self.events,
+					choices: self.states.events,
 					id: 'value',
 					label: 'Event',
-					default: self.events[0]?.id,
+					default: self.states.events[0]?.id,
 				},
 			],
 			callback: (action) => {
@@ -115,10 +115,10 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 			options: [
 				{
 					type: 'dropdown',
-					choices: self.events,
+					choices: self.states.events,
 					id: 'value',
 					label: 'Event',
-					default: self.events[0]?.id,
+					default: self.states.events[0]?.id,
 				},
 			],
 			callback: (action) => {

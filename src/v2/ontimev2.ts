@@ -11,19 +11,18 @@ import { feedbacks } from './feedback'
 import { presets } from './presets'
 import { variables } from './variables'
 import { connect, disconnectSocket } from './connection'
-import { stateobj } from './state'
+// import { stateobj } from './state'
 
 export class OntimeV2 implements OntimeClient {
 	instance: OnTimeInstance
 
 	constructor(instance: OnTimeInstance) {
 		this.instance = instance
+		this.instance.states = {}
 	}
 
 	async connect(): Promise<void> {
-		this.instance.states = stateobj
-
-		connect(this.instance)
+		await connect(this.instance)
 	}
 
 	disconnectSocket(): void {
@@ -34,12 +33,12 @@ export class OntimeV2 implements OntimeClient {
 		return variables()
 	}
 
-	getActions(): CompanionActionDefinitions {
-		return actions(this.instance)
+	getActions(self: OnTimeInstance): CompanionActionDefinitions {
+		return actions(self)
 	}
 
-	getFeedbacks(): CompanionFeedbackDefinitions {
-		return feedbacks(this.instance)
+	getFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
+		return feedbacks(self)
 	}
 
 	getPresets(): CompanionPresetDefinitions {

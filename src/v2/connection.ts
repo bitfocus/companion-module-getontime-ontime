@@ -10,7 +10,7 @@ let reconnectionTimeout: NodeJS.Timeout | null = null
 let reconnectInterval: number
 let shouldReconnect = false
 
-export function connect(self: OnTimeInstance): void {
+export async function connect(self: OnTimeInstance): Promise<void> {
 	reconnectInterval = self.config.reconnectInterval * 1000
 	shouldReconnect = self.config.reconnect
 
@@ -40,7 +40,7 @@ export function connect(self: OnTimeInstance): void {
 		clearTimeout(reconnectionTimeout as NodeJS.Timeout)
 		self.updateStatus(InstanceStatus.Ok)
 		self.log('debug', 'Socket connected')
-		void initEvents(self)
+		void fetchEvents(self)
 	}
 
 	ws.onclose = (event) => {
@@ -48,7 +48,7 @@ export function connect(self: OnTimeInstance): void {
 		if (shouldReconnect) {
 			reconnectionTimeout = setTimeout(() => {
 				if (ws && ws.readyState === Websocket.CLOSED) {
-					connect(self)
+					void connect(self)
 				}
 			}, reconnectInterval)
 		}
@@ -120,8 +120,7 @@ export function connect(self: OnTimeInstance): void {
 
 			if (type === 'ontime-refetch' && self.config.refetchEvents === true) {
 				self.log('debug', 'refetching events')
-				self.events = []
-				initEvents(self).then(
+				void fetchEvents(self).then(
 					() => {
 						self.init_actions()
 					},
@@ -159,16 +158,18 @@ export function socketSendJson(type: string, payload?: InputValue): void {
 	)
 }
 
-export async function initEvents(self: OnTimeInstance): Promise<void> {
+export async function fetchEvents(self: OnTimeInstance): Promise<void> {
 	self.log('debug', 'fetching events from ontime')
 	try {
 		const res = await axios.get(`http://${self.config.host}:${self.config.port}/events`, { responseType: 'json' })
 		self.log('debug', `fetched ${res.data.length} events`)
-		self.events = res.data.map((evt: any) => ({
+		self.states.events = []
+		self.states.events = res.data.map((evt: any) => ({
 			id: evt.id,
 			label: evt.title,
 		}))
 	} catch (e: any) {
+		self.states.events = [{ id: 'noEvents', label: 'No events found' }]
 		self.log('error', 'failed to fetch events from ontime')
 		self.log('error', e)
 	}

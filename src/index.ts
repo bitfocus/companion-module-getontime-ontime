@@ -14,19 +14,18 @@ import { OntimeV2 } from './v2/ontimev2'
 export interface OntimeClient {
 	instance: OnTimeInstance
 
-	connect(): void
+	connect(): Promise<void>
 	disconnectSocket(): void
 
 	getVariables(): CompanionVariableDefinition[]
-	getActions(): CompanionActionDefinitions
-	getFeedbacks(): CompanionFeedbackDefinitions
+	getActions(self: OnTimeInstance): CompanionActionDefinitions
+	getFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 	getPresets(): CompanionPresetDefinitions
 }
 export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 	public config!: OntimeConfig
 	public ontime!: OntimeClient
 	public states!: any
-	public events: Array<any> = [{ id: 'noEvents', label: 'No events found' }]
 
 	async init(config: OntimeConfig): Promise<void> {
 		this.log('debug', 'Initializing module')
@@ -43,9 +42,9 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 
 		await this.initConnection()
 		this.init_variables()
-		this.init_actions()
 		this.init_feedbacks()
 		this.init_presets()
+		this.init_actions()
 		this.checkFeedbacks()
 	}
 
@@ -72,15 +71,14 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 
 		await this.initConnection()
 		this.init_variables()
-		this.init_actions()
 		this.init_feedbacks()
 		this.init_presets()
+		this.init_actions()
 		this.checkFeedbacks()
 	}
 
 	async initConnection(): Promise<void> {
 		this.log('debug', 'Initializing connection')
-		// eslint-disable-next-line @typescript-eslint/await-thenable
 		await this.ontime.connect()
 	}
 
@@ -91,12 +89,12 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 
 	init_actions(): void {
 		this.log('debug', 'Initializing actions')
-		this.setActionDefinitions(this.ontime.getActions())
+		this.setActionDefinitions(this.ontime.getActions(this))
 	}
 
 	init_feedbacks(): void {
 		this.log('debug', 'Initializing feedbacks')
-		this.setFeedbackDefinitions(this.ontime.getFeedbacks())
+		this.setFeedbackDefinitions(this.ontime.getFeedbacks(this))
 	}
 
 	init_presets(): void {

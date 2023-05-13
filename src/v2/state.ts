@@ -46,6 +46,7 @@ const stateobj = {
 		presenterNext: null,
 		noteNext: null,
 	},
+	events: [{ id: 'noEvents', label: 'No events found' }],
 }
 
 export { stateobj }
