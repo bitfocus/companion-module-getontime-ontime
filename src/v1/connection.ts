@@ -21,8 +21,8 @@ export function connect(self: OnTimeInstance): void {
 	}
 
 	socket = io.connect(`${host}:${port}`, {
-		reconnection: true,
-		reconnectionDelay: 1000,
+		reconnection: self.config.reconnect,
+		reconnectionDelay: self.config.reconnectInterval * 1000,
 		reconnectionDelayMax: 5000,
 		reconnectionAttempts: 99999,
 		transports: ['websocket'],
