@@ -2,7 +2,7 @@ import { CompanionFeedbackDefinition, CompanionFeedbackDefinitions, combineRgb }
 import { OnTimeInstance } from '../index'
 import { feedbackId } from '../enums'
 
-export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
+export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 	const feedbacks: { [id: string]: CompanionFeedbackDefinition | undefined } = {}
 
 	feedbacks[feedbackId.ColorRunning] = {

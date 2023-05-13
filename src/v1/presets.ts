@@ -2,7 +2,7 @@ import { CompanionButtonPresetDefinition, CompanionPresetDefinitions, combineRgb
 import * as icons from '../assets/icons'
 import { ActionId, feedbackId } from '../enums'
 
-export function GetPresetList(): CompanionPresetDefinitions {
+export function presets(): CompanionPresetDefinitions {
 	const presets: { [id: string]: CompanionButtonPresetDefinition | undefined } = {}
 
 	presets['start_selected_event'] = {

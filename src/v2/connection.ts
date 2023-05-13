@@ -1,5 +1,5 @@
 import { InputValue, InstanceStatus } from '@companion-module/base'
-import { OnTimeInstance, OntimeBaseClient, OntimeClient } from '..'
+import { OnTimeInstance } from '..'
 import Websocket from 'ws'
 import { mstoTime, toReadableTime } from '../utilities'
 import axios from 'axios'
@@ -7,27 +7,13 @@ import { feedbackId, variableId } from '../enums'
 
 let ws: Websocket | null = null
 let reconnectionTimeout: NodeJS.Timeout | null = null
-const reconnectInterval = 1000
-let shouldReconnect = true
-
-import { getActions } from './actions'
-import { GetPresetList } from './presets'
-import { setVariables } from './variables'
-import { GetFeedbacks } from './feedback'
-
-export class OntimeV2 extends OntimeBaseClient implements OntimeClient {
-	constructor(instance: OnTimeInstance) {
-		super()
-		this.instance = instance
-	}
-
-	actions = getActions(this.instance)
-	presets = GetPresetList()
-	variables = setVariables()
-	feedbacks = GetFeedbacks(this.instance)
-}
+let reconnectInterval: number
+let shouldReconnect = false
 
 export function connect(self: OnTimeInstance): void {
+	reconnectInterval = self.config.reconnectInterval * 1000
+	shouldReconnect = self.config.reconnect
+
 	const host = self.config.host
 	const port = self.config.port
 
@@ -54,11 +40,11 @@ export function connect(self: OnTimeInstance): void {
 		clearTimeout(reconnectionTimeout as NodeJS.Timeout)
 		self.updateStatus(InstanceStatus.Ok)
 		self.log('debug', 'Socket connected')
+		void initEvents(self)
 	}
 
-	ws.onclose = (code) => {
-		self.log('debug', `Connection closed with code ${code}`)
-		self.updateStatus(InstanceStatus.Disconnected, `Connection closed with code ${code}`)
+	ws.onclose = (event) => {
+		self.log('debug', `Connection closed with code ${event.code}`)
 		if (shouldReconnect) {
 			reconnectionTimeout = setTimeout(() => {
 				if (ws && ws.readyState === Websocket.CLOSED) {
@@ -68,16 +54,14 @@ export function connect(self: OnTimeInstance): void {
 		}
 	}
 
-	ws.onerror = (data) => {
-		self.log('debug', `WebSocket error: ${data}`)
+	ws.onerror = (event) => {
+		self.log('debug', `WebSocket error: ${event.message}`)
+		self.updateStatus(InstanceStatus.ConnectionFailure, `WebSocket error: ${event.message}`)
 	}
 
 	ws.onmessage = (event: any) => {
 		try {
 			const data = JSON.parse(event.data)
-
-			// console.log(event.data)
-
 			const { type, payload } = data
 
 			if (!type) {
@@ -86,8 +70,6 @@ export function connect(self: OnTimeInstance): void {
 
 			if (type === 'ontime') {
 				self.states = payload
-
-				// console.log(self.states)
 
 				const timer = toReadableTime(self.states.timer.current)
 				const clock = toReadableTime(self.states.timer.clock)
@@ -136,7 +118,7 @@ export function connect(self: OnTimeInstance): void {
 				)
 			}
 
-			if (type === 'ontime-refetch') {
+			if (type === 'ontime-refetch' && self.config.refetchEvents === true) {
 				self.log('debug', 'refetching events')
 				self.events = []
 				initEvents(self).then(

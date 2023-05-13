@@ -31,7 +31,7 @@ enum ActionCommand {
  * @constructor
  * @returns CompanionActions
  */
-export function getActions(_self: OnTimeInstance): CompanionActionDefinitions {
+export function actions(_self: OnTimeInstance): CompanionActionDefinitions {
 	const actions: { [id: string]: CompanionActionDefinition | undefined } = {
 		[ActionId.Start]: {
 			name: 'Start selected event',

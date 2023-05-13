@@ -1,6 +1,6 @@
 import { CompanionVariableDefinition } from '@companion-module/base'
 
-export function setVariables(): CompanionVariableDefinition[] {
+export function variables(): CompanionVariableDefinition[] {
 	const variables: CompanionVariableDefinition[] = [
 		{
 			name: 'State of event (Running, Paused, Stopped, Roll)',

@@ -1,7 +1,7 @@
 import { CompanionVariableDefinition } from '@companion-module/base'
 import { variableId } from '../enums'
 
-export function setVariables(): CompanionVariableDefinition[] {
+export function variables(): CompanionVariableDefinition[] {
 	const variables: CompanionVariableDefinition[] = [
 		{
 			name: 'State of event (Running, Paused, Stopped, Roll)',

@@ -5,29 +5,24 @@ import {
 	CompanionVariableDefinition,
 } from '@companion-module/base'
 import { OnTimeInstance, OntimeClient } from '..'
+import Websocket from 'ws'
 
 import { actions } from './actions'
 import { feedbacks } from './feedback'
 import { presets } from './presets'
 import { variables } from './variables'
 import { connect, disconnectSocket } from './connection'
-import { stateobj } from './state'
 
-export class OntimeV2 implements OntimeClient {
+export class OntimeV1 implements OntimeClient {
 	instance: OnTimeInstance
+
+	ws: Websocket | null = null
+	reconnectionTimeout: NodeJS.Timeout | null = null
+	reconnectInterval = 1000
+	shouldReconnect = true
 
 	constructor(instance: OnTimeInstance) {
 		this.instance = instance
-	}
-
-	async connect(): Promise<void> {
-		this.instance.states = stateobj
-
-		connect(this.instance)
-	}
-
-	disconnectSocket(): void {
-		disconnectSocket()
 	}
 
 	getVariables(): CompanionVariableDefinition[] {
@@ -44,5 +39,13 @@ export class OntimeV2 implements OntimeClient {
 
 	getPresets(): CompanionPresetDefinitions {
 		return presets()
+	}
+
+	connect(): void {
+		connect(this.instance)
+	}
+
+	disconnectSocket(): void {
+		disconnectSocket()
 	}
 }
