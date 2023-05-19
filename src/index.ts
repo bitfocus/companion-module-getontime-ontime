@@ -34,6 +34,10 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 		this.config = config
 		this.states = {}
 
+		if (config.version === undefined) {
+			this.config.version = 'v1'
+		}
+
 		if (config.version === 'v1') {
 			this.ontime = new OntimeV1(this)
 		} else if (config.version === 'v2') {

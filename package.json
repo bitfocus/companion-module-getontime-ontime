@@ -1,6 +1,6 @@
 {
 	"name": "getontime-ontime",
-	"version": "3.0.0",
+	"version": "2.1.0",
 	"main": "/dist/index.js",
 	"license": "MIT",
 	"prettier": "@companion-module/tools/.prettierrc.json",
