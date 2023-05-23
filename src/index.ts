@@ -31,11 +31,14 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 		this.log('debug', 'Initializing module')
 		this.updateStatus(InstanceStatus.Disconnected)
 
-		this.config = config
 		this.states = {}
 
-		if (config.version === undefined) {
-			this.config.version = 'v1'
+		if (config.version !== 'v1' && config.version !== 'v2') {
+			config.version = 'v1'
+			config.refetchEvents = true
+			config.reconnect = true
+			config.reconnectInterval = 5
+			this.saveConfig(config)
 		}
 
 		if (config.version === 'v1') {
@@ -65,7 +68,6 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 	async configUpdated(config: OntimeConfig): Promise<void> {
 		this.ontime.disconnectSocket()
 		this.updateStatus(InstanceStatus.Disconnected)
-		this.config = config
 
 		if (config.version === 'v1') {
 			this.ontime = new OntimeV1(this)

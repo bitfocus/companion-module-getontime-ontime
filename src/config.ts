@@ -23,7 +23,6 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			id: 'host',
 			type: 'textinput',
 			default: '127.0.0.1',
-			regex: Regex.IP && Regex.HOSTNAME,
 			width: 6,
 			required: true,
 			tooltip: 'Ontime server address. Valid are IP or URL',
@@ -51,7 +50,7 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			tooltip: 'Choose wich version of Ontime you are connecting to.',
 		},
 		{
-			label: 'Retfetch events',
+			label: 'Refetch events',
 			id: 'refetchEvents',
 			type: 'checkbox',
 			default: true,
@@ -65,7 +64,7 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			type: 'checkbox',
 			default: true,
 			width: 4,
-			tooltip: 'Chose if you want Companion to try to reconnect to ontime whe the connection is lost.',
+			tooltip: 'Chose if you want Companion to try to reconnect to ontime when the connection is lost.',
 		},
 		{
 			label: 'Reconnect interval (seconds)',
