@@ -28,22 +28,24 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 	public states!: any
 
 	async init(config: OntimeConfig): Promise<void> {
+		this.config = config
+
 		this.log('debug', 'Initializing module')
 		this.updateStatus(InstanceStatus.Disconnected)
 
 		this.states = {}
 
-		if (config.version !== 'v1' && config.version !== 'v2') {
-			config.version = 'v1'
-			config.refetchEvents = true
-			config.reconnect = true
-			config.reconnectInterval = 5
-			this.saveConfig(config)
+		if (this.config.version !== 'v1' && this.config.version !== 'v2') {
+			this.config.version = 'v1'
+			this.config.refetchEvents = true
+			this.config.reconnect = true
+			this.config.reconnectInterval = 5
+			this.saveConfig(this.config)
 		}
 
-		if (config.version === 'v1') {
+		if (this.config.version === 'v1') {
 			this.ontime = new OntimeV1(this)
-		} else if (config.version === 'v2') {
+		} else if (this.config.version === 'v2') {
 			this.ontime = new OntimeV2(this)
 		}
 
@@ -66,12 +68,13 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 	}
 
 	async configUpdated(config: OntimeConfig): Promise<void> {
+		this.config = config
 		this.ontime.disconnectSocket()
 		this.updateStatus(InstanceStatus.Disconnected)
 
-		if (config.version === 'v1') {
+		if (this.config.version === 'v1') {
 			this.ontime = new OntimeV1(this)
-		} else if (config.version === 'v2') {
+		} else if (this.config.version === 'v2') {
 			this.ontime = new OntimeV2(this)
 		}
 
