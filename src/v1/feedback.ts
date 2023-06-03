@@ -1,10 +1,11 @@
 import { CompanionFeedbackDefinition, CompanionFeedbackDefinitions, combineRgb } from '@companion-module/base'
-import { OnTimeInstance } from './index'
+import { OnTimeInstance } from '../index'
+import { feedbackId } from '../enums'
 
-export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
+export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 	const feedbacks: { [id: string]: CompanionFeedbackDefinition | undefined } = {}
 
-	feedbacks['state_color_running'] = {
+	feedbacks[feedbackId.ColorRunning] = {
 		type: 'boolean',
 		name: 'Change color from timer state running',
 		description: 'Change the colors of a bank according if the timer is running',
@@ -13,15 +14,15 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 			bgcolor: combineRgb(0, 204, 0),
 		},
 		options: [],
-		callback: () => {
-			if (self.states.playstate == 'start') {
+		callback: (_feedback) => {
+			if (self.states.playstate === 'start') {
 				return true
 			} else {
 				return false
 			}
 		},
 	}
-	feedbacks['state_color_paused'] = {
+	feedbacks[feedbackId.ColorPaused] = {
 		type: 'boolean',
 		name: 'Change color from timer state paused',
 		description: 'Change the colors of a bank according if the timer is paused',
@@ -30,7 +31,7 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 			bgcolor: combineRgb(237, 137, 54),
 		},
 		options: [],
-		callback: () => {
+		callback: (_feedback) => {
 			if (self.states.playstate == 'pause') {
 				return true
 			} else {
@@ -38,7 +39,7 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 			}
 		},
 	}
-	feedbacks['state_color_stopped'] = {
+	feedbacks[feedbackId.ColorStopped] = {
 		type: 'boolean',
 		name: 'Change color from timer state stopped',
 		description: 'Change the colors of a bank according if the timer is stopped',
@@ -47,7 +48,7 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 			bgcolor: combineRgb(0, 0, 0),
 		},
 		options: [],
-		callback: () => {
+		callback: (_feedback) => {
 			if (self.states.playstate == 'stop') {
 				return true
 			} else {
@@ -55,7 +56,7 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 			}
 		},
 	}
-	feedbacks['state_color_roll'] = {
+	feedbacks[feedbackId.ColorRoll] = {
 		type: 'boolean',
 		name: 'Change color from timer state roll',
 		description: 'Change the colors of a bank according if the timer is in roll',
@@ -64,7 +65,7 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 			bgcolor: combineRgb(43, 108, 176),
 		},
 		options: [],
-		callback: () => {
+		callback: (_feedback) => {
 			if (self.states.playstate == 'roll') {
 				return true
 			} else {
@@ -72,7 +73,7 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 			}
 		},
 	}
-	feedbacks['timer_negative'] = {
+	feedbacks[feedbackId.ColorNegative] = {
 		type: 'boolean',
 		name: 'Change color from timer negative',
 		description: 'Change the colors of a bank according if the timer runs into negative time',
@@ -81,7 +82,7 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 			bgcolor: combineRgb(255, 0, 0),
 		},
 		options: [],
-		callback: () => {
+		callback: (_feedback) => {
 			if (self.states.isNegative) {
 				return true
 			} else {
@@ -89,7 +90,7 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 			}
 		},
 	}
-	feedbacks['onAir'] = {
+	feedbacks[feedbackId.OnAir] = {
 		type: 'boolean',
 		name: 'Change color from onAir',
 		description: 'Change the colors of a bank if onAir is turned on',
@@ -98,7 +99,7 @@ export function GetFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 			bgcolor: combineRgb(255, 0, 0),
 		},
 		options: [],
-		callback: () => {
+		callback: (_feedback) => {
 			if (self.states.onAir) {
 				return true
 			} else {

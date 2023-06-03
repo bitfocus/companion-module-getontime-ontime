@@ -5,5 +5,5 @@
 	"semi": false,
 	"singleQuote": true,
 	"useTabs": true,
-	"endOfLine": "lf"
+	"endOfLine": "auto"
 }

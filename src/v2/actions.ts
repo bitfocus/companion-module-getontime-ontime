@@ -1,12 +1,15 @@
-import { OnTimeInstance } from './index'
+import { OnTimeInstance } from '../index'
 import { CompanionActionDefinition, CompanionActionDefinitions } from '@companion-module/base'
+import { socketSendJson } from './connection'
+import { ActionId } from '../enums'
 
-export enum ActionId {
+enum ActionCommand {
 	Start = 'start',
-	StartId = 'startId',
-	StartIndex = 'startIndex',
-	LoadId = 'loadId',
-	LoadIndex = 'loadIndex',
+	StartId = 'startid',
+	StartIndex = 'startindex',
+	StartNext = 'start-next',
+	LoadId = 'loadid',
+	LoadIndex = 'loadindex',
 	Pause = 'pause',
 	Stop = 'stop',
 	Reload = 'reload',
@@ -14,13 +17,13 @@ export enum ActionId {
 	Previous = 'previous',
 	Roll = 'roll',
 	Delay = 'delay',
-	SetOnAir = 'setOnAir',
-	SetSpeakerMessageVisibility = 'setSpeakerMessageVisibility',
-	SetSpeakerMessage = 'setSpeakerMessage',
-	SetPublicMessageVisibility = 'setPublicMessageVisibility',
-	SetPublicMessage = 'setPublicMessage',
-	SetLowerMessageVisibility = 'setLowerMessageVisibility',
-	SetLowerMessage = 'setLowerMessage',
+	SetOnAir = 'set-onair',
+	SetSpeakerMessageVisibility = 'set-timer-message-visible',
+	SetSpeakerMessage = 'set-timer-message-text',
+	SetPublicMessageVisibility = 'set-public-message-visible',
+	SetPublicMessage = 'set-public-message-text',
+	SetLowerMessageVisibility = 'set-lower-message-visible',
+	SetLowerMessage = 'set-lower-message-text',
 }
 
 /**
@@ -29,13 +32,13 @@ export enum ActionId {
  * @constructor
  * @returns CompanionActions
  */
-export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefinitions {
-	const actions: { [id in ActionId]: CompanionActionDefinition | undefined } = {
+export function actions(self: OnTimeInstance): CompanionActionDefinitions {
+	const actions: { [id: string]: CompanionActionDefinition } = {
 		[ActionId.Start]: {
 			name: 'Start selected event',
 			options: [],
 			callback: () => {
-				self.sendcmd('set-start')
+				socketSendJson(ActionCommand.Start)
 			},
 		},
 		[ActionId.StartId]: {
@@ -49,11 +52,11 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-startid', action.options.value)
+				socketSendJson(ActionCommand.StartId, action.options.value)
 			},
 		},
 		[ActionId.StartIndex]: {
-			name: 'Start event at position (1-256)',
+			name: 'Start event at position',
 			options: [
 				{
 					type: 'number',
@@ -61,14 +64,36 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 					id: 'value',
 					default: 1,
 					min: 1,
-					max: 256,
+					max: self.states.loaded.numEvents,
 					step: 1,
 					range: true,
 					required: true,
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-startindex', Number(action.options.value) - 1)
+				socketSendJson(ActionCommand.StartIndex, action.options.value)
+			},
+		},
+		[ActionId.StartNext]: {
+			name: 'Start next event',
+			options: [],
+			callback: () => {
+				socketSendJson(ActionCommand.StartNext)
+			},
+		},
+		[ActionId.StartSelect]: {
+			name: 'Start event dropdown',
+			options: [
+				{
+					type: 'dropdown',
+					choices: self.states.events,
+					id: 'value',
+					label: 'Event',
+					default: self.states.events[0]?.id,
+				},
+			],
+			callback: (action) => {
+				socketSendJson(ActionCommand.StartId, action.options.value)
 			},
 		},
 		[ActionId.LoadId]: {
@@ -82,11 +107,26 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-loadid', action.options.value)
+				socketSendJson(ActionCommand.LoadId, action.options.value)
+			},
+		},
+		[ActionId.LoadSelect]: {
+			name: 'Load event dropdown',
+			options: [
+				{
+					type: 'dropdown',
+					choices: self.states.events,
+					id: 'value',
+					label: 'Event',
+					default: self.states.events[0]?.id,
+				},
+			],
+			callback: (action) => {
+				socketSendJson(ActionCommand.LoadId, action.options.value)
 			},
 		},
 		[ActionId.LoadIndex]: {
-			name: 'Load event at position (1-256)',
+			name: 'Load event at position',
 			options: [
 				{
 					type: 'number',
@@ -94,56 +134,56 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 					id: 'value',
 					default: 1,
 					min: 1,
-					max: 256,
+					max: self.states.loaded.numEvents,
 					step: 1,
 					range: true,
 					required: true,
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-loadindex', Number(action.options.value) - 1)
+				socketSendJson(ActionCommand.LoadIndex, action.options.value)
 			},
 		},
 		[ActionId.Pause]: {
 			name: 'Pause running timer',
 			options: [],
 			callback: () => {
-				self.sendcmd('set-pause')
+				socketSendJson(ActionCommand.Pause)
 			},
 		},
 		[ActionId.Stop]: {
 			name: 'Stop running timer',
 			options: [],
 			callback: () => {
-				self.sendcmd('set-stop')
+				socketSendJson(ActionCommand.Stop)
 			},
 		},
 		[ActionId.Reload]: {
 			name: 'Reload selected event',
 			options: [],
 			callback: () => {
-				self.sendcmd('set-reload')
+				socketSendJson(ActionCommand.Reload)
 			},
 		},
 		[ActionId.Next]: {
 			name: 'Select next event',
 			options: [],
 			callback: () => {
-				self.sendcmd('set-next')
+				socketSendJson(ActionCommand.Next)
 			},
 		},
 		[ActionId.Previous]: {
 			name: 'Select previous event',
 			options: [],
 			callback: () => {
-				self.sendcmd('set-previous')
+				socketSendJson(ActionCommand.Previous)
 			},
 		},
 		[ActionId.Roll]: {
 			name: 'Start roll mode',
 			options: [],
 			callback: () => {
-				self.sendcmd('set-roll')
+				socketSendJson(ActionCommand.Roll)
 			},
 		},
 		[ActionId.Delay]: {
@@ -162,7 +202,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-delay', action.options.value)
+				socketSendJson(ActionCommand.Delay, action.options.value)
 			},
 		},
 		[ActionId.SetOnAir]: {
@@ -176,7 +216,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-onAir', action.options.value)
+				socketSendJson(ActionCommand.SetOnAir, action.options.value)
 			},
 		},
 		[ActionId.SetSpeakerMessageVisibility]: {
@@ -190,7 +230,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-timer-message-visible', action.options.value)
+				socketSendJson(ActionCommand.SetSpeakerMessageVisibility, action.options.value)
 			},
 		},
 		[ActionId.SetSpeakerMessage]: {
@@ -204,7 +244,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-timer-message-text', action.options.value)
+				socketSendJson(ActionCommand.SetSpeakerMessage, action.options.value)
 			},
 		},
 		[ActionId.SetPublicMessageVisibility]: {
@@ -218,7 +258,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-public-message-visible', action.options.value)
+				socketSendJson(ActionCommand.SetPublicMessageVisibility, action.options.value)
 			},
 		},
 		[ActionId.SetPublicMessage]: {
@@ -232,7 +272,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-public-message-text', action.options.value)
+				socketSendJson(ActionCommand.SetPublicMessage, action.options.value)
 			},
 		},
 		[ActionId.SetLowerMessageVisibility]: {
@@ -246,7 +286,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-lower-message-visible', action.options.value)
+				socketSendJson(ActionCommand.SetLowerMessageVisibility, action.options.value)
 			},
 		},
 		[ActionId.SetLowerMessage]: {
@@ -260,7 +300,7 @@ export function getActionDefinitions(self: OnTimeInstance): CompanionActionDefin
 				},
 			],
 			callback: (action) => {
-				self.sendcmd('set-lower-message-text', action.options.value)
+				socketSendJson(ActionCommand.SetLowerMessage, action.options.value)
 			},
 		},
 	}
