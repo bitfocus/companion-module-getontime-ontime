@@ -1,6 +1,6 @@
 {
 	"name": "getontime-ontime",
-	"version": "2.1.0",
+	"version": "2.1.1",
 	"main": "/dist/index.js",
 	"license": "MIT",
 	"prettier": "@companion-module/tools/.prettierrc.json",
@@ -20,9 +20,7 @@
 		"postinstall": "yarn build"
 	},
 	"engines": {
-		"node": ">=18.12.0",
-		"format": "prettier -w .",
-		"postinstall": "yarn build"
+		"node": ">=18.12.0"
 	},
 	"dependencies": {
 		"@companion-module/base": "~1.2.1",
