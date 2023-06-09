@@ -803,7 +803,7 @@ data-uri-to-buffer@^4.0.0:
 
 "debounce-fn@github:julusian/debounce-fn#4.0.0-maxWaithack.0":
   version "4.0.0-maxWaithack.0"
-  resolved "git+ssh://git@github.com/julusian/debounce-fn.git#3ca54d1526c19f541fe6f103abbceda31554caa9"
+  resolved "https://codeload.github.com/julusian/debounce-fn/tar.gz/3ca54d1526c19f541fe6f103abbceda31554caa9"
   dependencies:
     mimic-fn "^3.0.0"
 
