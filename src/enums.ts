@@ -21,6 +21,8 @@ export enum ActionId {
 	SetPublicMessage = 'setPublicMessage',
 	SetLowerMessageVisibility = 'setLowerMessageVisibility',
 	SetLowerMessage = 'setLowerMessage',
+	SetTimerBlackout = 'setTimerBlackout',
+	SetTimerBlink = 'setTimerBlink',
 }
 
 export enum feedbackId {
@@ -33,6 +35,8 @@ export enum feedbackId {
 	SpeakerMessageVisible = 'speakerMessageVisible',
 	PublicMessageVisible = 'publicMessageVisible',
 	LowerMessageVisible = 'lowerMessageVisible',
+	TimerBlink = 'timerBlink',
+	TimerBlackout = 'timerBlackout',
 }
 
 export enum variableId {

@@ -14,7 +14,7 @@ const stateobj = {
 		endAction: null,
 	},
 	playback: 'stop',
-	timerMessage: { text: '', visible: false },
+	timerMessage: { text: '', visible: false, timerBlink: false, timerBlackout: false },
 	publicMessage: { text: '', visible: false },
 	lowerMessage: { text: '', visible: false },
 	onAir: false,

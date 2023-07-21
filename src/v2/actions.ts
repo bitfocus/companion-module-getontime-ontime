@@ -24,6 +24,8 @@ enum ActionCommand {
 	SetPublicMessage = 'set-public-message-text',
 	SetLowerMessageVisibility = 'set-lower-message-visible',
 	SetLowerMessage = 'set-lower-message-text',
+	SetTimerBlackout = 'set-timer-blackout',
+	SetTimerBlink = 'set-timer-blink',
 }
 
 /**
@@ -301,6 +303,34 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 			],
 			callback: (action) => {
 				socketSendJson(ActionCommand.SetLowerMessage, action.options.value)
+			},
+		},
+		[ActionId.SetTimerBlackout]: {
+			name: 'Toggle blackout of timer',
+			options: [
+				{
+					type: 'checkbox',
+					id: 'value',
+					label: 'Blackout',
+					default: true,
+				},
+			],
+			callback: (action) => {
+				socketSendJson(ActionCommand.SetTimerBlackout, action.options.value)
+			},
+		},
+		[ActionId.SetTimerBlink]: {
+			name: 'Toggle blinking of timer',
+			options: [
+				{
+					type: 'checkbox',
+					id: 'value',
+					label: 'Blink',
+					default: true,
+				},
+			],
+			callback: (action) => {
+				socketSendJson(ActionCommand.SetTimerBlink, action.options.value)
 			},
 		},
 	}
