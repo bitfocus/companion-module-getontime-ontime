@@ -8,7 +8,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 	feedbacks[feedbackId.ColorRunning] = {
 		type: 'boolean',
 		name: 'Change color from timer state running',
-		description: 'Change the colors of a bank according if the timer is running',
+		description: 'Change the colors of a button according if the timer is running',
 		defaultStyle: {
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 204, 0),
@@ -25,7 +25,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 	feedbacks[feedbackId.ColorPaused] = {
 		type: 'boolean',
 		name: 'Change color from timer state paused',
-		description: 'Change the colors of a bank according if the timer is paused',
+		description: 'Change the colors of a button according if the timer is paused',
 		defaultStyle: {
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(237, 137, 54),
@@ -42,7 +42,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 	feedbacks[feedbackId.ColorStopped] = {
 		type: 'boolean',
 		name: 'Change color from timer state stopped',
-		description: 'Change the colors of a bank according if the timer is stopped',
+		description: 'Change the colors of a button according if the timer is stopped',
 		defaultStyle: {
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),
@@ -59,7 +59,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 	feedbacks[feedbackId.ColorRoll] = {
 		type: 'boolean',
 		name: 'Change color from timer state roll',
-		description: 'Change the colors of a bank according if the timer is in roll',
+		description: 'Change the colors of a button according if the timer is in roll',
 		defaultStyle: {
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(43, 108, 176),
@@ -76,7 +76,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 	feedbacks[feedbackId.ColorNegative] = {
 		type: 'boolean',
 		name: 'Change color from timer negative',
-		description: 'Change the colors of a bank according if the timer runs into negative time',
+		description: 'Change the colors of a button according if the timer runs into negative time',
 		defaultStyle: {
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(255, 0, 0),
@@ -93,7 +93,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 	feedbacks[feedbackId.OnAir] = {
 		type: 'boolean',
 		name: 'Change color from onAir',
-		description: 'Change the colors of a bank if onAir is turned on',
+		description: 'Change the colors of a button if onAir is turned on',
 		defaultStyle: {
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(255, 0, 0),
@@ -110,7 +110,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 	feedbacks[feedbackId.SpeakerMessageVisible] = {
 		type: 'boolean',
 		name: 'Change color from speaker message visibility',
-		description: 'Change the colors of a bank if speaker message is visible',
+		description: 'Change the colors of a button if speaker message is visible',
 		defaultStyle: {
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(255, 0, 0),
@@ -127,7 +127,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 	feedbacks[feedbackId.PublicMessageVisible] = {
 		type: 'boolean',
 		name: 'Change color from public message visibility',
-		description: 'Change the colors of a bank if public message is visible',
+		description: 'Change the colors of a button if public message is visible',
 		defaultStyle: {
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(255, 0, 0),
@@ -144,7 +144,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 	feedbacks[feedbackId.LowerMessageVisible] = {
 		type: 'boolean',
 		name: 'Change color from lower message visibility',
-		description: 'Change the colors of a bank if lower message is visible',
+		description: 'Change the colors of a button if lower message is visible',
 		defaultStyle: {
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(255, 0, 0),
@@ -152,6 +152,40 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 		options: [],
 		callback: () => {
 			if (self.states.lowerMessage.visible) {
+				return true
+			} else {
+				return false
+			}
+		},
+	}
+	feedbacks[feedbackId.TimerBlink] = {
+		type: 'boolean',
+		name: 'Change color if timer is blinking',
+		description: 'Change the colors of a button if timer is blinking',
+		defaultStyle: {
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(229, 62, 62),
+		},
+		options: [],
+		callback: () => {
+			if (self.states.timerMessage.timerBlink) {
+				return true
+			} else {
+				return false
+			}
+		},
+	}
+	feedbacks[feedbackId.TimerBlackout] = {
+		type: 'boolean',
+		name: 'Change color if timer is blacked out',
+		description: 'Change the colors of a button if timer is blacked out',
+		defaultStyle: {
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(229, 62, 62),
+		},
+		options: [],
+		callback: () => {
+			if (self.states.timerMessage.timerBlackout) {
 				return true
 			} else {
 				return false
