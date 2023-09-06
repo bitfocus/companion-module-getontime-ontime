@@ -71,6 +71,8 @@ export function connect(self: OnTimeInstance): void {
 			if (type === 'ontime') {
 				self.states = payload
 
+				self.log('debug', JSON.stringify(payload))
+
 				const timer = toReadableTime(self.states.timer.current)
 				const clock = toReadableTime(self.states.timer.clock)
 				const timer_start = toReadableTime(self.states.timer.startedAt)
@@ -92,14 +94,14 @@ export function connect(self: OnTimeInstance): void {
 					[variableId.PlayState]: self.states.playback,
 					[variableId.OnAir]: self.states.onAir,
 
-					[variableId.TitleNow]: self.states.titles.titleNow,
-					[variableId.SubtitleNow]: self.states.titles.subtitleNow,
-					[variableId.SpeakerNow]: self.states.titles.presenterNow,
-					[variableId.NoteNow]: self.states.titles.noteNow,
-					[variableId.TitleNext]: self.states.titles.titleNext,
-					[variableId.SubtitleNext]: self.states.titles.subtitleNext,
-					[variableId.SpeakerNext]: self.states.titles.presenterNext,
-					[variableId.NoteNext]: self.states.titles.noteNext,
+					[variableId.TitleNow]: self.states.eventNow.title,
+					[variableId.SubtitleNow]: self.states.eventNow.subtitlw,
+					[variableId.SpeakerNow]: self.states.eventNow.presenter,
+					[variableId.NoteNow]: self.states.eventNow.note,
+					[variableId.TitleNext]: self.states.eventNext.title,
+					[variableId.SubtitleNext]: self.states.eventNext.subtitle,
+					[variableId.SpeakerNext]: self.states.eventNext.presenter,
+					[variableId.NoteNext]: self.states.eventNext.note,
 
 					[variableId.SpeakerMessage]: self.states.timerMessage.text,
 					[variableId.PublicMessage]: self.states.publicMessage.text,
