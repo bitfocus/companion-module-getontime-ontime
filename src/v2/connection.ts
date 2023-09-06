@@ -116,7 +116,9 @@ export function connect(self: OnTimeInstance): void {
 					feedbackId.OnAir,
 					feedbackId.SpeakerMessageVisible,
 					feedbackId.PublicMessageVisible,
-					feedbackId.LowerMessageVisible
+					feedbackId.LowerMessageVisible,
+					feedbackId.TimerBlink,
+					feedbackId.TimerBlackout
 				)
 			}
 

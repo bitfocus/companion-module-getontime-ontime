@@ -467,6 +467,96 @@ export function presets(): CompanionPresetDefinitions {
 			},
 		],
 	}
+	presets['toggle_timer_blink'] = {
+		type: 'button',
+		category: 'Commands',
+		name: 'Toggle the Timer Blink state',
+		options: {
+			stepAutoProgress: true,
+		},
+		style: {
+			text: 'Timer Blink',
+			alignment: 'center:center',
+			size: '24',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: ActionId.SetTimerBlink,
+						options: { value: true },
+					},
+				],
+				up: [],
+			},
+			{
+				down: [
+					{
+						actionId: ActionId.SetTimerBlink,
+						options: { value: false },
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.TimerBlink,
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(229, 62, 62),
+				},
+				options: {},
+			},
+		],
+	}
+	presets['toggle_timer_blackout'] = {
+		type: 'button',
+		category: 'Commands',
+		name: 'Toggle the Timer Blackout state',
+		options: {
+			stepAutoProgress: true,
+		},
+		style: {
+			text: 'Timer Blackout',
+			alignment: 'center:center',
+			size: '14',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: ActionId.SetTimerBlackout,
+						options: { value: true },
+					},
+				],
+				up: [],
+			},
+			{
+				down: [
+					{
+						actionId: ActionId.SetTimerBlackout,
+						options: { value: false },
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.TimerBlackout,
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(229, 62, 62),
+				},
+				options: {},
+			},
+		],
+	}
 	presets['display_timer_hhmmss'] = {
 		type: 'button',
 		category: 'Display',
