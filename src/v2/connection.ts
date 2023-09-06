@@ -71,8 +71,6 @@ export function connect(self: OnTimeInstance): void {
 			if (type === 'ontime') {
 				self.states = payload
 
-				self.log('debug', JSON.stringify(payload))
-
 				const timer = toReadableTime(self.states.timer.current)
 				const clock = toReadableTime(self.states.timer.clock)
 				const timer_start = toReadableTime(self.states.timer.startedAt)
