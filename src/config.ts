@@ -15,7 +15,7 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			label: 'Information',
 			id: 'info',
 			type: 'static-text',
-			value: 'This module will establish a connection to the ontime server Version 1 and Version 2.',
+			value: 'This module will establish a connection to the ontime server Version 1 and Version 2.8 upwards.',
 			width: 12,
 		},
 		{
