@@ -192,11 +192,28 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 			name: 'Add / remove time (min) to running timer',
 			options: [
 				{
+					type: 'checkbox',
+					default: false,
+					id: 'remove',
+					label: 'Remove Time',
+				},
+				{
 					type: 'number',
-					id: 'value',
-					label: 'Time',
+					id: 'minutes',
+					label: 'Minutes',
 					default: 0,
-					min: -60,
+					min: 0,
+					max: 60,
+					step: 1,
+					required: true,
+					range: true,
+				},
+				{
+					type: 'number',
+					id: 'seconds',
+					label: 'Seconds',
+					default: 0,
+					min: 0,
 					max: 60,
 					step: 1,
 					required: true,
@@ -204,7 +221,11 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				},
 			],
 			callback: (action) => {
-				socketSendJson(ActionCommand.Delay, action.options.value)
+				let val = Number(action.options.minutes) + (Number(action.options.seconds) / 60)
+				if (action.options.remove === true) {
+					val = val * -1
+				}
+				socketSendJson(ActionCommand.Delay, val)
 			},
 		},
 		[ActionId.SetOnAir]: {
