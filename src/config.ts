@@ -41,7 +41,7 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			label: 'Ontime Version',
 			id: 'version',
 			type: 'dropdown',
-			default: 'v1',
+			default: 'v2',
 			choices: [
 				{ id: 'v1', label: 'Ontime V1' },
 				{ id: 'v2', label: 'Ontime V2' },
