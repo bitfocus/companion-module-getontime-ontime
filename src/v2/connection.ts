@@ -133,7 +133,6 @@ export function connect(self: OnTimeInstance): void {
 				)
 			}
 		} catch (_) {
-			self.log('error', JSON.stringify(_))
 			// ignore unhandled
 		}
 	}
