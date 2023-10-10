@@ -92,15 +92,16 @@ export function connect(self: OnTimeInstance): void {
 					[variableId.PlayState]: self.states.playback,
 					[variableId.OnAir]: self.states.onAir,
 
-					[variableId.TitleNow]: self.states.eventNow.title,
-					[variableId.SubtitleNow]: self.states.eventNow.subtitlw,
-					[variableId.SpeakerNow]: self.states.eventNow.presenter,
-					[variableId.NoteNow]: self.states.eventNow.note,
-					[variableId.TitleNext]: self.states.eventNext.title,
-					[variableId.SubtitleNext]: self.states.eventNext.subtitle,
-					[variableId.SpeakerNext]: self.states.eventNext.presenter,
-					[variableId.NoteNext]: self.states.eventNext.note,
-
+					[variableId.TitleNow]: self.states.eventNow?.title,
+					[variableId.SubtitleNow]: self.states.eventNow?.subtitlw,
+					[variableId.SpeakerNow]: self.states.eventNow?.presenter,
+					[variableId.NoteNow]: self.states.eventNow?.note,
+					
+					[variableId.TitleNext]: self.states.eventNext?.title,
+					[variableId.SubtitleNext]: self.states.eventNext?.subtitle,
+					[variableId.SpeakerNext]: self.states.eventNext?.presenter,
+					[variableId.NoteNext]: self.states.eventNext?.note,
+					
 					[variableId.SpeakerMessage]: self.states.timerMessage.text,
 					[variableId.PublicMessage]: self.states.publicMessage.text,
 					[variableId.LowerMessage]: self.states.lowerMessage.text,
@@ -132,6 +133,7 @@ export function connect(self: OnTimeInstance): void {
 				)
 			}
 		} catch (_) {
+			self.log('error', JSON.stringify(_))
 			// ignore unhandled
 		}
 	}
