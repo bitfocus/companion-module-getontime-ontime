@@ -93,7 +93,7 @@ export function connect(self: OnTimeInstance): void {
 					[variableId.OnAir]: self.states.onAir,
 
 					[variableId.TitleNow]: self.states.eventNow?.title,
-					[variableId.SubtitleNow]: self.states.eventNow?.subtitlw,
+					[variableId.SubtitleNow]: self.states.eventNow?.subtitle,
 					[variableId.SpeakerNow]: self.states.eventNow?.presenter,
 					[variableId.NoteNow]: self.states.eventNow?.note,
 					
