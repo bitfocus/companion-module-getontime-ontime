@@ -289,7 +289,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Stage Timer message',
+					label: 'Public screens message',
 					id: 'value',
 					required: true,
 				},
@@ -317,7 +317,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Stage Timer message',
+					label: 'Lower Third message',
 					id: 'value',
 					required: true,
 				},
