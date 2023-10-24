@@ -26,10 +26,10 @@ Actions related to time control
 |   ✅   | Start next event                                                     |
 |   ✅   | Start event with given ID                                            |
 |   ✅   | Start event at given position                                        |
-|   ❌   | Start event with cue                                                 |
-|   ❌   | Load event with given ID                                             |
-|   ❌   | Load event at given position                                         |
-|   ❌   | Load event with cue                                                  |
+|   ✅   | Start event with cue                                                 |
+|   ✅   | Load event with given ID                                             |
+|   ✅   | Load event at given position                                         |
+|   ✅   | Load event with cue                                                  |
 |   ✅   | Pause running timer                                                  |
 |   ✅   | Stop running timer                                                   |
 |   ✅   | Reload selected event                                                |
