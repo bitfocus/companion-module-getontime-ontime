@@ -103,6 +103,14 @@ export function variables(): CompanionVariableDefinition[] {
 			name: 'Lower thirds Message Visible',
 			variableId: variableId.LowerMessageVisible,
 		},
+		{
+			name: 'Timer Blackout',
+			variableId: variableId.TimerBlackout,
+		},
+		{
+			name: 'Timer Blinking',
+			variableId: variableId.TimerBlink,
+		},
 	]
 
 	return variables

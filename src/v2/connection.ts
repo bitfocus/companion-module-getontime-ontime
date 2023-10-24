@@ -96,12 +96,12 @@ export function connect(self: OnTimeInstance): void {
 					[variableId.SubtitleNow]: self.states.eventNow?.subtitle,
 					[variableId.SpeakerNow]: self.states.eventNow?.presenter,
 					[variableId.NoteNow]: self.states.eventNow?.note,
-					
+
 					[variableId.TitleNext]: self.states.eventNext?.title,
 					[variableId.SubtitleNext]: self.states.eventNext?.subtitle,
 					[variableId.SpeakerNext]: self.states.eventNext?.presenter,
 					[variableId.NoteNext]: self.states.eventNext?.note,
-					
+
 					[variableId.TimerMessage]: self.states.timerMessage.text,
 					[variableId.PublicMessage]: self.states.publicMessage.text,
 					[variableId.LowerMessage]: self.states.lowerMessage.text,
@@ -109,6 +109,9 @@ export function connect(self: OnTimeInstance): void {
 					[variableId.TimerMessageVisible]: self.states.timerMessage.visible,
 					[variableId.PublicMessageVisible]: self.states.publicMessage.visible,
 					[variableId.LowerMessageVisible]: self.states.lowerMessage.visible,
+
+					[variableId.TimerBlackout]: self.states.timerMessage.timerBlackout,
+					[variableId.TimerBlink]: self.states.timerMessage.timerBlink,
 				})
 				self.checkFeedbacks(
 					feedbackId.ColorRunning,
