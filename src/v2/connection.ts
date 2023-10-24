@@ -105,6 +105,10 @@ export function connect(self: OnTimeInstance): void {
 					[variableId.TimerMessage]: self.states.timerMessage.text,
 					[variableId.PublicMessage]: self.states.publicMessage.text,
 					[variableId.LowerMessage]: self.states.lowerMessage.text,
+
+					[variableId.TimerMessageVisible]: self.states.timerMessage.visible,
+					[variableId.PublicMessageVisible]: self.states.publicMessage.visible,
+					[variableId.LowerMessageVisible]: self.states.lowerMessage.visible,
 				})
 				self.checkFeedbacks(
 					feedbackId.ColorRunning,

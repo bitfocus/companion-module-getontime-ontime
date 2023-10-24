@@ -62,4 +62,7 @@ export enum variableId {
 	TimerMessage = 'timerMessage',
 	PublicMessage = 'publicMessage',
 	LowerMessage = 'lowerMessage',
+	TimerMessageVisible = 'timerMessageVisible',
+	PublicMessageVisible = 'publicMessageVisible',
+	LowerMessageVisible = 'lowerMessageVisible',
 }

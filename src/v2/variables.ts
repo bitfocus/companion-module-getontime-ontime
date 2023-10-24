@@ -80,7 +80,7 @@ export function variables(): CompanionVariableDefinition[] {
 			variableId: variableId.OnAir,
 		},
 		{
-			name: 'Speaker Message',
+			name: 'Timer Message',
 			variableId: variableId.TimerMessage,
 		},
 		{
@@ -90,6 +90,18 @@ export function variables(): CompanionVariableDefinition[] {
 		{
 			name: 'Lower thirds Message',
 			variableId: variableId.LowerMessage,
+		},
+		{
+			name: 'Timer Message Visible',
+			variableId: variableId.TimerMessageVisible,
+		},
+		{
+			name: 'Public Message Visible',
+			variableId: variableId.PublicMessageVisible,
+		},
+		{
+			name: 'Lower thirds Message Visible',
+			variableId: variableId.LowerMessageVisible,
 		},
 	]
 
