@@ -96,11 +96,14 @@ export function connect(self: OnTimeInstance): void {
 					[variableId.SubtitleNow]: self.states.eventNow?.subtitle,
 					[variableId.SpeakerNow]: self.states.eventNow?.presenter,
 					[variableId.NoteNow]: self.states.eventNow?.note,
+					[variableId.CueNow]: self.states.eventNow?.cue,
 
 					[variableId.TitleNext]: self.states.eventNext?.title,
 					[variableId.SubtitleNext]: self.states.eventNext?.subtitle,
 					[variableId.SpeakerNext]: self.states.eventNext?.presenter,
 					[variableId.NoteNext]: self.states.eventNext?.note,
+					[variableId.CueNext]: self.states.eventNext?.cue,
+
 
 					[variableId.TimerMessage]: self.states.timerMessage.text,
 					[variableId.PublicMessage]: self.states.publicMessage.text,

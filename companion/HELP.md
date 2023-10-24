@@ -94,10 +94,12 @@ The following variables are made available in the module
 |     subtitleNow      | Subitle of current event                        |
 |      speakerNow      | Speaker of current event                        |
 |       noteNow        | Note of current event                           |
+|        cueNow        | Cue of current event                            |
 |      titleNext       | Title of next timer                             |
 |     subtitleNext     | Subitle of next event                           |
 |     speakerNext      | Speaker of next event                           |
 |       noteNext       | Note of next event                              |
+|       cueNext        | Cue of next event                               |
 |     timerMessage     | Current Timer Message                           |
 |    publicMessage     | Current public Message                          |
 |     lowerMessage     | Current lower Thirds Message                    |

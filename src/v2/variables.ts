@@ -60,6 +60,10 @@ export function variables(): CompanionVariableDefinition[] {
 			variableId: variableId.NoteNow,
 		},
 		{
+			name: 'Cue of current event',
+			variableId: variableId.CueNow,
+		},
+		{
 			name: 'Title of next event',
 			variableId: variableId.TitleNext,
 		},
@@ -74,6 +78,10 @@ export function variables(): CompanionVariableDefinition[] {
 		{
 			name: 'Note of next event',
 			variableId: variableId.NoteNext,
+		},
+		{
+			name: 'Cue of next event',
+			variableId: variableId.CueNext,
 		},
 		{
 			name: 'On Air',
