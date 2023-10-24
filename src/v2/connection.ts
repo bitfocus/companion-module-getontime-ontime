@@ -102,7 +102,7 @@ export function connect(self: OnTimeInstance): void {
 					[variableId.SpeakerNext]: self.states.eventNext?.presenter,
 					[variableId.NoteNext]: self.states.eventNext?.note,
 					
-					[variableId.SpeakerMessage]: self.states.timerMessage.text,
+					[variableId.TimerMessage]: self.states.timerMessage.text,
 					[variableId.PublicMessage]: self.states.publicMessage.text,
 					[variableId.LowerMessage]: self.states.lowerMessage.text,
 				})
@@ -113,7 +113,7 @@ export function connect(self: OnTimeInstance): void {
 					feedbackId.ColorRoll,
 					feedbackId.ColorNegative,
 					feedbackId.OnAir,
-					feedbackId.SpeakerMessageVisible,
+					feedbackId.TimerMessageVisible,
 					feedbackId.PublicMessageVisible,
 					feedbackId.LowerMessageVisible,
 					feedbackId.TimerBlink,

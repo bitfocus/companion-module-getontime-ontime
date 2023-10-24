@@ -17,8 +17,8 @@ enum ActionCommand {
 	Roll = 'set-roll',
 	Delay = 'set-delay',
 	SetOnAir = 'set-onAir',
-	SetSpeakerMessageVisibility = 'set-timer-message-visible',
-	SetSpeakerMessage = 'set-timer-message-text',
+	SetTimerMessageVisibility = 'set-timer-message-visible',
+	SetTimerMessage = 'set-timer-message-text',
 	SetPublicMessageVisibility = 'set-public-message-visible',
 	SetPublicMessage = 'set-public-message-text',
 	SetLowerMessageVisibility = 'set-lower-message-visible',
@@ -181,7 +181,7 @@ export function actions(_self: OnTimeInstance): CompanionActionDefinitions {
 				sendCommand(ActionCommand.SetOnAir, action.options.value)
 			},
 		},
-		[ActionId.SetSpeakerMessageVisibility]: {
+		[ActionId.SetTimerMessageVisibility]: {
 			name: 'Toggle visibility of Stage Timer message',
 			options: [
 				{
@@ -192,10 +192,10 @@ export function actions(_self: OnTimeInstance): CompanionActionDefinitions {
 				},
 			],
 			callback: (action) => {
-				sendCommand(ActionCommand.SetSpeakerMessageVisibility, action.options.value)
+				sendCommand(ActionCommand.SetTimerMessageVisibility, action.options.value)
 			},
 		},
-		[ActionId.SetSpeakerMessage]: {
+		[ActionId.SetTimerMessage]: {
 			name: 'Set text for Stage Timer message',
 			options: [
 				{
@@ -206,7 +206,7 @@ export function actions(_self: OnTimeInstance): CompanionActionDefinitions {
 				},
 			],
 			callback: (action) => {
-				sendCommand(ActionCommand.SetSpeakerMessage, action.options.value)
+				sendCommand(ActionCommand.SetTimerMessage, action.options.value)
 			},
 		},
 		[ActionId.SetPublicMessageVisibility]: {

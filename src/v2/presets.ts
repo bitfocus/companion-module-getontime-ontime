@@ -346,7 +346,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.SetSpeakerMessageVisibility,
+						actionId: ActionId.SetTimerMessageVisibility,
 						options: { value: true },
 					},
 				],
@@ -355,7 +355,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.SetSpeakerMessageVisibility,
+						actionId: ActionId.SetTimerMessageVisibility,
 						options: { value: false },
 					},
 				],
@@ -364,7 +364,7 @@ export function presets(): CompanionPresetDefinitions {
 		],
 		feedbacks: [
 			{
-				feedbackId: feedbackId.SpeakerMessageVisible,
+				feedbackId: feedbackId.TimerMessageVisible,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),

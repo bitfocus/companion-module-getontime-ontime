@@ -81,7 +81,7 @@ export function variables(): CompanionVariableDefinition[] {
 		},
 		{
 			name: 'Speaker Message',
-			variableId: variableId.SpeakerMessage,
+			variableId: variableId.TimerMessage,
 		},
 		{
 			name: 'Public Message',

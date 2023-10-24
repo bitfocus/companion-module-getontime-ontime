@@ -18,8 +18,8 @@ enum ActionCommand {
 	Roll = 'roll',
 	Delay = 'delay',
 	SetOnAir = 'set-onair',
-	SetSpeakerMessageVisibility = 'set-timer-message-visible',
-	SetSpeakerMessage = 'set-timer-message-text',
+	SetTimerMessageVisibility = 'set-timer-message-visible',
+	SetTimerMessage = 'set-timer-message-text',
 	SetPublicMessageVisibility = 'set-public-message-visible',
 	SetPublicMessage = 'set-public-message-text',
 	SetLowerMessageVisibility = 'set-lower-message-visible',
@@ -242,7 +242,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				socketSendJson(ActionCommand.SetOnAir, action.options.value)
 			},
 		},
-		[ActionId.SetSpeakerMessageVisibility]: {
+		[ActionId.SetTimerMessageVisibility]: {
 			name: 'Toggle visibility of Stage Timer message',
 			options: [
 				{
@@ -253,10 +253,10 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				},
 			],
 			callback: (action) => {
-				socketSendJson(ActionCommand.SetSpeakerMessageVisibility, action.options.value)
+				socketSendJson(ActionCommand.SetTimerMessageVisibility, action.options.value)
 			},
 		},
-		[ActionId.SetSpeakerMessage]: {
+		[ActionId.SetTimerMessage]: {
 			name: 'Set text for Stage Timer message',
 			options: [
 				{
@@ -267,7 +267,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				},
 			],
 			callback: (action) => {
-				socketSendJson(ActionCommand.SetSpeakerMessage, action.options.value)
+				socketSendJson(ActionCommand.SetTimerMessage, action.options.value)
 			},
 		},
 		[ActionId.SetPublicMessageVisibility]: {

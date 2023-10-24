@@ -346,7 +346,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.SetSpeakerMessageVisibility,
+						actionId: ActionId.SetTimerMessageVisibility,
 						options: { value: true },
 					},
 				],
@@ -355,7 +355,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.SetSpeakerMessageVisibility,
+						actionId: ActionId.SetTimerMessageVisibility,
 						options: { value: false },
 					},
 				],

@@ -107,7 +107,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 			}
 		},
 	}
-	feedbacks[feedbackId.SpeakerMessageVisible] = {
+	feedbacks[feedbackId.TimerMessageVisible] = {
 		type: 'boolean',
 		name: 'Change color from speaker message visibility',
 		description: 'Change the colors of a button if speaker message is visible',
