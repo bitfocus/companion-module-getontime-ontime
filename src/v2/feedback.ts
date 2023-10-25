@@ -90,6 +90,23 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 			}
 		},
 	}
+	feedbacks[feedbackId.ColorAddRemove] = {
+		type: 'boolean',
+		name: 'Change color from added/removed time',
+		description: 'Change the colors of a button according if time has been added/removed',
+		defaultStyle: {
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(254, 124, 19),
+		},
+		options: [],
+		callback: (_feedback) => {
+			if (self.states.timer.addedTime != 0) {
+				return true
+			} else {
+				return false
+			}
+		},
+	}
 	feedbacks[feedbackId.OnAir] = {
 		type: 'boolean',
 		name: 'Change color from onAir',

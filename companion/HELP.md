@@ -66,6 +66,7 @@ Currently, feedbacks are configured to change colours of banks on the given cond
 |   ✅   | Timer is paused                 |
 |   ✅   | Timer is in Roll Mode           |
 |   ✅   | Timer is in overtime            |
+|   ✅   | Time added or removed           |
 |   ✅   | Ontime is On Air                |
 |   ✅   | Public Message Visibility       |
 |   ✅   | Lower Thirds Message Visibility |

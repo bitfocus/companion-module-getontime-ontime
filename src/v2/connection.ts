@@ -122,6 +122,7 @@ export function connect(self: OnTimeInstance): void {
 					feedbackId.ColorStopped,
 					feedbackId.ColorRoll,
 					feedbackId.ColorNegative,
+					feedbackId.ColorAddRemove,
 					feedbackId.OnAir,
 					feedbackId.TimerMessageVisible,
 					feedbackId.PublicMessageVisible,

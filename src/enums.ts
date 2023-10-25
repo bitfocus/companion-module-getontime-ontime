@@ -33,6 +33,7 @@ export enum feedbackId {
 	ColorStopped = 'state_color_stopped',
 	ColorRoll = 'state_color_roll',
 	ColorNegative = 'timer_negative',
+	ColorAddRemove = 'state_color_add_remove',
 	OnAir = 'onAir',
 	TimerMessageVisible = 'timerMessageVisible',
 	PublicMessageVisible = 'publicMessageVisible',
