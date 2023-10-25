@@ -88,7 +88,7 @@ The following variables are made available in the module
 |        clock         | Clock (hh:mm:ss)                                |
 |     timer_start      | Start of timer (hh:mm:ss)                       |
 |     timer_finish     | Expected finish of timer (hh:mm:ss)             |
-|     timer_delay      | Current delay of timer                          |
+|     timer_added      | Current added of timer                          |
 |      playstate       | State of timer (Running, Paused, Stopped, Roll) |
 |        onair         | If onAir is toggled on or off                   |
 |       titleNow       | Title of current event                          |

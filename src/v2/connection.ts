@@ -75,7 +75,7 @@ export function connect(self: OnTimeInstance): void {
 				const clock = toReadableTime(self.states.timer.clock)
 				const timer_start = toReadableTime(self.states.timer.startedAt)
 				const timer_finish = toReadableTime(self.states.timer.expectedFinish)
-				const delay = mstoTime(self.states.timer.addedTime)
+				const added = mstoTime(self.states.timer.addedTime)
 				self.states.isNegative = self.states.timer.current < 0
 
 				self.setVariableValues({
@@ -87,7 +87,7 @@ export function connect(self: OnTimeInstance): void {
 					[variableId.Clock]: clock.hours + ':' + clock.minutes + ':' + clock.seconds,
 					[variableId.TimerStart]: timer_start.hours + ':' + timer_start.minutes + ':' + timer_start.seconds,
 					[variableId.TimerFinish]: timer_finish.hours + ':' + timer_finish.minutes + ':' + timer_finish.seconds,
-					[variableId.TimerDelay]: delay,
+					[variableId.TimerAdded]: added,
 
 					[variableId.PlayState]: self.states.playback,
 					[variableId.OnAir]: self.states.onAir,

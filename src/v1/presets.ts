@@ -248,7 +248,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.Delay,
+						actionId: ActionId.Add,
 						options: { value: 1 },
 					},
 				],
@@ -271,7 +271,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.Delay,
+						actionId: ActionId.Add,
 						options: { value: 5 },
 					},
 				],
@@ -294,7 +294,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.Delay,
+						actionId: ActionId.Add,
 						options: { value: -1 },
 					},
 				],
@@ -317,7 +317,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.Delay,
+						actionId: ActionId.Add,
 						options: { value: -5 },
 					},
 				],

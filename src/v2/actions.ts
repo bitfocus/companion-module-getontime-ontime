@@ -18,7 +18,7 @@ enum ActionCommand {
 	Next = 'next',
 	Previous = 'previous',
 	Roll = 'roll',
-	Delay = 'delay',
+	Add = 'delay',
 	SetOnAir = 'set-onair',
 	SetTimerMessageVisibility = 'set-timer-message-visible',
 	SetTimerMessage = 'set-timer-message-text',
@@ -218,7 +218,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				socketSendJson(ActionCommand.Roll)
 			},
 		},
-		[ActionId.Delay]: {
+		[ActionId.Add]: {
 			name: 'Add / remove time to running timer',
 			options: [
 				{
@@ -268,7 +268,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				if (action.options.addremove === 'remove') {
 					val = val * -1
 				}
-				socketSendJson(ActionCommand.Delay, val)
+				socketSendJson(ActionCommand.Add, val)
 			},
 		},
 		[ActionId.SetOnAir]: {

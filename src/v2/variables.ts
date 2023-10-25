@@ -20,8 +20,8 @@ export function variables(): CompanionVariableDefinition[] {
 			variableId: variableId.TimerFinish,
 		},
 		{
-			name: 'Delay of current event',
-			variableId: variableId.TimerDelay,
+			name: 'Time added to current event',
+			variableId: variableId.TimerAdded,
 		},
 		{
 			name: 'Current time of event (hh:mm:ss)',

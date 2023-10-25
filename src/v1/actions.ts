@@ -15,7 +15,7 @@ enum ActionCommand {
 	Next = 'set-next',
 	Previous = 'set-previous',
 	Roll = 'set-roll',
-	Delay = 'set-delay',
+	Add = 'set-delay',
 	SetOnAir = 'set-onAir',
 	SetTimerMessageVisibility = 'set-timer-message-visible',
 	SetTimerMessage = 'set-timer-message-text',
@@ -148,7 +148,7 @@ export function actions(_self: OnTimeInstance): CompanionActionDefinitions {
 				sendCommand(ActionCommand.Roll)
 			},
 		},
-		[ActionId.Delay]: {
+		[ActionId.Add]: {
 			name: 'Add / remove time (min) to running timer',
 			options: [
 				{
@@ -164,7 +164,7 @@ export function actions(_self: OnTimeInstance): CompanionActionDefinitions {
 				},
 			],
 			callback: (action) => {
-				sendCommand(ActionCommand.Delay, action.options.value)
+				sendCommand(ActionCommand.Add, action.options.value)
 			},
 		},
 		[ActionId.SetOnAir]: {

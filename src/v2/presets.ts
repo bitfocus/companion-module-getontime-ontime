@@ -248,7 +248,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.Delay,
+						actionId: ActionId.Add,
 						options: { value: 1 },
 					},
 				],
@@ -271,7 +271,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.Delay,
+						actionId: ActionId.Add,
 						options: { value: 5 },
 					},
 				],
@@ -294,7 +294,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.Delay,
+						actionId: ActionId.Add,
 						options: { value: -1 },
 					},
 				],
@@ -317,7 +317,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.Delay,
+						actionId: ActionId.Add,
 						options: { value: -5 },
 					},
 				],
@@ -827,12 +827,12 @@ export function presets(): CompanionPresetDefinitions {
 			},
 		],
 	}
-	presets['display_delay'] = {
+	presets['display_added'] = {
 		type: 'button',
 		category: 'Display',
-		name: 'Delay Time',
+		name: 'Added Time',
 		style: {
-			text: '$(ontime:timer_delay)',
+			text: '$(ontime:timer_added)',
 			size: '14',
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),
