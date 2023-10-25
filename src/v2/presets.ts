@@ -249,7 +249,12 @@ export function presets(): CompanionPresetDefinitions {
 				down: [
 					{
 						actionId: ActionId.Add,
-						options: { value: 1 },
+						options: {
+							addremove: 'add',
+							hours: 0,
+							minutes: 1,
+							seconds: 0,
+						},
 					},
 				],
 				up: [],
@@ -272,7 +277,12 @@ export function presets(): CompanionPresetDefinitions {
 				down: [
 					{
 						actionId: ActionId.Add,
-						options: { value: 5 },
+						options: {
+							addremove: 'add',
+							hours: 0,
+							minutes: 5,
+							seconds: 0,
+						},
 					},
 				],
 				up: [],
@@ -295,7 +305,12 @@ export function presets(): CompanionPresetDefinitions {
 				down: [
 					{
 						actionId: ActionId.Add,
-						options: { value: -1 },
+						options: {
+							addremove: 'remove',
+							hours: 0,
+							minutes: 1,
+							seconds: 0,
+						},
 					},
 				],
 				up: [],
@@ -318,7 +333,12 @@ export function presets(): CompanionPresetDefinitions {
 				down: [
 					{
 						actionId: ActionId.Add,
-						options: { value: -5 },
+						options: {
+							addremove: 'remove',
+							hours: 0,
+							minutes: 5,
+							seconds: 0,
+						},
 					},
 				],
 				up: [],
