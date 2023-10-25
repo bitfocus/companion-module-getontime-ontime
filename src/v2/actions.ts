@@ -219,24 +219,37 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 			},
 		},
 		[ActionId.Delay]: {
-			name: 'Add / remove time (min) to running timer',
+			name: 'Add / remove time to running timer',
 			options: [
 				{
-					type: 'checkbox',
-					default: false,
-					id: 'remove',
-					label: 'Remove Time',
+					id: 'addremove',
+					type: 'dropdown',
+					choices: [
+						{ id: 'add', label: 'Add Time' },
+						{ id: 'remove', label: 'Remove Time' },
+					],
+					label: 'Add or Remove',
+					default: 'add',
+				},
+				{
+					type: 'number',
+					id: 'hours',
+					label: 'Hours',
+					default: 0,
+					step: 1,
+					min: 0,
+					max: 24,
+					required: true,
 				},
 				{
 					type: 'number',
 					id: 'minutes',
 					label: 'Minutes',
-					default: 0,
-					min: 0,
-					max: 60,
+					default: 1,
 					step: 1,
+					min: 0,
+					max: 1440,
 					required: true,
-					range: true,
 				},
 				{
 					type: 'number',
@@ -244,15 +257,15 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 					label: 'Seconds',
 					default: 0,
 					min: 0,
-					max: 60,
+					max: 86400,
 					step: 1,
 					required: true,
-					range: true,
 				},
 			],
 			callback: (action) => {
-				let val = Number(action.options.minutes) + Number(action.options.seconds) / 60
-				if (action.options.remove === true) {
+				let val =
+					Number(action.options.hours) * 60 + Number(action.options.minutes) + Number(action.options.seconds) / 60
+				if (action.options.addremove === 'remove') {
 					val = val * -1
 				}
 				socketSendJson(ActionCommand.Delay, val)
@@ -294,7 +307,8 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				},
 			],
 			callback: (action) => {
-				const val = action.options.value === 2 ? !self.getVariableValue(variableId.TimerMessageVisible) : action.options.value
+				const val =
+					action.options.value === 2 ? !self.getVariableValue(variableId.TimerMessageVisible) : action.options.value
 				socketSendJson(ActionCommand.SetTimerMessageVisibility, val)
 			},
 		},
@@ -328,7 +342,8 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				},
 			],
 			callback: (action) => {
-				const val = action.options.value === 2 ? !self.getVariableValue(variableId.PublicMessageVisible) : action.options.value
+				const val =
+					action.options.value === 2 ? !self.getVariableValue(variableId.PublicMessageVisible) : action.options.value
 				socketSendJson(ActionCommand.SetPublicMessageVisibility, val)
 			},
 		},
@@ -362,7 +377,8 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				},
 			],
 			callback: (action) => {
-				const val = action.options.value === 2 ? !self.getVariableValue(variableId.LowerMessageVisible) : action.options.value
+				const val =
+					action.options.value === 2 ? !self.getVariableValue(variableId.LowerMessageVisible) : action.options.value
 				socketSendJson(ActionCommand.SetLowerMessageVisibility, val)
 			},
 		},
