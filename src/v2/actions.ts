@@ -323,7 +323,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				},
 			],
 			callback: (action) => {
-				socketSendJson(ActionCommand.SetTimerMessage, action.options.value)
+				socketSendJson(ActionCommand.SetTimerMessage, action.options?.value ?? '')
 			},
 		},
 		[ActionId.SetPublicMessageVisibility]: {
@@ -358,7 +358,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				},
 			],
 			callback: (action) => {
-				socketSendJson(ActionCommand.SetPublicMessage, action.options.value)
+				socketSendJson(ActionCommand.SetPublicMessage, action.options?.value ?? '')
 			},
 		},
 		[ActionId.SetLowerMessageVisibility]: {
@@ -393,7 +393,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				},
 			],
 			callback: (action) => {
-				socketSendJson(ActionCommand.SetLowerMessage, action.options.value)
+				socketSendJson(ActionCommand.SetLowerMessage, action.options?.value ?? '')
 			},
 		},
 		[ActionId.SetTimerBlackout]: {
