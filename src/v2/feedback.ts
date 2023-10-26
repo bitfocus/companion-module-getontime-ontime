@@ -126,8 +126,8 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 	}
 	feedbacks[feedbackId.TimerMessageVisible] = {
 		type: 'boolean',
-		name: 'Change color from speaker message visibility',
-		description: 'Change the colors of a button if speaker message is visible',
+		name: 'Change color from timer message visibility',
+		description: 'Change the colors of a button if timer message is visible',
 		defaultStyle: {
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(255, 0, 0),
