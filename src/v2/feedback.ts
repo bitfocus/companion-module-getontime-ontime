@@ -141,6 +141,31 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 			}
 		},
 	}
+	feedbacks[feedbackId.ThisTimerMessageVisible] = {
+		type: 'boolean',
+		name: 'Change color from this timer message visibility',
+		description: 'Change the colors of a button if timer message is visible and matches this message',
+		defaultStyle: {
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(255, 0, 0),
+		},
+		options: [
+			{
+				type: 'textinput',
+				id: 'msg',
+				default: '',
+				required: true,
+				label: 'Message to match',
+			},
+		],
+		callback: (feedback) => {
+			if (self.states.timerMessage.visible && self.states.timerMessage.text === feedback.options.msg) {
+				return true
+			} else {
+				return false
+			}
+		},
+	}
 	feedbacks[feedbackId.PublicMessageVisible] = {
 		type: 'boolean',
 		name: 'Change color from public message visibility',

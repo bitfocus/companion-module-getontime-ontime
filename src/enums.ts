@@ -36,6 +36,7 @@ export enum feedbackId {
 	ColorAddRemove = 'state_color_add_remove',
 	OnAir = 'onAir',
 	TimerMessageVisible = 'timerMessageVisible',
+	ThisTimerMessageVisible = 'thisTimerMessageVisible',
 	PublicMessageVisible = 'publicMessageVisible',
 	LowerMessageVisible = 'lowerMessageVisible',
 	TimerBlink = 'timerBlink',
