@@ -66,73 +66,84 @@ export function connect(self: OnTimeInstance): void {
 
 			if (!type) {
 				return
-			}
-
-			if (type === 'ontime') {
+			} else if (type === 'ontime') {
 				self.states = payload
-
-				const timer = toReadableTime(self.states.timer.current)
-				const clock = toReadableTime(self.states.timer.clock)
-				const timer_start = toReadableTime(self.states.timer.startedAt)
-				const timer_finish = toReadableTime(self.states.timer.expectedFinish)
-				const delay = mstoTime(self.states.timer.addedTime)
-				self.states.isNegative = self.states.timer.current < 0
-
-				self.setVariableValues({
-					[variableId.Time]: timer.hours + ':' + timer.minutes + ':' + timer.seconds,
-					[variableId.TimeHM]: timer.hours + ':' + timer.minutes,
-					[variableId.TimeH]: timer.hours,
-					[variableId.TimeM]: timer.minutes,
-					[variableId.TimeS]: timer.seconds,
-					[variableId.Clock]: clock.hours + ':' + clock.minutes + ':' + clock.seconds,
-					[variableId.TimerStart]: timer_start.hours + ':' + timer_start.minutes + ':' + timer_start.seconds,
-					[variableId.TimerFinish]: timer_finish.hours + ':' + timer_finish.minutes + ':' + timer_finish.seconds,
-					[variableId.TimerDelay]: delay,
-
-					[variableId.PlayState]: self.states.playback,
-					[variableId.OnAir]: self.states.onAir,
-
-					[variableId.TitleNow]: self.states.eventNow.title,
-					[variableId.SubtitleNow]: self.states.eventNow.subtitlw,
-					[variableId.SpeakerNow]: self.states.eventNow.presenter,
-					[variableId.NoteNow]: self.states.eventNow.note,
-					[variableId.TitleNext]: self.states.eventNext.title,
-					[variableId.SubtitleNext]: self.states.eventNext.subtitle,
-					[variableId.SpeakerNext]: self.states.eventNext.presenter,
-					[variableId.NoteNext]: self.states.eventNext.note,
-
-					[variableId.SpeakerMessage]: self.states.timerMessage.text,
-					[variableId.PublicMessage]: self.states.publicMessage.text,
-					[variableId.LowerMessage]: self.states.lowerMessage.text,
-				})
-				self.checkFeedbacks(
-					feedbackId.ColorRunning,
-					feedbackId.ColorPaused,
-					feedbackId.ColorStopped,
-					feedbackId.ColorRoll,
-					feedbackId.ColorNegative,
-					feedbackId.OnAir,
-					feedbackId.SpeakerMessageVisible,
-					feedbackId.PublicMessageVisible,
-					feedbackId.LowerMessageVisible,
-					feedbackId.TimerBlink,
-					feedbackId.TimerBlackout
-				)
-			}
-
-			if (type === 'ontime-refetch' && self.config.refetchEvents === true) {
-				self.log('debug', 'refetching events')
-				void fetchEvents(self).then(
-					() => {
-						self.init_actions()
-					},
-					(e: any) => {
-						self.log('debug', e)
-					}
-				)
+				setProp('', payload, true)
+			} else if (type === 'ontime-refetch') {
+				if (self.config.refetchEvents === true) {
+					self.log('debug', 'refetching events')
+					void fetchEvents(self).then(
+						() => {
+							self.init_actions()
+						},
+						(e: any) => {
+							self.log('debug', e)
+						}
+					)
+				}
+			} else {
+				const [tag, key] = type.split('-')
+				if (tag === 'ontime') {
+					setProp(key, payload)
+				}
 			}
 		} catch (_) {
 			// ignore unhandled
+		}
+	}
+	function setProp(key: string, payload: any, all = false) {
+		if (key in self.states || all) {
+			if (!all) {
+				self.states[key] = payload
+			}
+			
+			const timer = toReadableTime(self.states.timer.current)
+			const clock = toReadableTime(self.states.timer.clock)
+			const timer_start = toReadableTime(self.states.timer.startedAt)
+			const timer_finish = toReadableTime(self.states.timer.expectedFinish)
+			const delay = mstoTime(self.states.timer.addedTime)
+			self.states.isNegative = self.states.timer.current < 0
+
+			self.setVariableValues({
+				[variableId.Time]: timer.hours + ':' + timer.minutes + ':' + timer.seconds,
+				[variableId.TimeHM]: timer.hours + ':' + timer.minutes,
+				[variableId.TimeH]: timer.hours,
+				[variableId.TimeM]: timer.minutes,
+				[variableId.TimeS]: timer.seconds,
+				[variableId.Clock]: clock.hours + ':' + clock.minutes + ':' + clock.seconds,
+				[variableId.TimerStart]: timer_start.hours + ':' + timer_start.minutes + ':' + timer_start.seconds,
+				[variableId.TimerFinish]: timer_finish.hours + ':' + timer_finish.minutes + ':' + timer_finish.seconds,
+				[variableId.TimerDelay]: delay,
+
+				[variableId.PlayState]: self.states.playback,
+				[variableId.OnAir]: self.states.onAir,
+
+				[variableId.TitleNow]: self.states.eventNow?.title,
+				[variableId.SubtitleNow]: self.states.eventNow?.subtitlw,
+				[variableId.SpeakerNow]: self.states.eventNow?.presenter,
+				[variableId.NoteNow]: self.states.eventNow?.note,
+				[variableId.TitleNext]: self.states.eventNext?.title,
+				[variableId.SubtitleNext]: self.states.eventNext?.subtitle,
+				[variableId.SpeakerNext]: self.states.eventNext?.presenter,
+				[variableId.NoteNext]: self.states.eventNext?.note,
+
+				[variableId.SpeakerMessage]: self.states.timerMessage.text,
+				[variableId.PublicMessage]: self.states.publicMessage.text,
+				[variableId.LowerMessage]: self.states.lowerMessage.text,
+			})
+			self.checkFeedbacks(
+				feedbackId.ColorRunning,
+				feedbackId.ColorPaused,
+				feedbackId.ColorStopped,
+				feedbackId.ColorRoll,
+				feedbackId.ColorNegative,
+				feedbackId.OnAir,
+				feedbackId.SpeakerMessageVisible,
+				feedbackId.PublicMessageVisible,
+				feedbackId.LowerMessageVisible,
+				feedbackId.TimerBlink,
+				feedbackId.TimerBlackout
+			)
 		}
 	}
 }
