@@ -36,23 +36,23 @@ Actions related to time control
 |   ✅   | Select previous event                                                |
 |   ✅   | Select next event                                                    |
 |   ✅   | Start [Roll Mode](https://cpvalente.gitbook.io/ontime/features/roll) |
-|   ✅   | Add / remove time (min) to running timer                             |
-|   ✅   | Toggle On Air                                                        |
-|   ✅   | Toggle Timer Blinking                                                |
-|   ✅   | Toggle Timer Blackout                                                |
+|   ✅   | Add / remove time to running timer                                   |
+|   ✅   | Toggle/On/Off On Air                                                 |
+|   ✅   | Toggle/On/Off Timer Blinking                                         |
+|   ✅   | Toggle/On/Off Timer Blackout                                         |
 
 ### Messages Control
 
 Actions related to realtime messages
 
-| Preset | Action                                                    |
-| :----: | :-------------------------------------------------------- |
-|   ✅   | Set message for Timer view                                |
-|   ✅   | Toggle visibility of message for Timer view (above)       |
-|   ✅   | Set message for Public view                               |
-|   ✅   | Toggle visibility of message for Public view (above)      |
-|   ✅   | Set message for Lower Third view                          |
-|   ✅   | Toggle visibility of message for Lower Third view (above) |
+| Preset | Action                                                           |
+| :----: | :--------------------------------------------------------------- |
+|   ✅   | Set message for Timer view                                       |
+|   ✅   | Toggle/On/Off visibility of message for Timer view (above)       |
+|   ✅   | Set message for Public view                                      |
+|   ✅   | Toggle/On/Off visibility of message for Public view (above)      |
+|   ✅   | Set message for Lower Third view                                 |
+|   ✅   | Toggle/On/Off visibility of message for Lower Third view (above) |
 
 ### Ontime Feedback
 
@@ -71,6 +71,7 @@ Currently, feedbacks are configured to change colours of banks on the given cond
 |   ✅   | Public Message Visibility       |
 |   ✅   | Lower Thirds Message Visibility |
 |   ✅   | Timer Message Visibility        |
+|   ✅   | This Timer Message Visibility   |
 |   ✅   | Timer Blinking                  |
 |   ✅   | Timer Blackout                  |
 
