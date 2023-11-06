@@ -11,6 +11,7 @@ import {
 import { OntimeConfig, GetConfigFields } from './config'
 import { OntimeV1 } from './v1/ontimev1'
 import { OntimeV2 } from './v2/ontimev2'
+import { UpgradeScripts } from './upgrades'
 export interface OntimeClient {
 	instance: OnTimeInstance
 
@@ -112,4 +113,4 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 	}
 }
 
-runEntrypoint(OnTimeInstance, [])
+runEntrypoint(OnTimeInstance, UpgradeScripts)
