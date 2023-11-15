@@ -417,7 +417,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 			},
 		},
 		[ActionId.SetTimerBlink]: {
-			name: 'Toggle blinking of timer',
+			name: 'Toggle/On/Off blinking of timer',
 			options: [
 				{
 					type: 'dropdown',
