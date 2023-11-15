@@ -18,7 +18,7 @@ enum ActionCommand {
 	Next = 'next',
 	Previous = 'previous',
 	Roll = 'roll',
-	Add = 'delay',
+	Add = 'addtime',
 	SetOnAir = 'set-onair',
 	SetTimerMessageVisibility = 'set-timer-message-visible',
 	SetTimerMessage = 'set-timer-message-text',
@@ -264,7 +264,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 			],
 			callback: (action) => {
 				let val =
-					Number(action.options.hours) * 60 + Number(action.options.minutes) + Number(action.options.seconds) / 60
+					(Number(action.options.hours) * 60 + Number(action.options.minutes)) * 60 + Number(action.options.seconds)
 				if (action.options.addremove === 'remove') {
 					val = val * -1
 				}
