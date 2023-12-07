@@ -8,8 +8,8 @@ import {
 	type CompanionMigrationAction,
 	type CompanionMigrationFeedback,
 } from '@companion-module/base'
-import type { OntimeConfig } from './config.js'
-import { feedbackId, ActionId } from './enums.js'
+import type { OntimeConfig } from './config'
+import { feedbackId, ActionId } from './enums'
 
 function update2x4x0(
 	_context: CompanionUpgradeContext<OntimeConfig>,

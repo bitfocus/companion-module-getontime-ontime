@@ -42,9 +42,7 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			id: 'version',
 			type: 'dropdown',
 			default: 'v2',
-			choices: [
-				{ id: 'v2', label: 'Ontime V2' },
-			],
+			choices: [{ id: 'v2', label: 'Ontime V2' }],
 			width: 12,
 			tooltip: 'Choose wich version of Ontime you are connecting to.',
 		},
