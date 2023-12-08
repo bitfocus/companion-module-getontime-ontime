@@ -248,8 +248,13 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.Delay,
-						options: { value: 1 },
+						actionId: ActionId.Add,
+						options: {
+							addremove: 'add',
+							hours: 0,
+							minutes: 1,
+							seconds: 0,
+						},
 					},
 				],
 				up: [],
@@ -271,8 +276,13 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.Delay,
-						options: { value: 5 },
+						actionId: ActionId.Add,
+						options: {
+							addremove: 'add',
+							hours: 0,
+							minutes: 5,
+							seconds: 0,
+						},
 					},
 				],
 				up: [],
@@ -294,8 +304,13 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.Delay,
-						options: { value: -1 },
+						actionId: ActionId.Add,
+						options: {
+							addremove: 'remove',
+							hours: 0,
+							minutes: 1,
+							seconds: 0,
+						},
 					},
 				],
 				up: [],
@@ -317,8 +332,13 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.Delay,
-						options: { value: -5 },
+						actionId: ActionId.Add,
+						options: {
+							addremove: 'remove',
+							hours: 0,
+							minutes: 5,
+							seconds: 0,
+						},
 					},
 				],
 				up: [],
@@ -346,7 +366,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.SetSpeakerMessageVisibility,
+						actionId: ActionId.SetTimerMessageVisibility,
 						options: { value: true },
 					},
 				],
@@ -355,7 +375,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.SetSpeakerMessageVisibility,
+						actionId: ActionId.SetTimerMessageVisibility,
 						options: { value: false },
 					},
 				],
@@ -364,7 +384,7 @@ export function presets(): CompanionPresetDefinitions {
 		],
 		feedbacks: [
 			{
-				feedbackId: feedbackId.SpeakerMessageVisible,
+				feedbackId: feedbackId.TimerMessageVisible,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
@@ -827,12 +847,12 @@ export function presets(): CompanionPresetDefinitions {
 			},
 		],
 	}
-	presets['display_delay'] = {
+	presets['display_added'] = {
 		type: 'button',
 		category: 'Display',
-		name: 'Delay Time',
+		name: 'Added Time',
 		style: {
-			text: '$(ontime:timer_delay)',
+			text: '$(ontime:timer_added)',
 			size: '14',
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),

@@ -75,7 +75,7 @@ export function connect(self: OnTimeInstance): void {
 				const clock = toReadableTime(self.states.timer.clock)
 				const timer_start = toReadableTime(self.states.timer.startedAt)
 				const timer_finish = toReadableTime(self.states.timer.expectedFinish)
-				const delay = mstoTime(self.states.timer.addedTime)
+				const added = mstoTime(self.states.timer.addedTime)
 				self.states.isNegative = self.states.timer.current < 0
 
 				self.setVariableValues({
@@ -87,23 +87,34 @@ export function connect(self: OnTimeInstance): void {
 					[variableId.Clock]: clock.hours + ':' + clock.minutes + ':' + clock.seconds,
 					[variableId.TimerStart]: timer_start.hours + ':' + timer_start.minutes + ':' + timer_start.seconds,
 					[variableId.TimerFinish]: timer_finish.hours + ':' + timer_finish.minutes + ':' + timer_finish.seconds,
-					[variableId.TimerDelay]: delay,
+					[variableId.TimerAdded]: added,
 
 					[variableId.PlayState]: self.states.playback,
 					[variableId.OnAir]: self.states.onAir,
 
-					[variableId.TitleNow]: self.states.eventNow.title,
-					[variableId.SubtitleNow]: self.states.eventNow.subtitlw,
-					[variableId.SpeakerNow]: self.states.eventNow.presenter,
-					[variableId.NoteNow]: self.states.eventNow.note,
-					[variableId.TitleNext]: self.states.eventNext.title,
-					[variableId.SubtitleNext]: self.states.eventNext.subtitle,
-					[variableId.SpeakerNext]: self.states.eventNext.presenter,
-					[variableId.NoteNext]: self.states.eventNext.note,
+					[variableId.TitleNow]: self.states.eventNow?.title,
+					[variableId.SubtitleNow]: self.states.eventNow?.subtitle,
+					[variableId.SpeakerNow]: self.states.eventNow?.presenter,
+					[variableId.NoteNow]: self.states.eventNow?.note,
+					[variableId.CueNow]: self.states.eventNow?.cue,
 
-					[variableId.SpeakerMessage]: self.states.timerMessage.text,
+					[variableId.TitleNext]: self.states.eventNext?.title,
+					[variableId.SubtitleNext]: self.states.eventNext?.subtitle,
+					[variableId.SpeakerNext]: self.states.eventNext?.presenter,
+					[variableId.NoteNext]: self.states.eventNext?.note,
+					[variableId.CueNext]: self.states.eventNext?.cue,
+
+
+					[variableId.TimerMessage]: self.states.timerMessage.text,
 					[variableId.PublicMessage]: self.states.publicMessage.text,
 					[variableId.LowerMessage]: self.states.lowerMessage.text,
+
+					[variableId.TimerMessageVisible]: self.states.timerMessage.visible,
+					[variableId.PublicMessageVisible]: self.states.publicMessage.visible,
+					[variableId.LowerMessageVisible]: self.states.lowerMessage.visible,
+
+					[variableId.TimerBlackout]: self.states.timerMessage.timerBlackout,
+					[variableId.TimerBlink]: self.states.timerMessage.timerBlink,
 				})
 				self.checkFeedbacks(
 					feedbackId.ColorRunning,
@@ -111,8 +122,10 @@ export function connect(self: OnTimeInstance): void {
 					feedbackId.ColorStopped,
 					feedbackId.ColorRoll,
 					feedbackId.ColorNegative,
+					feedbackId.ColorAddRemove,
 					feedbackId.OnAir,
-					feedbackId.SpeakerMessageVisible,
+					feedbackId.TimerMessageVisible,
+					feedbackId.ThisTimerMessageVisible,
 					feedbackId.PublicMessageVisible,
 					feedbackId.LowerMessageVisible,
 					feedbackId.TimerBlink,

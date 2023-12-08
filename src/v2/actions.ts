@@ -1,11 +1,13 @@
 import { OnTimeInstance } from '../index'
 import { CompanionActionDefinition, CompanionActionDefinitions } from '@companion-module/base'
 import { socketSendJson } from './connection'
-import { ActionId } from '../enums'
+import { ActionId, variableId } from '../enums'
 
 enum ActionCommand {
 	Start = 'start',
 	StartId = 'startid',
+	StartCue = 'startcue',
+	LoadCue = 'loadcue',
 	StartIndex = 'startindex',
 	StartNext = 'start-next',
 	LoadId = 'loadid',
@@ -16,10 +18,10 @@ enum ActionCommand {
 	Next = 'next',
 	Previous = 'previous',
 	Roll = 'roll',
-	Delay = 'delay',
+	Add = 'addtime',
 	SetOnAir = 'set-onair',
-	SetSpeakerMessageVisibility = 'set-timer-message-visible',
-	SetSpeakerMessage = 'set-timer-message-text',
+	SetTimerMessageVisibility = 'set-timer-message-visible',
+	SetTimerMessage = 'set-timer-message-text',
 	SetPublicMessageVisibility = 'set-public-message-visible',
 	SetPublicMessage = 'set-public-message-text',
 	SetLowerMessageVisibility = 'set-lower-message-visible',
@@ -98,6 +100,20 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				socketSendJson(ActionCommand.StartId, action.options.value)
 			},
 		},
+		[ActionId.StartCue]: {
+			name: 'Start event with Cue',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Event Cue',
+					id: 'value',
+					required: true,
+				},
+			],
+			callback: (action) => {
+				socketSendJson(ActionCommand.StartCue, action.options.value)
+			},
+		},
 		[ActionId.LoadId]: {
 			name: 'Load event with given ID',
 			options: [
@@ -146,6 +162,20 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				socketSendJson(ActionCommand.LoadIndex, action.options.value)
 			},
 		},
+		[ActionId.LoadCue]: {
+			name: 'Load event with Cue',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Event Cue',
+					id: 'value',
+					required: true,
+				},
+			],
+			callback: (action) => {
+				socketSendJson(ActionCommand.LoadCue, action.options.value)
+			},
+		},
 		[ActionId.Pause]: {
 			name: 'Pause running timer',
 			options: [],
@@ -188,25 +218,38 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				socketSendJson(ActionCommand.Roll)
 			},
 		},
-		[ActionId.Delay]: {
-			name: 'Add / remove time (min) to running timer',
+		[ActionId.Add]: {
+			name: 'Add / remove time to running timer',
 			options: [
 				{
-					type: 'checkbox',
-					default: false,
-					id: 'remove',
-					label: 'Remove Time',
+					id: 'addremove',
+					type: 'dropdown',
+					choices: [
+						{ id: 'add', label: 'Add Time' },
+						{ id: 'remove', label: 'Remove Time' },
+					],
+					label: 'Add or Remove',
+					default: 'add',
+				},
+				{
+					type: 'number',
+					id: 'hours',
+					label: 'Hours',
+					default: 0,
+					step: 1,
+					min: 0,
+					max: 24,
+					required: true,
 				},
 				{
 					type: 'number',
 					id: 'minutes',
 					label: 'Minutes',
-					default: 0,
-					min: 0,
-					max: 60,
+					default: 1,
 					step: 1,
+					min: 0,
+					max: 1440,
 					required: true,
-					range: true,
 				},
 				{
 					type: 'number',
@@ -214,74 +257,94 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 					label: 'Seconds',
 					default: 0,
 					min: 0,
-					max: 60,
+					max: 86400,
 					step: 1,
 					required: true,
-					range: true,
 				},
 			],
 			callback: (action) => {
-				let val = Number(action.options.minutes) + (Number(action.options.seconds) / 60)
-				if (action.options.remove === true) {
+				let val =
+					(Number(action.options.hours) * 60 + Number(action.options.minutes)) * 60 + Number(action.options.seconds)
+				if (action.options.addremove === 'remove') {
 					val = val * -1
 				}
-				socketSendJson(ActionCommand.Delay, val)
+				socketSendJson(ActionCommand.Add, val)
 			},
 		},
 		[ActionId.SetOnAir]: {
-			name: 'Toggle On Air',
+			name: 'Toggle/On/Off On Air',
 			options: [
 				{
-					type: 'checkbox',
-					default: true,
+					type: 'dropdown',
+					choices: [
+						{ id: 2, label: 'Toggle' },
+						{ id: 1, label: 'On' },
+						{ id: 0, label: 'Off' },
+					],
+					default: 2,
 					id: 'value',
 					label: 'On Air',
 				},
 			],
 			callback: (action) => {
-				socketSendJson(ActionCommand.SetOnAir, action.options.value)
+				const val = action.options.value === 2 ? !self.getVariableValue(variableId.OnAir) : action.options.value
+				socketSendJson(ActionCommand.SetOnAir, val)
 			},
 		},
-		[ActionId.SetSpeakerMessageVisibility]: {
-			name: 'Toggle visibility of Stage Timer message',
+		[ActionId.SetTimerMessageVisibility]: {
+			name: 'Toggle/On/Off visibility of Timer message',
 			options: [
 				{
-					type: 'checkbox',
-					default: true,
+					type: 'dropdown',
+					choices: [
+						{ id: 2, label: 'Toggle' },
+						{ id: 1, label: 'On' },
+						{ id: 0, label: 'Off' },
+					],
+					default: 2,
 					id: 'value',
-					label: 'Show Message',
+					label: 'Timer message',
 				},
 			],
 			callback: (action) => {
-				socketSendJson(ActionCommand.SetSpeakerMessageVisibility, action.options.value)
+				const val =
+					action.options.value === 2 ? !self.getVariableValue(variableId.TimerMessageVisible) : action.options.value
+				socketSendJson(ActionCommand.SetTimerMessageVisibility, val)
 			},
 		},
-		[ActionId.SetSpeakerMessage]: {
-			name: 'Set text for Stage Timer message',
+		[ActionId.SetTimerMessage]: {
+			name: 'Set text for Timer message',
 			options: [
 				{
 					type: 'textinput',
-					label: 'Stage Timer message',
+					label: 'Timer message',
 					id: 'value',
 					required: true,
 				},
 			],
 			callback: (action) => {
-				socketSendJson(ActionCommand.SetSpeakerMessage, action.options.value)
+				socketSendJson(ActionCommand.SetTimerMessage, action.options?.value ?? '')
 			},
 		},
 		[ActionId.SetPublicMessageVisibility]: {
-			name: 'Toggle visibility of Public screens message',
+			name: 'Toggle/On/Off visibility of Public screens message',
 			options: [
 				{
-					type: 'checkbox',
+					type: 'dropdown',
+					choices: [
+						{ id: 2, label: 'Toggle' },
+						{ id: 1, label: 'On' },
+						{ id: 0, label: 'Off' },
+					],
+					default: 2,
 					id: 'value',
-					label: 'Show Message',
-					default: true,
+					label: 'Public screens message',
 				},
 			],
 			callback: (action) => {
-				socketSendJson(ActionCommand.SetPublicMessageVisibility, action.options.value)
+				const val =
+					action.options.value === 2 ? !self.getVariableValue(variableId.PublicMessageVisible) : action.options.value
+				socketSendJson(ActionCommand.SetPublicMessageVisibility, val)
 			},
 		},
 		[ActionId.SetPublicMessage]: {
@@ -289,27 +352,34 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Stage Timer message',
+					label: 'Public screens message',
 					id: 'value',
 					required: true,
 				},
 			],
 			callback: (action) => {
-				socketSendJson(ActionCommand.SetPublicMessage, action.options.value)
+				socketSendJson(ActionCommand.SetPublicMessage, action.options?.value ?? '')
 			},
 		},
 		[ActionId.SetLowerMessageVisibility]: {
-			name: 'Toggle visibility of Lower Third message',
+			name: 'Toggle/On/Off visibility of Lower Third message',
 			options: [
 				{
-					type: 'checkbox',
+					type: 'dropdown',
+					choices: [
+						{ id: 2, label: 'Toggle' },
+						{ id: 1, label: 'On' },
+						{ id: 0, label: 'Off' },
+					],
+					default: 2,
 					id: 'value',
-					label: 'Show Message',
-					default: true,
+					label: 'Lower Third message',
 				},
 			],
 			callback: (action) => {
-				socketSendJson(ActionCommand.SetLowerMessageVisibility, action.options.value)
+				const val =
+					action.options.value === 2 ? !self.getVariableValue(variableId.LowerMessageVisible) : action.options.value
+				socketSendJson(ActionCommand.SetLowerMessageVisibility, val)
 			},
 		},
 		[ActionId.SetLowerMessage]: {
@@ -317,41 +387,53 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 			options: [
 				{
 					type: 'textinput',
-					label: 'Stage Timer message',
+					label: 'Lower Third message',
 					id: 'value',
 					required: true,
 				},
 			],
 			callback: (action) => {
-				socketSendJson(ActionCommand.SetLowerMessage, action.options.value)
+				socketSendJson(ActionCommand.SetLowerMessage, action.options?.value ?? '')
 			},
 		},
 		[ActionId.SetTimerBlackout]: {
-			name: 'Toggle blackout of timer',
+			name: 'Toggle/On/Off Blackout of timer',
 			options: [
 				{
-					type: 'checkbox',
+					type: 'dropdown',
+					choices: [
+						{ id: 2, label: 'Toggle' },
+						{ id: 1, label: 'Blackout On' },
+						{ id: 0, label: 'Blackout Off' },
+					],
+					default: 2,
 					id: 'value',
-					label: 'Blackout',
-					default: true,
+					label: 'Blackout of timer',
 				},
 			],
 			callback: (action) => {
-				socketSendJson(ActionCommand.SetTimerBlackout, action.options.value)
+				const val = action.options.value === 2 ? !self.getVariableValue(variableId.TimerBlackout) : action.options.value
+				socketSendJson(ActionCommand.SetTimerBlackout, val)
 			},
 		},
 		[ActionId.SetTimerBlink]: {
-			name: 'Toggle blinking of timer',
+			name: 'Toggle/On/Off blinking of timer',
 			options: [
 				{
-					type: 'checkbox',
+					type: 'dropdown',
+					choices: [
+						{ id: 2, label: 'Toggle' },
+						{ id: 1, label: 'On' },
+						{ id: 0, label: 'Off' },
+					],
+					default: 2,
 					id: 'value',
-					label: 'Blink',
-					default: true,
+					label: 'Blink timer',
 				},
 			],
 			callback: (action) => {
-				socketSendJson(ActionCommand.SetTimerBlink, action.options.value)
+				const val = action.options.value === 2 ? !self.getVariableValue(variableId.TimerBlink) : action.options.value
+				socketSendJson(ActionCommand.SetTimerBlink, val)
 			},
 		},
 	}

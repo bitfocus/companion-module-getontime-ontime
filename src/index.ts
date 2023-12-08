@@ -9,8 +9,8 @@ import {
 	CompanionFeedbackDefinitions,
 } from '@companion-module/base'
 import { OntimeConfig, GetConfigFields } from './config'
-import { OntimeV1 } from './v1/ontimev1'
 import { OntimeV2 } from './v2/ontimev2'
+import { UpgradeScripts } from './upgrades'
 export interface OntimeClient {
 	instance: OnTimeInstance
 
@@ -36,7 +36,7 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 		this.states = {}
 
 		if (this.config.version !== 'v1' && this.config.version !== 'v2') {
-			this.config.version = 'v1'
+			this.config.version = 'v2'
 			this.config.refetchEvents = true
 			this.config.reconnect = true
 			this.config.reconnectInterval = 5
@@ -44,9 +44,12 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 		}
 
 		if (this.config.version === 'v1') {
-			this.ontime = new OntimeV1(this)
+			this.updateStatus(InstanceStatus.BadConfig, 'V1 is no longer suported')
+			return
 		} else if (this.config.version === 'v2') {
 			this.ontime = new OntimeV2(this)
+		} else {
+			this.updateStatus(InstanceStatus.BadConfig, 'unknown version')
 		}
 
 		this.initConnection()
@@ -73,9 +76,12 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 		this.updateStatus(InstanceStatus.Disconnected)
 
 		if (this.config.version === 'v1') {
-			this.ontime = new OntimeV1(this)
+			this.updateStatus(InstanceStatus.BadConfig, 'V1 is no longer suported')
+			return
 		} else if (this.config.version === 'v2') {
 			this.ontime = new OntimeV2(this)
+		} else {
+			this.updateStatus(InstanceStatus.BadConfig, 'unknown version')
 		}
 
 		this.initConnection()
@@ -112,4 +118,4 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 	}
 }
 
-runEntrypoint(OnTimeInstance, [])
+runEntrypoint(OnTimeInstance, UpgradeScripts)

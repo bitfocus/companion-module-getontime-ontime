@@ -20,8 +20,8 @@ export function variables(): CompanionVariableDefinition[] {
 			variableId: variableId.TimerFinish,
 		},
 		{
-			name: 'Delay of current event',
-			variableId: variableId.TimerDelay,
+			name: 'Time added to current event',
+			variableId: variableId.TimerAdded,
 		},
 		{
 			name: 'Current time of event (hh:mm:ss)',
@@ -60,6 +60,10 @@ export function variables(): CompanionVariableDefinition[] {
 			variableId: variableId.NoteNow,
 		},
 		{
+			name: 'Cue of current event',
+			variableId: variableId.CueNow,
+		},
+		{
 			name: 'Title of next event',
 			variableId: variableId.TitleNext,
 		},
@@ -76,12 +80,16 @@ export function variables(): CompanionVariableDefinition[] {
 			variableId: variableId.NoteNext,
 		},
 		{
+			name: 'Cue of next event',
+			variableId: variableId.CueNext,
+		},
+		{
 			name: 'On Air',
 			variableId: variableId.OnAir,
 		},
 		{
-			name: 'Speaker Message',
-			variableId: variableId.SpeakerMessage,
+			name: 'Timer Message',
+			variableId: variableId.TimerMessage,
 		},
 		{
 			name: 'Public Message',
@@ -90,6 +98,26 @@ export function variables(): CompanionVariableDefinition[] {
 		{
 			name: 'Lower thirds Message',
 			variableId: variableId.LowerMessage,
+		},
+		{
+			name: 'Timer Message Visible',
+			variableId: variableId.TimerMessageVisible,
+		},
+		{
+			name: 'Public Message Visible',
+			variableId: variableId.PublicMessageVisible,
+		},
+		{
+			name: 'Lower thirds Message Visible',
+			variableId: variableId.LowerMessageVisible,
+		},
+		{
+			name: 'Timer Blackout',
+			variableId: variableId.TimerBlackout,
+		},
+		{
+			name: 'Timer Blinking',
+			variableId: variableId.TimerBlink,
 		},
 	]
 

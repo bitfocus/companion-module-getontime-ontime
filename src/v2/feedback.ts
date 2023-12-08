@@ -90,6 +90,23 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 			}
 		},
 	}
+	feedbacks[feedbackId.ColorAddRemove] = {
+		type: 'boolean',
+		name: 'Change color from added/removed time',
+		description: 'Change the colors of a button according if time has been added/removed',
+		defaultStyle: {
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(254, 124, 19),
+		},
+		options: [],
+		callback: (_feedback) => {
+			if (self.states.timer.addedTime != 0) {
+				return true
+			} else {
+				return false
+			}
+		},
+	}
 	feedbacks[feedbackId.OnAir] = {
 		type: 'boolean',
 		name: 'Change color from onAir',
@@ -107,10 +124,10 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 			}
 		},
 	}
-	feedbacks[feedbackId.SpeakerMessageVisible] = {
+	feedbacks[feedbackId.TimerMessageVisible] = {
 		type: 'boolean',
-		name: 'Change color from speaker message visibility',
-		description: 'Change the colors of a button if speaker message is visible',
+		name: 'Change color from timer message visibility',
+		description: 'Change the colors of a button if timer message is visible',
 		defaultStyle: {
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(255, 0, 0),
@@ -118,6 +135,31 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 		options: [],
 		callback: () => {
 			if (self.states.timerMessage.visible) {
+				return true
+			} else {
+				return false
+			}
+		},
+	}
+	feedbacks[feedbackId.ThisTimerMessageVisible] = {
+		type: 'boolean',
+		name: 'Change color from this timer message visibility',
+		description: 'Change the colors of a button if timer message is visible and matches this message',
+		defaultStyle: {
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(255, 0, 0),
+		},
+		options: [
+			{
+				type: 'textinput',
+				id: 'msg',
+				default: '',
+				required: true,
+				label: 'Message to match',
+			},
+		],
+		callback: (feedback) => {
+			if (self.states.timerMessage.visible && self.states.timerMessage.text === feedback.options.msg) {
 				return true
 			} else {
 				return false
