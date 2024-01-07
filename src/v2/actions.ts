@@ -480,6 +480,38 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				}
 			},
 		},
+		[ActionId.ChangeColour]: {
+			name: 'Change current/next event colour',
+			options: [
+				{
+					type: 'dropdown',
+					choices: [
+						{ id: 'current', label: 'Current' },
+						{ id: 'next', label: 'Next' },
+					],
+					default: 'current',
+					id: 'target',
+					label: 'Target',
+				},
+				{
+					type: 'colorpicker',
+					id: 'colour',
+					label: 'Colour',
+					default: 48 + 48 + 48,
+				},
+			],
+			callback: (action) => {
+				const eventId =
+					action.options.target == 'current' ? self.states?.loaded?.selectedEventId : self.states?.loaded?.nextEventId
+				if (!eventId) {
+					self.log('info', `${action.options.target} event is not present`)
+				} else {
+					let colour = action.options?.colour ?? 0
+					colour = '#' + colour.toString(16)
+					socketSendChange(ActionCommand.Change, eventId, 'colour', colour)
+				}
+			},
+		},
 	}
 	return actions
 }
