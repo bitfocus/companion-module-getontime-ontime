@@ -497,7 +497,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 					type: 'colorpicker',
 					id: 'colour',
 					label: 'Colour',
-					default: 48 + 48 + 48,
+					default: 0xff0000,
 				},
 			],
 			callback: (action) => {
