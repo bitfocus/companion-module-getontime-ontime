@@ -1,6 +1,6 @@
 import { OnTimeInstance } from '../index'
 import { CompanionActionDefinition, CompanionActionDefinitions } from '@companion-module/base'
-import { socketSendJson } from './connection'
+import { socketSendChange, socketSendJson } from './connection'
 import { ActionId, variableId } from '../enums'
 
 enum ActionCommand {
@@ -28,6 +28,7 @@ enum ActionCommand {
 	SetLowerMessage = 'set-lower-message-text',
 	SetTimerBlackout = 'set-timer-blackout',
 	SetTimerBlink = 'set-timer-blink',
+	Change = 'change',
 }
 
 /**
@@ -434,6 +435,49 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 			callback: (action) => {
 				const val = action.options.value === 2 ? !self.getVariableValue(variableId.TimerBlink) : action.options.value
 				socketSendJson(ActionCommand.SetTimerBlink, val)
+			},
+		},
+		[ActionId.Change]: {
+			name: 'Change event property',
+			options: [
+				{
+					type: 'textinput',
+					id: 'eventId',
+					label: 'Event ID',
+					regex: '/^[a-zA-Z0-9]{5}$/',
+					required: true,
+				},
+				{
+					type: 'dropdown',
+					choices: [
+						{ id: 'title', label: 'Title' },
+						{ id: 'subtitle', label: 'Subtitle' },
+						{ id: 'presenter', label: 'Presenter' },
+						{ id: 'note', label: 'Note' },
+						{ id: 'cue', label: 'Cue' },
+						{ id: 'duration', label: 'Duration' },
+						{ id: 'isPublic', label: 'Public' },
+						{ id: 'skip', label: 'Skip' },
+						{ id: 'colour', label: 'Colour' },
+					],
+					default: 'title',
+					id: 'property',
+					label: 'Property',
+				},
+				{
+					type: 'textinput',
+					id: 'val',
+					label: 'Value',
+				},
+			],
+			callback: (action) => {
+				if (
+					action.options.eventId != undefined &&
+					action.options.property != undefined &&
+					action.options.val != undefined
+				) {
+					socketSendChange(ActionCommand.Change, action.options.eventId, action.options.property, action.options.val)
+				}
 			},
 		},
 	}

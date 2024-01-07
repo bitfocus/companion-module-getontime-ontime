@@ -25,6 +25,7 @@ export enum ActionId {
 	SetLowerMessage = 'setLowerMessage',
 	SetTimerBlackout = 'setTimerBlackout',
 	SetTimerBlink = 'setTimerBlink',
+	Change = 'change',
 }
 
 export enum feedbackId {

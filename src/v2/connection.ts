@@ -104,7 +104,6 @@ export function connect(self: OnTimeInstance): void {
 					[variableId.NoteNext]: self.states.eventNext?.note,
 					[variableId.CueNext]: self.states.eventNext?.cue,
 
-
 					[variableId.TimerMessage]: self.states.timerMessage.text,
 					[variableId.PublicMessage]: self.states.publicMessage.text,
 					[variableId.LowerMessage]: self.states.lowerMessage.text,
@@ -169,6 +168,19 @@ export function socketSendJson(type: string, payload?: InputValue): void {
 		JSON.stringify({
 			type,
 			payload,
+		})
+	)
+}
+
+export function socketSendChange(type: string, eventId: InputValue, property: InputValue, value: InputValue): void {
+	socketSend(
+		JSON.stringify({
+			type,
+			payload: {
+				eventId,
+				property,
+				value,
+			},
 		})
 	)
 }
