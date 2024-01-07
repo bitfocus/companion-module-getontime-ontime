@@ -512,6 +512,18 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				}
 			},
 		},
+		[ActionId.ChangeSkip]: {
+			name: 'Skip next event',
+			options: [],
+			callback: (action) => {
+				const eventId = self.states?.loaded?.nextEventId
+				if (!eventId) {
+					self.log('info', `${action.options.target} event is not present`)
+				} else {
+					socketSendChange(ActionCommand.Change, eventId, 'skip', true)
+				}
+			},
+		},
 	}
 	return actions
 }
