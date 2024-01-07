@@ -20,8 +20,8 @@ See below available actions, some of these are extended in Presets
 
 Actions related to time control
 
-| Preset | Action                                                               | version |
-| :----: | -------------------------------------------------------------------- | :-----: |
+| Preset | Action                                                               |
+| :----: | -------------------------------------------------------------------- |
 |   ✅   | Start selected event                                                 |
 |   ✅   | Start next event                                                     |
 |   ✅   | Start event with given ID                                            |
@@ -40,9 +40,9 @@ Actions related to time control
 |   ✅   | Toggle/On/Off On Air                                                 |
 |   ✅   | Toggle/On/Off Timer Blinking                                         |
 |   ✅   | Toggle/On/Off Timer Blackout                                         |
-|   ✅   | Change event property                                                | v2.22.0 |
-|   ✅   | Change color fo current/next event                                   | v2.22.0 |
-|   🔄   | Toggle/On/Off skip current/next event                                | v2.22.0 |
+|   ✅   | Change event property                                                |
+|   ✅   | Change color fo current/next event                                   |
+|   ✅   | Skip next event                                                      |
 
 ### Messages Control
 
