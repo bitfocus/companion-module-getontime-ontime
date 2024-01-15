@@ -235,16 +235,7 @@ export function presets(): CompanionPresetDefinitions {
 				down: [
 					{
 						actionId: ActionId.SetOnAir,
-						options: { value: true },
-					},
-				],
-				up: [],
-			},
-			{
-				down: [
-					{
-						actionId: ActionId.SetOnAir,
-						options: { value: false },
+						options: { value: 2 },
 					},
 				],
 				up: [],
