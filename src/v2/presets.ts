@@ -51,7 +51,7 @@ export function presets(): CompanionPresetDefinitions {
 			alignment: 'center:bottom',
 			size: '7',
 			color: combineRgb(255, 255, 255),
-			bgcolor: combineRgb(237, 137, 54),
+			bgcolor: combineRgb(0, 0, 0),
 		},
 		steps: [
 			{
@@ -64,7 +64,16 @@ export function presets(): CompanionPresetDefinitions {
 				up: [],
 			},
 		],
-		feedbacks: [],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.ColorPaused,
+				options: {},
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(237, 137, 54),
+				},
+			},
+		],
 	}
 	presets['stop_selected_event'] = {
 		type: 'button',
