@@ -385,16 +385,7 @@ export function presets(): CompanionPresetDefinitions {
 				down: [
 					{
 						actionId: ActionId.SetTimerMessageVisibility,
-						options: { value: true },
-					},
-				],
-				up: [],
-			},
-			{
-				down: [
-					{
-						actionId: ActionId.SetTimerMessageVisibility,
-						options: { value: false },
+						options: { value: 2 },
 					},
 				],
 				up: [],
@@ -432,16 +423,7 @@ export function presets(): CompanionPresetDefinitions {
 				down: [
 					{
 						actionId: ActionId.SetPublicMessageVisibility,
-						options: { value: true },
-					},
-				],
-				up: [],
-			},
-			{
-				down: [
-					{
-						actionId: ActionId.SetPublicMessageVisibility,
-						options: { value: false },
+						options: { value: 2 },
 					},
 				],
 				up: [],
@@ -479,16 +461,7 @@ export function presets(): CompanionPresetDefinitions {
 				down: [
 					{
 						actionId: ActionId.SetLowerMessageVisibility,
-						options: { value: true },
-					},
-				],
-				up: [],
-			},
-			{
-				down: [
-					{
-						actionId: ActionId.SetLowerMessageVisibility,
-						options: { value: false },
+						options: { value: 2 },
 					},
 				],
 				up: [],
@@ -524,16 +497,7 @@ export function presets(): CompanionPresetDefinitions {
 				down: [
 					{
 						actionId: ActionId.SetTimerBlink,
-						options: { value: true },
-					},
-				],
-				up: [],
-			},
-			{
-				down: [
-					{
-						actionId: ActionId.SetTimerBlink,
-						options: { value: false },
+						options: { value: 2 },
 					},
 				],
 				up: [],
@@ -569,16 +533,7 @@ export function presets(): CompanionPresetDefinitions {
 				down: [
 					{
 						actionId: ActionId.SetTimerBlackout,
-						options: { value: true },
-					},
-				],
-				up: [],
-			},
-			{
-				down: [
-					{
-						actionId: ActionId.SetTimerBlackout,
-						options: { value: false },
+						options: { value: 2 },
 					},
 				],
 				up: [],
