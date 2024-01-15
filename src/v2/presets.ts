@@ -29,7 +29,16 @@ export function presets(): CompanionPresetDefinitions {
 				up: [],
 			},
 		],
-		feedbacks: [],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.ColorRunning,
+				options: {},
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(51, 158, 78),
+				},
+			},
+		],
 	}
 	presets['pause_selected_event'] = {
 		type: 'button',
