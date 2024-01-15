@@ -190,7 +190,7 @@ export function presets(): CompanionPresetDefinitions {
 			alignment: 'center:bottom',
 			size: '7',
 			color: combineRgb(255, 255, 255),
-			bgcolor: combineRgb(43, 108, 176),
+			bgcolor: combineRgb(0, 0, 176),
 		},
 		steps: [
 			{
@@ -203,7 +203,16 @@ export function presets(): CompanionPresetDefinitions {
 				up: [],
 			},
 		],
-		feedbacks: [],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.ColorRoll,
+				options: {},
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(2, 116, 182),
+				},
+			},
+		],
 	}
 	presets['toggle_on_air'] = {
 		type: 'button',
