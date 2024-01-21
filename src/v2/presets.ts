@@ -29,7 +29,16 @@ export function presets(): CompanionPresetDefinitions {
 				up: [],
 			},
 		],
-		feedbacks: [],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.ColorRunning,
+				options: {},
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(51, 158, 78),
+				},
+			},
+		],
 	}
 	presets['pause_selected_event'] = {
 		type: 'button',
@@ -42,7 +51,7 @@ export function presets(): CompanionPresetDefinitions {
 			alignment: 'center:bottom',
 			size: '7',
 			color: combineRgb(255, 255, 255),
-			bgcolor: combineRgb(237, 137, 54),
+			bgcolor: combineRgb(0, 0, 0),
 		},
 		steps: [
 			{
@@ -55,7 +64,16 @@ export function presets(): CompanionPresetDefinitions {
 				up: [],
 			},
 		],
-		feedbacks: [],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.ColorPaused,
+				options: {},
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(237, 137, 54),
+				},
+			},
+		],
 	}
 	presets['stop_selected_event'] = {
 		type: 'button',
@@ -172,7 +190,7 @@ export function presets(): CompanionPresetDefinitions {
 			alignment: 'center:bottom',
 			size: '7',
 			color: combineRgb(255, 255, 255),
-			bgcolor: combineRgb(43, 108, 176),
+			bgcolor: combineRgb(0, 0, 176),
 		},
 		steps: [
 			{
@@ -185,7 +203,16 @@ export function presets(): CompanionPresetDefinitions {
 				up: [],
 			},
 		],
-		feedbacks: [],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.ColorRoll,
+				options: {},
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(2, 116, 182),
+				},
+			},
+		],
 	}
 	presets['toggle_on_air'] = {
 		type: 'button',
@@ -208,16 +235,7 @@ export function presets(): CompanionPresetDefinitions {
 				down: [
 					{
 						actionId: ActionId.SetOnAir,
-						options: { value: true },
-					},
-				],
-				up: [],
-			},
-			{
-				down: [
-					{
-						actionId: ActionId.SetOnAir,
-						options: { value: false },
+						options: { value: 2 },
 					},
 				],
 				up: [],
@@ -367,16 +385,7 @@ export function presets(): CompanionPresetDefinitions {
 				down: [
 					{
 						actionId: ActionId.SetTimerMessageVisibility,
-						options: { value: true },
-					},
-				],
-				up: [],
-			},
-			{
-				down: [
-					{
-						actionId: ActionId.SetTimerMessageVisibility,
-						options: { value: false },
+						options: { value: 2 },
 					},
 				],
 				up: [],
@@ -414,16 +423,7 @@ export function presets(): CompanionPresetDefinitions {
 				down: [
 					{
 						actionId: ActionId.SetPublicMessageVisibility,
-						options: { value: true },
-					},
-				],
-				up: [],
-			},
-			{
-				down: [
-					{
-						actionId: ActionId.SetPublicMessageVisibility,
-						options: { value: false },
+						options: { value: 2 },
 					},
 				],
 				up: [],
@@ -461,16 +461,7 @@ export function presets(): CompanionPresetDefinitions {
 				down: [
 					{
 						actionId: ActionId.SetLowerMessageVisibility,
-						options: { value: true },
-					},
-				],
-				up: [],
-			},
-			{
-				down: [
-					{
-						actionId: ActionId.SetLowerMessageVisibility,
-						options: { value: false },
+						options: { value: 2 },
 					},
 				],
 				up: [],
@@ -506,16 +497,7 @@ export function presets(): CompanionPresetDefinitions {
 				down: [
 					{
 						actionId: ActionId.SetTimerBlink,
-						options: { value: true },
-					},
-				],
-				up: [],
-			},
-			{
-				down: [
-					{
-						actionId: ActionId.SetTimerBlink,
-						options: { value: false },
+						options: { value: 2 },
 					},
 				],
 				up: [],
@@ -551,16 +533,7 @@ export function presets(): CompanionPresetDefinitions {
 				down: [
 					{
 						actionId: ActionId.SetTimerBlackout,
-						options: { value: true },
-					},
-				],
-				up: [],
-			},
-			{
-				down: [
-					{
-						actionId: ActionId.SetTimerBlackout,
-						options: { value: false },
+						options: { value: 2 },
 					},
 				],
 				up: [],
