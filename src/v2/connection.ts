@@ -4,6 +4,7 @@ import Websocket from 'ws'
 import { mstoTime, toReadableTime } from '../utilities'
 import axios from 'axios'
 import { feedbackId, variableId } from '../enums'
+import { OntimeEvent } from './state'
 
 let ws: Websocket | null = null
 let reconnectionTimeout: NodeJS.Timeout | null = null
@@ -191,6 +192,8 @@ export function socketSendChange(type: string, eventId: string, property: InputV
 	)
 }
 
+//@todo maybe we should take the whole event object here and decide where we consume it what data we need
+
 export async function fetchEvents(self: OnTimeInstance): Promise<void> {
 	self.log('debug', 'fetching events from ontime')
 	try {
@@ -198,10 +201,10 @@ export async function fetchEvents(self: OnTimeInstance): Promise<void> {
 		self.log('debug', `fetched ${result.data.length} events`)
 		self.events = []
 		self.events = result.data
-			.filter((event: any) => event.type === 'event')
-			.map((event: any) => ({
+			.filter((event: OntimeEvent) => event.type === 'event')
+			.map((event: OntimeEvent) => ({
 				id: event.id,
-				label: event.title,
+				label: event.cue + ' | ' + event.title,
 			}))
 		self.init_actions()
 	} catch (e: any) {
