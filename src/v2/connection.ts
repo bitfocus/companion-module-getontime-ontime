@@ -178,7 +178,7 @@ export function socketSendJson(type: string, payload?: InputValue): void {
 	)
 }
 
-export function socketSendChange(type: string, eventId: InputValue, property: InputValue, value: InputValue): void {
+export function socketSendChange(type: string, eventId: string, property: InputValue, value: InputValue): void {
 	socketSend(
 		JSON.stringify({
 			type,

@@ -26,8 +26,6 @@ export enum ActionId {
 	SetTimerBlackout = 'setTimerBlackout',
 	SetTimerBlink = 'setTimerBlink',
 	Change = 'change',
-	ChangeColour = 'changeColour',
-	ChangeSkip = 'changeSkip',
 }
 
 export enum feedbackId {

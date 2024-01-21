@@ -441,11 +441,11 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 			name: 'Change event property',
 			options: [
 				{
-					type: 'textinput',
+					type: 'dropdown',
+					choices: [{ id: 'selected', label: 'Selected' }, { id: 'next', label: 'Next' }, ...self.events],
 					id: 'eventId',
-					label: 'Event ID',
-					regex: '/^[a-zA-Z0-9]{5}$/',
-					required: true,
+					label: 'Event',
+					default: 'next',
 				},
 				{
 					type: 'dropdown',
@@ -482,55 +482,20 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 			],
 			callback: (action) => {
 				if (
-					action.options.eventId != undefined &&
-					action.options.property != undefined &&
-					action.options.val != undefined
+					action.options.eventId !== undefined &&
+					action.options.property !== undefined &&
+					action.options.val !== undefined
 				) {
-					socketSendChange(ActionCommand.Change, action.options.eventId, action.options.property, action.options.val)
-				}
-			},
-		},
-		[ActionId.ChangeColour]: {
-			name: 'Change current/next event colour',
-			options: [
-				{
-					type: 'dropdown',
-					choices: [
-						{ id: 'current', label: 'Current' },
-						{ id: 'next', label: 'Next' },
-					],
-					default: 'current',
-					id: 'target',
-					label: 'Target',
-				},
-				{
-					type: 'colorpicker',
-					id: 'colour',
-					label: 'Colour',
-					default: 0xff0000,
-				},
-			],
-			callback: (action) => {
-				const eventId =
-					action.options.target == 'current' ? self.states?.loaded?.selectedEventId : self.states?.loaded?.nextEventId
-				if (!eventId) {
-					self.log('info', `${action.options.target} event is not present`)
-				} else {
-					let colour = action.options?.colour ?? 0
-					colour = '#' + colour.toString(16)
-					socketSendChange(ActionCommand.Change, eventId, 'colour', colour)
-				}
-			},
-		},
-		[ActionId.ChangeSkip]: {
-			name: 'Skip next event',
-			options: [],
-			callback: (action) => {
-				const eventId = self.states?.loaded?.nextEventId
-				if (!eventId) {
-					self.log('info', `${action.options.target} event is not present`)
-				} else {
-					socketSendChange(ActionCommand.Change, eventId, 'skip', true)
+					const eventId =
+						action.options.eventId === 'selected'
+							? self.states.loaded.selectedEventId
+							: action.options.eventId === 'next'
+							? self.states.loaded.nextEventId
+							: action.options.eventId
+
+					if (typeof eventId === 'string') {
+						socketSendChange(ActionCommand.Change, eventId, action.options.property, action.options.val)
+					}
 				}
 			},
 		},
