@@ -10,6 +10,11 @@ let ws: Websocket | null = null
 let reconnectionTimeout: NodeJS.Timeout | null = null
 let reconnectInterval: number
 let shouldReconnect = false
+const defaultTimerObject = {
+	hours: '00',
+	minutes: '00',
+	seconds: '00',
+}
 
 export function connect(self: OnTimeInstance): void {
 	reconnectInterval = self.config.reconnectInterval * 1000
@@ -72,28 +77,26 @@ export function connect(self: OnTimeInstance): void {
 			if (type === 'ontime') {
 				self.states = payload
 
-				const timer = self.states.timer.current === null ? null : toReadableTime(self.states.timer.current)
+				const timer =
+					self.states.timer.current === null ? defaultTimerObject : toReadableTime(self.states.timer.current)
 				const clock = toReadableTime(self.states.timer.clock)
-				const timer_start = self.states.timer.startedAt === null ? null : toReadableTime(self.states.timer.startedAt)
+				const timer_start =
+					self.states.timer.startedAt === null ? defaultTimerObject : toReadableTime(self.states.timer.startedAt)
 				const timer_finish =
-					self.states.timer.expectedFinish === null ? null : toReadableTime(self.states.timer.expectedFinish)
+					self.states.timer.expectedFinish === null
+						? defaultTimerObject
+						: toReadableTime(self.states.timer.expectedFinish)
 				const added = mstoTime(self.states.timer.addedTime)
 
 				self.setVariableValues({
-					[variableId.Time]: timer === null ? undefined : timer.hours + ':' + timer.minutes + ':' + timer.seconds,
-					[variableId.TimeHM]: timer === null ? undefined : timer.hours + ':' + timer.minutes,
-					[variableId.TimeH]: timer === null ? undefined : timer.hours,
-					[variableId.TimeM]: timer === null ? undefined : timer.minutes,
-					[variableId.TimeS]: timer === null ? undefined : timer.seconds,
+					[variableId.Time]: timer.hours + ':' + timer.minutes + ':' + timer.seconds,
+					[variableId.TimeHM]: timer.hours + ':' + timer.minutes,
+					[variableId.TimeH]: timer.hours,
+					[variableId.TimeM]: timer.minutes,
+					[variableId.TimeS]: timer.seconds,
 					[variableId.Clock]: clock.hours + ':' + clock.minutes + ':' + clock.seconds,
-					[variableId.TimerStart]:
-						timer_start === null
-							? undefined
-							: timer_start.hours + ':' + timer_start.minutes + ':' + timer_start.seconds,
-					[variableId.TimerFinish]:
-						timer_finish === null
-							? undefined
-							: timer_finish.hours + ':' + timer_finish.minutes + ':' + timer_finish.seconds,
+					[variableId.TimerStart]: timer_start.hours + ':' + timer_start.minutes + ':' + timer_start.seconds,
+					[variableId.TimerFinish]: timer_finish.hours + ':' + timer_finish.minutes + ':' + timer_finish.seconds,
 					[variableId.TimerAdded]: added,
 
 					[variableId.PlayState]: self.states.playback,
