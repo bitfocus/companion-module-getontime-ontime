@@ -11,6 +11,7 @@ import {
 import { OntimeConfig, GetConfigFields } from './config'
 import { OntimeV2 } from './v2/ontimev2'
 import { UpgradeScripts } from './upgrades'
+import { stateobj } from './v2/state'
 export interface OntimeClient {
 	instance: OnTimeInstance
 
@@ -25,7 +26,8 @@ export interface OntimeClient {
 export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 	public config!: OntimeConfig
 	public ontime!: OntimeClient
-	public states!: any
+	public states = stateobj
+	public events = [{ id: 'noEvents', label: 'No events found' }]
 
 	async init(config: OntimeConfig): Promise<void> {
 		this.config = config
@@ -33,7 +35,8 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 		this.log('debug', 'Initializing module')
 		this.updateStatus(InstanceStatus.Disconnected)
 
-		this.states = {}
+		this.states = stateobj
+		this.events = [{ id: 'noEvents', label: 'No events found' }]
 
 		if (this.config.version !== 'v1' && this.config.version !== 'v2') {
 			this.config.version = 'v2'
