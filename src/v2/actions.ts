@@ -1,6 +1,6 @@
 import { OnTimeInstance } from '../index'
 import { CompanionActionDefinition, CompanionActionDefinitions } from '@companion-module/base'
-import { socketSendJson } from './connection'
+import { socketSendChange, socketSendJson } from './connection'
 import { ActionId, variableId } from '../enums'
 
 enum ActionCommand {
@@ -28,6 +28,7 @@ enum ActionCommand {
 	SetLowerMessage = 'set-lower-message-text',
 	SetTimerBlackout = 'set-timer-blackout',
 	SetTimerBlink = 'set-timer-blink',
+	Change = 'change',
 }
 
 /**
@@ -434,6 +435,68 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 			callback: (action) => {
 				const val = action.options.value === 2 ? !self.getVariableValue(variableId.TimerBlink) : action.options.value
 				socketSendJson(ActionCommand.SetTimerBlink, val)
+			},
+		},
+		[ActionId.Change]: {
+			name: 'Change event property',
+			options: [
+				{
+					type: 'dropdown',
+					choices: [{ id: 'selected', label: 'Selected' }, { id: 'next', label: 'Next' }, ...self.events],
+					id: 'eventId',
+					label: 'Event',
+					default: 'next',
+				},
+				{
+					type: 'dropdown',
+					choices: [
+						{ id: 'title', label: 'Title' },
+						{ id: 'subtitle', label: 'Subtitle' },
+						{ id: 'presenter', label: 'Presenter' },
+						{ id: 'note', label: 'Note' },
+						{ id: 'cue', label: 'Cue' },
+						{ id: 'duration', label: 'Duration' },
+						{ id: 'isPublic', label: 'Public' },
+						{ id: 'skip', label: 'Skip' },
+						{ id: 'colour', label: 'Colour' },
+						{ id: 'user0', label: 'User 0' },
+						{ id: 'user1', label: 'User 1' },
+						{ id: 'user2', label: 'User 2' },
+						{ id: 'user3', label: 'User 3' },
+						{ id: 'user4', label: 'User 4' },
+						{ id: 'user5', label: 'User 5' },
+						{ id: 'user6', label: 'User 6' },
+						{ id: 'user7', label: 'User 7' },
+						{ id: 'user8', label: 'User 8' },
+						{ id: 'user9', label: 'User 9' },
+					],
+					default: 'title',
+					id: 'property',
+					label: 'Property',
+				},
+				{
+					type: 'textinput',
+					id: 'val',
+					label: 'Value',
+				},
+			],
+			callback: (action) => {
+				if (
+					action.options.eventId !== undefined &&
+					action.options.property !== undefined &&
+					action.options.val !== undefined
+				) {
+					const eventId =
+						action.options.eventId === 'selected'
+							? self.states.loaded.selectedEventId
+							: action.options.eventId === 'next'
+							? self.states.loaded.nextEventId
+							: action.options.eventId
+
+					if (typeof eventId === 'string') {
+						socketSendChange(ActionCommand.Change, eventId, action.options.property, action.options.val)
+					}
+				}
 			},
 		},
 	}

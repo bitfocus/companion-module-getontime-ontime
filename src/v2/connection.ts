@@ -178,6 +178,19 @@ export function socketSendJson(type: string, payload?: InputValue): void {
 	)
 }
 
+export function socketSendChange(type: string, eventId: string, property: InputValue, value: InputValue): void {
+	socketSend(
+		JSON.stringify({
+			type,
+			payload: {
+				eventId,
+				property,
+				value,
+			},
+		})
+	)
+}
+
 export async function fetchEvents(self: OnTimeInstance): Promise<void> {
 	self.log('debug', 'fetching events from ontime')
 	try {
