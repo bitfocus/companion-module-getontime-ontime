@@ -83,7 +83,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 		},
 		options: [],
 		callback: (_feedback) => {
-			if (self.states.isNegative) {
+			if (self.states.timer.current === null ? false : self.states.timer.current < 0) {
 				return true
 			} else {
 				return false
