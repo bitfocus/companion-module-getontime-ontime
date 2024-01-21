@@ -41,8 +41,6 @@ Actions related to time control
 |   ✅   | Toggle/On/Off Timer Blinking                                         |
 |   ✅   | Toggle/On/Off Timer Blackout                                         |
 |   ✅   | Change event property                                                |
-|   ✅   | Change color fo current/next event                                   |
-|   ✅   | Skip next event                                                      |
 
 ### Messages Control
 
