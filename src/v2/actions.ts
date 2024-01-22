@@ -635,14 +635,14 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 					}
 					props.forEach((prop) => {
 						let propval = action.options[prop]
+						//return early if propval is empty
 						if (!propval) {
 							return
 						}
+						// converts companion color value to hex
 						if (prop === 'colour') {
 							propval = splitHex(propval as string)
 						}
-						console.log('debug', prop, propval)
-
 						socketSendChange(ActionCommand.Change, eventId, prop, propval)
 					})
 				}
