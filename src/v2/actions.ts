@@ -2,7 +2,6 @@ import { OnTimeInstance } from '../index'
 import {
 	CompanionActionDefinition,
 	CompanionActionDefinitions,
-	// CompanionActionEvent,
 	CompanionInputFieldCheckbox,
 	CompanionInputFieldColor,
 	CompanionInputFieldDropdown,
@@ -10,6 +9,8 @@ import {
 	CompanionInputFieldNumber,
 	CompanionInputFieldStaticText,
 	CompanionInputFieldTextInput,
+	combineRgb,
+	splitHex,
 } from '@companion-module/base'
 import { socketSendChange, socketSendJson } from './connection'
 import { ActionId, variableId } from '../enums'
@@ -89,15 +90,14 @@ function ChangePropertiesPicker(): Array<
 			id: 'cue',
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('cue'),
 		},
-		// --todo check correct min, max, step values
 		{
 			type: 'number',
-			label: 'Duration',
+			label: 'Duration in Seconds',
 			id: 'duration',
 			default: 0,
 			min: 0,
-			max: 100,
-			step: 0.1,
+			max: 3600,
+			step: 1,
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('duration'),
 		},
 		{
@@ -118,7 +118,7 @@ function ChangePropertiesPicker(): Array<
 			type: 'colorpicker',
 			label: 'Colour',
 			id: 'colour',
-			default: 'rgb(255,255,255)',
+			default: combineRgb(255, 255, 255),
 			returnType: 'string',
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('colour'),
 		},
@@ -631,14 +631,19 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				if (props && Array.isArray(props) && typeof eventId === 'string') {
 					//remove unwanted placeholder value if present
 					if (props.includes('pickOne')) {
-						props.splice(props.indexOf('pickOne'))
+						props.splice(props.indexOf('pickOne'), 1)
 					}
 					props.forEach((prop) => {
-						const propval = action.options[prop]
-						// console.log('debug', prop, action.options[prop])
-						if (propval) {
-							socketSendChange(ActionCommand.Change, eventId, prop, propval)
+						let propval = action.options[prop]
+						if (!propval) {
+							return
 						}
+						if (prop === 'colour') {
+							propval = splitHex(propval as string)
+						}
+						console.log('debug', prop, propval)
+
+						socketSendChange(ActionCommand.Change, eventId, prop, propval)
 					})
 				}
 			},
