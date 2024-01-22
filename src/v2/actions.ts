@@ -2,6 +2,7 @@ import { OnTimeInstance } from '../index'
 import {
 	CompanionActionDefinition,
 	CompanionActionDefinitions,
+	// CompanionActionEvent,
 	CompanionInputFieldCheckbox,
 	CompanionInputFieldColor,
 	CompanionInputFieldDropdown,
@@ -40,33 +41,7 @@ enum ActionCommand {
 	SetTimerBlink = 'set-timer-blink',
 	Change = 'change',
 }
-// {
-// 	type: 'multidropdown',
-// 	choices: [
-// 		{ id: 'title', label: 'Title' },
-// 		{ id: 'subtitle', label: 'Subtitle' },
-// 		{ id: 'presenter', label: 'Presenter' },
-// 		{ id: 'note', label: 'Note' },
-// 		{ id: 'cue', label: 'Cue' },
-// 		{ id: 'duration', label: 'Duration' },
-// 		{ id: 'isPublic', label: 'Public' },
-// 		{ id: 'skip', label: 'Skip' },
-// 		{ id: 'colour', label: 'Colour' },
-// 		{ id: 'user0', label: 'User 0' },
-// 		{ id: 'user1', label: 'User 1' },
-// 		{ id: 'user2', label: 'User 2' },
-// 		{ id: 'user3', label: 'User 3' },
-// 		{ id: 'user4', label: 'User 4' },
-// 		{ id: 'user5', label: 'User 5' },
-// 		{ id: 'user6', label: 'User 6' },
-// 		{ id: 'user7', label: 'User 7' },
-// 		{ id: 'user8', label: 'User 8' },
-// 		{ id: 'user9', label: 'User 9' },
-// 	],
-// 	default: 'title',
-// 	id: 'property',
-// 	label: 'Property',
-// },
+
 function ChangePropertiesPicker(): Array<
 	| CompanionInputFieldNumber
 	| CompanionInputFieldCheckbox
@@ -114,6 +89,7 @@ function ChangePropertiesPicker(): Array<
 			id: 'cue',
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('cue'),
 		},
+		// --todo check correct min, max, step values
 		{
 			type: 'number',
 			label: 'Duration',
@@ -121,6 +97,7 @@ function ChangePropertiesPicker(): Array<
 			default: 0,
 			min: 0,
 			max: 100,
+			step: 0.1,
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('duration'),
 		},
 		{
@@ -139,10 +116,11 @@ function ChangePropertiesPicker(): Array<
 		},
 		{
 			type: 'colorpicker',
-			label: 'Color',
-			id: 'color',
-			default: '#fffff',
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('color'),
+			label: 'Colour',
+			id: 'colour',
+			default: 'rgb(255,255,255)',
+			returnType: 'string',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('colour'),
 		},
 		{
 			type: 'textinput',
@@ -642,21 +620,24 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				...ChangePropertiesPicker(),
 			],
 			callback: (action) => {
-				if (
-					action.options.eventId !== undefined &&
-					action.options.property !== undefined &&
-					action.options.val !== undefined
-				) {
-					const eventId =
-						action.options.eventId === 'selected'
-							? self.states.loaded.selectedEventId
-							: action.options.eventId === 'next'
-							? self.states.loaded.nextEventId
-							: action.options.eventId
+				const eventId =
+					action.options.eventId === 'selected'
+						? self.states.loaded.selectedEventId
+						: action.options.eventId === 'next'
+						? self.states.loaded.nextEventId
+						: action.options.eventId
+				const props = action.options.properties
 
-					if (typeof eventId === 'string') {
-						socketSendChange(ActionCommand.Change, eventId, action.options.property, action.options.val)
+				if (props && Array.isArray(props) && typeof eventId === 'string') {
+					//remove unwanted placeholder value if present
+					if (props.includes('pickOne')) {
+						props.splice(props.indexOf('pickOne'))
 					}
+					props.forEach((prop) => {
+						// console.log('debug', prop, action.options[prop])
+						//@ts-ignore trust me for now
+						socketSendChange(ActionCommand.Change, eventId, prop, action.options[prop])
+					})
 				}
 			},
 		},
