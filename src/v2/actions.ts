@@ -634,9 +634,11 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 						props.splice(props.indexOf('pickOne'))
 					}
 					props.forEach((prop) => {
+						const propval = action.options[prop]
 						// console.log('debug', prop, action.options[prop])
-						//@ts-ignore trust me for now
-						socketSendChange(ActionCommand.Change, eventId, prop, action.options[prop])
+						if (propval) {
+							socketSendChange(ActionCommand.Change, eventId, prop, propval)
+						}
 					})
 				}
 			},
