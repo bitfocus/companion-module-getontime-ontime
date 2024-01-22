@@ -442,7 +442,11 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 			options: [
 				{
 					type: 'dropdown',
-					choices: [{ id: 'selected', label: 'Selected' }, { id: 'next', label: 'Next' }, ...self.events],
+					choices: [
+						{ id: 'selected', label: '--| Selected |--' },
+						{ id: 'next', label: '--| Next |--' },
+						...self.events,
+					],
 					id: 'eventId',
 					label: 'Event',
 					default: 'next',

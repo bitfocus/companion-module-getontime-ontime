@@ -59,7 +59,7 @@ type OntimeBaseEvent = {
 	after?: string // used when creating an event to indicate its position in rundown
 }
 
-type OntimeEvent = OntimeBaseEvent & {
+export type OntimeEvent = OntimeBaseEvent & {
 	type: SupportedEvent.Event
 	cue: string
 	title: string
