@@ -1,5 +1,17 @@
 import { OnTimeInstance } from '../index'
-import { CompanionActionDefinition, CompanionActionDefinitions } from '@companion-module/base'
+import {
+	CompanionActionDefinition,
+	CompanionActionDefinitions,
+	CompanionInputFieldCheckbox,
+	CompanionInputFieldColor,
+	CompanionInputFieldDropdown,
+	CompanionInputFieldMultiDropdown,
+	CompanionInputFieldNumber,
+	CompanionInputFieldStaticText,
+	CompanionInputFieldTextInput,
+	combineRgb,
+	splitHex,
+} from '@companion-module/base'
 import { socketSendChange, socketSendJson } from './connection'
 import { ActionId, variableId } from '../enums'
 
@@ -29,6 +41,160 @@ enum ActionCommand {
 	SetTimerBlackout = 'set-timer-blackout',
 	SetTimerBlink = 'set-timer-blink',
 	Change = 'change',
+}
+
+function ChangePropertiesPicker(): Array<
+	| CompanionInputFieldNumber
+	| CompanionInputFieldCheckbox
+	| CompanionInputFieldDropdown
+	| CompanionInputFieldMultiDropdown
+	| CompanionInputFieldColor
+	| CompanionInputFieldTextInput
+	| CompanionInputFieldStaticText
+> {
+	const allProps: ReturnType<typeof ChangePropertiesPicker> = [
+		{
+			type: 'static-text',
+			label: 'Pick an Option',
+			id: 'pickOne',
+			value: 'Pick Options',
+			isVisible: () => false,
+		},
+		{
+			type: 'textinput',
+			label: 'Title',
+			id: 'title',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('title'),
+		},
+		{
+			type: 'textinput',
+			label: 'Subtitle',
+			id: 'subtitle',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('subtitle'),
+		},
+		{
+			type: 'textinput',
+			label: 'Presenter',
+			id: 'presenter',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('presenter'),
+		},
+		{
+			type: 'textinput',
+			label: 'Note',
+			id: 'note',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('note'),
+		},
+		{
+			type: 'textinput',
+			label: 'Cue',
+			id: 'cue',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('cue'),
+		},
+		{
+			type: 'number',
+			label: 'Duration in Seconds',
+			id: 'duration',
+			default: 0,
+			min: 0,
+			max: 3600,
+			step: 1,
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('duration'),
+		},
+		{
+			type: 'checkbox',
+			label: 'Is Public',
+			id: 'isPublic',
+			default: false,
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('isPublic'),
+		},
+		{
+			type: 'checkbox',
+			label: 'Skip',
+			id: 'skip',
+			default: false,
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('skip'),
+		},
+		{
+			type: 'colorpicker',
+			label: 'Colour',
+			id: 'colour',
+			default: combineRgb(255, 255, 255),
+			returnType: 'string',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('colour'),
+		},
+		{
+			type: 'textinput',
+			label: 'User 0',
+			id: 'user0',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('user0'),
+		},
+		{
+			type: 'textinput',
+			label: 'User 1',
+			id: 'user1',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('user1'),
+		},
+		{
+			type: 'textinput',
+			label: 'User 2',
+			id: 'user2',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('user2'),
+		},
+		{
+			type: 'textinput',
+			label: 'User 3',
+			id: 'user3',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('user3'),
+		},
+		{
+			type: 'textinput',
+			label: 'User 4',
+			id: 'user4',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('user4'),
+		},
+		{
+			type: 'textinput',
+			label: 'User 5',
+			id: 'user5',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('user5'),
+		},
+		{
+			type: 'textinput',
+			label: 'User 6',
+			id: 'user6',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('user6'),
+		},
+		{
+			type: 'textinput',
+			label: 'User 7',
+			id: 'user7',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('user7'),
+		},
+		{
+			type: 'textinput',
+			label: 'User 8',
+			id: 'user8',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('user8'),
+		},
+		{
+			type: 'textinput',
+			label: 'User 9',
+			id: 'user9',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('user9'),
+		},
+	]
+
+	return [
+		{
+			type: 'multidropdown',
+			id: 'properties',
+			label: 'Properties',
+			minSelection: 1,
+			default: ['pickOne'],
+			choices: allProps.map((p) => ({ id: p.id, label: p.label })),
+		},
+		...allProps,
+	]
 }
 
 /**
@@ -451,55 +617,34 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 					label: 'Event',
 					default: 'next',
 				},
-				{
-					type: 'dropdown',
-					choices: [
-						{ id: 'title', label: 'Title' },
-						{ id: 'subtitle', label: 'Subtitle' },
-						{ id: 'presenter', label: 'Presenter' },
-						{ id: 'note', label: 'Note' },
-						{ id: 'cue', label: 'Cue' },
-						{ id: 'duration', label: 'Duration' },
-						{ id: 'isPublic', label: 'Public' },
-						{ id: 'skip', label: 'Skip' },
-						{ id: 'colour', label: 'Colour' },
-						{ id: 'user0', label: 'User 0' },
-						{ id: 'user1', label: 'User 1' },
-						{ id: 'user2', label: 'User 2' },
-						{ id: 'user3', label: 'User 3' },
-						{ id: 'user4', label: 'User 4' },
-						{ id: 'user5', label: 'User 5' },
-						{ id: 'user6', label: 'User 6' },
-						{ id: 'user7', label: 'User 7' },
-						{ id: 'user8', label: 'User 8' },
-						{ id: 'user9', label: 'User 9' },
-					],
-					default: 'title',
-					id: 'property',
-					label: 'Property',
-				},
-				{
-					type: 'textinput',
-					id: 'val',
-					label: 'Value',
-				},
+				...ChangePropertiesPicker(),
 			],
 			callback: (action) => {
-				if (
-					action.options.eventId !== undefined &&
-					action.options.property !== undefined &&
-					action.options.val !== undefined
-				) {
-					const eventId =
-						action.options.eventId === 'selected'
-							? self.states.loaded.selectedEventId
-							: action.options.eventId === 'next'
-							? self.states.loaded.nextEventId
-							: action.options.eventId
+				const eventId =
+					action.options.eventId === 'selected'
+						? self.states.loaded.selectedEventId
+						: action.options.eventId === 'next'
+						? self.states.loaded.nextEventId
+						: action.options.eventId
+				const props = action.options.properties
 
-					if (typeof eventId === 'string') {
-						socketSendChange(ActionCommand.Change, eventId, action.options.property, action.options.val)
+				if (props && Array.isArray(props) && typeof eventId === 'string') {
+					//remove unwanted placeholder value if present
+					if (props.includes('pickOne')) {
+						props.splice(props.indexOf('pickOne'), 1)
 					}
+					props.forEach((prop) => {
+						let propval = action.options[prop]
+						//return early if propval is empty
+						if (!propval) {
+							return
+						}
+						// converts companion color value to hex
+						if (prop === 'colour') {
+							propval = splitHex(propval as string)
+						}
+						socketSendChange(ActionCommand.Change, eventId, prop, propval)
+					})
 				}
 			},
 		},
