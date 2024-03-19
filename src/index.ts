@@ -10,8 +10,10 @@ import {
 } from '@companion-module/base'
 import { OntimeConfig, GetConfigFields } from './config'
 import { OntimeV2 } from './v2/ontimev2'
+import { OntimeV3 } from './v3/ontimev3'
 import { UpgradeScripts } from './upgrades'
-import { stateobj } from './v2/state'
+import { stateobj as stateV2 } from './v2/state'
+import { stateobj as stateV3 } from './v3/state'
 export interface OntimeClient {
 	instance: OnTimeInstance
 
@@ -26,33 +28,37 @@ export interface OntimeClient {
 export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 	public config!: OntimeConfig
 	public ontime!: OntimeClient
-	public states = stateobj
-	public events = [{ id: 'noEvents', label: 'No events found' }]
-
+	public states = stateV2 // used for v2
+	public runtimeStore = stateV3 // used for v3
+	public events = [{ id: 'noEvents', label: 'No events found'}]
+	public revision = 0
 	async init(config: OntimeConfig): Promise<void> {
 		this.config = config
 
 		this.log('debug', 'Initializing module')
 		this.updateStatus(InstanceStatus.Disconnected)
 
-		this.states = stateobj
 		this.events = [{ id: 'noEvents', label: 'No events found' }]
 
-		if (this.config.version !== 'v1' && this.config.version !== 'v2') {
-			this.config.version = 'v2'
-			this.config.refetchEvents = true
-			this.config.reconnect = true
-			this.config.reconnectInterval = 5
-			this.saveConfig(this.config)
-		}
-
-		if (this.config.version === 'v1') {
-			this.updateStatus(InstanceStatus.BadConfig, 'V1 is no longer suported')
-			return
-		} else if (this.config.version === 'v2') {
-			this.ontime = new OntimeV2(this)
-		} else {
-			this.updateStatus(InstanceStatus.BadConfig, 'unknown version')
+		switch (this.config.version) {
+			case 'v1': {
+				this.updateStatus(InstanceStatus.BadConfig, 'V1 is no longer suported')
+				break
+			}
+			case 'v2': {
+				this.updateStatus(InstanceStatus.Connecting, 'starting V2')
+				this.ontime = new OntimeV2(this)
+				break
+			}
+			case 'v3': {
+				this.updateStatus(InstanceStatus.Connecting, 'starting V3')
+				this.ontime = new OntimeV3(this)
+				break
+			}
+			default: {
+				this.updateStatus(InstanceStatus.BadConfig, 'unknown version')
+				break
+			}
 		}
 
 		this.initConnection()
