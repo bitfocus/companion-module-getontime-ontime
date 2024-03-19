@@ -432,7 +432,6 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 							? self.getVariableValue(variableId.IdNext)
 							: action.options.eventId
 
-					self.log('debug', `now ${self.getVariableValue(variableId.IdNow)} | next ${self.getVariableValue(variableId.IdNext)}`)
 					if (typeof eventId === 'string') {
 						socketSendChange(ActionCommand.Change, eventId, action.options.property, action.options.val)
 					}
