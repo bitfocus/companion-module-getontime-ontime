@@ -47,7 +47,7 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 				{ id: 'v3', label: 'Ontime V3' },
 			],
 			width: 12,
-			tooltip: 'Choose wich version of Ontime you are connecting to.',
+			tooltip: 'Which version of Ontime you are connecting to.',
 		},
 		{
 			label: 'Refetch events',
@@ -55,7 +55,7 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			type: 'checkbox',
 			default: true,
 			width: 4,
-			tooltip: 'Chose if you want Companion to refetch the events from Ontime when the rundown gets updated.',
+			tooltip: 'Whether Companion should keep the rundown updated with Ontime by refetching on change.',
 		},
 		{
 			label: 'Reconnect',
