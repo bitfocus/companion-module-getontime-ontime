@@ -55,7 +55,7 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			type: 'checkbox',
 			default: true,
 			width: 4,
-			tooltip: 'Chose if you want Companion to refetch the events from Ontime when the rundown gets updated.',
+			tooltip: 'Whether Companion should keep the rundown updated with Ontime by refetching on change.',
 		},
 		{
 			label: 'Reconnect',
