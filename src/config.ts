@@ -47,7 +47,7 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 				{ id: 'v3', label: 'Ontime V3' },
 			],
 			width: 12,
-			tooltip: 'Choose wich version of Ontime you are connecting to.',
+			tooltip: 'Which version of Ontime you are connecting to.',
 		},
 		{
 			label: 'Refetch events',
