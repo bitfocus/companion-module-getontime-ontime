@@ -1,4 +1,4 @@
-type RuntimeStore = {
+export type RuntimeStore = {
 	// timer service
 	timer: TimerState
 	playback: Playback

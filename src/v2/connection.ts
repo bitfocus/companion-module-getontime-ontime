@@ -4,7 +4,7 @@ import Websocket from 'ws'
 import { mstoTime, toReadableTime } from '../utilities'
 import axios from 'axios'
 import { feedbackId, variableId } from '../enums'
-import { OntimeEvent } from './state'
+import { OntimeEvent, RuntimeStore } from './state'
 
 let ws: Websocket | null = null
 let reconnectionTimeout: NodeJS.Timeout | null = null
@@ -75,7 +75,7 @@ export function connect(self: OnTimeInstance): void {
 			}
 
 			if (type === 'ontime') {
-				self.states = payload
+				self.states = payload as RuntimeStore
 
 				const timer =
 					self.states.timer.current === null ? defaultTimerObject : toReadableTime(self.states.timer.current)

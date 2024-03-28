@@ -26,6 +26,11 @@ export enum ActionId {
 	SetTimerBlackout = 'setTimerBlackout',
 	SetTimerBlink = 'setTimerBlink',
 	Change = 'change',
+
+	//v3
+	Load = 'load',
+	MessageVisibility = 'setTimerMessageVisibility',
+	MessageText = 'setTimerMessage',
 }
 
 export enum feedbackId {
@@ -42,6 +47,11 @@ export enum feedbackId {
 	LowerMessageVisible = 'lowerMessageVisible',
 	TimerBlink = 'timerBlink',
 	TimerBlackout = 'timerBlackout',
+
+	//v3
+	ColorPlaybeck = 'state_color_playback',
+	MessageVisible = 'messageVisible',
+	ThisMessageVisible = 'thisMessageVisible',
 }
 
 export enum variableId {
@@ -74,4 +84,9 @@ export enum variableId {
 	LowerMessageVisible = 'lowerMessageVisible',
 	TimerBlink = 'timerBlink',
 	TimerBlackout = 'timerBlackout',
+
+	//v3
+	TimerTotalMs = 'timer_total_ms',
+	IdNow = 'idNow',
+	IdNext = 'idNext',
 }
