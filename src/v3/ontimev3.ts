@@ -6,7 +6,7 @@ import {
 } from '@companion-module/base'
 import { OnTimeInstance, OntimeClient } from '..'
 
-import { actions } from './actions'
+import { actions } from './actions/index'
 import { feedbacks } from './feedback'
 import { presets } from './presets'
 import { variables } from './variables'

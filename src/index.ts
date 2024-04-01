@@ -42,7 +42,7 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 
 		switch (this.config.version) {
 			case 'v1': {
-				this.updateStatus(InstanceStatus.BadConfig, 'V1 is no longer suported')
+				this.updateStatus(InstanceStatus.BadConfig, 'V1 is no longer supported')
 				break
 			}
 			case 'v2': {

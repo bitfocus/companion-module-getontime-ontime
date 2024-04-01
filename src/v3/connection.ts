@@ -160,6 +160,7 @@ export function connect(self: OnTimeInstance): void {
 				return
 			}
 
+			//https://docs.getontime.no/api/runtime-data/
 			switch (type) {
 				case 'ontime-clock': {
 					updateClock(payload)
