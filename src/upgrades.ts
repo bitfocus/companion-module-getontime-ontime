@@ -9,7 +9,7 @@ import {
 	type CompanionMigrationFeedback,
 } from '@companion-module/base'
 import type { OntimeConfig } from './config'
-import { feedbackId, ActionId } from './enums'
+import { feedbackId, ActionId, deprecatedActionId } from './enums'
 
 function update2x4x0(
 	_context: CompanionUpgradeContext<OntimeConfig>,
@@ -23,10 +23,10 @@ function update2x4x0(
 	if (_context.currentConfig.version === 'v1') {
 		for (const action of props.actions) {
 			if (action.actionId === 'setSpeakerMessageVisibility') {
-				action.actionId = ActionId.SetTimerMessageVisibility
+				action.actionId = deprecatedActionId.SetTimerMessageVisibility
 				result.updatedActions.push(action)
 			} else if (action.actionId === 'setSpeakerMessage') {
-				action.actionId = ActionId.SetTimerMessage
+				action.actionId = deprecatedActionId.SetTimerMessage
 				result.updatedActions.push(action)
 			} else if (action.actionId === 'delay') {
 				action.actionId = ActionId.Add
@@ -42,10 +42,10 @@ function update2x4x0(
 	} else if (_context.currentConfig.version === 'v2') {
 		for (const action of props.actions) {
 			if (action.actionId === 'setSpeakerMessageVisibility') {
-				action.actionId = ActionId.SetTimerMessageVisibility
+				action.actionId = deprecatedActionId.SetTimerMessageVisibility
 				result.updatedActions.push(action)
 			} else if (action.actionId === 'setSpeakerMessage') {
-				action.actionId = ActionId.SetTimerMessage
+				action.actionId = deprecatedActionId.SetTimerMessage
 				result.updatedActions.push(action)
 			} else if (action.actionId === 'delay') {
 				action.actionId = ActionId.Add
@@ -67,4 +67,39 @@ function update2x4x0(
 	return result
 }
 
-export const UpgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [update2x4x0]
+function update3x4x0(
+	_context: CompanionUpgradeContext<OntimeConfig>,
+	props: CompanionStaticUpgradeProps<OntimeConfig>
+): CompanionStaticUpgradeResult<OntimeConfig> {
+	const result = {
+		updatedConfig: null,
+		updatedActions: new Array<CompanionMigrationAction>(),
+		updatedFeedbacks: new Array<CompanionMigrationFeedback>(),
+	}
+	if (_context.currentConfig.version === 'v2') {
+		for (const action of props.actions) {
+			if (action.actionId === ActionId.Change) {
+				if ('val' in action.options) {
+					action.options.properties = [String(action.options.property)]
+					action.options[String(action.options.property)] = action.options.val
+					if (action.options.eventId === 'selected') {
+						action.options.method = 'loaded'
+					} else if (action.options.eventId === 'next') {
+						action.options.method = 'next'
+					} else {
+						action.options.method = 'list'
+						action.options.eventList = action.options.eventId
+					}
+					delete action.options.eventId
+					delete action.options.property
+					delete action.options.val
+					result.updatedActions.push(action)
+				}
+			}
+		}
+	}
+
+	return result
+}
+
+export const UpgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [update2x4x0, update3x4x0]
