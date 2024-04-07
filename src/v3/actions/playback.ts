@@ -18,11 +18,11 @@ export function createPlaybackActions(
 				break
 			}
 			case 'next': {
-				socketSendJson(ActionCommand.Start, { next: '' })
+				socketSendJson(ActionCommand.Start, 'next')
 				break
 			}
 			case 'previous': {
-				socketSendJson(ActionCommand.Start, { previous: '' })
+				socketSendJson(ActionCommand.Start, 'previous')
 				break
 			}
 			case 'list': {
@@ -52,11 +52,11 @@ export function createPlaybackActions(
 				break
 			}
 			case 'next': {
-				socketSendJson(ActionCommand.Load, { next: '' })
+				socketSendJson(ActionCommand.Load, 'next')
 				break
 			}
 			case 'previous': {
-				socketSendJson(ActionCommand.Load, { previous: '' })
+				socketSendJson(ActionCommand.Load, 'previous')
 				break
 			}
 			case 'list': {
