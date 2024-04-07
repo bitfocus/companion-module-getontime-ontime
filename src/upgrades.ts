@@ -95,6 +95,34 @@ function update3x4x0(
 					delete action.options.val
 					result.updatedActions.push(action)
 				}
+			} else if (action.actionId === deprecatedActionId.LoadIndex) {
+				action.actionId = ActionId.Load
+				action.options.method = 'index'
+				action.options.eventIndex = action.options.value
+				delete action.options.value
+				result.updatedActions.push(action)
+			} else if (action.actionId === deprecatedActionId.LoadSelect) {
+				action.actionId = ActionId.Load
+				action.options.method = 'list'
+				action.options.eventList = action.options.value
+				delete action.options.value
+				result.updatedActions.push(action)
+			} else if (
+				action.actionId === deprecatedActionId.LoadCue
+			) {
+				action.actionId = ActionId.Load
+				action.options.method = 'cue'
+				action.options.eventCue = action.options.value
+				delete action.options.value
+				result.updatedActions.push(action)
+			} else if (
+				action.actionId === deprecatedActionId.LoadId
+			) {
+				action.actionId = ActionId.Load
+				action.options.method = 'id'
+				action.options.eventId = action.options.value
+				delete action.options.value
+				result.updatedActions.push(action)
 			}
 		}
 	}

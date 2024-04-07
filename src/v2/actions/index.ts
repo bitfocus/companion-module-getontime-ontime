@@ -12,6 +12,7 @@ import { eventsToChoices } from '../../utilities'
 
 import { ActionCommand } from './commands'
 import { createChangeActions } from './change'
+import { createPlaybackActions } from './playback'
 
 /**
  * Returns all implemented actions.
@@ -23,6 +24,7 @@ import { createChangeActions } from './change'
 export function actions(_self: OnTimeInstance, ontime: OntimeV2): CompanionActionDefinitions {
 	const actions: { [id: string]: CompanionActionDefinition } = {
 		...createChangeActions(ontime),
+		...createPlaybackActions(ontime),
 		[ActionId.Start]: {
 			name: 'Start selected event',
 			options: [],
@@ -97,68 +99,6 @@ export function actions(_self: OnTimeInstance, ontime: OntimeV2): CompanionActio
 			],
 			callback: (action) => {
 				socketSendJson(ActionCommand.StartCue, action.options.value)
-			},
-		},
-		[deprecatedActionId.LoadId]: {
-			name: 'Load event with given ID',
-			options: [
-				{
-					type: 'textinput',
-					label: 'Event ID',
-					id: 'value',
-					required: true,
-				},
-			],
-			callback: (action) => {
-				socketSendJson(ActionCommand.LoadId, action.options.value)
-			},
-		},
-		[deprecatedActionId.LoadSelect]: {
-			name: 'Load event dropdown',
-			options: [
-				{
-					type: 'dropdown',
-					choices: eventsToChoices(ontime.events),
-					id: 'value',
-					label: 'Event',
-					default: ontime.events[0]?.id,
-				},
-			],
-			callback: (action) => {
-				socketSendJson(ActionCommand.LoadId, action.options.value)
-			},
-		},
-		[deprecatedActionId.LoadIndex]: {
-			name: 'Load event at position',
-			options: [
-				{
-					type: 'number',
-					label: 'Position',
-					id: 'value',
-					default: 1,
-					min: 1,
-					max: ontime.state.loaded.numEvents,
-					step: 1,
-					range: true,
-					required: true,
-				},
-			],
-			callback: (action) => {
-				socketSendJson(ActionCommand.LoadIndex, action.options.value)
-			},
-		},
-		[deprecatedActionId.LoadCue]: {
-			name: 'Load event with Cue',
-			options: [
-				{
-					type: 'textinput',
-					label: 'Event Cue',
-					id: 'value',
-					required: true,
-				},
-			],
-			callback: (action) => {
-				socketSendJson(ActionCommand.LoadCue, action.options.value)
 			},
 		},
 		[ActionId.Pause]: {

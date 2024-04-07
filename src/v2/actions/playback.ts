@@ -1,4 +1,3 @@
-import { OnTimeInstance } from '../../index'
 import { CompanionActionDefinition, CompanionActionEvent } from '@companion-module/base'
 import { socketSendJson } from '../connection'
 import { ActionId } from '../../enums'
@@ -6,10 +5,7 @@ import { ActionCommand } from './commands'
 import { eventPicker } from '../../common/eventPicker'
 import { OntimeV2 } from '../ontimev2'
 
-export function createPlaybackActions(
-	_self: OnTimeInstance,
-	ontime: OntimeV2
-): { [id: string]: CompanionActionDefinition } {
+export function createPlaybackActions(ontime: OntimeV2): { [id: string]: CompanionActionDefinition } {
 	function start(action: CompanionActionEvent): void {
 		const { method, eventList, eventCue, eventId, eventIndex } = action.options
 		switch (method) {
