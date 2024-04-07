@@ -160,6 +160,36 @@ function update3x4x0(
 					action.options.method = 'loaded'
 					result.updatedActions.push(action)
 				}
+			} else if (action.actionId === deprecatedActionId.SetTimerMessageVisibility) {
+				action.actionId = ActionId.MessageVisibility
+				action.options.destination = 'timer'
+				result.updatedActions.push(action)
+			} else if (action.actionId === deprecatedActionId.SetPublicMessageVisibility) {
+				action.actionId = ActionId.MessageVisibility
+				action.options.destination = 'public'
+				result.updatedActions.push(action)
+			} else if (action.actionId === deprecatedActionId.SetLowerMessageVisibility) {
+				action.actionId = ActionId.MessageVisibility
+				action.options.destination = 'lower'
+				result.updatedActions.push(action)
+			} else if (action.actionId === deprecatedActionId.SetTimerMessage) {
+				action.actionId = ActionId.MessageText
+				action.options.destination = 'timer'
+				result.updatedActions.push(action)
+			} else if (action.actionId === deprecatedActionId.SetPublicMessage) {
+				action.actionId = ActionId.MessageText
+				action.options.destination = 'public'
+				result.updatedActions.push(action)
+			} else if (action.actionId === deprecatedActionId.SetLowerMessage) {
+				action.actionId = ActionId.MessageText
+				action.options.destination = 'lower'
+				result.updatedActions.push(action)
+			} else if (action.actionId === deprecatedActionId.SetTimerBlackout) {
+				action.actionId = ActionId.TimerBlackout
+				result.updatedActions.push(action)
+			} else if (action.actionId === deprecatedActionId.SetTimerBlink) {
+				action.actionId = ActionId.TimerBlink
+				result.updatedActions.push(action)
 			}
 		}
 	}

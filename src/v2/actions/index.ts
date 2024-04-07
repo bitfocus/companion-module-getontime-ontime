@@ -1,16 +1,14 @@
-import { OnTimeInstance } from '../../index'
 import { CompanionActionDefinition, CompanionActionDefinitions } from '@companion-module/base'
 
-// import { createPlaybackActions } from './playback'
-// import { createMessageActions } from './message'
-// import { createChangeActions } from './change'
-import { OntimeV2 } from '../ontimev2'
-import { ActionId, deprecatedActionId } from '../../enums'
-
+import { deprecatedActionId } from '../../enums'
+import { OnTimeInstance } from '../../index'
 import { socketSendJson } from '../connection'
 
-import { ActionCommand } from './commands'
+import { OntimeV2 } from '../ontimev2'
+
 import { createChangeActions } from './change'
+import { ActionCommand } from './commands'
+import { createMessageActions } from './message'
 import { createPlaybackActions } from './playback'
 
 /**
@@ -24,87 +22,7 @@ export function actions(_self: OnTimeInstance, ontime: OntimeV2): CompanionActio
 	const actions: { [id: string]: CompanionActionDefinition } = {
 		...createChangeActions(ontime),
 		...createPlaybackActions(ontime),
-		[ActionId.Pause]: {
-			name: 'Pause running timer',
-			options: [],
-			callback: () => {
-				socketSendJson(ActionCommand.Pause)
-			},
-		},
-		[ActionId.Stop]: {
-			name: 'Stop running timer',
-			options: [],
-			callback: () => {
-				socketSendJson(ActionCommand.Stop)
-			},
-		},
-		[ActionId.Reload]: {
-			name: 'Reload selected event',
-			options: [],
-			callback: () => {
-				socketSendJson(ActionCommand.Reload)
-			},
-		},
-		[ActionId.Roll]: {
-			name: 'Start roll mode',
-			options: [],
-			callback: () => {
-				socketSendJson(ActionCommand.Roll)
-			},
-		},
-		[ActionId.Add]: {
-			name: 'Add / remove time to running timer',
-			options: [
-				{
-					id: 'addremove',
-					type: 'dropdown',
-					choices: [
-						{ id: 'add', label: 'Add Time' },
-						{ id: 'remove', label: 'Remove Time' },
-					],
-					label: 'Add or Remove',
-					default: 'add',
-				},
-				{
-					type: 'number',
-					id: 'hours',
-					label: 'Hours',
-					default: 0,
-					step: 1,
-					min: 0,
-					max: 24,
-					required: true,
-				},
-				{
-					type: 'number',
-					id: 'minutes',
-					label: 'Minutes',
-					default: 1,
-					step: 1,
-					min: 0,
-					max: 1440,
-					required: true,
-				},
-				{
-					type: 'number',
-					id: 'seconds',
-					label: 'Seconds',
-					default: 0,
-					min: 0,
-					max: 86400,
-					step: 1,
-					required: true,
-				},
-			],
-			callback: (action) => {
-				let val =
-					(Number(action.options.hours) * 60 + Number(action.options.minutes)) * 60 + Number(action.options.seconds)
-				if (action.options.addremove === 'remove') {
-					val = val * -1
-				}
-				socketSendJson(ActionCommand.Add, val)
-			},
-		},
+		...createMessageActions(ontime),
 		[deprecatedActionId.SetOnAir]: {
 			name: 'Toggle/On/Off On Air',
 			options: [
@@ -123,148 +41,6 @@ export function actions(_self: OnTimeInstance, ontime: OntimeV2): CompanionActio
 			callback: (action) => {
 				const val = action.options.value === 2 ? !ontime.state.onAir : action.options.value
 				socketSendJson(ActionCommand.SetOnAir, val)
-			},
-		},
-		[deprecatedActionId.SetTimerMessageVisibility]: {
-			name: 'Toggle/On/Off visibility of Timer message',
-			options: [
-				{
-					type: 'dropdown',
-					choices: [
-						{ id: 2, label: 'Toggle' },
-						{ id: 1, label: 'On' },
-						{ id: 0, label: 'Off' },
-					],
-					default: 2,
-					id: 'value',
-					label: 'Timer message',
-				},
-			],
-			callback: (action) => {
-				const val = action.options.value === 2 ? !ontime.state.timerMessage.visible : action.options.value
-				socketSendJson(ActionCommand.SetTimerMessageVisibility, val)
-			},
-		},
-		[deprecatedActionId.SetTimerMessage]: {
-			name: 'Set text for Timer message',
-			options: [
-				{
-					type: 'textinput',
-					label: 'Timer message',
-					id: 'value',
-					required: true,
-				},
-			],
-			callback: (action) => {
-				socketSendJson(ActionCommand.SetTimerMessage, action.options?.value ?? '')
-			},
-		},
-		[deprecatedActionId.SetPublicMessageVisibility]: {
-			name: 'Toggle/On/Off visibility of Public screens message',
-			options: [
-				{
-					type: 'dropdown',
-					choices: [
-						{ id: 2, label: 'Toggle' },
-						{ id: 1, label: 'On' },
-						{ id: 0, label: 'Off' },
-					],
-					default: 2,
-					id: 'value',
-					label: 'Public screens message',
-				},
-			],
-			callback: (action) => {
-				const val = action.options.value === 2 ? !ontime.state.publicMessage.visible : action.options.value
-				socketSendJson(ActionCommand.SetPublicMessageVisibility, val)
-			},
-		},
-		[deprecatedActionId.SetPublicMessage]: {
-			name: 'Set text for Public screens message',
-			options: [
-				{
-					type: 'textinput',
-					label: 'Public screens message',
-					id: 'value',
-					required: true,
-				},
-			],
-			callback: (action) => {
-				socketSendJson(ActionCommand.SetPublicMessage, action.options?.value ?? '')
-			},
-		},
-		[deprecatedActionId.SetLowerMessageVisibility]: {
-			name: 'Toggle/On/Off visibility of Lower Third message',
-			options: [
-				{
-					type: 'dropdown',
-					choices: [
-						{ id: 2, label: 'Toggle' },
-						{ id: 1, label: 'On' },
-						{ id: 0, label: 'Off' },
-					],
-					default: 2,
-					id: 'value',
-					label: 'Lower Third message',
-				},
-			],
-			callback: (action) => {
-				const val = action.options.value === 2 ? !ontime.state.lowerMessage.visible : action.options.value
-				socketSendJson(ActionCommand.SetLowerMessageVisibility, val)
-			},
-		},
-		[deprecatedActionId.SetLowerMessage]: {
-			name: 'Set text for Lower Third message',
-			options: [
-				{
-					type: 'textinput',
-					label: 'Lower Third message',
-					id: 'value',
-					required: true,
-				},
-			],
-			callback: (action) => {
-				socketSendJson(ActionCommand.SetLowerMessage, action.options?.value ?? '')
-			},
-		},
-		[deprecatedActionId.SetTimerBlackout]: {
-			name: 'Toggle/On/Off Blackout of timer',
-			options: [
-				{
-					type: 'dropdown',
-					choices: [
-						{ id: 2, label: 'Toggle' },
-						{ id: 1, label: 'Blackout On' },
-						{ id: 0, label: 'Blackout Off' },
-					],
-					default: 2,
-					id: 'value',
-					label: 'Blackout of timer',
-				},
-			],
-			callback: (action) => {
-				const val = action.options.value === 2 ? !ontime.state.timerMessage.timerBlackout : action.options.value
-				socketSendJson(ActionCommand.SetTimerBlackout, val)
-			},
-		},
-		[deprecatedActionId.SetTimerBlink]: {
-			name: 'Toggle/On/Off blinking of timer',
-			options: [
-				{
-					type: 'dropdown',
-					choices: [
-						{ id: 2, label: 'Toggle' },
-						{ id: 1, label: 'On' },
-						{ id: 0, label: 'Off' },
-					],
-					default: 2,
-					id: 'value',
-					label: 'Blink timer',
-				},
-			],
-			callback: (action) => {
-				const val = action.options.value === 2 ? !ontime.state.timerMessage.timerBlink : action.options.value
-				socketSendJson(ActionCommand.SetTimerBlink, val)
 			},
 		},
 	}
