@@ -1,6 +1,6 @@
 import { CompanionButtonPresetDefinition, CompanionPresetDefinitions, combineRgb } from '@companion-module/base'
 import * as icons from '../assets/icons'
-import { ActionId, feedbackId } from '../enums'
+import { ActionId, deprecatedActionId, feedbackId } from '../enums'
 
 export function presets(): CompanionPresetDefinitions {
 	const presets: { [id: string]: CompanionButtonPresetDefinition | undefined } = {}
@@ -234,7 +234,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.SetOnAir,
+						actionId: deprecatedActionId.SetOnAir,
 						options: { value: 2 },
 					},
 				],
@@ -384,7 +384,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.SetTimerMessageVisibility,
+						actionId: deprecatedActionId.SetTimerMessageVisibility,
 						options: { value: 2 },
 					},
 				],
@@ -422,7 +422,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.SetPublicMessageVisibility,
+						actionId: deprecatedActionId.SetPublicMessageVisibility,
 						options: { value: 2 },
 					},
 				],
@@ -460,7 +460,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.SetLowerMessageVisibility,
+						actionId: deprecatedActionId.SetLowerMessageVisibility,
 						options: { value: 2 },
 					},
 				],
@@ -496,7 +496,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.SetTimerBlink,
+						actionId: deprecatedActionId.SetTimerBlink,
 						options: { value: 2 },
 					},
 				],
@@ -532,7 +532,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.SetTimerBlackout,
+						actionId: deprecatedActionId.SetTimerBlackout,
 						options: { value: 2 },
 					},
 				],

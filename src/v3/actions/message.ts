@@ -80,7 +80,7 @@ export function createMessageActions(ontime: OnTimeInstance): { [id: string]: Co
 				}),
 		},
 
-		[ActionId.SetTimerBlackout]: {
+		[ActionId.TimerBlackout]: {
 			name: 'Toggle/On/Off Blackout of timer',
 			options: [
 				{
@@ -97,7 +97,7 @@ export function createMessageActions(ontime: OnTimeInstance): { [id: string]: Co
 			],
 			callback: timerBlackout,
 		},
-		[ActionId.SetTimerBlink]: {
+		[ActionId.TimerBlink]: {
 			name: 'Toggle/On/Off blinking of timer',
 			options: [
 				{

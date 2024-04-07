@@ -105,6 +105,8 @@ type OntimeBaseEvent = {
 // 	title: string
 // }
 
+export type SimpleOntimeEvent = Pick<OntimeEvent, 'id' | 'cue' | 'title'>
+
 export type OntimeEvent = OntimeBaseEvent & {
 	type: SupportedEvent.Event
 	cue: string

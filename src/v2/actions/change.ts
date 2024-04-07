@@ -4,9 +4,9 @@ import { ActionId } from '../../enums'
 import { ActionCommand } from './commands'
 import { changePicker } from './changePicker'
 import { eventPicker } from '../../common/eventPicker'
-import { OntimeV3 } from '../ontimev3'
+import { OntimeV2 } from '../ontimev2'
 
-export function createChangeActions(ontime: OntimeV3): { [id: string]: CompanionActionDefinition } {
+export function createChangeActions(ontime: OntimeV2): { [id: string]: CompanionActionDefinition } {
 	function changeEvent(action: CompanionActionEvent): void {
 		const { properties, method, eventList, eventId } = action.options
 		let id: string | null = null

@@ -1,44 +1,28 @@
-import { OnTimeInstance } from '../index'
+import { OnTimeInstance } from '../../index'
 import { CompanionActionDefinition, CompanionActionDefinitions } from '@companion-module/base'
-import { socketSendChange, socketSendJson } from './connection'
-import { ActionId, variableId } from '../enums'
 
-enum ActionCommand {
-	Start = 'start',
-	StartId = 'startid',
-	StartCue = 'startcue',
-	LoadCue = 'loadcue',
-	StartIndex = 'startindex',
-	StartNext = 'start-next',
-	LoadId = 'loadid',
-	LoadIndex = 'loadindex',
-	Pause = 'pause',
-	Stop = 'stop',
-	Reload = 'reload',
-	Next = 'next',
-	Previous = 'previous',
-	Roll = 'roll',
-	Add = 'addtime',
-	SetOnAir = 'set-onair',
-	SetTimerMessageVisibility = 'set-timer-message-visible',
-	SetTimerMessage = 'set-timer-message-text',
-	SetPublicMessageVisibility = 'set-public-message-visible',
-	SetPublicMessage = 'set-public-message-text',
-	SetLowerMessageVisibility = 'set-lower-message-visible',
-	SetLowerMessage = 'set-lower-message-text',
-	SetTimerBlackout = 'set-timer-blackout',
-	SetTimerBlink = 'set-timer-blink',
-	Change = 'change',
-}
+// import { createPlaybackActions } from './playback'
+// import { createMessageActions } from './message'
+// import { createChangeActions } from './change'
+import { OntimeV2 } from '../ontimev2'
+import { ActionId, deprecatedActionId } from '../../enums'
+
+import { socketSendJson } from '../connection'
+import { eventsToChoices } from '../../utilities'
+
+import { ActionCommand } from './commands'
+import { createChangeActions } from './change'
 
 /**
  * Returns all implemented actions.
  * @param self reference to the BaseInstance
+ * @param ontime reference to the Ontime versiond
  * @constructor
  * @returns CompanionActions
  */
-export function actions(self: OnTimeInstance): CompanionActionDefinitions {
+export function actions(_self: OnTimeInstance, ontime: OntimeV2): CompanionActionDefinitions {
 	const actions: { [id: string]: CompanionActionDefinition } = {
+		...createChangeActions(ontime),
 		[ActionId.Start]: {
 			name: 'Start selected event',
 			options: [],
@@ -46,7 +30,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				socketSendJson(ActionCommand.Start)
 			},
 		},
-		[ActionId.StartId]: {
+		[deprecatedActionId.StartId]: {
 			name: 'Start event with given ID',
 			options: [
 				{
@@ -60,7 +44,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				socketSendJson(ActionCommand.StartId, action.options.value)
 			},
 		},
-		[ActionId.StartIndex]: {
+		[deprecatedActionId.StartIndex]: {
 			name: 'Start event at position',
 			options: [
 				{
@@ -69,7 +53,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 					id: 'value',
 					default: 1,
 					min: 1,
-					max: self.states.loaded.numEvents,
+					max: ontime.state.loaded.numEvents,
 					step: 1,
 					range: true,
 					required: true,
@@ -79,29 +63,29 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				socketSendJson(ActionCommand.StartIndex, action.options.value)
 			},
 		},
-		[ActionId.StartNext]: {
+		[deprecatedActionId.StartNext]: {
 			name: 'Start next event',
 			options: [],
 			callback: () => {
 				socketSendJson(ActionCommand.StartNext)
 			},
 		},
-		[ActionId.StartSelect]: {
+		[deprecatedActionId.StartSelect]: {
 			name: 'Start event dropdown',
 			options: [
 				{
 					type: 'dropdown',
-					choices: self.events,
+					choices: eventsToChoices(ontime.events),
 					id: 'value',
 					label: 'Event',
-					default: self.events[0]?.id,
+					default: ontime.events[0]?.id,
 				},
 			],
 			callback: (action) => {
 				socketSendJson(ActionCommand.StartId, action.options.value)
 			},
 		},
-		[ActionId.StartCue]: {
+		[deprecatedActionId.StartCue]: {
 			name: 'Start event with Cue',
 			options: [
 				{
@@ -115,7 +99,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				socketSendJson(ActionCommand.StartCue, action.options.value)
 			},
 		},
-		[ActionId.LoadId]: {
+		[deprecatedActionId.LoadId]: {
 			name: 'Load event with given ID',
 			options: [
 				{
@@ -129,22 +113,22 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				socketSendJson(ActionCommand.LoadId, action.options.value)
 			},
 		},
-		[ActionId.LoadSelect]: {
+		[deprecatedActionId.LoadSelect]: {
 			name: 'Load event dropdown',
 			options: [
 				{
 					type: 'dropdown',
-					choices: self.events,
+					choices: eventsToChoices(ontime.events),
 					id: 'value',
 					label: 'Event',
-					default: self.events[0]?.id,
+					default: ontime.events[0]?.id,
 				},
 			],
 			callback: (action) => {
 				socketSendJson(ActionCommand.LoadId, action.options.value)
 			},
 		},
-		[ActionId.LoadIndex]: {
+		[deprecatedActionId.LoadIndex]: {
 			name: 'Load event at position',
 			options: [
 				{
@@ -153,7 +137,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 					id: 'value',
 					default: 1,
 					min: 1,
-					max: self.states.loaded.numEvents,
+					max: ontime.state.loaded.numEvents,
 					step: 1,
 					range: true,
 					required: true,
@@ -163,7 +147,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				socketSendJson(ActionCommand.LoadIndex, action.options.value)
 			},
 		},
-		[ActionId.LoadCue]: {
+		[deprecatedActionId.LoadCue]: {
 			name: 'Load event with Cue',
 			options: [
 				{
@@ -272,7 +256,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				socketSendJson(ActionCommand.Add, val)
 			},
 		},
-		[ActionId.SetOnAir]: {
+		[deprecatedActionId.SetOnAir]: {
 			name: 'Toggle/On/Off On Air',
 			options: [
 				{
@@ -288,11 +272,11 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				},
 			],
 			callback: (action) => {
-				const val = action.options.value === 2 ? !self.getVariableValue(variableId.OnAir) : action.options.value
+				const val = action.options.value === 2 ? !ontime.state.onAir : action.options.value
 				socketSendJson(ActionCommand.SetOnAir, val)
 			},
 		},
-		[ActionId.SetTimerMessageVisibility]: {
+		[deprecatedActionId.SetTimerMessageVisibility]: {
 			name: 'Toggle/On/Off visibility of Timer message',
 			options: [
 				{
@@ -308,12 +292,11 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				},
 			],
 			callback: (action) => {
-				const val =
-					action.options.value === 2 ? !self.getVariableValue(variableId.TimerMessageVisible) : action.options.value
+				const val = action.options.value === 2 ? !ontime.state.timerMessage.visible : action.options.value
 				socketSendJson(ActionCommand.SetTimerMessageVisibility, val)
 			},
 		},
-		[ActionId.SetTimerMessage]: {
+		[deprecatedActionId.SetTimerMessage]: {
 			name: 'Set text for Timer message',
 			options: [
 				{
@@ -327,7 +310,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				socketSendJson(ActionCommand.SetTimerMessage, action.options?.value ?? '')
 			},
 		},
-		[ActionId.SetPublicMessageVisibility]: {
+		[deprecatedActionId.SetPublicMessageVisibility]: {
 			name: 'Toggle/On/Off visibility of Public screens message',
 			options: [
 				{
@@ -343,12 +326,11 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				},
 			],
 			callback: (action) => {
-				const val =
-					action.options.value === 2 ? !self.getVariableValue(variableId.PublicMessageVisible) : action.options.value
+				const val = action.options.value === 2 ? !ontime.state.publicMessage.visible : action.options.value
 				socketSendJson(ActionCommand.SetPublicMessageVisibility, val)
 			},
 		},
-		[ActionId.SetPublicMessage]: {
+		[deprecatedActionId.SetPublicMessage]: {
 			name: 'Set text for Public screens message',
 			options: [
 				{
@@ -362,7 +344,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				socketSendJson(ActionCommand.SetPublicMessage, action.options?.value ?? '')
 			},
 		},
-		[ActionId.SetLowerMessageVisibility]: {
+		[deprecatedActionId.SetLowerMessageVisibility]: {
 			name: 'Toggle/On/Off visibility of Lower Third message',
 			options: [
 				{
@@ -378,12 +360,11 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				},
 			],
 			callback: (action) => {
-				const val =
-					action.options.value === 2 ? !self.getVariableValue(variableId.LowerMessageVisible) : action.options.value
+				const val = action.options.value === 2 ? !ontime.state.lowerMessage.visible : action.options.value
 				socketSendJson(ActionCommand.SetLowerMessageVisibility, val)
 			},
 		},
-		[ActionId.SetLowerMessage]: {
+		[deprecatedActionId.SetLowerMessage]: {
 			name: 'Set text for Lower Third message',
 			options: [
 				{
@@ -397,7 +378,7 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				socketSendJson(ActionCommand.SetLowerMessage, action.options?.value ?? '')
 			},
 		},
-		[ActionId.SetTimerBlackout]: {
+		[deprecatedActionId.SetTimerBlackout]: {
 			name: 'Toggle/On/Off Blackout of timer',
 			options: [
 				{
@@ -413,11 +394,11 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				},
 			],
 			callback: (action) => {
-				const val = action.options.value === 2 ? !self.getVariableValue(variableId.TimerBlackout) : action.options.value
+				const val = action.options.value === 2 ? !ontime.state.timerMessage.timerBlackout : action.options.value
 				socketSendJson(ActionCommand.SetTimerBlackout, val)
 			},
 		},
-		[ActionId.SetTimerBlink]: {
+		[deprecatedActionId.SetTimerBlink]: {
 			name: 'Toggle/On/Off blinking of timer',
 			options: [
 				{
@@ -433,74 +414,8 @@ export function actions(self: OnTimeInstance): CompanionActionDefinitions {
 				},
 			],
 			callback: (action) => {
-				const val = action.options.value === 2 ? !self.getVariableValue(variableId.TimerBlink) : action.options.value
+				const val = action.options.value === 2 ? !ontime.state.timerMessage.timerBlink : action.options.value
 				socketSendJson(ActionCommand.SetTimerBlink, val)
-			},
-		},
-		[ActionId.Change]: {
-			name: 'Change event property',
-			options: [
-				{
-					type: 'dropdown',
-					choices: [
-						{ id: 'selected', label: '--| Selected |--' },
-						{ id: 'next', label: '--| Next |--' },
-						...self.events,
-					],
-					id: 'eventId',
-					label: 'Event',
-					default: 'next',
-				},
-				{
-					type: 'dropdown',
-					choices: [
-						{ id: 'title', label: 'Title' },
-						{ id: 'subtitle', label: 'Subtitle' },
-						{ id: 'presenter', label: 'Presenter' },
-						{ id: 'note', label: 'Note' },
-						{ id: 'cue', label: 'Cue' },
-						{ id: 'duration', label: 'Duration' },
-						{ id: 'isPublic', label: 'Public' },
-						{ id: 'skip', label: 'Skip' },
-						{ id: 'colour', label: 'Colour' },
-						{ id: 'user0', label: 'User 0' },
-						{ id: 'user1', label: 'User 1' },
-						{ id: 'user2', label: 'User 2' },
-						{ id: 'user3', label: 'User 3' },
-						{ id: 'user4', label: 'User 4' },
-						{ id: 'user5', label: 'User 5' },
-						{ id: 'user6', label: 'User 6' },
-						{ id: 'user7', label: 'User 7' },
-						{ id: 'user8', label: 'User 8' },
-						{ id: 'user9', label: 'User 9' },
-					],
-					default: 'title',
-					id: 'property',
-					label: 'Property',
-				},
-				{
-					type: 'textinput',
-					id: 'val',
-					label: 'Value',
-				},
-			],
-			callback: (action) => {
-				if (
-					action.options.eventId !== undefined &&
-					action.options.property !== undefined &&
-					action.options.val !== undefined
-				) {
-					const eventId =
-						action.options.eventId === 'selected'
-							? self.states.loaded.selectedEventId
-							: action.options.eventId === 'next'
-							? self.states.loaded.nextEventId
-							: action.options.eventId
-
-					if (typeof eventId === 'string') {
-						socketSendChange(ActionCommand.Change, eventId, action.options.property, action.options.val)
-					}
-				}
 			},
 		},
 	}

@@ -1,8 +1,8 @@
 import { CompanionFeedbackDefinition, CompanionFeedbackDefinitions, combineRgb } from '@companion-module/base'
-import { OnTimeInstance } from '../index'
 import { feedbackId } from '../enums'
+import { OntimeV2 } from './ontimev2'
 
-export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
+export function feedbacks(ontime: OntimeV2): CompanionFeedbackDefinitions {
 	const feedbacks: { [id: string]: CompanionFeedbackDefinition | undefined } = {}
 
 	feedbacks[feedbackId.ColorRunning] = {
@@ -15,7 +15,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 		},
 		options: [],
 		callback: (_feedback) => {
-			if (self.states.playback === 'play') {
+			if (ontime.state.playback === 'play') {
 				return true
 			} else {
 				return false
@@ -32,7 +32,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 		},
 		options: [],
 		callback: (_feedback) => {
-			if (self.states.playback == 'pause') {
+			if (ontime.state.playback == 'pause') {
 				return true
 			} else {
 				return false
@@ -49,7 +49,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 		},
 		options: [],
 		callback: (_feedback) => {
-			if (self.states.playback == 'stop') {
+			if (ontime.state.playback == 'stop') {
 				return true
 			} else {
 				return false
@@ -66,7 +66,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 		},
 		options: [],
 		callback: (_feedback) => {
-			if (self.states.playback == 'roll') {
+			if (ontime.state.playback == 'roll') {
 				return true
 			} else {
 				return false
@@ -83,7 +83,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 		},
 		options: [],
 		callback: (_feedback) => {
-			if (self.states.timer.current === null ? false : self.states.timer.current < 0) {
+			if (ontime.state.timer.current === null ? false : ontime.state.timer.current < 0) {
 				return true
 			} else {
 				return false
@@ -100,7 +100,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 		},
 		options: [],
 		callback: (_feedback) => {
-			if (self.states.timer.addedTime != 0) {
+			if (ontime.state.timer.addedTime != 0) {
 				return true
 			} else {
 				return false
@@ -117,7 +117,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 		},
 		options: [],
 		callback: (_feedback) => {
-			if (self.states.onAir) {
+			if (ontime.state.onAir) {
 				return true
 			} else {
 				return false
@@ -134,7 +134,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 		},
 		options: [],
 		callback: () => {
-			if (self.states.timerMessage.visible) {
+			if (ontime.state.timerMessage.visible) {
 				return true
 			} else {
 				return false
@@ -159,7 +159,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 			},
 		],
 		callback: (feedback) => {
-			if (self.states.timerMessage.visible && self.states.timerMessage.text === feedback.options.msg) {
+			if (ontime.state.timerMessage.visible && ontime.state.timerMessage.text === feedback.options.msg) {
 				return true
 			} else {
 				return false
@@ -176,7 +176,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 		},
 		options: [],
 		callback: () => {
-			if (self.states.publicMessage.visible) {
+			if (ontime.state.publicMessage.visible) {
 				return true
 			} else {
 				return false
@@ -193,7 +193,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 		},
 		options: [],
 		callback: () => {
-			if (self.states.lowerMessage.visible) {
+			if (ontime.state.lowerMessage.visible) {
 				return true
 			} else {
 				return false
@@ -210,7 +210,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 		},
 		options: [],
 		callback: () => {
-			if (self.states.timerMessage.timerBlink) {
+			if (ontime.state.timerMessage.timerBlink) {
 				return true
 			} else {
 				return false
@@ -227,7 +227,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 		},
 		options: [],
 		callback: () => {
-			if (self.states.timerMessage.timerBlackout) {
+			if (ontime.state.timerMessage.timerBlackout) {
 				return true
 			} else {
 				return false

@@ -28,7 +28,7 @@
 		"ws": "^8.8.1"
 	},
 	"devDependencies": {
-		"@companion-module/tools": "^1.1.0",
+		"@companion-module/tools": "^1.5.0",
 		"@types/node": "^18.14.0",
 		"@types/ws": "^8.5.4",
 		"@typescript-eslint/eslint-plugin": "^5.53.0",

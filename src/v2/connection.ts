@@ -5,6 +5,7 @@ import { mstoTime, toReadableTime } from '../utilities'
 import axios from 'axios'
 import { feedbackId, variableId } from '../enums'
 import { OntimeEvent, RuntimeStore } from './state'
+import { OntimeV2 } from './ontimev2'
 
 let ws: Websocket | null = null
 let reconnectionTimeout: NodeJS.Timeout | null = null
@@ -16,7 +17,7 @@ const defaultTimerObject = {
 	seconds: '00',
 }
 
-export function connect(self: OnTimeInstance): void {
+export function connect(self: OnTimeInstance, ontime: OntimeV2): void {
 	reconnectInterval = self.config.reconnectInterval * 1000
 	shouldReconnect = self.config.reconnect
 
@@ -46,7 +47,7 @@ export function connect(self: OnTimeInstance): void {
 		clearTimeout(reconnectionTimeout as NodeJS.Timeout)
 		self.updateStatus(InstanceStatus.Ok)
 		self.log('debug', 'Socket connected')
-		void fetchEvents(self)
+		void fetchEvents(self, ontime)
 	}
 
 	ws.onclose = (event) => {
@@ -54,7 +55,7 @@ export function connect(self: OnTimeInstance): void {
 		if (shouldReconnect) {
 			reconnectionTimeout = setTimeout(() => {
 				if (ws && ws.readyState === Websocket.CLOSED) {
-					void connect(self)
+					void connect(self, ontime)
 				}
 			}, reconnectInterval)
 		}
@@ -75,18 +76,18 @@ export function connect(self: OnTimeInstance): void {
 			}
 
 			if (type === 'ontime') {
-				self.states = payload as RuntimeStore
+				ontime.state = payload as RuntimeStore
 
 				const timer =
-					self.states.timer.current === null ? defaultTimerObject : toReadableTime(self.states.timer.current)
-				const clock = toReadableTime(self.states.timer.clock)
+					ontime.state.timer.current === null ? defaultTimerObject : toReadableTime(ontime.state.timer.current)
+				const clock = toReadableTime(ontime.state.timer.clock)
 				const timer_start =
-					self.states.timer.startedAt === null ? defaultTimerObject : toReadableTime(self.states.timer.startedAt)
+					ontime.state.timer.startedAt === null ? defaultTimerObject : toReadableTime(ontime.state.timer.startedAt)
 				const timer_finish =
-					self.states.timer.expectedFinish === null
+					ontime.state.timer.expectedFinish === null
 						? defaultTimerObject
-						: toReadableTime(self.states.timer.expectedFinish)
-				const added = mstoTime(self.states.timer.addedTime)
+						: toReadableTime(ontime.state.timer.expectedFinish)
+				const added = mstoTime(ontime.state.timer.addedTime)
 
 				self.setVariableValues({
 					[variableId.Time]: timer.hours + ':' + timer.minutes + ':' + timer.seconds,
@@ -99,31 +100,31 @@ export function connect(self: OnTimeInstance): void {
 					[variableId.TimerFinish]: timer_finish.hours + ':' + timer_finish.minutes + ':' + timer_finish.seconds,
 					[variableId.TimerAdded]: added,
 
-					[variableId.PlayState]: self.states.playback,
-					[variableId.OnAir]: self.states.onAir,
+					[variableId.PlayState]: ontime.state.playback,
+					[variableId.OnAir]: ontime.state.onAir,
 
-					[variableId.TitleNow]: self.states.eventNow?.title,
-					[variableId.SubtitleNow]: self.states.eventNow?.subtitle,
-					[variableId.SpeakerNow]: self.states.eventNow?.presenter,
-					[variableId.NoteNow]: self.states.eventNow?.note,
-					[variableId.CueNow]: self.states.eventNow?.cue,
+					[variableId.TitleNow]: ontime.state.eventNow?.title,
+					[variableId.SubtitleNow]: ontime.state.eventNow?.subtitle,
+					[variableId.SpeakerNow]: ontime.state.eventNow?.presenter,
+					[variableId.NoteNow]: ontime.state.eventNow?.note,
+					[variableId.CueNow]: ontime.state.eventNow?.cue,
 
-					[variableId.TitleNext]: self.states.eventNext?.title,
-					[variableId.SubtitleNext]: self.states.eventNext?.subtitle,
-					[variableId.SpeakerNext]: self.states.eventNext?.presenter,
-					[variableId.NoteNext]: self.states.eventNext?.note,
-					[variableId.CueNext]: self.states.eventNext?.cue,
+					[variableId.TitleNext]: ontime.state.eventNext?.title,
+					[variableId.SubtitleNext]: ontime.state.eventNext?.subtitle,
+					[variableId.SpeakerNext]: ontime.state.eventNext?.presenter,
+					[variableId.NoteNext]: ontime.state.eventNext?.note,
+					[variableId.CueNext]: ontime.state.eventNext?.cue,
 
-					[variableId.TimerMessage]: self.states.timerMessage.text,
-					[variableId.PublicMessage]: self.states.publicMessage.text,
-					[variableId.LowerMessage]: self.states.lowerMessage.text,
+					[variableId.TimerMessage]: ontime.state.timerMessage.text,
+					[variableId.PublicMessage]: ontime.state.publicMessage.text,
+					[variableId.LowerMessage]: ontime.state.lowerMessage.text,
 
-					[variableId.TimerMessageVisible]: self.states.timerMessage.visible,
-					[variableId.PublicMessageVisible]: self.states.publicMessage.visible,
-					[variableId.LowerMessageVisible]: self.states.lowerMessage.visible,
+					[variableId.TimerMessageVisible]: ontime.state.timerMessage.visible,
+					[variableId.PublicMessageVisible]: ontime.state.publicMessage.visible,
+					[variableId.LowerMessageVisible]: ontime.state.lowerMessage.visible,
 
-					[variableId.TimerBlackout]: self.states.timerMessage.timerBlackout,
-					[variableId.TimerBlink]: self.states.timerMessage.timerBlink,
+					[variableId.TimerBlackout]: ontime.state.timerMessage.timerBlackout,
+					[variableId.TimerBlink]: ontime.state.timerMessage.timerBlink,
 				})
 				self.checkFeedbacks(
 					feedbackId.ColorRunning,
@@ -144,7 +145,7 @@ export function connect(self: OnTimeInstance): void {
 
 			if (type === 'ontime-refetch' && self.config.refetchEvents === true) {
 				self.log('debug', 'refetching events')
-				void fetchEvents(self).then(
+				void fetchEvents(self, ontime).then(
 					() => {
 						self.init_actions()
 					},
@@ -197,21 +198,22 @@ export function socketSendChange(type: string, eventId: string, property: InputV
 
 //@todo maybe we should take the whole event object here and decide where we consume it what data we need
 
-export async function fetchEvents(self: OnTimeInstance): Promise<void> {
+export async function fetchEvents(self: OnTimeInstance, ontime: OntimeV2): Promise<void> {
 	self.log('debug', 'fetching events from ontime')
 	try {
 		const result = await axios.get(`http://${self.config.host}:${self.config.port}/events`, { responseType: 'json' })
 		self.log('debug', `fetched ${result.data.length} events`)
-		self.events = []
-		self.events = result.data
+		ontime.events = []
+		ontime.events = result.data
 			.filter((event: OntimeEvent) => event.type === 'event')
 			.map((event: OntimeEvent) => ({
 				id: event.id,
-				label: event.cue + ' | ' + event.title,
+				cue: event.cue,
+				title: event.title,
 			}))
 		self.init_actions()
 	} catch (e: any) {
-		self.events = [{ id: 'noEvents', label: 'No events found' }]
+		ontime.events = []
 		self.log('error', 'failed to fetch events from ontime')
 		self.log('error', e)
 	}

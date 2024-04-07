@@ -4,11 +4,11 @@ import { socketSendJson } from '../connection'
 import { ActionId } from '../../enums'
 import { ActionCommand } from './commands'
 import { eventPicker } from '../../common/eventPicker'
-import { OntimeV3 } from '../ontimev3'
+import { OntimeV2 } from '../ontimev2'
 
 export function createPlaybackActions(
 	_self: OnTimeInstance,
-	ontime: OntimeV3
+	ontime: OntimeV2
 ): { [id: string]: CompanionActionDefinition } {
 	function start(action: CompanionActionEvent): void {
 		const { method, eventList, eventCue, eventId, eventIndex } = action.options
@@ -18,27 +18,23 @@ export function createPlaybackActions(
 				break
 			}
 			case 'next': {
-				socketSendJson(ActionCommand.Start, { next: '' })
-				break
-			}
-			case 'previous': {
-				socketSendJson(ActionCommand.Start, { previous: '' })
+				socketSendJson(ActionCommand.StartNext)
 				break
 			}
 			case 'list': {
-				socketSendJson(ActionCommand.Start, { id: eventList })
+				socketSendJson(ActionCommand.StartId, eventList)
 				break
 			}
 			case 'cue': {
-				socketSendJson(ActionCommand.Start, { cue: eventCue })
+				socketSendJson(ActionCommand.StartCue, eventCue)
 				break
 			}
 			case 'id': {
-				socketSendJson(ActionCommand.Start, { id: eventId })
+				socketSendJson(ActionCommand.StartId, eventId)
 				break
 			}
 			case 'index': {
-				socketSendJson(ActionCommand.Start, { index: eventIndex })
+				socketSendJson(ActionCommand.StartIndex, eventIndex)
 				break
 			}
 		}
@@ -52,27 +48,27 @@ export function createPlaybackActions(
 				break
 			}
 			case 'next': {
-				socketSendJson(ActionCommand.Load, { next: '' })
+				socketSendJson(ActionCommand.Next)
 				break
 			}
 			case 'previous': {
-				socketSendJson(ActionCommand.Load, { previous: '' })
+				socketSendJson(ActionCommand.Previous)
 				break
 			}
 			case 'list': {
-				socketSendJson(ActionCommand.Load, { id: eventList })
+				socketSendJson(ActionCommand.LoadId, eventList)
 				break
 			}
 			case 'cue': {
-				socketSendJson(ActionCommand.Load, { cue: eventCue })
+				socketSendJson(ActionCommand.LoadCue, eventCue)
 				break
 			}
 			case 'id': {
-				socketSendJson(ActionCommand.Load, { id: eventId })
+				socketSendJson(ActionCommand.LoadId, eventId)
 				break
 			}
 			case 'index': {
-				socketSendJson(ActionCommand.Load, { index: eventIndex })
+				socketSendJson(ActionCommand.LoadIndex, eventIndex)
 				break
 			}
 		}

@@ -1,5 +1,6 @@
-import { OnTimeInstance } from '../../index'
 import { SomeCompanionActionInputField, DropdownChoice } from '@companion-module/base'
+import { SimpleOntimeEvent } from '../v3/state'
+import { eventsToChoices } from '../utilities'
 
 type SelectOptions = 'list' | 'loaded' | 'previous' | 'next' | 'cue' | 'id' | 'index'
 const selectOptions: DropdownChoice[] = [
@@ -13,7 +14,7 @@ const selectOptions: DropdownChoice[] = [
 ]
 
 export function eventPicker(
-	ontime: OnTimeInstance,
+	events: SimpleOntimeEvent[],
 	options: SelectOptions[] = ['list', 'next', 'previous', 'loaded', 'cue', 'id', 'index']
 ): SomeCompanionActionInputField[] {
 	const selectChoices = new Array<DropdownChoice>()
@@ -22,23 +23,20 @@ export function eventPicker(
 			selectChoices.push(choice)
 		}
 	})
-	ontime.log('debug', JSON.stringify(selectChoices))
-	ontime.log('debug', JSON.stringify(options))
 	return [
 		{
 			type: 'dropdown',
 			id: 'method',
 			label: 'Event Selection',
 			choices: selectChoices,
-
 			default: 'loaded',
 		},
 		{
 			type: 'dropdown',
-			choices: ontime.events,
+			choices: eventsToChoices(events),
 			id: 'eventList',
 			label: 'Event',
-			default: ontime.events[0].id,
+			default: events[0]?.id ?? '',
 			isVisible: (options) => options['method'] === 'list',
 		},
 		{
@@ -68,7 +66,7 @@ export function eventPicker(
 			label: 'Event Index',
 			default: 1,
 			min: 1,
-			max: ontime.events.length,
+			max: events.length,
 			isVisible: (options) => options['method'] === 'index',
 		},
 	]

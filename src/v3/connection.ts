@@ -5,6 +5,7 @@ import { mstoTime, toReadableTime } from '../utilities'
 import axios from 'axios'
 import { feedbackId, variableId } from '../enums'
 import { MessageState, OntimeEvent, Runtime, TimerState } from './state'
+import { OntimeV3 } from './ontimev3'
 
 let ws: Websocket | null = null
 let reconnectionTimeout: NodeJS.Timeout | null = null
@@ -16,7 +17,7 @@ const defaultTimerObject = {
 	seconds: '00',
 }
 
-export function connect(self: OnTimeInstance): void {
+export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 	reconnectInterval = self.config.reconnectInterval * 1000
 	shouldReconnect = self.config.reconnect
 
@@ -46,7 +47,7 @@ export function connect(self: OnTimeInstance): void {
 		clearTimeout(reconnectionTimeout as NodeJS.Timeout)
 		self.updateStatus(InstanceStatus.Ok)
 		self.log('debug', 'Socket connected')
-		void fetchEvents(self)
+		void fetchEvents(self, ontime)
 	}
 
 	ws.onclose = (event) => {
@@ -54,7 +55,7 @@ export function connect(self: OnTimeInstance): void {
 		if (shouldReconnect) {
 			reconnectionTimeout = setTimeout(() => {
 				if (ws && ws.readyState === Websocket.CLOSED) {
-					void connect(self)
+					void connect(self, ontime)
 				}
 			}, reconnectInterval)
 		}
@@ -225,7 +226,7 @@ export function connect(self: OnTimeInstance): void {
 
 			if (type === 'ontime-refetch' && self.config.refetchEvents === true) {
 				self.log('debug', 'refetching events')
-				void fetchEvents(self).then(
+				void fetchEvents(self, ontime).then(
 					() => {
 						self.init_actions()
 					},
@@ -276,7 +277,7 @@ export function socketSendChange(type: string, eventId: string, property: InputV
 	)
 }
 
-export async function fetchEvents(self: OnTimeInstance): Promise<void> {
+export async function fetchEvents(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
 	self.log('debug', 'fetching events from ontime')
 	try {
 		const result = await axios.get(`http://${self.config.host}:${self.config.port}/data/rundown`, {
@@ -288,8 +289,8 @@ export async function fetchEvents(self: OnTimeInstance): Promise<void> {
 		// 	return
 		// }
 		self.log('debug', `fetched ${result.data.length} events`)
-		self.events = []
-		self.events = result.data
+		ontime.events = []
+		ontime.events = result.data
 			.filter((event: OntimeEvent) => event.type === 'event')
 			.map((event: OntimeEvent) => ({
 				id: event.id,
@@ -298,7 +299,7 @@ export async function fetchEvents(self: OnTimeInstance): Promise<void> {
 
 		self.init_actions()
 	} catch (e: any) {
-		self.events = [{ id: 'noEvents', label: 'No events found' }]
+		ontime.events = []
 		self.log('error', 'failed to fetch events from ontime')
 		self.log('error', e)
 	}

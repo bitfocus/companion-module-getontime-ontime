@@ -1,8 +1,9 @@
+import { DropdownChoice } from '@companion-module/base'
+
 /**
  * @param {number} number - number to pad
  * @return {string} - padded number
  */
-
 function padTo2Digits(number: number) {
 	return number.toString().padStart(2, '0')
 }
@@ -73,4 +74,10 @@ export function mstoTime(time: number): string {
 	const hours = padTo2Digits(Math.floor((time / (1000 * 60 * 60)) % 24))
 
 	return negative ? '-' + hours + ':' + minutes + ':' + seconds : hours + ':' + minutes + ':' + seconds
+}
+
+export function eventsToChoices(events: { id: string; cue: string; title: string }[]): DropdownChoice[] {
+	return events.map(({ id, cue, title }) => {
+		return { id, label: `${cue} | ${title}` }
+	})
 }

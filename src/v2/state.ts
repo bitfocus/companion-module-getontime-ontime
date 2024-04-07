@@ -59,6 +59,8 @@ type OntimeBaseEvent = {
 	after?: string // used when creating an event to indicate its position in rundown
 }
 
+export type SimpleOntimeEvent = Pick<OntimeEvent, 'id' | 'cue' | 'title'>
+
 export type OntimeEvent = OntimeBaseEvent & {
 	type: SupportedEvent.Event
 	cue: string

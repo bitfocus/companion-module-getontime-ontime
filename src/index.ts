@@ -12,8 +12,6 @@ import { OntimeConfig, GetConfigFields } from './config'
 import { OntimeV2 } from './v2/ontimev2'
 import { OntimeV3 } from './v3/ontimev3'
 import { UpgradeScripts } from './upgrades'
-import { stateobj as stateV2 } from './v2/state'
-import { stateobj as stateV3 } from './v3/state'
 export interface OntimeClient {
 	instance: OnTimeInstance
 
@@ -25,20 +23,21 @@ export interface OntimeClient {
 	getFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 	getPresets(): CompanionPresetDefinitions
 }
+
 export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 	public config!: OntimeConfig
-	public ontime!: OntimeClient
-	public states = stateV2 // used for v2
-	public runtimeStore = stateV3 // used for v3
-	public events = [{ id: 'noEvents', label: 'No events found'}]
+	private ontime!: OntimeClient
 	public revision = 0
+
+	/**
+	 * Main initialization function called once the module
+	 * is OK to start doing things.
+	 */
 	async init(config: OntimeConfig): Promise<void> {
 		this.config = config
 
 		this.log('debug', 'Initializing module')
 		this.updateStatus(InstanceStatus.Disconnected)
-
-		this.events = [{ id: 'noEvents', label: 'No events found' }]
 
 		switch (this.config.version) {
 			case 'v1': {
@@ -85,10 +84,14 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 		this.updateStatus(InstanceStatus.Disconnected)
 
 		if (this.config.version === 'v1') {
-			this.updateStatus(InstanceStatus.BadConfig, 'V1 is no longer suported')
+			this.updateStatus(InstanceStatus.BadConfig, 'V1 is no longer supported')
 			return
 		} else if (this.config.version === 'v2') {
+			this.updateStatus(InstanceStatus.Connecting, 'starting V2')
 			this.ontime = new OntimeV2(this)
+		} else if (this.config.version === 'v3') {
+			this.updateStatus(InstanceStatus.Connecting, 'starting V3')
+			this.ontime = new OntimeV3(this)
 		} else {
 			this.updateStatus(InstanceStatus.BadConfig, 'unknown version')
 		}

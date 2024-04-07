@@ -1,5 +1,28 @@
 export enum ActionId {
 	Start = 'start',
+	Pause = 'pause',
+	Stop = 'stop',
+	Reload = 'reload',
+	Next = 'next',
+	Previous = 'previous',
+	Roll = 'roll',
+	Add = 'add',
+	Change = 'change',
+	TimerBlackout = 'TimerBlackout',
+	TimerBlink = 'TimerBlink',
+	Load = 'load',
+	MessageVisibility = 'setMessageVisibility',
+	MessageText = 'setMessage',
+}
+
+export enum deprecatedActionId {
+	SetOnAir = 'setOnAir',
+	SetTimerMessageVisibility = 'setTimerMessageVisibility',
+	SetTimerMessage = 'setTimerMessage',
+	SetPublicMessageVisibility = 'setPublicMessageVisibility',
+	SetPublicMessage = 'setPublicMessage',
+	SetLowerMessageVisibility = 'setLowerMessageVisibility',
+	SetLowerMessage = 'setLowerMessage',
 	StartId = 'startId',
 	StartSelect = 'startSelect',
 	StartIndex = 'startIndex',
@@ -9,28 +32,8 @@ export enum ActionId {
 	LoadSelect = 'loadSelect',
 	LoadIndex = 'loadIndex',
 	LoadCue = 'loadCue',
-	Pause = 'pause',
-	Stop = 'stop',
-	Reload = 'reload',
-	Next = 'next',
-	Previous = 'previous',
-	Roll = 'roll',
-	Add = 'add',
-	SetOnAir = 'setOnAir',
-	SetTimerMessageVisibility = 'setTimerMessageVisibility',
-	SetTimerMessage = 'setTimerMessage',
-	SetPublicMessageVisibility = 'setPublicMessageVisibility',
-	SetPublicMessage = 'setPublicMessage',
-	SetLowerMessageVisibility = 'setLowerMessageVisibility',
-	SetLowerMessage = 'setLowerMessage',
 	SetTimerBlackout = 'setTimerBlackout',
 	SetTimerBlink = 'setTimerBlink',
-	Change = 'change',
-
-	//v3
-	Load = 'load',
-	MessageVisibility = 'setTimerMessageVisibility',
-	MessageText = 'setTimerMessage',
 }
 
 export enum feedbackId {
