@@ -101,28 +101,65 @@ function update3x4x0(
 				action.options.eventIndex = action.options.value
 				delete action.options.value
 				result.updatedActions.push(action)
+			} else if (action.actionId === deprecatedActionId.Previous) {
+				action.actionId = ActionId.Load
+				action.options.method = 'previous'
+				result.updatedActions.push(action)
+			} else if (action.actionId === deprecatedActionId.Next) {
+				action.actionId = ActionId.Load
+				action.options.method = 'next'
+				result.updatedActions.push(action)
 			} else if (action.actionId === deprecatedActionId.LoadSelect) {
 				action.actionId = ActionId.Load
 				action.options.method = 'list'
 				action.options.eventList = action.options.value
 				delete action.options.value
 				result.updatedActions.push(action)
-			} else if (
-				action.actionId === deprecatedActionId.LoadCue
-			) {
+			} else if (action.actionId === deprecatedActionId.LoadCue) {
 				action.actionId = ActionId.Load
 				action.options.method = 'cue'
 				action.options.eventCue = action.options.value
 				delete action.options.value
 				result.updatedActions.push(action)
-			} else if (
-				action.actionId === deprecatedActionId.LoadId
-			) {
+			} else if (action.actionId === deprecatedActionId.LoadId) {
 				action.actionId = ActionId.Load
 				action.options.method = 'id'
 				action.options.eventId = action.options.value
 				delete action.options.value
 				result.updatedActions.push(action)
+			} else if (action.actionId === deprecatedActionId.StartIndex) {
+				action.actionId = ActionId.Start
+				action.options.method = 'index'
+				action.options.eventIndex = action.options.value
+				delete action.options.value
+				result.updatedActions.push(action)
+			} else if (action.actionId === deprecatedActionId.StartSelect) {
+				action.actionId = ActionId.Start
+				action.options.method = 'list'
+				action.options.eventList = action.options.value
+				delete action.options.value
+				result.updatedActions.push(action)
+			} else if (action.actionId === deprecatedActionId.StartCue) {
+				action.actionId = ActionId.Start
+				action.options.method = 'cue'
+				action.options.eventCue = action.options.value
+				delete action.options.value
+				result.updatedActions.push(action)
+			} else if (action.actionId === deprecatedActionId.StartId) {
+				action.actionId = ActionId.Start
+				action.options.method = 'id'
+				action.options.eventId = action.options.value
+				delete action.options.value
+				result.updatedActions.push(action)
+			} else if (action.actionId === deprecatedActionId.StartNext) {
+				action.actionId = ActionId.Start
+				action.options.method = 'next'
+				result.updatedActions.push(action)
+			} else if (action.actionId === ActionId.Start) {
+				if (!('method' in action.options)) {
+					action.options.method = 'loaded'
+					result.updatedActions.push(action)
+				}
 			}
 		}
 	}

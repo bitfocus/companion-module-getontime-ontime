@@ -3,8 +3,6 @@ export enum ActionId {
 	Pause = 'pause',
 	Stop = 'stop',
 	Reload = 'reload',
-	Next = 'next',
-	Previous = 'previous',
 	Roll = 'roll',
 	Add = 'add',
 	Change = 'change',
@@ -16,6 +14,8 @@ export enum ActionId {
 }
 
 export enum deprecatedActionId {
+	Next = 'next',
+	Previous = 'previous',
 	SetOnAir = 'setOnAir',
 	SetTimerMessageVisibility = 'setTimerMessageVisibility',
 	SetTimerMessage = 'setTimerMessage',

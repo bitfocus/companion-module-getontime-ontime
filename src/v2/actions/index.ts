@@ -8,7 +8,6 @@ import { OntimeV2 } from '../ontimev2'
 import { ActionId, deprecatedActionId } from '../../enums'
 
 import { socketSendJson } from '../connection'
-import { eventsToChoices } from '../../utilities'
 
 import { ActionCommand } from './commands'
 import { createChangeActions } from './change'
@@ -25,82 +24,6 @@ export function actions(_self: OnTimeInstance, ontime: OntimeV2): CompanionActio
 	const actions: { [id: string]: CompanionActionDefinition } = {
 		...createChangeActions(ontime),
 		...createPlaybackActions(ontime),
-		[ActionId.Start]: {
-			name: 'Start selected event',
-			options: [],
-			callback: () => {
-				socketSendJson(ActionCommand.Start)
-			},
-		},
-		[deprecatedActionId.StartId]: {
-			name: 'Start event with given ID',
-			options: [
-				{
-					type: 'textinput',
-					label: 'Event ID',
-					id: 'value',
-					required: true,
-				},
-			],
-			callback: (action) => {
-				socketSendJson(ActionCommand.StartId, action.options.value)
-			},
-		},
-		[deprecatedActionId.StartIndex]: {
-			name: 'Start event at position',
-			options: [
-				{
-					type: 'number',
-					label: 'Position',
-					id: 'value',
-					default: 1,
-					min: 1,
-					max: ontime.state.loaded.numEvents,
-					step: 1,
-					range: true,
-					required: true,
-				},
-			],
-			callback: (action) => {
-				socketSendJson(ActionCommand.StartIndex, action.options.value)
-			},
-		},
-		[deprecatedActionId.StartNext]: {
-			name: 'Start next event',
-			options: [],
-			callback: () => {
-				socketSendJson(ActionCommand.StartNext)
-			},
-		},
-		[deprecatedActionId.StartSelect]: {
-			name: 'Start event dropdown',
-			options: [
-				{
-					type: 'dropdown',
-					choices: eventsToChoices(ontime.events),
-					id: 'value',
-					label: 'Event',
-					default: ontime.events[0]?.id,
-				},
-			],
-			callback: (action) => {
-				socketSendJson(ActionCommand.StartId, action.options.value)
-			},
-		},
-		[deprecatedActionId.StartCue]: {
-			name: 'Start event with Cue',
-			options: [
-				{
-					type: 'textinput',
-					label: 'Event Cue',
-					id: 'value',
-					required: true,
-				},
-			],
-			callback: (action) => {
-				socketSendJson(ActionCommand.StartCue, action.options.value)
-			},
-		},
 		[ActionId.Pause]: {
 			name: 'Pause running timer',
 			options: [],
@@ -120,20 +43,6 @@ export function actions(_self: OnTimeInstance, ontime: OntimeV2): CompanionActio
 			options: [],
 			callback: () => {
 				socketSendJson(ActionCommand.Reload)
-			},
-		},
-		[ActionId.Next]: {
-			name: 'Select next event',
-			options: [],
-			callback: () => {
-				socketSendJson(ActionCommand.Next)
-			},
-		},
-		[ActionId.Previous]: {
-			name: 'Select previous event',
-			options: [],
-			callback: () => {
-				socketSendJson(ActionCommand.Previous)
 			},
 		},
 		[ActionId.Roll]: {

@@ -144,7 +144,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.Previous,
+						actionId: deprecatedActionId.Previous,
 						options: {},
 					},
 				],
@@ -170,7 +170,7 @@ export function presets(): CompanionPresetDefinitions {
 			{
 				down: [
 					{
-						actionId: ActionId.Next,
+						actionId: deprecatedActionId.Next,
 						options: {},
 					},
 				],
