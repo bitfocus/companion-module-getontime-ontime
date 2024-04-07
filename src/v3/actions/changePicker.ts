@@ -88,6 +88,7 @@ export function changePicker(): Array<
 			returnType: 'string',
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('colour'),
 		},
+		//TODO: replace with custom
 		{
 			type: 'textinput',
 			label: 'User 0',

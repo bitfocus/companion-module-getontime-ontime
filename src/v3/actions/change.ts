@@ -1,5 +1,5 @@
 import { CompanionActionDefinition, CompanionActionEvent, splitHex } from '@companion-module/base'
-import { socketSendChange } from '../connection'
+import { socketSendJson } from '../connection'
 import { ActionId } from '../../enums'
 import { ActionCommand } from './commands'
 import { changePicker } from './changePicker'
@@ -28,7 +28,11 @@ export function createChangeActions(ontime: OntimeV3): { [id: string]: Companion
 				break
 			}
 		}
-
+		//if no ID skip
+		if (id === null) {
+			return
+		}
+		const patch = {}
 		if (properties && Array.isArray(properties)) {
 			//remove unwanted placeholder value if present
 			if (properties.includes('pickOne')) {
@@ -44,11 +48,10 @@ export function createChangeActions(ontime: OntimeV3): { [id: string]: Companion
 				if (prop === 'colour') {
 					propval = splitHex(propval as string)
 				}
-				if (id === null) {
-					return
-				}
-				socketSendChange(ActionCommand.Change, id, prop, propval)
+
+				Object.assign(patch, { [prop]: propval })
 			})
+			socketSendJson(ActionCommand.Change, { [id]: patch })
 		}
 	}
 
