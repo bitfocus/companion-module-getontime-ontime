@@ -35,7 +35,7 @@ function update2x4x0(
 		}
 		for (const feedback of props.feedbacks) {
 			if (feedback.feedbackId === 'speakerMessageVisible') {
-				feedback.feedbackId = feedbackId.TimerMessageVisible
+				feedback.feedbackId = deprecatedFeedbackId.TimerMessageVisible
 				result.updatedFeedbacks.push(feedback)
 			}
 		}
@@ -58,7 +58,7 @@ function update2x4x0(
 		}
 		for (const feedback of props.feedbacks) {
 			if (feedback.feedbackId === 'speakerMessageVisible') {
-				feedback.feedbackId = feedbackId.TimerMessageVisible
+				feedback.feedbackId = deprecatedFeedbackId.TimerMessageVisible
 				result.updatedFeedbacks.push(feedback)
 			}
 		}
@@ -214,6 +214,28 @@ function update3x4x0(
 					feedback.options.direction = 'both'
 					result.updatedFeedbacks.push(feedback)
 				}
+			} else if (feedback.feedbackId === deprecatedFeedbackId.LowerMessageVisible) {
+				feedback.feedbackId = feedbackId.MessageVisible
+				feedback.options.source = 'lower'
+				feedback.options.reqText = false
+				result.updatedFeedbacks.push(feedback)
+			} else if (feedback.feedbackId === deprecatedFeedbackId.PublicMessageVisible) {
+				feedback.feedbackId = feedbackId.MessageVisible
+				feedback.options.source = 'public'
+				feedback.options.reqText = false
+				result.updatedFeedbacks.push(feedback)
+			} else if (feedback.feedbackId === deprecatedFeedbackId.ThisTimerMessageVisible) {
+				feedback.feedbackId = feedbackId.MessageVisible
+				feedback.options.source = 'timer'
+				feedback.options.reqText = true
+				feedback.options.text = feedback.options.msg
+				delete feedback.options.msg
+				result.updatedFeedbacks.push(feedback)
+			} else if (feedback.feedbackId === deprecatedFeedbackId.TimerMessageVisible) {
+				feedback.feedbackId = feedbackId.MessageVisible
+				feedback.options.source = 'timer'
+				feedback.options.reqText = false
+				result.updatedFeedbacks.push(feedback)
 			}
 		}
 	}

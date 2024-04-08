@@ -1,6 +1,6 @@
 import { CompanionFeedbackDefinition, CompanionFeedbackDefinitions, combineRgb } from '@companion-module/base'
 import { OnTimeInstance } from '../index'
-import { feedbackId, variableId } from '../enums'
+import { deprecatedFeedbackId, feedbackId, variableId } from '../enums'
 import { Playback } from './state'
 
 export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
@@ -110,7 +110,7 @@ export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 			}
 		},
 	}
-	feedbacks[feedbackId.ThisMessageVisible] = {
+	feedbacks[deprecatedFeedbackId.ThisMessageVisible] = {
 		type: 'boolean',
 		name: 'Change color from this message visibility',
 		description: 'Change the colors of a button if message is visible and matches this message',

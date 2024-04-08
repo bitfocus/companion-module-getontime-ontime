@@ -393,7 +393,7 @@ export function presets(): CompanionPresetDefinitions {
 		],
 		feedbacks: [
 			{
-				feedbackId: feedbackId.TimerMessageVisible,
+				feedbackId: deprecatedFeedbackId.TimerMessageVisible,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
@@ -431,7 +431,7 @@ export function presets(): CompanionPresetDefinitions {
 		],
 		feedbacks: [
 			{
-				feedbackId: feedbackId.PublicMessageVisible,
+				feedbackId: deprecatedFeedbackId.PublicMessageVisible,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
@@ -469,7 +469,7 @@ export function presets(): CompanionPresetDefinitions {
 		],
 		feedbacks: [
 			{
-				feedbackId: feedbackId.LowerMessageVisible,
+				feedbackId: deprecatedFeedbackId.LowerMessageVisible,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),

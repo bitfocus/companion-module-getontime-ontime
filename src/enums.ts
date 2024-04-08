@@ -38,23 +38,22 @@ export enum deprecatedActionId {
 
 export enum feedbackId {
 	ColorPlayback = 'colorPlayback',
-	
 	ColorNegative = 'timer_negative',
 	ColorAddRemove = 'state_color_add_remove',
 	OnAir = 'onAir',
+	MessageVisible = 'messageVisible',
+	TimerBlink = 'timerBlink',
+	TimerBlackout = 'timerBlackout',
+
+	//v3
+}
+
+export enum deprecatedFeedbackId {
+	ThisMessageVisible = 'thisMessageVisible',
 	TimerMessageVisible = 'timerMessageVisible',
 	ThisTimerMessageVisible = 'thisTimerMessageVisible',
 	PublicMessageVisible = 'publicMessageVisible',
 	LowerMessageVisible = 'lowerMessageVisible',
-	TimerBlink = 'timerBlink',
-	TimerBlackout = 'timerBlackout',
-	
-	//v3
-	MessageVisible = 'messageVisible',
-	ThisMessageVisible = 'thisMessageVisible',
-}
-
-export enum deprecatedFeedbackId {
 	ColorRunning = 'state_color_running',
 	ColorPaused = 'state_color_paused',
 	ColorStopped = 'state_color_stopped',

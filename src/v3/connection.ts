@@ -2,7 +2,7 @@ import { InputValue, InstanceStatus } from '@companion-module/base'
 import { OnTimeInstance } from '..'
 import Websocket from 'ws'
 import { mstoTime, toReadableTime } from '../utilities'
-import { feedbackId, variableId } from '../enums'
+import { deprecatedFeedbackId, feedbackId, variableId } from '../enums'
 import { MessageState, OntimeEvent, Runtime, SimpleTimerState, TimerState } from './state'
 import { OntimeV3 } from './ontimev3'
 
@@ -119,7 +119,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 
 		self.checkFeedbacks(
 			feedbackId.MessageVisible,
-			feedbackId.ThisMessageVisible,
+			deprecatedFeedbackId.ThisMessageVisible,
 			feedbackId.TimerBlackout,
 			feedbackId.TimerBlink
 		)
