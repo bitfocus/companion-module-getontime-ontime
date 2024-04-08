@@ -2,7 +2,7 @@ import { InputValue, InstanceStatus } from '@companion-module/base'
 import { OnTimeInstance } from '..'
 import Websocket from 'ws'
 import { mstoTime, toReadableTime } from '../utilities'
-import { feedbackId, variableId } from '../enums'
+import { deprecatedFeedbackId, feedbackId, variableId } from '../enums'
 import { OntimeEvent, RuntimeStore } from './state'
 import { OntimeV2 } from './ontimev2'
 
@@ -126,10 +126,10 @@ export function connect(self: OnTimeInstance, ontime: OntimeV2): void {
 					[variableId.TimerBlink]: ontime.state.timerMessage.timerBlink,
 				})
 				self.checkFeedbacks(
-					feedbackId.ColorRunning,
-					feedbackId.ColorPaused,
-					feedbackId.ColorStopped,
-					feedbackId.ColorRoll,
+					feedbackId.ColorPlayback,
+					deprecatedFeedbackId.ColorPaused,
+					deprecatedFeedbackId.ColorStopped,
+					deprecatedFeedbackId.ColorRoll,
 					feedbackId.ColorNegative,
 					feedbackId.ColorAddRemove,
 					feedbackId.OnAir,
@@ -200,7 +200,7 @@ export function socketSendChange(type: string, eventId: string, property: InputV
 export async function fetchEvents(self: OnTimeInstance, ontime: OntimeV2): Promise<void> {
 	self.log('debug', 'fetching events from ontime')
 	try {
-		const response = await fetch(`http://${self.config.host}:${self.config.port}/data/rundown`)
+		const response = await fetch(`http://${self.config.host}:${self.config.port}/rundown`)
 		const data = (await response.json()) as OntimeEvent[]
 		self.log('debug', `fetched ${data.length} events`)
 		ontime.events = []

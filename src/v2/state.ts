@@ -100,7 +100,7 @@ type TimerMessage = Message & {
 	timerBlackout: boolean
 }
 
-enum Playback {
+export enum Playback {
 	Roll = 'roll',
 	Play = 'play',
 	Pause = 'pause',

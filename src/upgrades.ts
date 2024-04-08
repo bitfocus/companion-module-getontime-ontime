@@ -9,7 +9,7 @@ import {
 	type CompanionMigrationFeedback,
 } from '@companion-module/base'
 import type { OntimeConfig } from './config'
-import { feedbackId, ActionId, deprecatedActionId } from './enums'
+import { feedbackId, ActionId, deprecatedActionId, deprecatedFeedbackId } from './enums'
 
 function update2x4x0(
 	_context: CompanionUpgradeContext<OntimeConfig>,
@@ -190,6 +190,30 @@ function update3x4x0(
 			} else if (action.actionId === deprecatedActionId.SetTimerBlink) {
 				action.actionId = ActionId.TimerBlink
 				result.updatedActions.push(action)
+			}
+		}
+		for (const feedback of props.feedbacks) {
+			if (feedback.feedbackId === deprecatedFeedbackId.ColorRunning) {
+				feedback.feedbackId = feedbackId.ColorPlayback
+				feedback.options.state = 'play'
+				result.updatedFeedbacks.push(feedback)
+			} else if (feedback.feedbackId === deprecatedFeedbackId.ColorPaused) {
+				feedback.feedbackId = feedbackId.ColorPlayback
+				feedback.options.state = 'pause'
+				result.updatedFeedbacks.push(feedback)
+			} else if (feedback.feedbackId === deprecatedFeedbackId.ColorStopped) {
+				feedback.feedbackId = feedbackId.ColorPlayback
+				feedback.options.state = 'stop'
+				result.updatedFeedbacks.push(feedback)
+			} else if (feedback.feedbackId === deprecatedFeedbackId.ColorRoll) {
+				feedback.feedbackId = feedbackId.ColorPlayback
+				feedback.options.state = 'roll'
+				result.updatedFeedbacks.push(feedback)
+			} else if (feedback.feedbackId === feedbackId.ColorAddRemove) {
+				if (!('direction' in feedback.options)) {
+					feedback.options.direction = 'both'
+					result.updatedFeedbacks.push(feedback)
+				}
 			}
 		}
 	}

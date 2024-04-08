@@ -19,7 +19,7 @@ export interface OntimeClient {
 	disconnectSocket(): void
 
 	getVariables(): CompanionVariableDefinition[]
-	getActions(self: OnTimeInstance): CompanionActionDefinitions
+	getActions(): CompanionActionDefinitions
 	getFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 	getPresets(): CompanionPresetDefinitions
 }
@@ -115,7 +115,7 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 
 	init_actions(): void {
 		this.log('debug', 'Initializing actions')
-		this.setActionDefinitions(this.ontime.getActions(this))
+		this.setActionDefinitions(this.ontime.getActions())
 	}
 
 	init_feedbacks(): void {

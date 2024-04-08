@@ -1,7 +1,6 @@
 import { CompanionActionDefinition, CompanionActionDefinitions } from '@companion-module/base'
 
 import { deprecatedActionId } from '../../enums'
-import { OnTimeInstance } from '../../index'
 import { socketSendJson } from '../connection'
 
 import { OntimeV2 } from '../ontimev2'
@@ -18,7 +17,7 @@ import { createPlaybackActions } from './playback'
  * @constructor
  * @returns CompanionActions
  */
-export function actions(_self: OnTimeInstance, ontime: OntimeV2): CompanionActionDefinitions {
+export function actions(ontime: OntimeV2): CompanionActionDefinitions {
 	const actions: { [id: string]: CompanionActionDefinition } = {
 		...createChangeActions(ontime),
 		...createPlaybackActions(ontime),

@@ -1,6 +1,6 @@
 import { CompanionButtonPresetDefinition, CompanionPresetDefinitions, combineRgb } from '@companion-module/base'
 import * as icons from '../assets/icons'
-import { ActionId, deprecatedActionId, feedbackId } from '../enums'
+import { ActionId, deprecatedActionId, deprecatedFeedbackId, feedbackId } from '../enums'
 
 export function presets(): CompanionPresetDefinitions {
 	const presets: { [id: string]: CompanionButtonPresetDefinition | undefined } = {}
@@ -31,7 +31,7 @@ export function presets(): CompanionPresetDefinitions {
 		],
 		feedbacks: [
 			{
-				feedbackId: feedbackId.ColorRunning,
+				feedbackId: deprecatedFeedbackId.ColorRunning,
 				options: {},
 				style: {
 					color: combineRgb(255, 255, 255),
@@ -66,7 +66,7 @@ export function presets(): CompanionPresetDefinitions {
 		],
 		feedbacks: [
 			{
-				feedbackId: feedbackId.ColorPaused,
+				feedbackId: deprecatedFeedbackId.ColorPaused,
 				options: {},
 				style: {
 					color: combineRgb(255, 255, 255),
@@ -205,7 +205,7 @@ export function presets(): CompanionPresetDefinitions {
 		],
 		feedbacks: [
 			{
-				feedbackId: feedbackId.ColorRoll,
+				feedbackId: deprecatedFeedbackId.ColorRoll,
 				options: {},
 				style: {
 					color: combineRgb(255, 255, 255),
@@ -563,7 +563,7 @@ export function presets(): CompanionPresetDefinitions {
 		steps: [],
 		feedbacks: [
 			{
-				feedbackId: feedbackId.ColorRunning,
+				feedbackId: deprecatedFeedbackId.ColorRunning,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
@@ -571,7 +571,7 @@ export function presets(): CompanionPresetDefinitions {
 				options: {},
 			},
 			{
-				feedbackId: feedbackId.ColorPaused,
+				feedbackId: deprecatedFeedbackId.ColorPaused,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
@@ -579,7 +579,7 @@ export function presets(): CompanionPresetDefinitions {
 				options: {},
 			},
 			{
-				feedbackId: feedbackId.ColorStopped,
+				feedbackId: deprecatedFeedbackId.ColorStopped,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
@@ -587,7 +587,7 @@ export function presets(): CompanionPresetDefinitions {
 				options: {},
 			},
 			{
-				feedbackId: feedbackId.ColorRoll,
+				feedbackId: deprecatedFeedbackId.ColorRoll,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
@@ -617,7 +617,7 @@ export function presets(): CompanionPresetDefinitions {
 		steps: [],
 		feedbacks: [
 			{
-				feedbackId: feedbackId.ColorRunning,
+				feedbackId: deprecatedFeedbackId.ColorRunning,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
@@ -625,7 +625,7 @@ export function presets(): CompanionPresetDefinitions {
 				options: {},
 			},
 			{
-				feedbackId: feedbackId.ColorPaused,
+				feedbackId: deprecatedFeedbackId.ColorPaused,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
@@ -633,7 +633,7 @@ export function presets(): CompanionPresetDefinitions {
 				options: {},
 			},
 			{
-				feedbackId: feedbackId.ColorStopped,
+				feedbackId: deprecatedFeedbackId.ColorStopped,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
@@ -641,7 +641,7 @@ export function presets(): CompanionPresetDefinitions {
 				options: {},
 			},
 			{
-				feedbackId: feedbackId.ColorRoll,
+				feedbackId: deprecatedFeedbackId.ColorRoll,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
@@ -671,7 +671,7 @@ export function presets(): CompanionPresetDefinitions {
 		steps: [],
 		feedbacks: [
 			{
-				feedbackId: feedbackId.ColorRunning,
+				feedbackId: deprecatedFeedbackId.ColorRunning,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
@@ -679,7 +679,7 @@ export function presets(): CompanionPresetDefinitions {
 				options: {},
 			},
 			{
-				feedbackId: feedbackId.ColorPaused,
+				feedbackId: deprecatedFeedbackId.ColorPaused,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
@@ -687,7 +687,7 @@ export function presets(): CompanionPresetDefinitions {
 				options: {},
 			},
 			{
-				feedbackId: feedbackId.ColorStopped,
+				feedbackId: deprecatedFeedbackId.ColorStopped,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
@@ -695,7 +695,7 @@ export function presets(): CompanionPresetDefinitions {
 				options: {},
 			},
 			{
-				feedbackId: feedbackId.ColorRoll,
+				feedbackId: deprecatedFeedbackId.ColorRoll,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
@@ -725,7 +725,7 @@ export function presets(): CompanionPresetDefinitions {
 		steps: [],
 		feedbacks: [
 			{
-				feedbackId: feedbackId.ColorRunning,
+				feedbackId: deprecatedFeedbackId.ColorRunning,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
@@ -733,7 +733,7 @@ export function presets(): CompanionPresetDefinitions {
 				options: {},
 			},
 			{
-				feedbackId: feedbackId.ColorPaused,
+				feedbackId: deprecatedFeedbackId.ColorPaused,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
@@ -741,7 +741,7 @@ export function presets(): CompanionPresetDefinitions {
 				options: {},
 			},
 			{
-				feedbackId: feedbackId.ColorStopped,
+				feedbackId: deprecatedFeedbackId.ColorStopped,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
@@ -749,7 +749,7 @@ export function presets(): CompanionPresetDefinitions {
 				options: {},
 			},
 			{
-				feedbackId: feedbackId.ColorRoll,
+				feedbackId: deprecatedFeedbackId.ColorRoll,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),
@@ -779,7 +779,7 @@ export function presets(): CompanionPresetDefinitions {
 		steps: [],
 		feedbacks: [
 			{
-				feedbackId: feedbackId.ColorRunning,
+				feedbackId: deprecatedFeedbackId.ColorRunning,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 204, 0),
@@ -787,7 +787,7 @@ export function presets(): CompanionPresetDefinitions {
 				options: {},
 			},
 			{
-				feedbackId: feedbackId.ColorPaused,
+				feedbackId: deprecatedFeedbackId.ColorPaused,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(237, 137, 54),
@@ -795,7 +795,7 @@ export function presets(): CompanionPresetDefinitions {
 				options: {},
 			},
 			{
-				feedbackId: feedbackId.ColorStopped,
+				feedbackId: deprecatedFeedbackId.ColorStopped,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(0, 0, 0),
@@ -803,7 +803,7 @@ export function presets(): CompanionPresetDefinitions {
 				options: {},
 			},
 			{
-				feedbackId: feedbackId.ColorRoll,
+				feedbackId: deprecatedFeedbackId.ColorRoll,
 				style: {
 					color: combineRgb(255, 255, 255),
 					bgcolor: combineRgb(43, 108, 176),

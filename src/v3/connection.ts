@@ -90,7 +90,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			[variableId.PlayState]: val.playback,
 		})
 
-		self.checkFeedbacks(feedbackId.ColorPlaybeck, feedbackId.ColorNegative, feedbackId.ColorAddRemove, feedbackId.OnAir)
+		self.checkFeedbacks(feedbackId.ColorPlayback, feedbackId.ColorNegative, feedbackId.ColorAddRemove, feedbackId.OnAir)
 	}
 
 	const updateOnAir = (val: boolean) => {

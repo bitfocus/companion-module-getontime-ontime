@@ -37,10 +37,8 @@ export enum deprecatedActionId {
 }
 
 export enum feedbackId {
-	ColorRunning = 'state_color_running',
-	ColorPaused = 'state_color_paused',
-	ColorStopped = 'state_color_stopped',
-	ColorRoll = 'state_color_roll',
+	ColorPlayback = 'colorPlayback',
+	
 	ColorNegative = 'timer_negative',
 	ColorAddRemove = 'state_color_add_remove',
 	OnAir = 'onAir',
@@ -50,11 +48,17 @@ export enum feedbackId {
 	LowerMessageVisible = 'lowerMessageVisible',
 	TimerBlink = 'timerBlink',
 	TimerBlackout = 'timerBlackout',
-
+	
 	//v3
-	ColorPlaybeck = 'state_color_playback',
 	MessageVisible = 'messageVisible',
 	ThisMessageVisible = 'thisMessageVisible',
+}
+
+export enum deprecatedFeedbackId {
+	ColorRunning = 'state_color_running',
+	ColorPaused = 'state_color_paused',
+	ColorStopped = 'state_color_stopped',
+	ColorRoll = 'state_color_roll',
 }
 
 export enum variableId {

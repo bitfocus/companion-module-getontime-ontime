@@ -6,7 +6,7 @@ import { Playback } from './state'
 export function feedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
 	const feedbacks: { [id: string]: CompanionFeedbackDefinition | undefined } = {}
 
-	feedbacks[feedbackId.ColorRunning] = {
+	feedbacks[feedbackId.ColorPlayback] = {
 		type: 'boolean',
 		name: 'Change color from timer playbeck state',
 		description: 'Change the colors of a button according if the timer is stop/play/pause/armed',
