@@ -51,7 +51,7 @@ enum SimpleDirection {
 	CountDown = 'count-down',
 }
 
-type SimpleTimerState = {
+export type SimpleTimerState = {
 	duration: number
 	current: number
 	playback: SimplePlayback

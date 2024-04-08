@@ -36,8 +36,8 @@ export class OntimeV3 implements OntimeClient {
 		return variables()
 	}
 
-	getActions(self: OnTimeInstance): CompanionActionDefinitions {
-		return actions(self, this)
+	getActions(_self: OnTimeInstance): CompanionActionDefinitions {
+		return actions(this)
 	}
 
 	getFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {

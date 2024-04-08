@@ -3,7 +3,7 @@ import { OnTimeInstance } from '..'
 import Websocket from 'ws'
 import { mstoTime, toReadableTime } from '../utilities'
 import { feedbackId, variableId } from '../enums'
-import { MessageState, OntimeEvent, Runtime, TimerState } from './state'
+import { MessageState, OntimeEvent, Runtime, SimpleTimerState, TimerState } from './state'
 import { OntimeV3 } from './ontimev3'
 
 let ws: Websocket | null = null
@@ -66,11 +66,13 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 	}
 
 	const updateClock = (val: number) => {
+		ontime.state.clock = val
 		const clock = toReadableTime(val)
 		self.setVariableValues({ [variableId.Clock]: clock.hours + ':' + clock.minutes + ':' + clock.seconds })
 	}
 
 	const updateTimer = (val: TimerState) => {
+		ontime.state.timer = val
 		const timer = val.current === null ? defaultTimerObject : toReadableTime(val.current)
 		const timer_start = val.startedAt === null ? defaultTimerObject : toReadableTime(val.startedAt)
 		const timer_finish = val.expectedFinish === null ? defaultTimerObject : toReadableTime(val.expectedFinish)
@@ -92,6 +94,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 	}
 
 	const updateOnAir = (val: boolean) => {
+		ontime.state.onAir = val
 		self.setVariableValues({
 			[variableId.OnAir]: val,
 		})
@@ -100,6 +103,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 	}
 
 	const updateMessage = (val: MessageState) => {
+		ontime.state.message = val
 		self.setVariableValues({
 			[variableId.TimerMessage]: val.timer.text,
 			[variableId.PublicMessage]: val.public.text,
@@ -121,11 +125,14 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		)
 	}
 
-	const updateRuntime = (_val: Runtime) => {
+	const updateRuntime = (val: Runtime) => {
+		ontime.state.runtime = val
+
 		//TODO:
 	}
 
 	const updateEventNow = (val: OntimeEvent) => {
+		ontime.state.eventNow = val
 		self.setVariableValues({
 			[variableId.TitleNow]: val.title ?? '',
 			[variableId.NoteNow]: val.note ?? '',
@@ -134,6 +141,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		})
 	}
 	const updateEventNext = (val: OntimeEvent) => {
+		ontime.state.eventNext = val
 		self.setVariableValues({
 			[variableId.TitleNext]: val.title ?? '',
 			[variableId.NoteNext]: val.note ?? '',
@@ -141,13 +149,18 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			[variableId.IdNext]: val.id ?? '',
 		})
 	}
-	const updatePublicEventNext = (_val: OntimeEvent) => {
+	const updatePublicEventNext = (val: OntimeEvent) => {
+		ontime.state.publicEventNow = val
+
 		//TODO:
 	}
-	const updatePublicEventNow = (_val: OntimeEvent) => {
+	const updatePublicEventNow = (val: OntimeEvent) => {
+		ontime.state.publicEventNext = val
+
 		//TODO:
 	}
-	const updateTimer1 = (_val: Runtime) => {
+	const updateTimer1 = (val: SimpleTimerState) => {
+		ontime.state.timer1 = val
 		//TODO:
 	}
 
@@ -203,6 +216,16 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					updateTimer1(payload)
 					break
 				}
+				case 'ontime': {
+					updateTimer(payload.timer)
+					updateClock(payload.clock)
+					updateOnAir(payload.onAir)
+					updateMessage(payload.message)
+					updateEventNow(payload.eventNow)
+					updateEventNext(payload.eventNext)
+					break
+				}
+				case 'ontime-refetch': {
 					if (self.config.refetchEvents === false) {
 						break
 					}
