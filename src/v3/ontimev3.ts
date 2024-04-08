@@ -7,7 +7,7 @@ import {
 import { OnTimeInstance, OntimeClient } from '..'
 
 import { actions } from './actions/index'
-import { feedbacks } from './feedback'
+import { feedbacks } from './feedbacks/index'
 import { presets } from './presets'
 import { variables } from './variables'
 import { connect, disconnectSocket } from './connection'
@@ -40,8 +40,8 @@ export class OntimeV3 implements OntimeClient {
 		return actions(this)
 	}
 
-	getFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
-		return feedbacks(self)
+	getFeedbacks(): CompanionFeedbackDefinitions {
+		return feedbacks(this)
 	}
 
 	getPresets(): CompanionPresetDefinitions {
