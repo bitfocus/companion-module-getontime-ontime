@@ -2,7 +2,6 @@ import { InputValue, InstanceStatus } from '@companion-module/base'
 import { OnTimeInstance } from '..'
 import Websocket from 'ws'
 import { mstoTime, toReadableTime } from '../utilities'
-import axios from 'axios'
 import { feedbackId, variableId } from '../enums'
 import { OntimeEvent, RuntimeStore } from './state'
 import { OntimeV2 } from './ontimev2'
@@ -201,16 +200,12 @@ export function socketSendChange(type: string, eventId: string, property: InputV
 export async function fetchEvents(self: OnTimeInstance, ontime: OntimeV2): Promise<void> {
 	self.log('debug', 'fetching events from ontime')
 	try {
-		const result = await axios.get(`http://${self.config.host}:${self.config.port}/events`, { responseType: 'json' })
-		self.log('debug', `fetched ${result.data.length} events`)
+		const response = await fetch(`http://${self.config.host}:${self.config.port}/data/rundown`)
+		const data = (await response.json()) as OntimeEvent[]
+		self.log('debug', `fetched ${data.length} events`)
 		ontime.events = []
-		ontime.events = result.data
-			.filter((event: OntimeEvent) => event.type === 'event')
-			.map((event: OntimeEvent) => ({
-				id: event.id,
-				cue: event.cue,
-				title: event.title,
-			}))
+		ontime.events = data.filter(({ type }) => type === 'event').map(({ id, cue, title }) => ({ id, cue, title }))
+
 		self.init_actions()
 	} catch (e: any) {
 		ontime.events = []

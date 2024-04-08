@@ -2,7 +2,6 @@ import { InputValue, InstanceStatus } from '@companion-module/base'
 import { OnTimeInstance } from '..'
 import Websocket from 'ws'
 import { mstoTime, toReadableTime } from '../utilities'
-import axios from 'axios'
 import { feedbackId, variableId } from '../enums'
 import { MessageState, OntimeEvent, Runtime, TimerState } from './state'
 import { OntimeV3 } from './ontimev3'
@@ -47,7 +46,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		clearTimeout(reconnectionTimeout as NodeJS.Timeout)
 		self.updateStatus(InstanceStatus.Ok)
 		self.log('debug', 'Socket connected')
-		void fetchEvents(self, ontime)
+		void fetchAllEvents(self, ontime)
 	}
 
 	ws.onclose = (event) => {
@@ -204,36 +203,21 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					updateTimer1(payload)
 					break
 				}
-			}
-
-			if (type === 'ontime') {
-				updateTimer(payload.timer)
-				updateClock(payload.clock)
-				updateOnAir(payload.onAir)
-				updateMessage(payload.message)
-				updateEventNow(payload.eventNow)
-				updateEventNext(payload.eventNext)
-
-				self.checkFeedbacks(
-					feedbackId.TimerMessageVisible,
-					feedbackId.ThisTimerMessageVisible,
-					feedbackId.PublicMessageVisible,
-					feedbackId.LowerMessageVisible,
-					feedbackId.TimerBlink,
-					feedbackId.TimerBlackout
-				)
-			}
-
-			if (type === 'ontime-refetch' && self.config.refetchEvents === true) {
-				self.log('debug', 'refetching events')
-				void fetchEvents(self, ontime).then(
-					() => {
-						self.init_actions()
-					},
-					(e: any) => {
-						self.log('debug', e)
+					if (self.config.refetchEvents === false) {
+						break
 					}
-				)
+					self.log('debug', 'refetching events')
+					// self.log('debug', JSON.stringify(payload))
+					void fetchAllEvents(self, ontime).then(
+						() => {
+							self.init_actions()
+						},
+						(e: any) => {
+							self.log('debug', e)
+						}
+					)
+					break
+				}
 			}
 		} catch (_) {
 			// ignore unhandled
@@ -277,25 +261,29 @@ export function socketSendChange(type: string, eventId: string, property: InputV
 	)
 }
 
-export async function fetchEvents(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
+
+let Etag: string = ''
+let timeout: NodeJS.Timeout
+
+export async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
+	clearTimeout(timeout)
+	if (self.config.refetchEvents) {
+		// timeout = setTimeout(() => fetchAllEvents(self, ontime), 60000)
+	}
 	self.log('debug', 'fetching events from ontime')
 	try {
-		const result = await axios.get(`http://${self.config.host}:${self.config.port}/data/rundown`, {
-			responseType: 'json',
+		const response = await fetch(`http://${self.config.host}:${self.config.port}/data/rundown`, {
+			method: 'GET',
+			headers: { Etag },
 		})
-		//TODO: maybe chack if the order has actualy changed
-		// if (self.revision >= result.data.revision) {
-		// 	self.log('debug', `skipping reload no new revision ${result.data.revision}`)
-		// 	return
-		// }
-		self.log('debug', `fetched ${result.data.length} events`)
+		if (response.status === 304) {
+			return
+		}
+		Etag = response.headers.get('Etag') ?? ''
+		const data = (await response.json()) as OntimeEvent[]
+		self.log('debug', `fetched ${data.length} events`)
 		ontime.events = []
-		ontime.events = result.data
-			.filter((event: OntimeEvent) => event.type === 'event')
-			.map((event: OntimeEvent) => ({
-				id: event.id,
-				label: event.cue + ' | ' + event.title,
-			}))
+		ontime.events = data.filter(({ type }) => type === 'event').map(({ id, cue, title }) => ({ id, cue, title }))
 
 		self.init_actions()
 	} catch (e: any) {

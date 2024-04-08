@@ -27,7 +27,6 @@ export interface OntimeClient {
 export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 	public config!: OntimeConfig
 	private ontime!: OntimeClient
-	public revision = 0
 
 	/**
 	 * Main initialization function called once the module
