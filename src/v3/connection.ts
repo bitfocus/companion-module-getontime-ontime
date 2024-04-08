@@ -284,6 +284,23 @@ export function socketSendChange(type: string, eventId: string, property: InputV
 	)
 }
 
+//FIXME: this is placeholder stuff
+export async function fetchEvents(self: OnTimeInstance, ontime: OntimeV3, events: string[]) {
+	self.log('debug', `fetching events from ontime ${events}`)
+	for (const event of events) {
+		try {
+			const response = await fetch(`http://${self.config.host}:${self.config.port}/data/rundown/${event}`)
+			const { id, cue, title } = (await response.json()) as any
+			const oldEvent = ontime.events.find((e) => e.id === event)
+			if (oldEvent) {
+				Object.assign(oldEvent, { id, cue, title })
+			}
+		} catch (e: any) {
+			self.log('error', `failed to fetch event: ${event}`)
+			self.log('error', e)
+		}
+	}
+}
 
 let Etag: string = ''
 let timeout: NodeJS.Timeout
