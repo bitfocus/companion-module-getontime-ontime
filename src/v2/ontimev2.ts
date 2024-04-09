@@ -11,11 +11,12 @@ import { feedbacks } from './feedbacks/index'
 import { presets } from './presets'
 import { variables } from './variables'
 import { connect, disconnectSocket } from './connection'
-import { SimpleOntimeEvent, stateobj } from './state'
+import { OntimeEvent } from './ontime-types'
+import { stateobj } from './state'
 
 export class OntimeV2 implements OntimeClient {
 	instance: OnTimeInstance
-	public events: SimpleOntimeEvent[] = []
+	public events: OntimeEvent[] = []
 
 	public state = stateobj
 

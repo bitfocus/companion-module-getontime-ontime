@@ -3,7 +3,7 @@ import { OnTimeInstance } from '..'
 import Websocket from 'ws'
 import { msToSplitTime, defaultTimerObject } from '../utilities'
 import { feedbackId, variableId } from '../enums'
-import { OntimeEvent, RuntimeStore } from './state'
+import { OntimeEvent, RuntimeStore } from './ontime-types'
 import { OntimeV2 } from './ontimev2'
 
 let ws: Websocket | null = null
@@ -191,8 +191,7 @@ export async function fetchEvents(self: OnTimeInstance, ontime: OntimeV2): Promi
 		const response = await fetch(`http://${self.config.host}:${self.config.port}/events`)
 		const data = (await response.json()) as OntimeEvent[]
 		self.log('debug', `fetched ${data.length} events`)
-		ontime.events = []
-		ontime.events = data.filter(({ type }) => type === 'event').map(({ id, cue, title }) => ({ id, cue, title }))
+		ontime.events = data
 
 		self.init_actions()
 	} catch (e: any) {

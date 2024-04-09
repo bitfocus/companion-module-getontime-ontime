@@ -1,14 +1,6 @@
-export type TimerState = {
-	addedTime: number // time added by user, can be negative
-	current: number | null // running countdown
-	duration: number | null // normalised duration of current event
-	elapsed: number | null // elapsed time in current timer
-	expectedFinish: number | null // time we expect timer to finish
-	finishedAt: number | null // only if timer has already finished
-	playback: Playback
-	secondaryTimer: number | null // used for roll mode
-	startedAt: number | null // only if timer has already started
-}
+import { EndAction, Message, OntimeBaseEvent, Playback, SupportedEvent, TimerType } from '../common/ontime-types'
+
+// Main runtime store
 
 export type RuntimeStore = {
 	// timer data
@@ -30,6 +22,18 @@ export type RuntimeStore = {
 	timer1: SimpleTimerState
 }
 
+export type TimerState = {
+	addedTime: number // time added by user, can be negative
+	current: number | null // running countdown
+	duration: number | null // normalised duration of current event
+	elapsed: number | null // elapsed time in current timer
+	expectedFinish: number | null // time we expect timer to finish
+	finishedAt: number | null // only if timer has already finished
+	playback: Playback
+	secondaryTimer: number | null // used for roll mode
+	startedAt: number | null // only if timer has already started
+}
+
 export type Runtime = {
 	numEvents: number
 	selectedEventIndex: number | null
@@ -40,71 +44,7 @@ export type Runtime = {
 	expectedEnd: number | null
 }
 
-export enum SimplePlayback {
-	Start = 'start',
-	Pause = 'pause',
-	Stop = 'stop',
-}
-
-export enum SimpleDirection {
-	CountUp = 'count-up',
-	CountDown = 'count-down',
-}
-
-export type SimpleTimerState = {
-	duration: number
-	current: number
-	playback: SimplePlayback
-	direction: SimpleDirection
-}
-
-export enum Playback {
-	Roll = 'roll',
-	Play = 'play',
-	Pause = 'pause',
-	Stop = 'stop',
-	Armed = 'armed',
-}
-
-export type Message = {
-	text: string
-	visible: boolean
-}
-
-export type TimerMessage = Message & {
-	blink: boolean
-	blackout: boolean
-}
-
-export type MessageState = {
-	timer: TimerMessage
-	public: Message
-	lower: Message
-	external: Message
-}
-
-export enum SupportedEvent {
-	Event = 'event',
-	Delay = 'delay',
-	Block = 'block',
-}
-
-export type OntimeBaseEvent = {
-	type: SupportedEvent
-	id: string
-	after?: string // used when creating an event to indicate its position in rundown
-}
-
-// type OntimeDelay = OntimeBaseEvent & {
-// 	type: SupportedEvent.Delay
-// 	duration: number
-// }
-
-// type OntimeBlock = OntimeBaseEvent & {
-// 	type: SupportedEvent.Block
-// 	title: string
-// }
-
+// Event
 
 export type OntimeEvent = OntimeBaseEvent & {
 	type: SupportedEvent.Event
@@ -128,24 +68,26 @@ export type OntimeEvent = OntimeBaseEvent & {
 	custom: EventCustomFields
 }
 
-export enum EndAction {
-	None = 'none',
-	Stop = 'stop',
-	LoadNext = 'load-next',
-	PlayNext = 'play-next',
-}
-
 export enum TimeStrategy {
 	LockEnd = 'lock-end',
 	LockDuration = 'lock-duration',
 }
 
-export enum TimerType {
-	CountDown = 'count-down',
-	CountUp = 'count-up',
-	TimeToEnd = 'time-to-end',
-	Clock = 'clock',
+// Message
+
+export type MessageState = {
+	timer: TimerMessage
+	public: Message
+	lower: Message
+	external: Message
 }
+
+type TimerMessage = Message & {
+	blink: boolean
+	blackout: boolean
+}
+
+// Custom fields
 
 export type CustomField = {
 	type: 'string'
@@ -155,3 +97,23 @@ export type CustomField = {
 
 export type CustomFields = Record<string, CustomField>
 export type EventCustomFields = Record<string, { value: string }>
+
+//Extra timer
+
+export enum SimplePlayback {
+	Start = 'start',
+	Pause = 'pause',
+	Stop = 'stop',
+}
+
+export enum SimpleDirection {
+	CountUp = 'count-up',
+	CountDown = 'count-down',
+}
+
+export type SimpleTimerState = {
+	duration: number
+	current: number
+	playback: SimplePlayback
+	direction: SimpleDirection
+}

@@ -1,4 +1,5 @@
-import { RuntimeStore, SimpleDirection, SimplePlayback, Playback } from './ontime-types'
+import { RuntimeStore, SimpleDirection, SimplePlayback } from './ontime-types'
+import { Playback } from '../common/ontime-types'
 
 const stateobj: RuntimeStore = {
 	clock: 0,

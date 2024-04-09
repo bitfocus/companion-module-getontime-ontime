@@ -1,7 +1,7 @@
 import { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition, combineRgb } from '@companion-module/base'
 import { OntimeV3 } from '../ontimev3'
 import { feedbackId } from '../../enums'
-import { Playback } from '../ontime-types'
+import { Playback } from '../../common/ontime-types'
 
 export function createPlaybackFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
 	function addTime(feedback: CompanionFeedbackBooleanEvent): boolean {
