@@ -1,7 +1,7 @@
 import { InputValue, InstanceStatus } from '@companion-module/base'
 import { OnTimeInstance } from '..'
 import Websocket from 'ws'
-import { mstoTime, toReadableTime } from '../utilities'
+import { msToSplitTime, defaultTimerObject } from '../utilities'
 import { feedbackId, variableId } from '../enums'
 import { OntimeEvent, RuntimeStore } from './state'
 import { OntimeV2 } from './ontimev2'
@@ -10,11 +10,6 @@ let ws: Websocket | null = null
 let reconnectionTimeout: NodeJS.Timeout | null = null
 let reconnectInterval: number
 let shouldReconnect = false
-const defaultTimerObject = {
-	hours: '00',
-	minutes: '00',
-	seconds: '00',
-}
 
 export function connect(self: OnTimeInstance, ontime: OntimeV2): void {
 	reconnectInterval = self.config.reconnectInterval * 1000
@@ -76,28 +71,27 @@ export function connect(self: OnTimeInstance, ontime: OntimeV2): void {
 
 			if (type === 'ontime') {
 				ontime.state = payload as RuntimeStore
-
 				const timer =
-					ontime.state.timer.current === null ? defaultTimerObject : toReadableTime(ontime.state.timer.current)
-				const clock = toReadableTime(ontime.state.timer.clock)
+					ontime.state.timer.current === null ? defaultTimerObject : msToSplitTime(ontime.state.timer.current)
+				const clock = msToSplitTime(ontime.state.timer.clock)
 				const timer_start =
-					ontime.state.timer.startedAt === null ? defaultTimerObject : toReadableTime(ontime.state.timer.startedAt)
+					ontime.state.timer.startedAt === null ? defaultTimerObject : msToSplitTime(ontime.state.timer.startedAt)
 				const timer_finish =
 					ontime.state.timer.expectedFinish === null
 						? defaultTimerObject
-						: toReadableTime(ontime.state.timer.expectedFinish)
-				const added = mstoTime(ontime.state.timer.addedTime)
+						: msToSplitTime(ontime.state.timer.expectedFinish)
+				const added = msToSplitTime(ontime.state.timer.addedTime)
 
 				self.setVariableValues({
-					[variableId.Time]: timer.hours + ':' + timer.minutes + ':' + timer.seconds,
-					[variableId.TimeHM]: timer.hours + ':' + timer.minutes,
+					[variableId.Time]: timer.hoursMinutesSeconds,
+					[variableId.TimeHM]: timer.hoursMinutes,
 					[variableId.TimeH]: timer.hours,
 					[variableId.TimeM]: timer.minutes,
 					[variableId.TimeS]: timer.seconds,
-					[variableId.Clock]: clock.hours + ':' + clock.minutes + ':' + clock.seconds,
-					[variableId.TimerStart]: timer_start.hours + ':' + timer_start.minutes + ':' + timer_start.seconds,
-					[variableId.TimerFinish]: timer_finish.hours + ':' + timer_finish.minutes + ':' + timer_finish.seconds,
-					[variableId.TimerAdded]: added,
+					[variableId.Clock]: clock.hoursMinutesSeconds,
+					[variableId.TimerStart]: timer_start.hoursMinutesSeconds,
+					[variableId.TimerFinish]: timer_finish.hoursMinutesSeconds,
+					[variableId.TimerAdded]: added.hoursMinutesSeconds,
 
 					[variableId.PlayState]: ontime.state.playback,
 					[variableId.OnAir]: ontime.state.onAir,

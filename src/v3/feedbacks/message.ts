@@ -1,7 +1,7 @@
 import { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition, combineRgb } from '@companion-module/base'
 import { OntimeV3 } from '../ontimev3'
 import { feedbackId } from '../../enums'
-import { MessageState } from '../state'
+import { MessageState } from '../ontime-types'
 
 export function createMessageFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
 	function messageVisible(feedback: CompanionFeedbackBooleanEvent): boolean {

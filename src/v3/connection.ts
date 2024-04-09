@@ -1,20 +1,16 @@
 import { InputValue, InstanceStatus } from '@companion-module/base'
 import { OnTimeInstance } from '..'
 import Websocket from 'ws'
-import { mstoTime, toReadableTime } from '../utilities'
+import { defaultTimerObject, msToSplitTime } from '../utilities'
 import { deprecatedFeedbackId, feedbackId, variableId } from '../enums'
-import { MessageState, OntimeEvent, Runtime, SimpleTimerState, TimerState } from './state'
+import { MessageState, OntimeEvent, Runtime, SimpleTimerState, TimerState } from './ontime-types'
 import { OntimeV3 } from './ontimev3'
+import { CustomFields } from './ontime-types'
 
 let ws: Websocket | null = null
 let reconnectionTimeout: NodeJS.Timeout | null = null
 let reconnectInterval: number
 let shouldReconnect = false
-const defaultTimerObject = {
-	hours: '00',
-	minutes: '00',
-	seconds: '00',
-}
 
 export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 	reconnectInterval = self.config.reconnectInterval * 1000
@@ -47,6 +43,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		self.updateStatus(InstanceStatus.Ok)
 		self.log('debug', 'Socket connected')
 		void fetchAllEvents(self, ontime)
+		void fetchCustomFields(self, ontime)
 	}
 
 	ws.onclose = (event) => {
@@ -67,26 +64,26 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 
 	const updateClock = (val: number) => {
 		ontime.state.clock = val
-		const clock = toReadableTime(val)
-		self.setVariableValues({ [variableId.Clock]: clock.hours + ':' + clock.minutes + ':' + clock.seconds })
+		const clock = msToSplitTime(val)
+		self.setVariableValues({ [variableId.Clock]: clock.hoursMinutesSeconds })
 	}
-
+	//TODO: consider padding the timer values
 	const updateTimer = (val: TimerState) => {
 		ontime.state.timer = val
-		const timer = val.current === null ? defaultTimerObject : toReadableTime(val.current)
-		const timer_start = val.startedAt === null ? defaultTimerObject : toReadableTime(val.startedAt)
-		const timer_finish = val.expectedFinish === null ? defaultTimerObject : toReadableTime(val.expectedFinish)
-		const added = mstoTime(val.addedTime)
+		const timer = val.current === null ? defaultTimerObject : msToSplitTime(val.current)
+		const timer_start = val.startedAt === null ? defaultTimerObject : msToSplitTime(val.startedAt)
+		const timer_finish = val.expectedFinish === null ? defaultTimerObject : msToSplitTime(val.expectedFinish)
+		const added = msToSplitTime(val.addedTime)
 		self.setVariableValues({
 			[variableId.TimerTotalMs]: val.current ?? 0,
-			[variableId.Time]: timer.hours + ':' + timer.minutes + ':' + timer.seconds,
-			[variableId.TimeHM]: timer.hours + ':' + timer.minutes,
+			[variableId.Time]: timer.hoursMinutesSeconds,
+			[variableId.TimeHM]: timer.hoursMinutes,
 			[variableId.TimeH]: timer.hours,
 			[variableId.TimeM]: timer.minutes,
 			[variableId.TimeS]: timer.seconds,
-			[variableId.TimerStart]: timer_start.hours + ':' + timer_start.minutes + ':' + timer_start.seconds,
-			[variableId.TimerFinish]: timer_finish.hours + ':' + timer_finish.minutes + ':' + timer_finish.seconds,
-			[variableId.TimerAdded]: added,
+			[variableId.TimerStart]: timer_start.hoursMinutesSeconds,
+			[variableId.TimerFinish]: timer_finish.hoursMinutesSeconds,
+			[variableId.TimerAdded]: added.hoursMinutesSeconds,
 			[variableId.PlayState]: val.playback,
 		})
 
@@ -302,11 +299,11 @@ export async function fetchEvents(self: OnTimeInstance, ontime: OntimeV3, events
 	}
 }
 
-let Etag: string = ''
-let timeout: NodeJS.Timeout
+let rundownEtag: string = ''
+let rundownTimeout: NodeJS.Timeout
 
 export async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
-	clearTimeout(timeout)
+	clearTimeout(rundownTimeout)
 	if (self.config.refetchEvents) {
 		// timeout = setTimeout(() => fetchAllEvents(self, ontime), 60000)
 	}
@@ -314,16 +311,45 @@ export async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Pr
 	try {
 		const response = await fetch(`http://${self.config.host}:${self.config.port}/data/rundown`, {
 			method: 'GET',
-			headers: { Etag },
+			headers: { Etag: rundownEtag },
 		})
 		if (response.status === 304) {
 			return
 		}
-		Etag = response.headers.get('Etag') ?? ''
+		rundownEtag = response.headers.get('Etag') ?? ''
 		const data = (await response.json()) as OntimeEvent[]
 		self.log('debug', `fetched ${data.length} events`)
+		ontime.events = data
+
+		self.init_actions()
+	} catch (e: any) {
 		ontime.events = []
-		ontime.events = data.filter(({ type }) => type === 'event').map(({ id, cue, title }) => ({ id, cue, title }))
+		self.log('error', 'failed to fetch events from ontime')
+		self.log('error', e)
+	}
+}
+
+let customFieldsEtag: string = ''
+let customFieldsTimeout: NodeJS.Timeout
+
+export async function fetchCustomFields(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
+	clearTimeout(customFieldsTimeout)
+	if (self.config.refetchEvents) {
+		customFieldsTimeout = setTimeout(() => fetchCustomFields(self, ontime), 60000)
+	}
+	self.log('debug', 'fetching custom-fields from ontime')
+	try {
+		const response = await fetch(`http://${self.config.host}:${self.config.port}/data/custom-fields`, {
+			method: 'GET',
+			headers: { Etag: customFieldsEtag },
+		})
+		if (response.status === 304) {
+			return
+		}
+		customFieldsEtag = response.headers.get('Etag') ?? ''
+		const data = (await response.json()) as CustomFields
+		self.log('debug', `fetched ${data.length} custom fields`)
+		ontime.customFields = data
 
 		self.init_actions()
 	} catch (e: any) {

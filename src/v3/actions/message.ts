@@ -3,7 +3,7 @@ import { socketSendJson } from '../connection'
 import { ActionId } from '../../enums'
 import { ActionCommand } from './commands'
 import { OntimeV3 } from '../ontimev3'
-import { MessageState } from '../state'
+import { MessageState } from '../ontime-types'
 
 export function createMessageActions(ontime: OntimeV3): { [id: string]: CompanionActionDefinition } {
 	function messageVisibility(action: CompanionActionEvent): void {

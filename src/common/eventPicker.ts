@@ -1,6 +1,11 @@
 import { SomeCompanionActionInputField, DropdownChoice } from '@companion-module/base'
-import { SimpleOntimeEvent } from '../v3/state'
 import { eventsToChoices } from '../utilities'
+
+type minimumEvent = {
+	id: string
+	cue: string
+	title: string
+}
 
 type SelectOptions = 'list' | 'loaded' | 'previous' | 'next' | 'cue' | 'id' | 'index'
 const selectOptions: DropdownChoice[] = [
@@ -14,7 +19,7 @@ const selectOptions: DropdownChoice[] = [
 ]
 
 export function eventPicker(
-	events: SimpleOntimeEvent[],
+	events: minimumEvent[],
 	options: SelectOptions[] = ['list', 'next', 'previous', 'loaded', 'cue', 'id', 'index']
 ): SomeCompanionActionInputField[] {
 	const selectChoices = new Array<DropdownChoice>()
@@ -43,7 +48,7 @@ export function eventPicker(
 			type: 'static-text',
 			value: '',
 			id: 'cuenote',
-			label: 'Note! this will target the first event with a matching CUE name',
+			label: 'NB! this will target the first event with a matching CUE name',
 			isVisible: (options) => options['method'] === 'cue',
 		},
 		{
