@@ -11,6 +11,11 @@ export enum ActionId {
 	Load = 'load',
 	MessageVisibility = 'setMessageVisibility',
 	MessageText = 'setMessage',
+
+	//V3
+	ExtraTimerDuration = 'extraTimerDuration',
+	ExtraTimerPlayState = 'extraTimerPlayState',
+	ExtraTimerDirection = 'extraTimerDirection',
 }
 
 export enum deprecatedActionId {
