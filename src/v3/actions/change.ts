@@ -58,7 +58,7 @@ export function createChangeActions(ontime: OntimeV3): { [id: string]: Companion
 	return {
 		[ActionId.Change]: {
 			name: 'Change event property',
-			options: [...eventPicker(ontime.events, ['list', 'loaded', 'next', 'id']), ...changePicker()],
+			options: [...eventPicker(ontime.events, ['list', 'loaded', 'next', 'id']), ...changePicker(ontime)],
 			callback: changeEvent,
 		},
 	}

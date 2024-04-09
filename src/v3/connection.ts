@@ -348,7 +348,6 @@ export async function fetchCustomFields(self: OnTimeInstance, ontime: OntimeV3):
 		}
 		customFieldsEtag = response.headers.get('Etag') ?? ''
 		const data = (await response.json()) as CustomFields
-		self.log('debug', `fetched ${data.length} custom fields`)
 		ontime.customFields = data
 
 		self.init_actions()
