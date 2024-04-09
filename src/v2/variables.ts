@@ -1,5 +1,5 @@
 import { CompanionVariableDefinition } from '@companion-module/base'
-import { variableId } from '../enums'
+import { deprecatedVariableId, variableId } from '../enums'
 
 export function variables(): CompanionVariableDefinition[] {
 	const variables: CompanionVariableDefinition[] = [
@@ -18,6 +18,10 @@ export function variables(): CompanionVariableDefinition[] {
 		{
 			name: 'Expected finish of event (hh:mm:ss)',
 			variableId: variableId.TimerFinish,
+		},
+		{
+			name: 'Current time of event in milliseconds',
+			variableId: variableId.TimerTotalMs,
 		},
 		{
 			name: 'Time added to current event',
@@ -44,16 +48,20 @@ export function variables(): CompanionVariableDefinition[] {
 			variableId: variableId.TimeS,
 		},
 		{
+			name: 'ID of current event',
+			variableId: variableId.IdNow,
+		},
+		{
 			name: 'Title of current event',
 			variableId: variableId.TitleNow,
 		},
 		{
 			name: 'Subitle of current event',
-			variableId: variableId.SubtitleNow,
+			variableId: deprecatedVariableId.SubtitleNow,
 		},
 		{
 			name: 'Name of current speaker',
-			variableId: variableId.SpeakerNow,
+			variableId: deprecatedVariableId.SpeakerNow,
 		},
 		{
 			name: 'Note of current event',
@@ -64,16 +72,20 @@ export function variables(): CompanionVariableDefinition[] {
 			variableId: variableId.CueNow,
 		},
 		{
+			name: 'ID of next event',
+			variableId: variableId.IdNext,
+		},
+		{
 			name: 'Title of next event',
 			variableId: variableId.TitleNext,
 		},
 		{
 			name: 'Subitle of next event',
-			variableId: variableId.SubtitleNext,
+			variableId: deprecatedVariableId.SubtitleNext,
 		},
 		{
 			name: 'Name of next speaker',
-			variableId: variableId.SpeakerNext,
+			variableId: deprecatedVariableId.SpeakerNext,
 		},
 		{
 			name: 'Note of next event',

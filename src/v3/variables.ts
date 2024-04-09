@@ -149,6 +149,31 @@ export function variables(): CompanionVariableDefinition[] {
 			name: 'Cue of next event',
 			variableId: variableId.CueNext,
 		},
+		//extra timer
+		{
+			name: 'Extra timer 1 duration in milliseconds',
+			variableId: variableId.ExtraTimerDurationMs + '-1',
+		},
+		{
+			name: 'Extra timer 1 current in milliseconds',
+			variableId: variableId.ExtraTimerCurrentMs + '-1',
+		},
+		{
+			name: 'Extra timer 1 duration (hh:mm:ss)',
+			variableId: variableId.ExtraTimerDuration + '-1',
+		},
+		{
+			name: 'Extra timer 1 current (hh:mm:ss)',
+			variableId: variableId.ExtraTimerCurrent + '-1',
+		},
+		{
+			name: 'Extra timer 1 playback',
+			variableId: variableId.ExtraTimerPalyback + '-1',
+		},
+		{
+			name: 'Extra timer 1 direction',
+			variableId: variableId.ExtraTimerDirection + '-1',
+		},
 	]
 
 	return variables

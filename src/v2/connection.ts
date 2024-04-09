@@ -2,7 +2,7 @@ import { InputValue, InstanceStatus } from '@companion-module/base'
 import { OnTimeInstance } from '..'
 import Websocket from 'ws'
 import { msToSplitTime, defaultTimerObject } from '../utilities'
-import { feedbackId, variableId } from '../enums'
+import { deprecatedVariableId, feedbackId, variableId } from '../enums'
 import { OntimeEvent, RuntimeStore } from './ontime-types'
 import { OntimeV2 } from './ontimev2'
 
@@ -83,6 +83,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV2): void {
 				const added = msToSplitTime(ontime.state.timer.addedTime)
 
 				self.setVariableValues({
+					[variableId.TimerTotalMs]: ontime.state.timer.current ?? 0,
 					[variableId.Time]: timer.hoursMinutesSeconds,
 					[variableId.TimeHM]: timer.hoursMinutes,
 					[variableId.TimeH]: timer.hours,
@@ -96,15 +97,17 @@ export function connect(self: OnTimeInstance, ontime: OntimeV2): void {
 					[variableId.PlayState]: ontime.state.playback,
 					[variableId.OnAir]: ontime.state.onAir,
 
+					[variableId.IdNow]: ontime.state.eventNow?.id,
 					[variableId.TitleNow]: ontime.state.eventNow?.title,
-					[variableId.SubtitleNow]: ontime.state.eventNow?.subtitle,
-					[variableId.SpeakerNow]: ontime.state.eventNow?.presenter,
+					[deprecatedVariableId.SubtitleNow]: ontime.state.eventNow?.subtitle,
+					[deprecatedVariableId.SpeakerNow]: ontime.state.eventNow?.presenter,
 					[variableId.NoteNow]: ontime.state.eventNow?.note,
 					[variableId.CueNow]: ontime.state.eventNow?.cue,
 
+					[variableId.IdNext]: ontime.state.eventNext?.id,
 					[variableId.TitleNext]: ontime.state.eventNext?.title,
-					[variableId.SubtitleNext]: ontime.state.eventNext?.subtitle,
-					[variableId.SpeakerNext]: ontime.state.eventNext?.presenter,
+					[deprecatedVariableId.SubtitleNext]: ontime.state.eventNext?.subtitle,
+					[deprecatedVariableId.SpeakerNext]: ontime.state.eventNext?.presenter,
 					[variableId.NoteNext]: ontime.state.eventNext?.note,
 					[variableId.CueNext]: ontime.state.eventNext?.cue,
 

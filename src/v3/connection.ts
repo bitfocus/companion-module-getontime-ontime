@@ -2,7 +2,7 @@ import { InputValue, InstanceStatus } from '@companion-module/base'
 import { OnTimeInstance } from '..'
 import Websocket from 'ws'
 import { defaultTimerObject, msToSplitTime } from '../utilities'
-import { deprecatedFeedbackId, feedbackId, variableId } from '../enums'
+import { feedbackId, variableId } from '../enums'
 import { MessageState, OntimeEvent, Runtime, SimpleTimerState, TimerState } from './ontime-types'
 import { OntimeV3 } from './ontimev3'
 import { CustomFields } from './ontime-types'
@@ -87,7 +87,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			[variableId.PlayState]: val.playback,
 		})
 
-		self.checkFeedbacks(feedbackId.ColorPlayback, feedbackId.ColorNegative, feedbackId.ColorAddRemove, feedbackId.OnAir)
+		self.checkFeedbacks(feedbackId.ColorPlayback, feedbackId.ColorNegative, feedbackId.ColorAddRemove)
 	}
 
 	const updateOnAir = (val: boolean) => {
@@ -114,12 +114,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			[variableId.TimerBlink]: val.timer.blink,
 		})
 
-		self.checkFeedbacks(
-			feedbackId.MessageVisible,
-			deprecatedFeedbackId.ThisMessageVisible,
-			feedbackId.TimerBlackout,
-			feedbackId.TimerBlink
-		)
+		self.checkFeedbacks(feedbackId.MessageVisible, feedbackId.TimerBlackout, feedbackId.TimerBlink)
 	}
 
 	const updateRuntime = (val: Runtime) => {
@@ -158,7 +153,17 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 	}
 	const updateTimer1 = (val: SimpleTimerState) => {
 		ontime.state.timer1 = val
-		//TODO:
+		const duration = val.duration === null ? defaultTimerObject : msToSplitTime(val.duration)
+		const current = val.current === null ? defaultTimerObject : msToSplitTime(val.current)
+
+		self.setVariableValues({
+			[variableId.ExtraTimerDurationMs + '-1']: val.duration,
+			[variableId.ExtraTimerCurrentMs + '-1']: val.current,
+			[variableId.ExtraTimerDuration + '-1']: duration.hoursMinutesSeconds,
+			[variableId.ExtraTimerCurrent + '-1']: current.hoursMinutesSeconds,
+			[variableId.ExtraTimerPalyback + '-1']: val.playback,
+			[variableId.ExtraTimerDirection + '-1']: val.direction,
+		})
 	}
 
 	ws.onmessage = (event: any) => {

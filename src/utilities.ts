@@ -32,7 +32,7 @@ export function msToSplitTime(time: number): SplitTime {
 	}
 	const seconds = padTo2Digits(Math.floor((time / 1000) % 60))
 	const minutes = padTo2Digits(Math.floor((time / (1000 * 60)) % 60))
-	const hours = (negative && '-') + padTo2Digits(Math.floor((time / (1000 * 60 * 60)) % 24))
+	const hours = (negative ? '-' : '') + padTo2Digits(Math.floor((time / (1000 * 60 * 60)) % 24))
 
 	const hoursMinutes = `${hours}:${minutes}`
 	const hoursMinutesSeconds = `${hoursMinutes}:${seconds}`

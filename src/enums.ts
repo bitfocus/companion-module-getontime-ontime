@@ -66,19 +66,18 @@ export enum variableId {
 	TimerStart = 'timer_start',
 	TimerFinish = 'timer_finish',
 	TimerAdded = 'timer_added',
+	TimerTotalMs = 'timer_total_ms',
 	Time = 'time',
 	TimeHM = 'time_hm',
 	TimeH = 'time_h',
 	TimeM = 'time_m',
 	TimeS = 'time_s',
+	IdNow = 'idNow',
 	TitleNow = 'titleNow',
-	SubtitleNow = 'subtitleNow',
-	SpeakerNow = 'speakerNow',
 	NoteNow = 'noteNow',
 	CueNow = 'cueNow',
+	IdNext = 'idNext',
 	TitleNext = 'titleNext',
-	SubtitleNext = 'subtitleNext',
-	SpeakerNext = 'speakerNext',
 	NoteNext = 'noteNext',
 	CueNext = 'cueNext',
 	OnAir = 'onAir',
@@ -91,8 +90,18 @@ export enum variableId {
 	TimerBlink = 'timerBlink',
 	TimerBlackout = 'timerBlackout',
 
-	//v3
-	TimerTotalMs = 'timer_total_ms',
-	IdNow = 'idNow',
-	IdNext = 'idNext',
+	//V3
+	ExtraTimerDurationMs = 'extraTimer_duration_ms',
+	ExtraTimerDuration = 'extraTimer_duration',
+	ExtraTimerCurrentMs = 'extraTimer_current_hms',
+	ExtraTimerCurrent = 'extraTimer_current_hms',
+	ExtraTimerPalyback = 'extraTimer_playback',
+	ExtraTimerDirection = 'extraTimer_direction',
+}
+
+export enum deprecatedVariableId {
+	SubtitleNow = 'subtitleNow',
+	SpeakerNow = 'speakerNow',
+	SubtitleNext = 'subtitleNext',
+	SpeakerNext = 'speakerNext',
 }
