@@ -1,7 +1,7 @@
+import { Playback, TimerZone } from '../common/ontime-types'
 import { RuntimeStore, SimpleDirection, SimplePlayback } from './ontime-types'
-import { Playback } from '../common/ontime-types'
 
-const stateobj: RuntimeStore = {
+const stateobj: RuntimeStore & { companionSpecific: { timerZone: TimerZone } } = {
 	clock: 0,
 	timer: {
 		current: null,
@@ -39,6 +39,9 @@ const stateobj: RuntimeStore = {
 		current: 0,
 		playback: SimplePlayback.Stop,
 		direction: SimpleDirection.CountDown,
+	},
+	companionSpecific: {
+		timerZone: TimerZone.None,
 	},
 }
 

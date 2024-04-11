@@ -1,4 +1,5 @@
 import { DropdownChoice } from '@companion-module/base'
+import { TimerZone } from './common/ontime-types.js'
 
 export const joinTime = (...args: string[]) => args.join(':')
 
@@ -6,21 +7,16 @@ function padTo2Digits(number: number) {
 	return number.toString().padStart(2, '0')
 }
 
-type SplitTime = {
-	hours: string
-	minutes: string
-	seconds: string
-	hoursMinutes: string
-	hoursMinutesSeconds: string
-}
-
-export const defaultTimerObject: SplitTime = {
+export const defaultTimerObject = {
 	hours: '--',
 	minutes: '--',
 	seconds: '--',
 	hoursMinutes: '--:--',
 	hoursMinutesSeconds: '--:--:--',
+	delayString: '0',
 }
+
+type SplitTime = typeof defaultTimerObject
 
 export function msToSplitTime(time: number): SplitTime {
 	let negative = false
@@ -30,18 +26,34 @@ export function msToSplitTime(time: number): SplitTime {
 	} else {
 		negative = false
 	}
-	const seconds = padTo2Digits(Math.floor((time / 1000) % 60))
-	const minutes = padTo2Digits(Math.floor((time / (1000 * 60)) % 60))
-	const hours = (negative ? '-' : '') + padTo2Digits(Math.floor((time / (1000 * 60 * 60)) % 24))
+	const s = Math.floor((time / 1000) % 60)
+	const m = Math.floor((time / (1000 * 60)) % 60)
+	const h = Math.floor((time / (1000 * 60 * 60)) % 24)
+
+	const seconds = padTo2Digits(s)
+	const minutes = padTo2Digits(m)
+	const hours = (negative ? '-' : '') + padTo2Digits(h)
 
 	const hoursMinutes = `${hours}:${minutes}`
 	const hoursMinutesSeconds = `${hoursMinutes}:${seconds}`
+
+	let delayString = ''
+
+	if (h && !m && !s) {
+		delayString = `${negative ? '-' : '+'}${h}h`
+	} else if (!h && m && !s) {
+		delayString = `${negative ? '-' : '+'}${m}m`
+	} else if (!h && !m && s) {
+		delayString = `${negative ? '-' : '+'}${s}s`
+	}
+
 	return {
 		hours,
 		minutes,
 		seconds,
 		hoursMinutes,
 		hoursMinutesSeconds,
+		delayString,
 	}
 }
 
@@ -49,4 +61,23 @@ export function eventsToChoices(events: { id: string; cue: string; title: string
 	return events.map(({ id, cue, title }) => {
 		return { id, label: `${cue} | ${title}` }
 	})
+}
+
+export function extractTimerZone(
+	timer: number | null,
+	currentEvent: { timeWarning: number; timeDanger: number } = { timeWarning: 2, timeDanger: 1 }
+): TimerZone {
+	if (timer === null) {
+		return TimerZone.None
+	}
+	if (timer > currentEvent.timeWarning) {
+		return TimerZone.Normal
+	}
+	if (timer > currentEvent.timeDanger) {
+		return TimerZone.Warning
+	}
+	if (timer > 0) {
+		return TimerZone.Danger
+	}
+	return TimerZone.Overtime
 }

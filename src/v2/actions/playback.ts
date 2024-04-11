@@ -4,7 +4,7 @@ import { ActionId } from '../../enums'
 import { ActionCommand } from './commands'
 import { eventPicker } from '../../common/eventPicker'
 import { OntimeV2 } from '../ontimev2'
-import { Playback } from '../../common/ontime-types.js'
+import { Playback } from '../../common/ontime-types'
 
 export function createPlaybackActions(ontime: OntimeV2): { [id: string]: CompanionActionDefinition } {
 	function start(action: CompanionActionEvent): void {

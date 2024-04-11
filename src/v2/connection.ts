@@ -1,9 +1,9 @@
 import { InputValue, InstanceStatus } from '@companion-module/base'
 import { OnTimeInstance } from '..'
 import Websocket from 'ws'
-import { msToSplitTime, defaultTimerObject } from '../utilities'
+import { msToSplitTime, defaultTimerObject, extractTimerZone } from '../utilities'
 import { deprecatedVariableId, feedbackId, variableId } from '../enums'
-import { OntimeEvent, RuntimeStore } from './ontime-types'
+import { OntimeEvent } from './ontime-types'
 import { OntimeV2 } from './ontimev2'
 
 let ws: Websocket | null = null
@@ -70,7 +70,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV2): void {
 			}
 
 			if (type === 'ontime') {
-				ontime.state = payload as RuntimeStore
+				ontime.state = { ...ontime.state, ...payload }
 				const timer =
 					ontime.state.timer.current === null ? defaultTimerObject : msToSplitTime(ontime.state.timer.current)
 				const clock = msToSplitTime(ontime.state.timer.clock)
@@ -82,6 +82,9 @@ export function connect(self: OnTimeInstance, ontime: OntimeV2): void {
 						: msToSplitTime(ontime.state.timer.expectedFinish)
 				const added = msToSplitTime(ontime.state.timer.addedTime)
 
+				const timerZone = extractTimerZone(ontime.state.timer.current)
+				ontime.state.companionSpecific.timerZone = timerZone
+
 				self.setVariableValues({
 					[variableId.TimerTotalMs]: ontime.state.timer.current ?? 0,
 					[variableId.Time]: timer.hoursMinutesSeconds,
@@ -90,9 +93,11 @@ export function connect(self: OnTimeInstance, ontime: OntimeV2): void {
 					[variableId.TimeM]: timer.minutes,
 					[variableId.TimeS]: timer.seconds,
 					[variableId.Clock]: clock.hoursMinutesSeconds,
+					[variableId.TimerZone]: timerZone,
 					[variableId.TimerStart]: timer_start.hoursMinutesSeconds,
 					[variableId.TimerFinish]: timer_finish.hoursMinutesSeconds,
 					[variableId.TimerAdded]: added.hoursMinutesSeconds,
+					[variableId.TimerAddedNice]: added.delayString,
 
 					[variableId.PlayState]: ontime.state.playback,
 					[variableId.OnAir]: ontime.state.onAir,
@@ -129,7 +134,8 @@ export function connect(self: OnTimeInstance, ontime: OntimeV2): void {
 					feedbackId.OnAir,
 					feedbackId.MessageVisible,
 					feedbackId.TimerBlackout,
-					feedbackId.TimerBlink
+					feedbackId.TimerBlink,
+					feedbackId.TimerZone
 				)
 			}
 

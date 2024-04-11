@@ -49,6 +49,7 @@ export enum feedbackId {
 	MessageVisible = 'messageVisible',
 	TimerBlink = 'timerBlink',
 	TimerBlackout = 'timerBlackout',
+	TimerZone = 'timerZone',
 
 	//v3
 }
@@ -71,7 +72,9 @@ export enum variableId {
 	TimerStart = 'timer_start',
 	TimerFinish = 'timer_finish',
 	TimerAdded = 'timer_added',
+	TimerAddedNice = 'timer_added_nice',
 	TimerTotalMs = 'timer_total_ms',
+	TimerZone = 'time_zone',
 	Time = 'time',
 	TimeHM = 'time_hm',
 	TimeH = 'time_h',

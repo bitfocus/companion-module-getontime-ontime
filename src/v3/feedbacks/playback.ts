@@ -4,7 +4,6 @@ import { feedbackId } from '../../enums'
 import { Playback } from '../../common/ontime-types'
 
 export function createPlaybackFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
-
 	function addTime(feedback: CompanionFeedbackBooleanEvent): boolean {
 		const { direction } = feedback.options
 

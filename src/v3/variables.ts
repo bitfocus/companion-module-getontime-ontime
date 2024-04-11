@@ -13,7 +13,15 @@ export function variables(): CompanionVariableDefinition[] {
 			name: 'Time added to current event (hh:mm:ss)',
 			variableId: variableId.TimerAdded,
 		},
+		{
+			name: 'Time added in its smallest form ',
+			variableId: variableId.TimerAddedNice,
+		},
 		//timer.current
+		{
+			name: 'Current event timer zone (Normal/Warning/Danger/Overtime)',
+			variableId: variableId.TimerZone,
+		},
 		{
 			name: 'Current time of event in milliseconds',
 			variableId: variableId.TimerTotalMs,

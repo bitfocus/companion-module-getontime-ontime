@@ -1,3 +1,11 @@
+export enum TimerZone {
+	None = '',
+	Normal = 'normal',
+	Warning = 'warning',
+	Danger = 'danger',
+	Overtime = 'overtime',
+}
+
 //Playbeck
 
 export enum Playback {

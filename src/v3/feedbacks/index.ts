@@ -2,11 +2,13 @@ import { CompanionFeedbackDefinition, CompanionFeedbackDefinitions } from '@comp
 import { OntimeV3 } from '../ontimev3'
 import { createPlaybackFeedbacks } from './playback'
 import { createMessageFeedbacks } from './message'
+import { createTimerZoneFeedback } from '../../common/feedbacks'
 
 export function feedbacks(ontime: OntimeV3): CompanionFeedbackDefinitions {
 	const feedbacks: { [id: string]: CompanionFeedbackDefinition | undefined } = {
 		...createPlaybackFeedbacks(ontime),
 		...createMessageFeedbacks(ontime),
+		...createTimerZoneFeedback(ontime),
 	}
 
 	return feedbacks

@@ -12,7 +12,6 @@ import { stateobj } from './state'
 
 import { actions } from './actions/index'
 import { feedbacks } from './feedbacks/index'
-import { presets } from './presets'
 import { variables } from './variables'
 import { presets } from '../common/presets'
 
@@ -21,11 +20,9 @@ export class OntimeV3 implements OntimeClient {
 	public events: OntimeEvent[] = []
 	public customFields: CustomFields = {}
 	public state = stateobj
-	public log
 
 	constructor(instance: OnTimeInstance) {
 		this.instance = instance
-		this.log = instance.log
 	}
 
 	connect(): void {

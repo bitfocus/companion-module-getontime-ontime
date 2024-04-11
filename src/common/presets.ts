@@ -5,20 +5,35 @@ import {
 	combineRgb,
 } from '@companion-module/base'
 import * as icons from '../assets/icons'
-import { ActionId, deprecatedActionId, deprecatedFeedbackId, feedbackId } from '../enums'
+import { ActionId, feedbackId } from '../enums'
+import { TimerZone } from './ontime-types'
 
 export function presets(): CompanionPresetDefinitions {
-	return { ...playbackPresets }
+	return { ...playbackPresets, ...timerPresets }
 }
 
-const PlaybackGreen = combineRgb(51, 158, 78)
-const PlaybackRed = combineRgb(228, 40, 30)
-const PlaybackOrange = combineRgb(192, 86, 33)
-const PlaybackBlue = combineRgb(2, 116, 182)
 const White = combineRgb(255, 255, 255)
 const Black = combineRgb(0, 0, 0)
 
+const PlaybackGreen = combineRgb(51, 158, 78)
+const PlaybackRed = combineRgb(228, 40, 30)
+const PauseOrange = combineRgb(192, 86, 33)
+const RollBlue = combineRgb(2, 116, 182)
+
+const NormalGray = combineRgb(211, 211, 211)
+const WarningOrange = combineRgb(255, 171, 51)
+const DangerRed = combineRgb(237, 51, 51)
+
 const defaultStyle: CompanionButtonStyleProps = {
+	size: '24',
+	color: White,
+	bgcolor: Black,
+	text: '',
+	alignment: 'center:center',
+	// show_topbar: false,
+}
+
+const defaultWithIconStyle: CompanionButtonStyleProps = {
 	pngalignment: 'center:top',
 	size: '14',
 	color: White,
@@ -65,7 +80,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		category: 'Playback',
 		name: 'Selects previous event',
 		style: {
-			...defaultStyle,
+			...defaultWithIconStyle,
 			png64: icons.PlaybackPrevious,
 		},
 		steps: [
@@ -86,7 +101,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		category: 'Playback',
 		name: 'Selects next event',
 		style: {
-			...defaultStyle,
+			...defaultWithIconStyle,
 			png64: icons.PlaybackNext,
 		},
 		steps: [
@@ -107,13 +122,13 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		category: 'Playback',
 		name: 'Stops running event',
 		style: {
-			...defaultStyle,
+			...defaultWithIconStyle,
 			png64: icons.PlaybackStop,
 			text: 'STOP',
 			color: PlaybackRed,
 		},
 		previewStyle: {
-			...defaultStyle,
+			...defaultWithIconStyle,
 			png64: icons.PlaybackStop,
 			text: 'STOP',
 			bgcolor: PlaybackRed,
@@ -147,15 +162,15 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		category: 'Playback',
 		name: 'Pauses running event',
 		style: {
-			...defaultStyle,
+			...defaultWithIconStyle,
 			png64: icons.PlaybackPause,
 			text: 'PAUSE',
 		},
 		previewStyle: {
-			...defaultStyle,
+			...defaultWithIconStyle,
 			png64: icons.PlaybackPause,
 			text: 'PAUSE',
-			bgcolor: PlaybackOrange,
+			bgcolor: PauseOrange,
 		},
 		steps: [
 			{
@@ -176,7 +191,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				},
 				style: {
 					color: White,
-					bgcolor: PlaybackOrange,
+					bgcolor: PauseOrange,
 				},
 			},
 			{
@@ -185,7 +200,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 					state: 'play',
 				},
 				style: {
-					color: PlaybackOrange,
+					color: PauseOrange,
 				},
 			},
 		],
@@ -195,12 +210,12 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		category: 'Playback',
 		name: 'Starts selected event',
 		style: {
-			...defaultStyle,
+			...defaultWithIconStyle,
 			png64: icons.PlaybackStart,
 			text: 'START',
 		},
 		previewStyle: {
-			...defaultStyle,
+			...defaultWithIconStyle,
 			png64: icons.PlaybackStart,
 			text: 'START',
 			bgcolor: PlaybackGreen,
@@ -225,12 +240,12 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		category: 'Playback',
 		name: 'Start next event',
 		style: {
-			...defaultStyle,
+			...defaultWithIconStyle,
 			png64: icons.PlaybackStart,
 			text: 'NEXT',
 		},
 		previewStyle: {
-			...defaultStyle,
+			...defaultWithIconStyle,
 			png64: icons.PlaybackStart,
 			text: 'NEXT',
 			bgcolor: PlaybackGreen,
@@ -253,12 +268,12 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		category: 'Playback',
 		name: 'Start selected/next event',
 		style: {
-			...defaultStyle,
+			...defaultWithIconStyle,
 			png64: icons.PlaybackStart,
 			text: 'GO',
 		},
 		previewStyle: {
-			...defaultStyle,
+			...defaultWithIconStyle,
 			png64: icons.PlaybackStart,
 			text: 'GO',
 			bgcolor: PlaybackGreen,
@@ -281,7 +296,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		category: 'Playback',
 		name: 'Reload selected event',
 		style: {
-			...defaultStyle,
+			...defaultWithIconStyle,
 			png64: icons.PlaybackReload,
 			text: 'RELOAD',
 		},
@@ -303,16 +318,16 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		category: 'Playback',
 		name: 'Starts Roll Mode',
 		style: {
-			...defaultStyle,
+			...defaultWithIconStyle,
 			png64: icons.PlaybackRoll,
 			text: 'ROLL',
-			color: PlaybackBlue,
+			color: RollBlue,
 		},
 		previewStyle: {
-			...defaultStyle,
+			...defaultWithIconStyle,
 			png64: icons.PlaybackRoll,
 			text: 'ROLL',
-			bgcolor: PlaybackBlue,
+			bgcolor: RollBlue,
 		},
 		steps: [
 			{
@@ -331,10 +346,176 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				options: { state: 'roll' },
 				style: {
 					color: White,
-					bgcolor: PlaybackBlue,
+					bgcolor: RollBlue,
 				},
 			},
 		],
+	},
+}
+
+const timerZoneFeedBack = [
+	{
+		feedbackId: feedbackId.TimerZone,
+		options: { zone: TimerZone.Normal },
+		style: { bgcolor: NormalGray, color: Black },
+	},
+	{
+		feedbackId: feedbackId.TimerZone,
+		options: { zone: TimerZone.Warning },
+		style: { bgcolor: WarningOrange, color: Black },
+	},
+	{
+		feedbackId: feedbackId.TimerZone,
+		options: { zone: TimerZone.Danger },
+		style: { bgcolor: DangerRed, color: Black },
+	},
+	{
+		feedbackId: feedbackId.TimerZone,
+		options: { zone: TimerZone.Overtime },
+		style: { bgcolor: Black, color: DangerRed },
+	},
+]
+
+const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
+	add_1_min: {
+		type: 'button',
+		category: 'Timer Management',
+		name: 'Add 1 minute to running timer',
+		style: {
+			...defaultStyle,
+			text: '+1',
+			color: PauseOrange,
+			alignment: 'center:center',
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: ActionId.Add,
+						options: { addremove: 'add', minutes: 1, hours: 0, seconds: 0 },
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [],
+	},
+	remove_1_min: {
+		type: 'button',
+		category: 'Timer Management',
+		name: 'Remove 1 minute to running timer',
+		style: { ...defaultStyle, text: '-1', color: PauseOrange, alignment: 'center:center' },
+		steps: [
+			{
+				down: [
+					{
+						actionId: ActionId.Add,
+						options: { addremove: 'remove', minutes: 1, hours: 0, seconds: 0 },
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [],
+	},
+	add_5_min: {
+		type: 'button',
+		category: 'Timer Management',
+		name: 'Add 5 minute to running timer',
+		style: {
+			...defaultStyle,
+			text: '+5',
+			color: PauseOrange,
+			alignment: 'center:center',
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: ActionId.Add,
+						options: { addremove: 'add', minutes: 5, hours: 0, seconds: 0 },
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [],
+	},
+	remove_5_min: {
+		type: 'button',
+		category: 'Timer Management',
+		name: 'Remove 5 minute to running timer',
+		style: {
+			...defaultStyle,
+			text: '-5',
+			color: PauseOrange,
+			alignment: 'center:center',
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: ActionId.Add,
+						options: { addremove: 'remove', minutes: 5, hours: 0, seconds: 0 },
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [],
+	},
+	current_added: {
+		type: 'button',
+		category: 'Timer Management',
+		name: 'Amount of time added/removed from running timer',
+		style: {
+			...defaultStyle,
+			text: `Total added\n$(ontime:timer_added_nice)`,
+			size: 'auto',
+			alignment: 'center:center',
+		},
+		previewStyle: {
+			...defaultStyle,
+			text: 'Total added\n00',
+			size: 'auto',
+			alignment: 'center:center',
+			bgcolor: PauseOrange,
+		},
+		steps: [
+			{
+				down: [],
+				up: [],
+			},
+		],
+		feedbacks: [
+			{ feedbackId: feedbackId.ColorAddRemove, options: { direction: 'both' }, style: { bgcolor: PauseOrange } },
+		],
+	},
+	current_time_hms: {
+		type: 'button',
+		category: 'Timer Management',
+		name: 'Current timer ',
+		style: {
+			...defaultStyle,
+			text: `$(ontime:time)`,
+			size: '14',
+			alignment: 'center:center',
+		},
+		previewStyle: {
+			...defaultStyle,
+			text: '00:15:25',
+			size: '14',
+			alignment: 'center:center',
+			bgcolor: NormalGray,
+			color: Black,
+		},
+		steps: [
+			{
+				down: [],
+				up: [],
+			},
+		],
+		feedbacks: timerZoneFeedBack,
 	},
 }
 

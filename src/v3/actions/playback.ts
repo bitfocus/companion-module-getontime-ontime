@@ -6,9 +6,7 @@ import { eventPicker } from '../../common/eventPicker'
 import { OntimeV3 } from '../ontimev3'
 import { Playback } from '../../common/ontime-types'
 
-export function createPlaybackActions(
-	ontime: OntimeV3
-): { [id: string]: CompanionActionDefinition } {
+export function createPlaybackActions(ontime: OntimeV3): { [id: string]: CompanionActionDefinition } {
 	function start(action: CompanionActionEvent): void {
 		const { method, eventList, eventCue, eventId, eventIndex } = action.options
 		switch (method) {

@@ -28,8 +28,16 @@ export function variables(): CompanionVariableDefinition[] {
 			variableId: variableId.TimerAdded,
 		},
 		{
+			name: 'Time added in its smallest form ',
+			variableId: variableId.TimerAddedNice,
+		},
+		{
 			name: 'Current time of event (hh:mm:ss)',
 			variableId: variableId.Time,
+		},
+		{
+			name: 'Current event timer zone (Normal/Warning/Danger/Overtime)',
+			variableId: variableId.TimerZone,
 		},
 		{
 			name: 'Current time of event (hh:mm)',

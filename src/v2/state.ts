@@ -1,8 +1,7 @@
-import { Playback } from "../common/ontime-types"
-import { RuntimeStore } from "./ontime-types"
+import { Playback, TimerZone } from '../common/ontime-types'
+import { RuntimeStore } from './ontime-types'
 
-
-const stateobj: RuntimeStore = {
+const stateobj: RuntimeStore & { companionSpecific: { timerZone: TimerZone } } = {
 	timer: {
 		clock: 0,
 		current: null,
@@ -35,6 +34,9 @@ const stateobj: RuntimeStore = {
 	publicEventNow: null,
 	eventNext: null,
 	publicEventNext: null,
+	companionSpecific: {
+		timerZone: TimerZone.None,
+	},
 }
 
 export { stateobj }
