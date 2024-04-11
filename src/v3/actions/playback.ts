@@ -4,6 +4,7 @@ import { ActionId } from '../../enums'
 import { ActionCommand } from './commands'
 import { eventPicker } from '../../common/eventPicker'
 import { OntimeV3 } from '../ontimev3'
+import { Playback } from '../../common/ontime-types'
 
 export function createPlaybackActions(
 	ontime: OntimeV3
@@ -17,6 +18,14 @@ export function createPlaybackActions(
 			}
 			case 'next': {
 				socketSendJson(ActionCommand.Start, 'next')
+				break
+			}
+			case 'go': {
+				if (ontime.state.timer.playback === Playback.Armed || ontime.state.timer.playback === Playback.Pause) {
+					socketSendJson(ActionCommand.Start)
+				} else {
+					socketSendJson(ActionCommand.Start, 'next')
+				}
 				break
 			}
 			case 'previous': {
@@ -85,7 +94,7 @@ export function createPlaybackActions(
 	return {
 		[ActionId.Start]: {
 			name: 'Start an event',
-			options: [...eventPicker(ontime.events)],
+			options: [...eventPicker(ontime.events, ['list', 'next', 'previous', 'loaded', 'cue', 'id', 'index', 'go'])],
 			callback: start,
 		},
 		[ActionId.Load]: {

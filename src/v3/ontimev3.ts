@@ -14,6 +14,7 @@ import { actions } from './actions/index'
 import { feedbacks } from './feedbacks/index'
 import { presets } from './presets'
 import { variables } from './variables'
+import { presets } from '../common/presets'
 
 export class OntimeV3 implements OntimeClient {
 	instance: OnTimeInstance

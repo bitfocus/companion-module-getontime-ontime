@@ -7,11 +7,12 @@ type minimumEvent = {
 	title: string
 }
 
-type SelectOptions = 'list' | 'loaded' | 'previous' | 'next' | 'cue' | 'id' | 'index'
+type SelectOptions = 'list' | 'loaded' | 'previous' | 'next' | 'cue' | 'id' | 'index' | 'go'
 const selectOptions: DropdownChoice[] = [
 	{ id: 'list', label: 'From list' },
 	{ id: 'loaded', label: 'Loaded Event' },
 	{ id: 'next', label: 'Next Event' },
+	{ id: 'go', label: 'GO (Next/Loaded Event)' },
 	{ id: 'previous', label: 'Previous Event' },
 	{ id: 'cue', label: 'CUE' },
 	{ id: 'id', label: 'ID' },

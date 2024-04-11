@@ -10,9 +10,10 @@ import { actions } from './actions/index'
 import { feedbacks } from './feedbacks/index'
 import { presets } from './presets'
 import { variables } from './variables'
-import { connect, disconnectSocket } from './connection'
+import { connect, disconnectSocket } from '../common/connection'
 import { OntimeEvent } from './ontime-types'
 import { stateobj } from './state'
+import { presets } from '../common/presets'
 
 export class OntimeV2 implements OntimeClient {
 	instance: OnTimeInstance

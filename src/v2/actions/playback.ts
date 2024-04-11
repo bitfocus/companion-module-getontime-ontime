@@ -4,6 +4,7 @@ import { ActionId } from '../../enums'
 import { ActionCommand } from './commands'
 import { eventPicker } from '../../common/eventPicker'
 import { OntimeV2 } from '../ontimev2'
+import { Playback } from '../../common/ontime-types.js'
 
 export function createPlaybackActions(ontime: OntimeV2): { [id: string]: CompanionActionDefinition } {
 	function start(action: CompanionActionEvent): void {
@@ -15,6 +16,14 @@ export function createPlaybackActions(ontime: OntimeV2): { [id: string]: Compani
 			}
 			case 'next': {
 				socketSendJson(ActionCommand.StartNext)
+				break
+			}
+			case 'go': {
+				if (ontime.state.playback === Playback.Armed || ontime.state.playback === Playback.Pause) {
+					socketSendJson(ActionCommand.Start)
+				} else {
+					socketSendJson(ActionCommand.Start, 'next')
+				}
 				break
 			}
 			case 'list': {
@@ -79,7 +88,7 @@ export function createPlaybackActions(ontime: OntimeV2): { [id: string]: Compani
 	return {
 		[ActionId.Start]: {
 			name: 'Start an event',
-			options: [...eventPicker(ontime.events)],
+			options: [...eventPicker(ontime.events, ['list', 'next', 'previous', 'loaded', 'cue', 'id', 'index', 'go'])],
 			callback: start,
 		},
 		[ActionId.Load]: {
