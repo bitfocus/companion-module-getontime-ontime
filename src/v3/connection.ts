@@ -334,6 +334,10 @@ export async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Pr
 			method: 'GET',
 			headers: { Etag: rundownEtag },
 		})
+		if (!response.ok) {
+			self.log('error', `uable to fetch events: ${response.statusText}`)
+			return
+		}
 		if (response.status === 304) {
 			return
 		}

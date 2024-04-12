@@ -198,6 +198,10 @@ export async function fetchEvents(self: OnTimeInstance, ontime: OntimeV2): Promi
 	self.log('debug', 'fetching events from ontime')
 	try {
 		const response = await fetch(`http://${self.config.host}:${self.config.port}/events`)
+		if (!response.ok) {
+			self.log('error', `uable to fetch events: ${response.statusText}`)
+			return
+		}
 		const data = (await response.json()) as OntimeEvent[]
 		self.log('debug', `fetched ${data.length} events`)
 		ontime.events = data
