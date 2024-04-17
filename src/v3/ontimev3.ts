@@ -13,7 +13,7 @@ import { stateobj } from './state'
 import { actions } from './actions/index'
 import { feedbacks } from './feedbacks/index'
 import { variables } from './variables'
-import { presets } from '../common/presets'
+import { presets } from './presets'
 
 export class OntimeV3 implements OntimeClient {
 	instance: OnTimeInstance

@@ -1,6 +1,6 @@
 import { CompanionFeedbackDefinition, combineRgb } from '@companion-module/base'
-import { TimerZone } from './ontime-types.js'
-import { feedbackId } from '../enums.js'
+import { TimerZone } from '../ontime-types.js'
+import { feedbackId } from '../../enums.js'
 
 export function createTimerZoneFeedback(ontime: { state: { companionSpecific: { timerZone: TimerZone } } }): {
 	[id: string]: CompanionFeedbackDefinition

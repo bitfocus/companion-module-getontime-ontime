@@ -1,4 +1,4 @@
-import { Playback, TimerZone } from '../common/ontime-types'
+import { Playback, TimerZone } from './ontime-types'
 import { RuntimeStore, SimpleDirection, SimplePlayback } from './ontime-types'
 
 const stateobj: RuntimeStore & { companionSpecific: { timerZone: TimerZone } } = {

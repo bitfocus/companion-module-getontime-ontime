@@ -1,5 +1,5 @@
 import { DropdownChoice } from '@companion-module/base'
-import { TimerZone } from './common/ontime-types.js'
+import { TimerZone } from './v3/ontime-types.js'
 
 export const joinTime = (...args: string[]) => args.join(':')
 

@@ -6,7 +6,7 @@ import { feedbackId, variableId } from '../enums'
 import { MessageState, OntimeEvent, Runtime, SimpleTimerState, TimerState } from './ontime-types'
 import { OntimeV3 } from './ontimev3'
 import { CustomFields } from './ontime-types'
-import { TimerZone } from '../common/ontime-types'
+import { TimerZone } from './ontime-types'
 
 let ws: Websocket | null = null
 let reconnectionTimeout: NodeJS.Timeout | null = null

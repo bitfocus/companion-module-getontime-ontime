@@ -1,5 +1,5 @@
 import { SomeCompanionActionInputField, DropdownChoice } from '@companion-module/base'
-import { eventsToChoices } from '../utilities'
+import { eventsToChoices } from '../../utilities'
 
 type minimumEvent = {
 	id: string

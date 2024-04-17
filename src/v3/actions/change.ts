@@ -3,7 +3,7 @@ import { socketSendJson } from '../connection'
 import { ActionId } from '../../enums'
 import { ActionCommand } from './commands'
 import { changePicker } from './changePicker'
-import { eventPicker } from '../../common/eventPicker'
+import { eventPicker } from './eventPicker'
 import { OntimeV3 } from '../ontimev3'
 
 export function createChangeActions(ontime: OntimeV3): { [id: string]: CompanionActionDefinition } {

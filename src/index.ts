@@ -9,7 +9,6 @@ import {
 	CompanionFeedbackDefinitions,
 } from '@companion-module/base'
 import { OntimeConfig, GetConfigFields } from './config'
-import { OntimeV2 } from './v2/ontimev2'
 import { OntimeV3 } from './v3/ontimev3'
 import { UpgradeScripts } from './upgrades'
 export interface OntimeClient {
@@ -44,8 +43,7 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 				break
 			}
 			case 'v2': {
-				this.updateStatus(InstanceStatus.Connecting, 'starting V2')
-				this.ontime = new OntimeV2(this)
+				this.updateStatus(InstanceStatus.BadConfig, 'V2 is no longer supported')
 				break
 			}
 			case 'v3': {
@@ -86,8 +84,7 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 			this.updateStatus(InstanceStatus.BadConfig, 'V1 is no longer supported')
 			return
 		} else if (this.config.version === 'v2') {
-			this.updateStatus(InstanceStatus.Connecting, 'starting V2')
-			this.ontime = new OntimeV2(this)
+			this.updateStatus(InstanceStatus.BadConfig, 'V2 is no longer supported')
 		} else if (this.config.version === 'v3') {
 			this.updateStatus(InstanceStatus.Connecting, 'starting V3')
 			this.ontime = new OntimeV3(this)

@@ -2,9 +2,9 @@ import { CompanionActionDefinition, CompanionActionEvent } from '@companion-modu
 import { socketSendJson } from '../connection'
 import { ActionId } from '../../enums'
 import { ActionCommand } from './commands'
-import { eventPicker } from '../../common/eventPicker'
+import { eventPicker } from './eventPicker'
 import { OntimeV3 } from '../ontimev3'
-import { Playback } from '../../common/ontime-types'
+import { Playback } from '../ontime-types'
 
 export function createPlaybackActions(ontime: OntimeV3): { [id: string]: CompanionActionDefinition } {
 	function start(action: CompanionActionEvent): void {
