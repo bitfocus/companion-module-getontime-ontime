@@ -99,12 +99,12 @@ export enum variableId {
 	TimerBlackout = 'timerBlackout',
 
 	//V3
-	ExtraTimerDurationMs = 'extraTimer_duration_ms',
-	ExtraTimerDuration = 'extraTimer_duration',
-	ExtraTimerCurrentMs = 'extraTimer_current_hms',
-	ExtraTimerCurrent = 'extraTimer_current_hms',
-	ExtraTimerPalyback = 'extraTimer_playback',
-	ExtraTimerDirection = 'extraTimer_direction',
+	AuxTimerDurationMs = 'extraTimer_duration_ms',
+	AuxTimerDuration = 'extraTimer_duration',
+	AuxTimerCurrentMs = 'extraTimer_current_hms',
+	AuxTimerCurrent = 'extraTimer_current_hms',
+	AuxTimerPalyback = 'extraTimer_playback',
+	AuxTimerDirection = 'extraTimer_direction',
 }
 
 export enum deprecatedVariableId {

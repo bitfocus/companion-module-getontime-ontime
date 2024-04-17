@@ -173,12 +173,12 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		const current = msToSplitTime(val.current)
 
 		self.setVariableValues({
-			[variableId.ExtraTimerDurationMs + '-1']: val.duration,
-			[variableId.ExtraTimerCurrentMs + '-1']: val.current,
-			[variableId.ExtraTimerDuration + '-1']: duration.hoursMinutesSeconds,
-			[variableId.ExtraTimerCurrent + '-1']: current.hoursMinutesSeconds,
-			[variableId.ExtraTimerPalyback + '-1']: val.playback,
-			[variableId.ExtraTimerDirection + '-1']: val.direction,
+			[variableId.AuxTimerDurationMs + '-1']: val.duration,
+			[variableId.AuxTimerCurrentMs + '-1']: val.current,
+			[variableId.AuxTimerDuration + '-1']: duration.hoursMinutesSeconds,
+			[variableId.AuxTimerCurrent + '-1']: current.hoursMinutesSeconds,
+			[variableId.AuxTimerPalyback + '-1']: val.playback,
+			[variableId.AuxTimerDirection + '-1']: val.direction,
 		})
 	}
 
