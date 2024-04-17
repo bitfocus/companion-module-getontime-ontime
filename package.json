@@ -17,6 +17,7 @@
 		"lint": "eslint ./src --ext .ts",
 		"lint:raw": "eslint --ext .ts --ext .js --ignore-pattern dist --ignore-pattern pkg",
 		"format": "prettier -w .",
+		"package": "yarn build && companion-module-build",
 		"postinstall": "yarn build"
 	},
 	"engines": {
