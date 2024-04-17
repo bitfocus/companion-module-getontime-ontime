@@ -102,7 +102,7 @@ export function createPlaybackActions(ontime: OntimeV3): { [id: string]: Compani
 		},
 
 		[ActionId.Pause]: {
-			name: 'Pause running timer',
+			name: 'Load an event',
 			options: [],
 			callback: () => socketSendJson(ActionCommand.Pause),
 		},

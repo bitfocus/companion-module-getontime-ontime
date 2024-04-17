@@ -25,7 +25,7 @@ export function createPlaybackFeedbacks(ontime: OntimeV3): { [id: string]: Compa
 	return {
 		[feedbackId.ColorPlayback]: {
 			type: 'boolean',
-			name: 'Change color from playback state',
+			name: 'Playback state',
 			description: 'TODO: description',
 			defaultStyle: {
 				color: combineRgb(255, 255, 255),
@@ -50,7 +50,7 @@ export function createPlaybackFeedbacks(ontime: OntimeV3): { [id: string]: Compa
 		},
 		[feedbackId.ColorNegative]: {
 			type: 'boolean',
-			name: 'Change color from timer negative',
+			name: 'Timer negative',
 			description: 'TODO: better wording - Change the colors of a button if the timer runs into negative time',
 			defaultStyle: {
 				color: combineRgb(255, 255, 255),
@@ -61,9 +61,9 @@ export function createPlaybackFeedbacks(ontime: OntimeV3): { [id: string]: Compa
 		},
 		[feedbackId.ColorAddRemove]: {
 			type: 'boolean',
-			name: 'Change color from added/removed time',
+			name: 'Added/removed time',
 			description:
-				'TODO: better names in dropdown Change the colors of a button according if time has been added/removed',
+				'TODO: better names in dropdown - Change the colors of a button according if time has been added/removed',
 			defaultStyle: {
 				color: combineRgb(255, 255, 255),
 				bgcolor: combineRgb(254, 124, 19),

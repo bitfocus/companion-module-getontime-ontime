@@ -13,8 +13,8 @@ export function createMessageFeedbacks(ontime: OntimeV3): { [id: string]: Compan
 	return {
 		[feedbackId.MessageVisible]: {
 			type: 'boolean',
-			name: 'Change color from message visibility',
-			description: 'Change the colors of a button if message is visible',
+			name: 'Message visibility',
+			description: 'Change the colors if message is visible',
 			defaultStyle: {
 				color: combineRgb(255, 255, 255),
 				bgcolor: combineRgb(255, 0, 0),
@@ -38,7 +38,7 @@ export function createMessageFeedbacks(ontime: OntimeV3): { [id: string]: Compan
 		},
 		[feedbackId.TimerBlink]: {
 			type: 'boolean',
-			name: 'Change color if timer is blinking',
+			name: 'Timer is blinking',
 			description: 'Change the colors of a button if timer is blinking',
 			defaultStyle: {
 				color: combineRgb(255, 255, 255),
@@ -49,7 +49,7 @@ export function createMessageFeedbacks(ontime: OntimeV3): { [id: string]: Compan
 		},
 		[feedbackId.TimerBlackout]: {
 			type: 'boolean',
-			name: 'Change color if timer is blacked out',
+			name: 'Timer is blacked out',
 			description: 'Change the colors of a button if timer is blacked out',
 			defaultStyle: {
 				color: combineRgb(255, 255, 255),

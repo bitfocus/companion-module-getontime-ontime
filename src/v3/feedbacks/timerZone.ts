@@ -8,7 +8,7 @@ export function createTimerZoneFeedback(ontime: { state: { companionSpecific: { 
 	return {
 		[feedbackId.TimerZone]: {
 			type: 'boolean',
-			name: 'Change color from timer zone',
+			name: 'Timer zone',
 			description: 'TODO: description',
 			defaultStyle: {
 				color: combineRgb(255, 255, 255),
