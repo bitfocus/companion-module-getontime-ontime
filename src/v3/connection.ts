@@ -1,7 +1,7 @@
 import { InputValue, InstanceStatus } from '@companion-module/base'
 import { OnTimeInstance } from '..'
 import Websocket from 'ws'
-import { defaultTimerObject, extractTimerZone, msToSplitTime } from '../utilities'
+import { extractTimerZone, msToSplitTime } from '../utilities'
 import { feedbackId, variableId } from '../enums'
 import { MessageState, OntimeEvent, Runtime, SimpleTimerState, TimerState } from './ontime-types'
 import { OntimeV3 } from './ontimev3'
@@ -71,9 +71,9 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 	//TODO: consider padding the timer values
 	const updateTimer = (val: TimerState) => {
 		ontime.state.timer = val
-		const timer = val.current === null ? defaultTimerObject : msToSplitTime(val.current)
-		const timer_start = val.startedAt === null ? defaultTimerObject : msToSplitTime(val.startedAt)
-		const timer_finish = val.expectedFinish === null ? defaultTimerObject : msToSplitTime(val.expectedFinish)
+		const timer = msToSplitTime(val.current)
+		const timer_start = msToSplitTime(val.startedAt)
+		const timer_finish = msToSplitTime(val.expectedFinish)
 		const added = msToSplitTime(val.addedTime)
 
 		let timerZone = TimerZone.None
@@ -82,7 +82,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			timerZone = extractTimerZone(ontime.state.timer.current, { timeWarning, timeDanger })
 		}
 		ontime.state.companionSpecific.timerZone = timerZone
-		console.log(timerZone)
+		console.log(added)
 		self.setVariableValues({
 			[variableId.TimerTotalMs]: val.current ?? 0,
 			[variableId.Time]: timer.hoursMinutesSeconds,
@@ -169,8 +169,8 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 	}
 	const updateTimer1 = (val: SimpleTimerState) => {
 		ontime.state.timer1 = val
-		const duration = val.duration === null ? defaultTimerObject : msToSplitTime(val.duration)
-		const current = val.current === null ? defaultTimerObject : msToSplitTime(val.current)
+		const duration = msToSplitTime(val.duration)
+		const current = msToSplitTime(val.current)
 
 		self.setVariableValues({
 			[variableId.ExtraTimerDurationMs + '-1']: val.duration,

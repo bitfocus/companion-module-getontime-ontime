@@ -7,7 +7,7 @@ function padTo2Digits(number: number) {
 	return number.toString().padStart(2, '0')
 }
 
-export const defaultTimerObject = {
+const defaultTimerObject = {
 	hours: '--',
 	minutes: '--',
 	seconds: '--',
@@ -18,7 +18,10 @@ export const defaultTimerObject = {
 
 type SplitTime = typeof defaultTimerObject
 
-export function msToSplitTime(time: number): SplitTime {
+export function msToSplitTime(time: number | null): SplitTime {
+	if (time === null) {
+		return defaultTimerObject
+	}
 	let negative = false
 	if (time < 0) {
 		time = time * -1
@@ -37,7 +40,7 @@ export function msToSplitTime(time: number): SplitTime {
 	const hoursMinutes = `${hours}:${minutes}`
 	const hoursMinutesSeconds = `${hoursMinutes}:${seconds}`
 
-	let delayString = ''
+	let delayString = '00'
 
 	if (h && !m && !s) {
 		delayString = `${negative ? '-' : '+'}${h}h`
