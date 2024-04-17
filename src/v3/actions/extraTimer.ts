@@ -5,45 +5,45 @@ import { OntimeV3 } from '../ontimev3'
 import { ActionCommand } from './commands'
 import { RuntimeStore, SimpleDirection, SimplePlayback, SimpleTimerState } from '../ontime-types'
 
-export function createExtraTimerActions(ontime: OntimeV3): { [id: string]: CompanionActionDefinition } {
+export function createAuxTimerActions(ontime: OntimeV3): { [id: string]: CompanionActionDefinition } {
 	function togglePlayState(action: CompanionActionEvent): void {
 		const id = action.options.destination as string
 		const timer = ontime.state[('timer' + id) as keyof RuntimeStore] as SimpleTimerState
 
 		if (action.options.value === 'toggleSS') {
-			socketSendJson(ActionCommand.ExtraTimer, {
+			socketSendJson(ActionCommand.AuxTimer, {
 				[id]: timer.playback === SimplePlayback.Start ? SimplePlayback.Stop : SimplePlayback.Start,
 			})
 			return
 		}
 
 		if (action.options.value === 'toggleSP') {
-			socketSendJson(ActionCommand.ExtraTimer, {
+			socketSendJson(ActionCommand.AuxTimer, {
 				[id]: timer.playback === SimplePlayback.Start ? SimplePlayback.Pause : SimplePlayback.Start,
 			})
 			return
 		}
 
-		socketSendJson(ActionCommand.ExtraTimer, { [id]: action.options.value })
+		socketSendJson(ActionCommand.AuxTimer, { [id]: action.options.value })
 	}
 
 	function duration(action: CompanionActionEvent): void {
 		const id = action.options.destination as string
 		const { hours, minutes, seconds } = action.options
 		const val = (Number(hours) * 60 + Number(minutes)) * 60 + Number(seconds)
-		socketSendJson(ActionCommand.ExtraTimer, { [id]: { duration: val } })
+		socketSendJson(ActionCommand.AuxTimer, { [id]: { duration: val } })
 	}
 
 	return {
-		[ActionId.ExtraTimerPlayState]: {
-			name: 'Start/Stop/Pause the extra timer',
+		[ActionId.AuxTimerPlayState]: {
+			name: 'Start/Stop/Pause the aux timer',
 			options: [
 				{
 					type: 'dropdown',
-					choices: [{ id: '1', label: 'Extra Timer 1' }],
+					choices: [{ id: '1', label: 'Aux Timer 1' }],
 					default: '1',
 					id: 'destination',
-					label: 'Select Extra Timer',
+					label: 'Select Aux Timer',
 					isVisible: () => false, //This Stays hidden for now
 				},
 				{
@@ -62,15 +62,15 @@ export function createExtraTimerActions(ontime: OntimeV3): { [id: string]: Compa
 			],
 			callback: togglePlayState,
 		},
-		[ActionId.ExtraTimerDuration]: {
-			name: 'Set the extra timer duration',
+		[ActionId.AuxTimerDuration]: {
+			name: 'Set the aux timer duration',
 			options: [
 				{
 					type: 'dropdown',
-					choices: [{ id: '1', label: 'Extra Timer 1' }],
+					choices: [{ id: '1', label: 'Aux Timer 1' }],
 					default: '1',
 					id: 'destination',
-					label: 'Select Extra Timer',
+					label: 'Select Aux Timer',
 					isVisible: () => false, //This Stays hidden for now
 				},
 				{
@@ -106,8 +106,8 @@ export function createExtraTimerActions(ontime: OntimeV3): { [id: string]: Compa
 			],
 			callback: duration,
 		},
-		[ActionId.ExtraTimerDirection]: {
-			name: 'Set the extra timer direction',
+		[ActionId.AuxTimerDirection]: {
+			name: 'Set the aux timer direction',
 			options: [
 				{
 					type: 'dropdown',
@@ -129,7 +129,7 @@ export function createExtraTimerActions(ontime: OntimeV3): { [id: string]: Compa
 				},
 			],
 			callback: ({ options }) =>
-				socketSendJson(ActionCommand.ExtraTimer, { [options.destination as string]: { direction: options.direction } }),
+				socketSendJson(ActionCommand.AuxTimer, { [options.destination as string]: { direction: options.direction } }),
 		},
 	}
 }

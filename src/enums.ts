@@ -13,9 +13,9 @@ export enum ActionId {
 	MessageText = 'setMessage',
 
 	//V3
-	ExtraTimerDuration = 'extraTimerDuration',
-	ExtraTimerPlayState = 'extraTimerPlayState',
-	ExtraTimerDirection = 'extraTimerDirection',
+	AuxTimerDuration = 'extraTimerDuration',
+	AuxTimerPlayState = 'extraTimerPlayState',
+	AuxTimerDirection = 'extraTimerDirection',
 }
 
 export enum deprecatedActionId {

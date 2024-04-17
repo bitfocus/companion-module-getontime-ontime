@@ -4,7 +4,7 @@ import { createPlaybackActions } from './playback'
 import { createMessageActions } from './message'
 import { createChangeActions } from './change'
 import { OntimeV3 } from '../ontimev3'
-import { createExtraTimerActions } from './extraTimer'
+import { createAuxTimerActions } from './extraTimer'
 
 /**
  * Returns all implemented actions.
@@ -17,7 +17,7 @@ export function actions(ontime: OntimeV3): CompanionActionDefinitions {
 		...createMessageActions(ontime),
 		...createPlaybackActions(ontime),
 		...createChangeActions(ontime),
-		...createExtraTimerActions(ontime),
+		...createAuxTimerActions(ontime),
 	}
 	return actions
 }
