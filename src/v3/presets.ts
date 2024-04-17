@@ -503,7 +503,7 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		},
 		previewStyle: {
 			...defaultStyle,
-			text: '00:15:25',
+			text: 'HH:MM:SS',
 			size: '14',
 			alignment: 'center:center',
 			bgcolor: NormalGray,
@@ -517,638 +517,82 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		],
 		feedbacks: timerZoneFeedBack,
 	},
+	current_time_h: {
+		type: 'button',
+		category: 'Timer Management',
+		name: 'Current timer hour',
+		style: {
+			...defaultStyle,
+			size: 44,
+			text: `$(ontime:time_h)`,
+			alignment: 'center:center',
+		},
+		previewStyle: {
+			...defaultStyle,
+			size: 44,
+			text: 'HH',
+			alignment: 'center:center',
+			bgcolor: NormalGray,
+			color: Black,
+		},
+		steps: [
+			{
+				down: [],
+				up: [],
+			},
+		],
+		feedbacks: timerZoneFeedBack,
+	},
+	current_time_m: {
+		type: 'button',
+		category: 'Timer Management',
+		name: 'Current timer minutes',
+		style: {
+			...defaultStyle,
+			size: 44,
+			text: `$(ontime:time_m)`,
+			alignment: 'center:center',
+		},
+		previewStyle: {
+			...defaultStyle,
+			size: 28,
+			text: 'MM',
+			alignment: 'center:center',
+			bgcolor: NormalGray,
+			color: Black,
+		},
+		steps: [
+			{
+				down: [],
+				up: [],
+			},
+		],
+		feedbacks: timerZoneFeedBack,
+	},
+	current_time_s: {
+		type: 'button',
+		category: 'Timer Management',
+		name: 'Current timer seconds',
+		style: {
+			...defaultStyle,
+			size: 44,
+			text: `$(ontime:time_s)`,
+			alignment: 'center:center',
+		},
+		previewStyle: {
+			...defaultStyle,
+			size: 28,
+			text: 'SS',
+			alignment: 'center:center',
+			bgcolor: NormalGray,
+			color: Black,
+		},
+		steps: [
+			{
+				down: [],
+				up: [],
+			},
+		],
+		feedbacks: timerZoneFeedBack,
+	},
 }
-
-/*
-
-
-	//Playback
-
-	
-	
-	
-	
-
-	
-
-	presets['toggle_on_air'] = {
-		type: 'button',
-		category: 'Commands',
-		name: 'Toggle On Air state',
-		options: {
-			stepAutoProgress: true,
-		},
-		style: {
-			png64: icons.OnAir,
-			pngalignment: 'center:top',
-			text: 'ON AIR',
-			alignment: 'center:bottom',
-			size: '7',
-			color: combineRgb(255, 255, 255),
-			bgcolor: combineRgb(0, 0, 0),
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: deprecatedActionId.SetOnAir,
-						options: { value: 2 },
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [
-			{
-				feedbackId: 'onAir',
-				options: {},
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(255, 0, 0),
-				},
-			},
-		],
-	}
-	presets['delay_add_1'] = {
-		type: 'button',
-		category: 'Commands',
-		name: 'Adds 1 min to running event',
-		style: {
-			text: '+1 MIN',
-			size: '18',
-			color: combineRgb(221, 107, 32),
-			bgcolor: combineRgb(0, 0, 0),
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: ActionId.Add,
-						options: {
-							addremove: 'add',
-							hours: 0,
-							minutes: 1,
-							seconds: 0,
-						},
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [],
-	}
-	presets['delay_add_5'] = {
-		type: 'button',
-		category: 'Commands',
-		name: 'Adds 5 min to running event',
-		style: {
-			text: '+5 MIN',
-			size: '18',
-			color: combineRgb(221, 107, 32),
-			bgcolor: combineRgb(0, 0, 0),
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: ActionId.Add,
-						options: {
-							addremove: 'add',
-							hours: 0,
-							minutes: 5,
-							seconds: 0,
-						},
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [],
-	}
-	presets['delay_subtract_1'] = {
-		type: 'button',
-		category: 'Commands',
-		name: 'Subtracts 1 min from running event',
-		style: {
-			text: '-1 MIN',
-			size: '18',
-			color: combineRgb(221, 107, 32),
-			bgcolor: combineRgb(0, 0, 0),
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: ActionId.Add,
-						options: {
-							addremove: 'remove',
-							hours: 0,
-							minutes: 1,
-							seconds: 0,
-						},
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [],
-	}
-	presets['delay_subtract_5'] = {
-		type: 'button',
-		category: 'Commands',
-		name: 'Subtracts 5 min from running event',
-		style: {
-			text: '-5 MIN',
-			size: '18',
-			color: combineRgb(221, 107, 32),
-			bgcolor: combineRgb(0, 0, 0),
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: ActionId.Add,
-						options: {
-							addremove: 'remove',
-							hours: 0,
-							minutes: 5,
-							seconds: 0,
-						},
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [],
-	}
-	presets['toggle_speaker_message_visibility'] = {
-		type: 'button',
-		category: 'Commands',
-		name: 'Toggle visibility of Speaker message',
-		options: {
-			stepAutoProgress: true,
-		},
-		style: {
-			png64: icons.MessageSpeaker,
-			pngalignment: 'center:top',
-			text: 'SPEAKER MSG',
-			alignment: 'center:bottom',
-			size: '7',
-			color: combineRgb(255, 255, 255),
-			bgcolor: combineRgb(0, 0, 0),
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: deprecatedActionId.SetTimerMessageVisibility,
-						options: { value: 2 },
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [
-			{
-				feedbackId: deprecatedFeedbackId.TimerMessageVisible,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(43, 108, 176),
-				},
-				options: {},
-			},
-		],
-	}
-	presets['toggle_public_message_visibility'] = {
-		type: 'button',
-		category: 'Commands',
-		name: 'Toggle visibility of Public screens message',
-		options: {
-			stepAutoProgress: true,
-		},
-		style: {
-			png64: icons.MessagePublic,
-			pngalignment: 'center:top',
-			text: 'PUBLIC MSG',
-			alignment: 'center:bottom',
-			size: '7',
-			color: combineRgb(255, 255, 255),
-			bgcolor: combineRgb(0, 0, 0),
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: deprecatedActionId.SetPublicMessageVisibility,
-						options: { value: 2 },
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [
-			{
-				feedbackId: deprecatedFeedbackId.PublicMessageVisible,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(43, 108, 176),
-				},
-				options: {},
-			},
-		],
-	}
-	presets['toggle_lower_message_visibility'] = {
-		type: 'button',
-		category: 'Commands',
-		name: 'Toggle visibility of Lower Third message',
-		options: {
-			stepAutoProgress: true,
-		},
-		style: {
-			png64: icons.MessageLower,
-			pngalignment: 'center:top',
-			text: 'L3 MSG',
-			alignment: 'center:bottom',
-			size: '7',
-			color: combineRgb(255, 255, 255),
-			bgcolor: combineRgb(0, 0, 0),
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: deprecatedActionId.SetLowerMessageVisibility,
-						options: { value: 2 },
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [
-			{
-				feedbackId: deprecatedFeedbackId.LowerMessageVisible,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(43, 108, 176),
-				},
-				options: {},
-			},
-		],
-	}
-	presets['toggle_timer_blink'] = {
-		type: 'button',
-		category: 'Commands',
-		name: 'Toggle the Timer Blink state',
-		options: {
-			stepAutoProgress: true,
-		},
-		style: {
-			text: 'Timer Blink',
-			alignment: 'center:center',
-			size: '24',
-			color: combineRgb(255, 255, 255),
-			bgcolor: combineRgb(0, 0, 0),
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: deprecatedActionId.SetTimerBlink,
-						options: { value: 2 },
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [
-			{
-				feedbackId: feedbackId.TimerBlink,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(229, 62, 62),
-				},
-				options: {},
-			},
-		],
-	}
-	presets['toggle_timer_blackout'] = {
-		type: 'button',
-		category: 'Commands',
-		name: 'Toggle the Timer Blackout state',
-		options: {
-			stepAutoProgress: true,
-		},
-		style: {
-			text: 'Timer Blackout',
-			alignment: 'center:center',
-			size: '14',
-			color: combineRgb(255, 255, 255),
-			bgcolor: combineRgb(0, 0, 0),
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: deprecatedActionId.SetTimerBlackout,
-						options: { value: 2 },
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [
-			{
-				feedbackId: feedbackId.TimerBlackout,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(229, 62, 62),
-				},
-				options: {},
-			},
-		],
-	}
-	presets['display_timer_hhmmss'] = {
-		type: 'button',
-		category: 'Display',
-		name: 'Timer Hours:Minutes:Seconds',
-		style: {
-			text: '$(timer:time)',
-			size: '14',
-			color: combineRgb(255, 255, 255),
-			bgcolor: combineRgb(0, 0, 0),
-		},
-		steps: [],
-		feedbacks: [
-			{
-				feedbackId: deprecatedFeedbackId.ColorRunning,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(0, 204, 0),
-				},
-				options: {},
-			},
-			{
-				feedbackId: deprecatedFeedbackId.ColorPaused,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(237, 137, 54),
-				},
-				options: {},
-			},
-			{
-				feedbackId: deprecatedFeedbackId.ColorStopped,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(0, 0, 0),
-				},
-				options: {},
-			},
-			{
-				feedbackId: deprecatedFeedbackId.ColorRoll,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(43, 108, 176),
-				},
-				options: {},
-			},
-			{
-				feedbackId: feedbackId.ColorNegative,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(255, 0, 0),
-				},
-				options: {},
-			},
-		],
-	}
-	presets['display_timer_hhmm'] = {
-		type: 'button',
-		category: 'Display',
-		name: 'Timer Hours:Minutes',
-		style: {
-			text: '$(timer:time_hm)',
-			size: '24',
-			color: combineRgb(255, 255, 255),
-			bgcolor: combineRgb(0, 0, 0),
-		},
-		steps: [],
-		feedbacks: [
-			{
-				feedbackId: deprecatedFeedbackId.ColorRunning,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(0, 204, 0),
-				},
-				options: {},
-			},
-			{
-				feedbackId: deprecatedFeedbackId.ColorPaused,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(237, 137, 54),
-				},
-				options: {},
-			},
-			{
-				feedbackId: deprecatedFeedbackId.ColorStopped,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(0, 0, 0),
-				},
-				options: {},
-			},
-			{
-				feedbackId: deprecatedFeedbackId.ColorRoll,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(43, 108, 176),
-				},
-				options: {},
-			},
-			{
-				feedbackId: feedbackId.ColorNegative,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(255, 0, 0),
-				},
-				options: {},
-			},
-		],
-	}
-	presets['display_timer_hh'] = {
-		type: 'button',
-		category: 'Display',
-		name: 'Timer Hours',
-		style: {
-			text: '$(timer:time_h)',
-			size: '44',
-			color: combineRgb(255, 255, 255),
-			bgcolor: combineRgb(0, 0, 0),
-		},
-		steps: [],
-		feedbacks: [
-			{
-				feedbackId: deprecatedFeedbackId.ColorRunning,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(0, 204, 0),
-				},
-				options: {},
-			},
-			{
-				feedbackId: deprecatedFeedbackId.ColorPaused,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(237, 137, 54),
-				},
-				options: {},
-			},
-			{
-				feedbackId: deprecatedFeedbackId.ColorStopped,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(0, 0, 0),
-				},
-				options: {},
-			},
-			{
-				feedbackId: deprecatedFeedbackId.ColorRoll,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(43, 108, 176),
-				},
-				options: {},
-			},
-			{
-				feedbackId: feedbackId.ColorNegative,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(255, 0, 0),
-				},
-				options: {},
-			},
-		],
-	}
-	presets['display_timer_mm'] = {
-		type: 'button',
-		category: 'Display',
-		name: 'Timer Minutes',
-		style: {
-			text: '$(timer:time_m)',
-			size: '44',
-			color: combineRgb(255, 255, 255),
-			bgcolor: combineRgb(0, 0, 0),
-		},
-		steps: [],
-		feedbacks: [
-			{
-				feedbackId: deprecatedFeedbackId.ColorRunning,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(0, 204, 0),
-				},
-				options: {},
-			},
-			{
-				feedbackId: deprecatedFeedbackId.ColorPaused,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(237, 137, 54),
-				},
-				options: {},
-			},
-			{
-				feedbackId: deprecatedFeedbackId.ColorStopped,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(0, 0, 0),
-				},
-				options: {},
-			},
-			{
-				feedbackId: deprecatedFeedbackId.ColorRoll,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(43, 108, 176),
-				},
-				options: {},
-			},
-			{
-				feedbackId: feedbackId.ColorNegative,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(255, 0, 0),
-				},
-				options: {},
-			},
-		],
-	}
-	presets['display_timer_ss'] = {
-		type: 'button',
-		category: 'Display',
-		name: 'Timer Seconds',
-		style: {
-			text: '$(timer:time_s)',
-			size: '44',
-			color: combineRgb(255, 255, 255),
-			bgcolor: combineRgb(0, 0, 0),
-		},
-		steps: [],
-		feedbacks: [
-			{
-				feedbackId: deprecatedFeedbackId.ColorRunning,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(0, 204, 0),
-				},
-				options: {},
-			},
-			{
-				feedbackId: deprecatedFeedbackId.ColorPaused,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(237, 137, 54),
-				},
-				options: {},
-			},
-			{
-				feedbackId: deprecatedFeedbackId.ColorStopped,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(0, 0, 0),
-				},
-				options: {},
-			},
-			{
-				feedbackId: deprecatedFeedbackId.ColorRoll,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(43, 108, 176),
-				},
-				options: {},
-			},
-			{
-				feedbackId: feedbackId.ColorNegative,
-				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(255, 0, 0),
-				},
-				options: {},
-			},
-		],
-	}
-	presets['display_added'] = {
-		type: 'button',
-		category: 'Display',
-		name: 'Added Time',
-		style: {
-			text: '$(ontime:timer_added)',
-			size: '14',
-			color: combineRgb(255, 255, 255),
-			bgcolor: combineRgb(0, 0, 0),
-		},
-		steps: [],
-		feedbacks: [],
-	}
-
-*/
