@@ -353,7 +353,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 	},
 }
 
-const timerZoneFeedBack = [
+const timerZoneFeedback = [
 	{
 		feedbackId: feedbackId.TimerZone,
 		options: { zone: TimerZone.Normal },
@@ -373,6 +373,15 @@ const timerZoneFeedBack = [
 		feedbackId: feedbackId.TimerZone,
 		options: { zone: TimerZone.Overtime },
 		style: { bgcolor: Black, color: DangerRed },
+	},
+]
+
+const timerZoneAndPauseFeedback = [
+	...timerZoneFeedback,
+	{
+		feedbackId: feedbackId.ColorPlayback,
+		options: { state: 'pause' },
+		style: { color: PauseOrange },
 	},
 ]
 
@@ -515,7 +524,7 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				up: [],
 			},
 		],
-		feedbacks: timerZoneFeedBack,
+		feedbacks: timerZoneAndPauseFeedback,
 	},
 	current_time_h: {
 		type: 'button',
@@ -541,7 +550,7 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				up: [],
 			},
 		],
-		feedbacks: timerZoneFeedBack,
+		feedbacks: timerZoneAndPauseFeedback,
 	},
 	current_time_m: {
 		type: 'button',
@@ -567,7 +576,7 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				up: [],
 			},
 		],
-		feedbacks: timerZoneFeedBack,
+		feedbacks: timerZoneAndPauseFeedback,
 	},
 	current_time_s: {
 		type: 'button',
@@ -593,6 +602,6 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				up: [],
 			},
 		],
-		feedbacks: timerZoneFeedBack,
+		feedbacks: timerZoneAndPauseFeedback,
 	},
 }
