@@ -4,7 +4,7 @@ import { createPlaybackActions } from './playback'
 import { createMessageActions } from './message'
 import { createChangeActions } from './change'
 import { OntimeV3 } from '../ontimev3'
-import { createAuxTimerActions } from './extraTimer'
+import { createAuxTimerActions } from './auxTimer'
 
 /**
  * Returns all implemented actions.

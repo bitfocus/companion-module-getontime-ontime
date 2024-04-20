@@ -68,7 +68,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		const clock = msToSplitTime(val)
 		self.setVariableValues({ [variableId.Clock]: clock.hoursMinutesSeconds })
 	}
-	//TODO: consider padding the timer values
+	
 	const updateTimer = (val: TimerState) => {
 		ontime.state.timer = val
 		const timer = msToSplitTime(val.current)
@@ -82,7 +82,6 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			timerZone = extractTimerZone(ontime.state.timer.current, { timeWarning, timeDanger })
 		}
 		ontime.state.companionSpecific.timerZone = timerZone
-		console.log(added)
 		self.setVariableValues({
 			[variableId.TimerTotalMs]: val.current ?? 0,
 			[variableId.Time]: timer.hoursMinutesSeconds,
@@ -167,7 +166,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 
 		//TODO:
 	}
-	const updateTimer1 = (val: SimpleTimerState) => {
+	const updateAuxTimer1 = (val: SimpleTimerState) => {
 		ontime.state.timer1 = val
 		const duration = msToSplitTime(val.duration)
 		const current = msToSplitTime(val.current)
@@ -230,8 +229,8 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					updatePublicEventNext(payload)
 					break
 				}
-				case 'ontime-timer1': {
-					updateTimer1(payload)
+				case 'ontime-auxtimer1': {
+					updateAuxTimer1(payload)
 					break
 				}
 				case 'ontime': {
