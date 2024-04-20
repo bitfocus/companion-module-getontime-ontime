@@ -108,15 +108,6 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		)
 	}
 
-	const updateOnAir = (val: boolean) => {
-		ontime.state.onAir = val
-		self.setVariableValues({
-			[variableId.OnAir]: val,
-		})
-
-		self.checkFeedbacks(feedbackId.OnAir)
-	}
-
 	const updateMessage = (val: MessageState) => {
 		ontime.state.message = val
 		self.setVariableValues({
@@ -163,7 +154,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		self.setVariableValues({
 			[variableId.AuxTimerDurationMs + '-1']: val.duration,
 			[variableId.AuxTimerCurrentMs + '-1']: val.current,
-			[variableId.AuxTimerDuration + '-1']: duration.hoursMinutesSeconds,
+			[variableId.AuxTimerDirection + '-1']: duration.hoursMinutesSeconds,
 			[variableId.AuxTimerCurrent + '-1']: current.hoursMinutesSeconds,
 			[variableId.AuxTimerPalyback + '-1']: val.playback,
 			[variableId.AuxTimerDirection + '-1']: val.direction,
@@ -187,10 +178,6 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 				}
 				case 'ontime-timer': {
 					updateTimer(payload)
-					break
-				}
-				case 'ontime-onAir': {
-					updateOnAir(payload)
 					break
 				}
 				case 'ontime-message': {
@@ -228,7 +215,6 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 				case 'ontime': {
 					updateTimer(payload.timer)
 					updateClock(payload.clock)
-					updateOnAir(payload.onAir)
 					updateMessage(payload.message)
 					updateEventNow(payload.eventNow)
 					updateEventNext(payload.eventNext)
@@ -329,7 +315,6 @@ export async function fetchCustomFields(self: OnTimeInstance, ontime: OntimeV3):
 		self.init_actions()
 	} catch (e: any) {
 		ontime.events = []
-		self.log('error', 'failed to fetch events from ontime')
-		self.log('error', e)
+		self.log('error', `unable to fetch events: ${e}`)
 	}
 }

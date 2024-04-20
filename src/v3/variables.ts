@@ -65,11 +65,6 @@ export function variables(): CompanionVariableDefinition[] {
 			name: 'Start time of current timer (hh:mm:ss)',
 			variableId: variableId.TimerStart,
 		},
-		//onAir
-		{
-			name: 'On Air',
-			variableId: variableId.OnAir,
-		},
 		//message.timer.text
 		{
 			name: 'Timer Message',
@@ -79,16 +74,6 @@ export function variables(): CompanionVariableDefinition[] {
 		{
 			name: 'Timer Message Visible',
 			variableId: variableId.TimerMessageVisible,
-		},
-		//message.public.visible
-		{
-			name: 'Public Message Visible',
-			variableId: variableId.PublicMessageVisible,
-		},
-		//message.lower.visible
-		{
-			name: 'Lower thirds Message Visible',
-			variableId: variableId.LowerMessageVisible,
 		},
 		//message.timer.blackout
 		{

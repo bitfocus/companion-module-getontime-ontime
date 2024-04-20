@@ -1,21 +1,23 @@
 export enum ActionId {
 	Start = 'start',
+	Load = 'load',
 	Pause = 'pause',
 	Stop = 'stop',
 	Reload = 'reload',
 	Roll = 'roll',
+
 	Add = 'add',
+
 	Change = 'change',
+
 	TimerBlackout = 'TimerBlackout',
 	TimerBlink = 'TimerBlink',
-	Load = 'load',
 	MessageVisibility = 'setMessageVisibility',
 	MessageText = 'setMessage',
 
-	//V3
-	AuxTimerDuration = 'extraTimerDuration',
-	AuxTimerPlayState = 'extraTimerPlayState',
-	AuxTimerDirection = 'extraTimerDirection',
+	AuxTimerDuration = 'auxTimerDuration',
+	AuxTimerPlayState = 'auxTimerPlayState',
+	AuxTimerDirection = 'auxTimerDirection',
 }
 
 export enum deprecatedActionId {
@@ -50,8 +52,6 @@ export enum feedbackId {
 	TimerBlink = 'timerBlink',
 	TimerBlackout = 'timerBlackout',
 	TimerZone = 'timerZone',
-
-	//v3
 }
 
 export enum deprecatedFeedbackId {
@@ -68,7 +68,9 @@ export enum deprecatedFeedbackId {
 
 export enum variableId {
 	PlayState = 'playState',
+
 	Clock = 'clock',
+
 	TimerStart = 'timer_start',
 	TimerFinish = 'timer_finish',
 	TimerAdded = 'timer_added',
@@ -80,31 +82,28 @@ export enum variableId {
 	TimeH = 'time_h',
 	TimeM = 'time_m',
 	TimeS = 'time_s',
+
 	IdNow = 'idNow',
 	TitleNow = 'titleNow',
 	NoteNow = 'noteNow',
 	CueNow = 'cueNow',
+
 	IdNext = 'idNext',
 	TitleNext = 'titleNext',
 	NoteNext = 'noteNext',
 	CueNext = 'cueNext',
-	OnAir = 'onAir',
+
 	TimerMessage = 'timerMessage',
-	PublicMessage = 'publicMessage',
-	LowerMessage = 'lowerMessage',
 	TimerMessageVisible = 'timerMessageVisible',
-	PublicMessageVisible = 'publicMessageVisible',
-	LowerMessageVisible = 'lowerMessageVisible',
 	TimerBlink = 'timerBlink',
 	TimerBlackout = 'timerBlackout',
 
-	//V3
-	AuxTimerDurationMs = 'extraTimer_duration_ms',
-	AuxTimerDuration = 'extraTimer_duration',
-	AuxTimerCurrentMs = 'extraTimer_current_hms',
-	AuxTimerCurrent = 'extraTimer_current_hms',
-	AuxTimerPalyback = 'extraTimer_playback',
-	AuxTimerDirection = 'extraTimer_direction',
+	AuxTimerDurationMs = 'auxTimer_duration_ms',
+	AuxTimerPlayback = 'auxTimer_playback',
+	AuxTimerCurrentMs = 'auxTimer_current_hms',
+	AuxTimerCurrent = 'auxTimer_current_hms',
+	AuxTimerPalyback = 'auxTimer_playback',
+	AuxTimerDirection = 'auxTimer_direction',
 }
 
 export enum deprecatedVariableId {
