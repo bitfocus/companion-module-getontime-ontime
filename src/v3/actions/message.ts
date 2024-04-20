@@ -30,8 +30,6 @@ export function createMessageActions(ontime: OntimeV3): { [id: string]: Companio
 					type: 'dropdown',
 					choices: [
 						{ id: 'timer', label: 'Timer' },
-						{ id: 'lower', label: 'Lower' },
-						{ id: 'public', label: 'Public' },
 					],
 					default: 'timer',
 					id: 'destination',

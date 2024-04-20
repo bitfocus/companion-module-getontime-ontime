@@ -10,6 +10,7 @@ import { TimerZone } from './ontime-types'
 
 let ws: Websocket | null = null
 let reconnectionTimeout: NodeJS.Timeout | null = null
+let versionTimeout: NodeJS.Timeout | null = null
 let reconnectInterval: number
 let shouldReconnect = false
 
@@ -25,7 +26,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		return
 	}
 
-	self.updateStatus(InstanceStatus.Connecting)
+	self.updateStatus(InstanceStatus.Connecting, 'Trying WS connection')
 
 	if (ws) {
 		ws.close()
@@ -41,10 +42,12 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 
 	ws.onopen = () => {
 		clearTimeout(reconnectionTimeout as NodeJS.Timeout)
-		self.updateStatus(InstanceStatus.Ok)
-		self.log('debug', 'Socket connected')
-		void fetchAllEvents(self, ontime)
-		void fetchCustomFields(self, ontime)
+		self.updateStatus(InstanceStatus.Connecting, 'Ensurreing Ontime V3...')
+		socketSendJson('version')
+		versionTimeout = setTimeout(() => {
+			self.updateStatus(InstanceStatus.ConnectionFailure, 'Version confirmation timed out')
+			ws?.close()
+		}, 1000)
 	}
 
 	ws.onclose = (event) => {
@@ -68,7 +71,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		const clock = msToSplitTime(val)
 		self.setVariableValues({ [variableId.Clock]: clock.hoursMinutesSeconds })
 	}
-	
+
 	const updateTimer = (val: TimerState) => {
 		ontime.state.timer = val
 		const timer = msToSplitTime(val.current)
@@ -211,6 +214,17 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					updateAuxTimer1(payload)
 					break
 				}
+				case 'version': {
+					//TODO: check actual version
+					if (versionTimeout) {
+						clearTimeout(versionTimeout)
+					}
+					self.updateStatus(InstanceStatus.Ok)
+					self.log('debug', 'Socket connected')
+					void fetchAllEvents(self, ontime)
+					void fetchCustomFields(self, ontime)
+					break
+				}
 				case 'ontime': {
 					updateTimer(payload.timer)
 					updateClock(payload.clock)
@@ -251,60 +265,20 @@ export function disconnectSocket(): void {
 	ws?.close()
 }
 
-export function socketSend(message: string): void {
-	if (ws && ws.readyState === ws.OPEN) {
-		ws.send(message)
-	}
-}
-
 export function socketSendJson(type: string, payload?: InputValue | object): void {
-	socketSend(
-		JSON.stringify({
-			type,
-			payload,
-		})
-	)
-}
-
-export function socketSendChange(type: string, eventId: string, property: InputValue, value: InputValue): void {
-	socketSend(
-		JSON.stringify({
-			type,
-			payload: {
-				eventId,
-				property,
-				value,
-			},
-		})
-	)
-}
-
-//FIXME: this is placeholder stuff
-export async function fetchEvents(self: OnTimeInstance, ontime: OntimeV3, events: string[]) {
-	self.log('debug', `fetching events from ontime ${events}`)
-	for (const event of events) {
-		try {
-			const response = await fetch(`http://${self.config.host}:${self.config.port}/data/rundown/${event}`)
-			const { id, cue, title } = (await response.json()) as any
-			const oldEvent = ontime.events.find((e) => e.id === event)
-			if (oldEvent) {
-				Object.assign(oldEvent, { id, cue, title })
-			}
-		} catch (e: any) {
-			self.log('error', `failed to fetch event: ${event}`)
-			self.log('error', e)
-		}
+	if (ws && ws.readyState === ws.OPEN) {
+		ws.send(
+			JSON.stringify({
+				type,
+				payload,
+			})
+		)
 	}
 }
 
 let rundownEtag: string = ''
-let rundownTimeout: NodeJS.Timeout
 
 export async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
-	clearTimeout(rundownTimeout)
-	if (self.config.refetchEvents) {
-		// timeout = setTimeout(() => fetchAllEvents(self, ontime), 60000)
-	}
 	self.log('debug', 'fetching events from ontime')
 	try {
 		const response = await fetch(`http://${self.config.host}:${self.config.port}/data/rundown`, {

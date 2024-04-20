@@ -1,11 +1,6 @@
 import { SomeCompanionActionInputField, DropdownChoice } from '@companion-module/base'
 import { eventsToChoices } from '../../utilities'
-
-type minimumEvent = {
-	id: string
-	cue: string
-	title: string
-}
+import { OntimeEvent } from '../ontime-types'
 
 type SelectOptions = 'list' | 'loaded' | 'previous' | 'next' | 'cue' | 'id' | 'index' | 'go'
 const selectOptions: DropdownChoice[] = [
@@ -20,7 +15,7 @@ const selectOptions: DropdownChoice[] = [
 ]
 
 export function eventPicker(
-	events: minimumEvent[],
+	events: OntimeEvent[],
 	options: SelectOptions[] = ['list', 'next', 'previous', 'loaded', 'cue', 'id', 'index']
 ): SomeCompanionActionInputField[] {
 	const selectChoices = new Array<DropdownChoice>()

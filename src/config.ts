@@ -39,16 +39,6 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			tooltip: 'Ontime server port. Default is 4001',
 		},
 		{
-			label: 'Ontime Version',
-			id: 'version',
-			type: 'dropdown',
-			default: 'v3',
-			choices: [{ id: 'v3', label: 'Ontime V3' }],
-			isVisible: () => false,
-			width: 12,
-			tooltip: 'Which version of Ontime you are connecting to.',
-		},
-		{
 			label: 'Refetch events',
 			id: 'refetchEvents',
 			type: 'checkbox',

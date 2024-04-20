@@ -1,5 +1,5 @@
 import { DropdownChoice } from '@companion-module/base'
-import { TimerZone } from './v3/ontime-types.js'
+import { OntimeEvent, TimerZone } from './v3/ontime-types.js'
 
 export const joinTime = (...args: string[]) => args.join(':')
 
@@ -60,7 +60,7 @@ export function msToSplitTime(time: number | null): SplitTime {
 	}
 }
 
-export function eventsToChoices(events: { id: string; cue: string; title: string }[]): DropdownChoice[] {
+export function eventsToChoices(events: OntimeEvent[]): DropdownChoice[] {
 	return events.map(({ id, cue, title }) => {
 		return { id, label: `${cue} | ${title}` }
 	})

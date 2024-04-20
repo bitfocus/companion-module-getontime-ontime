@@ -37,25 +37,8 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 		this.log('debug', 'Initializing module')
 		this.updateStatus(InstanceStatus.Disconnected)
 
-		switch (this.config.version) {
-			case 'v1': {
-				this.updateStatus(InstanceStatus.BadConfig, 'V1 is no longer supported')
-				break
-			}
-			case 'v2': {
-				this.updateStatus(InstanceStatus.BadConfig, 'V2 is no longer supported')
-				break
-			}
-			case 'v3': {
-				this.updateStatus(InstanceStatus.Connecting, 'starting V3')
-				this.ontime = new OntimeV3(this)
-				break
-			}
-			default: {
-				this.updateStatus(InstanceStatus.BadConfig, 'unknown version')
-				break
-			}
-		}
+		this.ontime = new OntimeV3(this)
+		this.updateStatus(InstanceStatus.Connecting, 'starting V3')
 
 		this.initConnection()
 		this.init_variables()
@@ -79,18 +62,6 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 		this.config = config
 		this.ontime.disconnectSocket()
 		this.updateStatus(InstanceStatus.Disconnected)
-
-		if (this.config.version === 'v1') {
-			this.updateStatus(InstanceStatus.BadConfig, 'V1 is no longer supported')
-			return
-		} else if (this.config.version === 'v2') {
-			this.updateStatus(InstanceStatus.BadConfig, 'V2 is no longer supported')
-		} else if (this.config.version === 'v3') {
-			this.updateStatus(InstanceStatus.Connecting, 'starting V3')
-			this.ontime = new OntimeV3(this)
-		} else {
-			this.updateStatus(InstanceStatus.BadConfig, 'unknown version')
-		}
 
 		this.initConnection()
 		this.init_variables()

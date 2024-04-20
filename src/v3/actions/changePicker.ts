@@ -97,7 +97,7 @@ function generateCustomFieldsOptions(ontime: OntimeV3): Array<CompanionInputFiel
 		customProps.push({
 			type: 'textinput',
 			id,
-			label: customFields[field].label, //TODO: should we prefix this with something
+			label: `Custom: ${customFields[field].label}`,
 			isVisibleData: id,
 			isVisible: (opts, data) => Array.isArray(opts.properties) && opts.properties.includes(data),
 		})
