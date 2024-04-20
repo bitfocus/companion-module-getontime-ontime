@@ -27,8 +27,6 @@ export function createMessageFeedbacks(ontime: OntimeV3): { [id: string]: Compan
 					default: 'timer',
 					choices: [
 						{ id: 'timer', label: 'Timer' },
-						{ id: 'lower', label: 'Lower Third' },
-						{ id: 'public', label: 'Public' },
 					],
 				},
 				{ type: 'checkbox', id: 'reqText', default: false, label: 'Requere matching text' },

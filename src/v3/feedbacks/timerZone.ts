@@ -9,7 +9,7 @@ export function createTimerZoneFeedback(ontime: { state: { companionSpecific: { 
 		[feedbackId.TimerZone]: {
 			type: 'boolean',
 			name: 'Timer zone',
-			description: 'TODO: description',
+			description: 'Timer zones use Ontimes warn and danger times to change colour depending on timer progress',
 			defaultStyle: {
 				color: combineRgb(255, 255, 255),
 				bgcolor: combineRgb(255, 0, 0),

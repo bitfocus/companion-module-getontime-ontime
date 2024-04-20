@@ -31,6 +31,9 @@ export enum SupportedEvent {
 	Block = 'block',
 }
 
+/**  
+ * {@link https://github.com/cpvalente/ontime/blob/8f249b9d515fb0d799514d3a67de6713f5029faf/packages/types/src/definitions/core/OntimeEvent.type.ts GitHub}.  
+ */  
 export type OntimeBaseEvent = {
 	type: SupportedEvent
 	id: string
@@ -65,9 +68,9 @@ export type RuntimeStore = {
 	// rundown data
 	runtime: Runtime
 	eventNow: OntimeEvent | null
-	publicEventNow: OntimeEvent | null
+	// publicEventNow: OntimeEvent | null
 	eventNext: OntimeEvent | null
-	publicEventNext: OntimeEvent | null
+	// publicEventNext: OntimeEvent | null
 
 	// extra timers
 	timer1: SimpleTimerState
@@ -113,7 +116,7 @@ export type OntimeEvent = OntimeBaseEvent & {
 	skip: boolean
 	colour: string
 	revision: number
-	delay?: number // calculated at runtime
+	delay: number // calculated at runtime
 	timeWarning: number
 	timeDanger: number
 	custom: EventCustomFields
@@ -128,8 +131,6 @@ export enum TimeStrategy {
 
 export type MessageState = {
 	timer: TimerMessage
-	public: Message
-	lower: Message
 	external: Message
 }
 

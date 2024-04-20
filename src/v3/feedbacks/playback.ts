@@ -26,7 +26,7 @@ export function createPlaybackFeedbacks(ontime: OntimeV3): { [id: string]: Compa
 		[feedbackId.ColorPlayback]: {
 			type: 'boolean',
 			name: 'Playback state',
-			description: 'TODO: description',
+			description: 'Indicator colour for playback state',
 			defaultStyle: {
 				color: combineRgb(255, 255, 255),
 				bgcolor: combineRgb(0, 204, 0),
@@ -48,22 +48,10 @@ export function createPlaybackFeedbacks(ontime: OntimeV3): { [id: string]: Compa
 			],
 			callback: (feedback) => ontime.state.timer.playback === feedback.options.state,
 		},
-		[feedbackId.ColorNegative]: {
-			type: 'boolean',
-			name: 'Timer negative',
-			description: 'TODO: better wording - Change the colors of a button if the timer runs into negative time',
-			defaultStyle: {
-				color: combineRgb(255, 255, 255),
-				bgcolor: combineRgb(255, 0, 0),
-			},
-			options: [],
-			callback: () => (ontime.state.timer.current ? ontime.state.timer.current < 0 : false),
-		},
 		[feedbackId.ColorAddRemove]: {
 			type: 'boolean',
 			name: 'Added/removed time',
-			description:
-				'TODO: better names in dropdown - Change the colors of a button according if time has been added/removed',
+			description: 'Indicator colour for whether timer has user added time',
 			defaultStyle: {
 				color: combineRgb(255, 255, 255),
 				bgcolor: combineRgb(254, 124, 19),
@@ -74,7 +62,6 @@ export function createPlaybackFeedbacks(ontime: OntimeV3): { [id: string]: Compa
 					label: 'Direction',
 					id: 'direction',
 					choices: [
-						{ id: 'both', label: 'Added and Removed' },
 						{ id: 'add', label: 'Only Added' },
 						{ id: 'remove', label: 'Only Removed' },
 						{ id: 'none', label: 'No change' },
@@ -83,17 +70,6 @@ export function createPlaybackFeedbacks(ontime: OntimeV3): { [id: string]: Compa
 				},
 			],
 			callback: addTime,
-		},
-		[feedbackId.OnAir]: {
-			type: 'boolean',
-			name: 'Change color from onAir',
-			description: 'TODO: ',
-			defaultStyle: {
-				color: combineRgb(255, 255, 255),
-				bgcolor: combineRgb(255, 0, 0),
-			},
-			options: [],
-			callback: () => ontime.state.onAir,
 		},
 	}
 }

@@ -10,24 +10,24 @@ export function variables(): CompanionVariableDefinition[] {
 		},
 		//timer.addedTime
 		{
-			name: 'Time added to current event (hh:mm:ss)',
+			name: 'User added time to current event (hh:mm:ss)',
 			variableId: variableId.TimerAdded,
 		},
 		{
-			name: 'Time added in its smallest form ',
+			name: 'User added time to current event (smallest unit)',
 			variableId: variableId.TimerAddedNice,
 		},
 		//timer.current
 		{
-			name: 'Current event timer zone (Normal/Warning/Danger/Overtime)',
+			name: 'Current timer progress (Normal/Warning/Danger/Overtime)',
 			variableId: variableId.TimerZone,
 		},
 		{
-			name: 'Current time of event in milliseconds',
+			name: 'Current timer (milliseconds)',
 			variableId: variableId.TimerTotalMs,
 		},
 		{
-			name: 'Current time of event (hh:mm:ss)',
+			name: 'Current timer (hh:mm:ss)',
 			variableId: variableId.Time,
 		},
 		{
@@ -56,13 +56,13 @@ export function variables(): CompanionVariableDefinition[] {
 		//timer.finishedAt
 		//timer.playback
 		{
-			name: 'State of event (Running, Paused, Stopped, Roll)',
+			name: 'Playback state (Running, Paused, Stopped, Roll)',
 			variableId: variableId.PlayState,
 		},
 		//timer.secondaryTimer
 		//timer.startedAt
 		{
-			name: 'Start of event (hh:mm:ss)',
+			name: 'Start time of current timer (hh:mm:ss)',
 			variableId: variableId.TimerStart,
 		},
 		//onAir
@@ -74,16 +74,6 @@ export function variables(): CompanionVariableDefinition[] {
 		{
 			name: 'Timer Message',
 			variableId: variableId.TimerMessage,
-		},
-		//message.public.text
-		{
-			name: 'Public Message',
-			variableId: variableId.PublicMessage,
-		},
-		//message.lower.text
-		{
-			name: 'Lower thirds Message',
-			variableId: variableId.LowerMessage,
 		},
 		//message.timer.visible
 		{
@@ -159,11 +149,11 @@ export function variables(): CompanionVariableDefinition[] {
 		},
 		//aux timer
 		{
-			name: 'Aux timer 1 duration in milliseconds',
+			name: 'Aux timer 1 duration (milliseconds)',
 			variableId: variableId.AuxTimerDurationMs + '-1',
 		},
 		{
-			name: 'Aux timer 1 current in milliseconds',
+			name: 'Aux timer 1 current (milliseconds)',
 			variableId: variableId.AuxTimerDurationMs + '-1',
 		},
 		{
@@ -179,7 +169,7 @@ export function variables(): CompanionVariableDefinition[] {
 			variableId: variableId.AuxTimerPalyback + '-1',
 		},
 		{
-			name: 'Aux timer 1 direction',
+			name: 'Aux timer 1 direction (count-up/count-down)',
 			variableId: variableId.AuxTimerDirection + '-1',
 		},
 	]

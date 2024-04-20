@@ -17,8 +17,6 @@ const stateobj: RuntimeStore & { companionSpecific: { timerZone: TimerZone } } =
 	onAir: false,
 	message: {
 		timer: { text: '', visible: false, blink: false, blackout: false },
-		public: { text: '', visible: false },
-		lower: { text: '', visible: false },
 		external: { text: '', visible: false },
 	},
 	runtime: {
@@ -31,9 +29,7 @@ const stateobj: RuntimeStore & { companionSpecific: { timerZone: TimerZone } } =
 		expectedEnd: 0,
 	},
 	eventNow: null,
-	publicEventNow: null,
 	eventNext: null,
-	publicEventNext: null,
 	timer1: {
 		duration: 0,
 		current: 0,

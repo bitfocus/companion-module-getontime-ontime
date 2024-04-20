@@ -118,13 +118,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		ontime.state.message = val
 		self.setVariableValues({
 			[variableId.TimerMessage]: val.timer.text,
-			[variableId.PublicMessage]: val.public.text,
-			[variableId.LowerMessage]: val.lower.text,
-
 			[variableId.TimerMessageVisible]: val.timer.visible,
-			[variableId.PublicMessageVisible]: val.public.visible,
-			[variableId.LowerMessageVisible]: val.lower.visible,
-
 			[variableId.TimerBlackout]: val.timer.blackout,
 			[variableId.TimerBlink]: val.timer.blink,
 		})
@@ -147,6 +141,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			[variableId.IdNow]: val.id ?? '',
 		})
 	}
+
 	const updateEventNext = (val: OntimeEvent) => {
 		ontime.state.eventNext = val
 		self.setVariableValues({
@@ -156,16 +151,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			[variableId.IdNext]: val.id ?? '',
 		})
 	}
-	const updatePublicEventNext = (val: OntimeEvent) => {
-		ontime.state.publicEventNow = val
 
-		//TODO:
-	}
-	const updatePublicEventNow = (val: OntimeEvent) => {
-		ontime.state.publicEventNext = val
-
-		//TODO:
-	}
 	const updateAuxTimer1 = (val: SimpleTimerState) => {
 		ontime.state.timer1 = val
 		const duration = msToSplitTime(val.duration)
@@ -217,16 +203,8 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					updateEventNow(payload)
 					break
 				}
-				case 'ontime-publicEventNow': {
-					updatePublicEventNow(payload)
-					break
-				}
 				case 'ontime-eventNext': {
 					updateEventNext(payload)
-					break
-				}
-				case 'ontime-publicEventNext': {
-					updatePublicEventNext(payload)
 					break
 				}
 				case 'ontime-auxtimer1': {
