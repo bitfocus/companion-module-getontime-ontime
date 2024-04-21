@@ -10,7 +10,7 @@ import { TimerZone } from './ontime-types'
 
 let ws: Websocket | null = null
 let reconnectionTimeout: NodeJS.Timeout | null = null
-let versionTimeout: NodeJS.Timeout | null = null
+// let versionTimeout: NodeJS.Timeout | null = null //TODO: later
 let reconnectInterval: number
 let shouldReconnect = false
 
@@ -42,12 +42,14 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 
 	ws.onopen = () => {
 		clearTimeout(reconnectionTimeout as NodeJS.Timeout)
-		self.updateStatus(InstanceStatus.Connecting, 'Ensurreing Ontime V3...')
-		socketSendJson('version')
-		versionTimeout = setTimeout(() => {
-			self.updateStatus(InstanceStatus.ConnectionFailure, 'Version confirmation timed out')
-			ws?.close()
-		}, 1000)
+		self.updateStatus(InstanceStatus.Ok)
+		//TODO: later
+		// self.updateStatus(InstanceStatus.Connecting, 'Ensurreing Ontime V3...')
+		// socketSendJson('version')
+		// versionTimeout = setTimeout(() => {
+		// 	self.updateStatus(InstanceStatus.ConnectionFailure, 'Version confirmation timed out')
+		// 	ws?.close()
+		// }, 1000)
 	}
 
 	ws.onclose = (event) => {
@@ -202,14 +204,14 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					break
 				}
 				case 'version': {
-					//TODO: check actual version
-					if (versionTimeout) {
-						clearTimeout(versionTimeout)
-					}
-					self.updateStatus(InstanceStatus.Ok)
-					self.log('debug', 'Socket connected')
-					void fetchAllEvents(self, ontime)
-					void fetchCustomFields(self, ontime)
+					//TODO: later
+					// if (versionTimeout) {
+					// 	clearTimeout(versionTimeout)
+					// }
+					// self.updateStatus(InstanceStatus.Ok)
+					// self.log('debug', 'Socket connected')
+					// void fetchAllEvents(self, ontime)
+					// void fetchCustomFields(self, ontime)
 					break
 				}
 				case 'ontime': {
