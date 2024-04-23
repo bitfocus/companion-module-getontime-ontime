@@ -43,13 +43,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 	ws.onopen = () => {
 		clearTimeout(reconnectionTimeout as NodeJS.Timeout)
 		self.updateStatus(InstanceStatus.Ok)
-		//TODO: later
-		// self.updateStatus(InstanceStatus.Connecting, 'Ensurreing Ontime V3...')
-		// socketSendJson('version')
-		// versionTimeout = setTimeout(() => {
-		// 	self.updateStatus(InstanceStatus.ConnectionFailure, 'Version confirmation timed out')
-		// 	ws?.close()
-		// }, 1000)
+		//TODO: later authenticate the version number
 	}
 
 	ws.onclose = (event) => {
@@ -203,17 +197,6 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					updateAuxTimer1(payload)
 					break
 				}
-				case 'version': {
-					//TODO: later
-					// if (versionTimeout) {
-					// 	clearTimeout(versionTimeout)
-					// }
-					// self.updateStatus(InstanceStatus.Ok)
-					// self.log('debug', 'Socket connected')
-					// void fetchAllEvents(self, ontime)
-					// void fetchCustomFields(self, ontime)
-					break
-				}
 				case 'ontime': {
 					updateTimer(payload.timer)
 					updateClock(payload.clock)
@@ -227,7 +210,6 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 						break
 					}
 					self.log('debug', 'refetching events')
-					// self.log('debug', JSON.stringify(payload))
 					void fetchAllEvents(self, ontime).then(
 						() => {
 							self.init_actions()
