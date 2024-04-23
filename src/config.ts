@@ -15,7 +15,8 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			label: 'Information',
 			id: 'info',
 			type: 'static-text',
-			value: 'This module will establish a connection to the ontime server Version 2.13 upwards.',
+			value:
+				'This module will establish a connection to Ontime v3. If you are upgrading from V2 to V3 we suggest backing up your configuration file.',
 			width: 12,
 		},
 		{
@@ -38,22 +39,12 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			tooltip: 'Ontime server port. Default is 4001',
 		},
 		{
-			label: 'Ontime Version',
-			id: 'version',
-			type: 'dropdown',
-			default: 'v2',
-			choices: [{ id: 'v2', label: 'Ontime V2' }],
-			width: 12,
-			tooltip: 'Choose wich version of Ontime you are connecting to.',
-		},
-		{
 			label: 'Refetch events',
 			id: 'refetchEvents',
 			type: 'checkbox',
 			default: true,
 			width: 4,
-			isVisible: (config) => config.version === 'v2',
-			tooltip: 'Chose if you want Companion to refetch the events from Ontime when the rundown gets updated.',
+			tooltip: 'Whether Companion should keep the rundown updated with Ontime by refetching on change.',
 		},
 		{
 			label: 'Reconnect',

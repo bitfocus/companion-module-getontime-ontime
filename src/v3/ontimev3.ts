@@ -6,23 +6,27 @@ import {
 } from '@companion-module/base'
 import { OnTimeInstance, OntimeClient } from '..'
 
-import { actions } from './actions'
-import { feedbacks } from './feedback'
-import { presets } from './presets'
-import { variables } from './variables'
 import { connect, disconnectSocket } from './connection'
+import { CustomFields, OntimeEvent } from './ontime-types'
 import { stateobj } from './state'
 
-export class OntimeV2 implements OntimeClient {
+import { actions } from './actions/index'
+import { feedbacks } from './feedbacks/index'
+import { variables } from './variables'
+import { presets } from './presets'
+
+export class OntimeV3 implements OntimeClient {
 	instance: OnTimeInstance
+	public events: OntimeEvent[] = []
+	public customFields: CustomFields = {}
+	public state = stateobj
 
 	constructor(instance: OnTimeInstance) {
 		this.instance = instance
-		this.instance.states = stateobj
 	}
 
 	connect(): void {
-		connect(this.instance)
+		connect(this.instance, this)
 	}
 
 	disconnectSocket(): void {
@@ -33,12 +37,12 @@ export class OntimeV2 implements OntimeClient {
 		return variables()
 	}
 
-	getActions(self: OnTimeInstance): CompanionActionDefinitions {
-		return actions(self)
+	getActions(): CompanionActionDefinitions {
+		return actions(this)
 	}
 
-	getFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions {
-		return feedbacks(self)
+	getFeedbacks(): CompanionFeedbackDefinitions {
+		return feedbacks(this)
 	}
 
 	getPresets(): CompanionPresetDefinitions {

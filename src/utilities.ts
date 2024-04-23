@@ -1,76 +1,86 @@
-/**
- * @param {number} number - number to pad
- * @return {string} - padded number
- */
+import { DropdownChoice } from '@companion-module/base'
+import { OntimeEvent, TimerZone } from './v3/ontime-types.js'
+
+export const joinTime = (...args: string[]) => args.join(':')
 
 function padTo2Digits(number: number) {
 	return number.toString().padStart(2, '0')
 }
 
-/**
- *
- * @typedef {Object} ReadableTime
- * @property {string} hours - hours in format hh
- * @property {string} minutes - minutes in format mm
- * @property {string} seconds - seconds in format ss
- */
-
-/**
- * @param {number} time - time in format s or ms
- * @param {string} [format=ms] - format of time (s or ms)
- * @return {ReadableTime} - object with hours, minutes and seconds
- */
-
-interface ReadableTime {
-	hours: string
-	minutes: string
-	seconds: string
+const defaultTimerObject = {
+	hours: '--',
+	minutes: '--',
+	seconds: '--',
+	hoursMinutes: '--:--',
+	hoursMinutesSeconds: '--:--:--',
+	delayString: '0',
 }
 
-export function toReadableTime(time: number, format = 'ms'): ReadableTime {
+type SplitTime = typeof defaultTimerObject
+
+export function msToSplitTime(time: number | null): SplitTime {
+	if (time === null) {
+		return defaultTimerObject
+	}
 	let negative = false
-	time = Number(time)
 	if (time < 0) {
 		time = time * -1
 		negative = true
 	} else {
 		negative = false
 	}
+	const s = Math.floor((time / 1000) % 60)
+	const m = Math.floor((time / (1000 * 60)) % 60)
+	const h = Math.floor((time / (1000 * 60 * 60)) % 24)
 
-	if (format === 's') {
-		time = time * 1000
-	}
+	const seconds = padTo2Digits(s)
+	const minutes = padTo2Digits(m)
+	const hours = (negative ? '-' : '') + padTo2Digits(h)
 
-	const s = Math.floor(time / 1000)
-	const m = Math.floor(s / 60)
-	const h = Math.floor(m / 60)
+	const hoursMinutes = `${hours}:${minutes}`
+	const hoursMinutesSeconds = `${hoursMinutes}:${seconds}`
 
-	const seconds = padTo2Digits(s % 60)
-	const minutes = padTo2Digits(m % 60)
-	let hours = padTo2Digits(h % 24)
+	let delayString = '00'
 
-	if (negative) {
-		hours = '-' + hours
+	if (h && !m && !s) {
+		delayString = `${negative ? '-' : '+'}${h}h`
+	} else if (!h && m && !s) {
+		delayString = `${negative ? '-' : '+'}${m}m`
+	} else if (!h && !m && s) {
+		delayString = `${negative ? '-' : '+'}${s}s`
 	}
 
 	return {
-		hours: String(hours),
-		minutes: String(minutes),
-		seconds: String(seconds),
+		hours,
+		minutes,
+		seconds,
+		hoursMinutes,
+		hoursMinutesSeconds,
+		delayString,
 	}
 }
 
-export function mstoTime(time: number): string {
-	let negative = false
-	if (time < 0) {
-		time = time * -1
-		negative = true
-	} else {
-		negative = false
-	}
-	const seconds = padTo2Digits(Math.floor((time / 1000) % 60))
-	const minutes = padTo2Digits(Math.floor((time / (1000 * 60)) % 60))
-	const hours = padTo2Digits(Math.floor((time / (1000 * 60 * 60)) % 24))
+export function eventsToChoices(events: OntimeEvent[]): DropdownChoice[] {
+	return events.map(({ id, cue, title }) => {
+		return { id, label: `${cue} | ${title}` }
+	})
+}
 
-	return negative ? '-' + hours + ':' + minutes + ':' + seconds : hours + ':' + minutes + ':' + seconds
+export function extractTimerZone(
+	timer: number | null,
+	currentEvent: { timeWarning: number; timeDanger: number } = { timeWarning: 2, timeDanger: 1 }
+): TimerZone {
+	if (timer === null) {
+		return TimerZone.None
+	}
+	if (timer > currentEvent.timeWarning) {
+		return TimerZone.Normal
+	}
+	if (timer > currentEvent.timeDanger) {
+		return TimerZone.Warning
+	}
+	if (timer > 0) {
+		return TimerZone.Danger
+	}
+	return TimerZone.Overtime
 }

@@ -9,9 +9,8 @@ import {
 	CompanionFeedbackDefinitions,
 } from '@companion-module/base'
 import { OntimeConfig, GetConfigFields } from './config'
-import { OntimeV2 } from './v2/ontimev2'
+import { OntimeV3 } from './v3/ontimev3'
 import { UpgradeScripts } from './upgrades'
-import { stateobj } from './v2/state'
 export interface OntimeClient {
 	instance: OnTimeInstance
 
@@ -19,41 +18,27 @@ export interface OntimeClient {
 	disconnectSocket(): void
 
 	getVariables(): CompanionVariableDefinition[]
-	getActions(self: OnTimeInstance): CompanionActionDefinitions
+	getActions(): CompanionActionDefinitions
 	getFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
 	getPresets(): CompanionPresetDefinitions
 }
+
 export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 	public config!: OntimeConfig
-	public ontime!: OntimeClient
-	public states = stateobj
-	public events = [{ id: 'noEvents', label: 'No events found' }]
+	private ontime!: OntimeClient
 
+	/**
+	 * Main initialization function called once the module
+	 * is OK to start doing things.
+	 */
 	async init(config: OntimeConfig): Promise<void> {
 		this.config = config
 
 		this.log('debug', 'Initializing module')
 		this.updateStatus(InstanceStatus.Disconnected)
 
-		this.states = stateobj
-		this.events = [{ id: 'noEvents', label: 'No events found' }]
-
-		if (this.config.version !== 'v1' && this.config.version !== 'v2') {
-			this.config.version = 'v2'
-			this.config.refetchEvents = true
-			this.config.reconnect = true
-			this.config.reconnectInterval = 5
-			this.saveConfig(this.config)
-		}
-
-		if (this.config.version === 'v1') {
-			this.updateStatus(InstanceStatus.BadConfig, 'V1 is no longer suported')
-			return
-		} else if (this.config.version === 'v2') {
-			this.ontime = new OntimeV2(this)
-		} else {
-			this.updateStatus(InstanceStatus.BadConfig, 'unknown version')
-		}
+		this.ontime = new OntimeV3(this)
+		this.updateStatus(InstanceStatus.Connecting, 'starting V3')
 
 		this.initConnection()
 		this.init_variables()
@@ -78,15 +63,6 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 		this.ontime.disconnectSocket()
 		this.updateStatus(InstanceStatus.Disconnected)
 
-		if (this.config.version === 'v1') {
-			this.updateStatus(InstanceStatus.BadConfig, 'V1 is no longer suported')
-			return
-		} else if (this.config.version === 'v2') {
-			this.ontime = new OntimeV2(this)
-		} else {
-			this.updateStatus(InstanceStatus.BadConfig, 'unknown version')
-		}
-
 		this.initConnection()
 		this.init_variables()
 		this.init_actions()
@@ -107,7 +83,7 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 
 	init_actions(): void {
 		this.log('debug', 'Initializing actions')
-		this.setActionDefinitions(this.ontime.getActions(this))
+		this.setActionDefinitions(this.ontime.getActions())
 	}
 
 	init_feedbacks(): void {
