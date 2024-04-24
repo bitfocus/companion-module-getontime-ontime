@@ -31,9 +31,9 @@ export enum SupportedEvent {
 	Block = 'block',
 }
 
-/**  
- * {@link https://github.com/cpvalente/ontime/blob/8f249b9d515fb0d799514d3a67de6713f5029faf/packages/types/src/definitions/core/OntimeEvent.type.ts GitHub}.  
- */  
+/**
+ * {@link https://github.com/cpvalente/ontime/blob/8f249b9d515fb0d799514d3a67de6713f5029faf/packages/types/src/definitions/core/OntimeEvent.type.ts GitHub}.
+ */
 export type OntimeBaseEvent = {
 	type: SupportedEvent
 	id: string
@@ -88,6 +88,9 @@ export type TimerState = {
 	startedAt: number | null // only if timer has already started
 }
 
+/**
+ * {@link https://github.com/cpvalente/ontime/blob/master/packages/types/src/definitions/runtime/Runtime.type.ts GitHub}
+ */
 export type Runtime = {
 	numEvents: number
 	selectedEventIndex: number | null

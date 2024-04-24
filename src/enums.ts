@@ -52,6 +52,8 @@ export enum feedbackId {
 	TimerBlink = 'timerBlink',
 	TimerBlackout = 'timerBlackout',
 	TimerZone = 'timerZone',
+
+	RundownOffset = 'rundownOffset',
 }
 
 export enum deprecatedFeedbackId {
@@ -104,6 +106,14 @@ export enum variableId {
 	AuxTimerCurrent = 'auxTimer_current_hms',
 	AuxTimerPalyback = 'auxTimer_playback',
 	AuxTimerDirection = 'auxTimer_direction',
+
+	NumberOfEvents = 'numEvents',
+	SelectedEventIndex = 'selectedEventIndex',
+	RundownOffset = 'rundown_offset_hms',
+	PlannedStart = 'plannedStart_hms',
+	ActualStart = 'actualStart_hms',
+	PlannedEnd = 'plannedEnd_hms',
+	ExpectedEnd = 'expectedEnd_hms',
 }
 
 export enum deprecatedVariableId {
