@@ -7,7 +7,6 @@ export function createOverUnderFeedbacks(ontime: OntimeV3): { [id: string]: Comp
 		const state = feedback.options.state
 		const margin = Number(feedback.options.margin)
 		const offset = (ontime.state.runtime.offset ?? 0) / 1000
-		console.log(offset, margin)
 		switch (state) {
 			case 'on':
 				return offset > -margin && offset < margin
