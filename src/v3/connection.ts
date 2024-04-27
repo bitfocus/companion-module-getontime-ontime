@@ -118,9 +118,6 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 
 	const updateRuntime = (val: Runtime) => {
 		ontime.state.runtime = val
-		if (val.offset !== null) {
-			ontime.state.runtime.offset = -val.offset //The offset in the server and UI is reversed
-		}
 		const offset = msToSplitTime(ontime.state.runtime.offset)
 		const plannedStart = msToSplitTime(val.plannedStart)
 		const actualStart = msToSplitTime(val.actualStart)
