@@ -2,15 +2,15 @@ import { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition, combineRgb 
 import { OntimeV3 } from '../ontimev3'
 import { feedbackId } from '../../enums'
 
-export function createOverUnderFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
-	function overUnder(feedback: CompanionFeedbackBooleanEvent): boolean {
+export function createOffsetFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
+	function offset(feedback: CompanionFeedbackBooleanEvent): boolean {
 		const state = feedback.options.state
 		const margin = Number(feedback.options.margin)
 		const offset = (ontime.state.runtime.offset ?? 0) / 1000
 		switch (state) {
 			case 'on':
 				return offset > -margin && offset < margin
-			case 'any':
+			case 'both':
 				return offset < -margin || offset > margin
 			case 'over':
 				return offset < -margin
@@ -24,8 +24,8 @@ export function createOverUnderFeedbacks(ontime: OntimeV3): { [id: string]: Comp
 	return {
 		[feedbackId.RundownOffset]: {
 			type: 'boolean',
-			name: 'Rundown Over/Under Offset',
-			description: 'Colour of indicator for  rundown offset state',
+			name: 'Rundown Offset',
+			description: 'Colour of indicator for rundown offset state',
 			defaultStyle: {
 				bgcolor: combineRgb(255, 0, 0),
 			},
@@ -35,12 +35,12 @@ export function createOverUnderFeedbacks(ontime: OntimeV3): { [id: string]: Comp
 					label: 'State',
 					id: 'state',
 					choices: [
-						{ id: 'on', label: 'Ontime' },
-						{ id: 'over', label: 'Overtime' },
-						{ id: 'under', label: 'Undertime' },
-						{ id: 'any', label: 'Any' },
+						{ id: 'on', label: 'On time' },
+						{ id: 'behind', label: 'Behind schedule' },
+						{ id: 'ahead', label: 'Ahead of schedule' },
+						{ id: 'both', label: 'Behind or Ahead of schedule' },
 					],
-					default: 'over',
+					default: 'behind',
 				},
 				{
 					type: 'number',
@@ -49,10 +49,10 @@ export function createOverUnderFeedbacks(ontime: OntimeV3): { [id: string]: Comp
 					default: 10,
 					min: 0,
 					max: 120,
-					tooltip: 'How many seconds in over/under time to allow before triggering',
+					tooltip: 'How many seconds in offset time to allow before triggering',
 				},
 			],
-			callback: overUnder,
+			callback: offset,
 		},
 	}
 }
