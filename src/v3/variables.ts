@@ -110,7 +110,7 @@ export function variables(): CompanionVariableDefinition[] {
 			variableId: variableId.ActualStart,
 		},
 		{
-			name: 'Rundown expecterdd end (hh:mm:ss)',
+			name: 'Rundown expected end (hh:mm:ss)',
 			variableId: variableId.ExpectedEnd,
 		},
 		//eventNow.id
