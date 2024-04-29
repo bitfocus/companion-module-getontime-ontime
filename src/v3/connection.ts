@@ -7,10 +7,11 @@ import { MessageState, OntimeEvent, Runtime, SimpleTimerState, TimerState } from
 import { OntimeV3 } from './ontimev3'
 import { CustomFields } from './ontime-types'
 import { TimerZone } from './ontime-types'
+import * as semver from 'semver'
 
 let ws: Websocket | null = null
 let reconnectionTimeout: NodeJS.Timeout | null = null
-// let versionTimeout: NodeJS.Timeout | null = null //TODO: later
+let versionTimeout: NodeJS.Timeout | null = null
 let reconnectInterval: number
 let shouldReconnect = false
 
@@ -42,8 +43,13 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 
 	ws.onopen = () => {
 		clearTimeout(reconnectionTimeout as NodeJS.Timeout)
-		self.updateStatus(InstanceStatus.Ok)
-		//TODO: later authenticate the version number
+		clearTimeout(versionTimeout as NodeJS.Timeout)
+		self.updateStatus(InstanceStatus.Connecting)
+		socketSendJson('version')
+		versionTimeout = setTimeout(() => {
+			self.updateStatus(InstanceStatus.ConnectionFailure, 'Version request timed out')
+			ws?.close()
+		}, 500)
 	}
 
 	ws.onclose = (event) => {
@@ -165,7 +171,6 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			if (!type) {
 				return
 			}
-
 			//https://docs.getontime.no/api/runtime-data/
 			switch (type) {
 				case 'ontime-clock': {
@@ -203,6 +208,16 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					updateMessage(payload.message)
 					updateEventNow(payload.eventNow)
 					updateEventNext(payload.eventNext)
+					break
+				}
+				case 'version': {
+					clearTimeout(versionTimeout as NodeJS.Timeout)
+					if (semver.satisfies(semver.coerce(payload) ?? '', '>=3.0.0')) {
+						self.updateStatus(InstanceStatus.Ok, payload)
+					} else {
+						self.updateStatus(InstanceStatus.ConnectionFailure, `Incompatible version ${payload}`)
+						ws?.close()
+					}
 					break
 				}
 				case 'ontime-refetch': {
