@@ -25,7 +25,7 @@ export function createOverUnderFeedbacks(ontime: OntimeV3): { [id: string]: Comp
 		[feedbackId.RundownOffset]: {
 			type: 'boolean',
 			name: 'Rundown Over/Under Offset',
-			description: 'Indicator colour total rundown over/under state',
+			description: 'Colour of indicator for  rundown offset state',
 			defaultStyle: {
 				bgcolor: combineRgb(255, 0, 0),
 			},
