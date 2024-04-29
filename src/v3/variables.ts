@@ -102,7 +102,7 @@ export function variables(): CompanionVariableDefinition[] {
 			variableId: variableId.PlannedStart,
 		},
 		{
-			name: 'Rundown planed end (hh:mm:ss)',
+			name: 'Rundown planned end (hh:mm:ss)',
 			variableId: variableId.PlannedEnd,
 		},
 		{
