@@ -98,7 +98,7 @@ export function variables(): CompanionVariableDefinition[] {
 			variableId: variableId.RundownOffset,
 		},
 		{
-			name: 'Rundown planed start (hh:mm:ss)',
+			name: 'Rundown planned start (hh:mm:ss)',
 			variableId: variableId.PlannedStart,
 		},
 		{
