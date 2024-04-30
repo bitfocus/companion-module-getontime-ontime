@@ -7,7 +7,6 @@ import { MessageState, OntimeEvent, Runtime, SimpleTimerState, TimerState } from
 import { OntimeV3 } from './ontimev3'
 import { CustomFields } from './ontime-types'
 import { TimerZone } from './ontime-types'
-import * as semver from 'semver'
 
 let ws: Websocket | null = null
 let reconnectionTimeout: NodeJS.Timeout | null = null
@@ -47,7 +46,11 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		self.updateStatus(InstanceStatus.Connecting)
 		socketSendJson('version')
 		versionTimeout = setTimeout(() => {
-			self.updateStatus(InstanceStatus.ConnectionFailure, 'Version request timed out')
+			self.updateStatus(InstanceStatus.ConnectionFailure, 'Unsupported version: see log')
+			self.log(
+				'error',
+				'The version request timed out, this is mostlily do to an old ontime version. Get the latest here: https://www.getontime.no/'
+			)
 			ws?.close()
 		}, 500)
 	}
@@ -212,10 +215,12 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 				}
 				case 'version': {
 					clearTimeout(versionTimeout as NodeJS.Timeout)
-					if (semver.satisfies(semver.coerce(payload) ?? '', '>=3.0.0')) {
+					const majorVersion = payload.split('.').at(0)
+					if (majorVersion === '3') {
 						self.updateStatus(InstanceStatus.Ok, payload)
 					} else {
-						self.updateStatus(InstanceStatus.ConnectionFailure, `Incompatible version ${payload}`)
+						self.updateStatus(InstanceStatus.ConnectionFailure, 'Unsupported version: see log')
+						self.log('error', `Unsupported version ${payload}. Get the latest here: https://www.getontime.no/`)
 						ws?.close()
 					}
 					break
