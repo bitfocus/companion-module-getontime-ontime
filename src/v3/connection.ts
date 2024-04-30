@@ -49,7 +49,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			self.updateStatus(InstanceStatus.ConnectionFailure, 'Unsupported version: see log')
 			self.log(
 				'error',
-				'The version request timed out, this is mostlily do to an old ontime version. Get the latest here: https://www.getontime.no/'
+				'The version request timed out, this is most likely do to an old ontime version. You can download the latest version of Ontime through the website https://www.getontime.no/'
 			)
 			ws?.close()
 		}, 500)
@@ -220,7 +220,10 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 						self.updateStatus(InstanceStatus.Ok, payload)
 					} else {
 						self.updateStatus(InstanceStatus.ConnectionFailure, 'Unsupported version: see log')
-						self.log('error', `Unsupported version ${payload}. Get the latest here: https://www.getontime.no/`)
+						self.log(
+							'error',
+							`Unsupported version "${payload}" You can download the latest version of Ontime through the website https://www.getontime.no/`
+						)
 						ws?.close()
 					}
 					break
