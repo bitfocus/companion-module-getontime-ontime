@@ -85,13 +85,34 @@ export function variables(): CompanionVariableDefinition[] {
 			name: 'Timer Blinking',
 			variableId: variableId.TimerBlink,
 		},
-		//runtime.numEvents
-		//runtime.selectedEventIndex
-		//runtime.offset
-		//runtime.plannedStart
-		//runtime.actualStart
-		//runtime.plannedEnd
-		//runtime.expectedEnd
+		{
+			name: 'Number of events',
+			variableId: variableId.NumberOfEvents,
+		},
+		{
+			name: 'Selected event index',
+			variableId: variableId.SelectedEventIndex,
+		},
+		{
+			name: 'Rundown offset (hh:mm:ss)',
+			variableId: variableId.RundownOffset,
+		},
+		{
+			name: 'Rundown planned start (hh:mm:ss)',
+			variableId: variableId.PlannedStart,
+		},
+		{
+			name: 'Rundown planned end (hh:mm:ss)',
+			variableId: variableId.PlannedEnd,
+		},
+		{
+			name: 'Rundown actual start (hh:mm:ss)',
+			variableId: variableId.ActualStart,
+		},
+		{
+			name: 'Rundown expected end (hh:mm:ss)',
+			variableId: variableId.ExpectedEnd,
+		},
 		//eventNow.id
 		{
 			name: 'ID of current event',

@@ -118,8 +118,21 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 
 	const updateRuntime = (val: Runtime) => {
 		ontime.state.runtime = val
-
-		//TODO:
+		const offset = msToSplitTime(ontime.state.runtime.offset)
+		const plannedStart = msToSplitTime(val.plannedStart)
+		const actualStart = msToSplitTime(val.actualStart)
+		const plannedEnd = msToSplitTime(val.plannedEnd)
+		const expectedEnd = msToSplitTime(val.expectedEnd)
+		self.setVariableValues({
+			[variableId.NumberOfEvents]: val.numEvents,
+			[variableId.SelectedEventIndex]: val.selectedEventIndex ?? undefined,
+			[variableId.RundownOffset]: offset.hoursMinutesSeconds,
+			[variableId.PlannedStart]: plannedStart.hoursMinutesSeconds,
+			[variableId.ActualStart]: actualStart.hoursMinutesSeconds,
+			[variableId.PlannedEnd]: plannedEnd.hoursMinutesSeconds,
+			[variableId.ExpectedEnd]: expectedEnd.hoursMinutesSeconds,
+		})
+		self.checkFeedbacks(feedbackId.RundownOffset)
 	}
 
 	const updateEventNow = (val: OntimeEvent) => {
