@@ -10,7 +10,7 @@ import { TimerZone } from './ontime-types'
 
 let ws: Websocket | null = null
 let reconnectionTimeout: NodeJS.Timeout | null = null
-// let versionTimeout: NodeJS.Timeout | null = null //TODO: later
+let versionTimeout: NodeJS.Timeout | null = null
 let reconnectInterval: number
 let shouldReconnect = false
 
@@ -42,8 +42,17 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 
 	ws.onopen = () => {
 		clearTimeout(reconnectionTimeout as NodeJS.Timeout)
-		self.updateStatus(InstanceStatus.Ok)
-		//TODO: later authenticate the version number
+		clearTimeout(versionTimeout as NodeJS.Timeout)
+		self.updateStatus(InstanceStatus.Connecting)
+		socketSendJson('version')
+		versionTimeout = setTimeout(() => {
+			self.updateStatus(InstanceStatus.ConnectionFailure, 'Unsupported version: see log')
+			self.log(
+				'error',
+				'The version request timed out, this is most likely do to an old ontime version. You can download the latest version of Ontime through the website https://www.getontime.no/'
+			)
+			ws?.close()
+		}, 500)
 	}
 
 	ws.onclose = (event) => {
@@ -178,7 +187,6 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			if (!type) {
 				return
 			}
-
 			//https://docs.getontime.no/api/runtime-data/
 			switch (type) {
 				case 'ontime-clock': {
@@ -216,6 +224,21 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					updateMessage(payload.message)
 					updateEventNow(payload.eventNow)
 					updateEventNext(payload.eventNext)
+					break
+				}
+				case 'version': {
+					clearTimeout(versionTimeout as NodeJS.Timeout)
+					const majorVersion = payload.split('.').at(0)
+					if (majorVersion === '3') {
+						self.updateStatus(InstanceStatus.Ok, payload)
+					} else {
+						self.updateStatus(InstanceStatus.ConnectionFailure, 'Unsupported version: see log')
+						self.log(
+							'error',
+							`Unsupported version "${payload}" You can download the latest version of Ontime through the website https://www.getontime.no/`
+						)
+						ws?.close()
+					}
 					break
 				}
 				case 'ontime-refetch': {
