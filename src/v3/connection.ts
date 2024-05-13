@@ -92,6 +92,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		ontime.state.companionSpecific.timerZone = timerZone
 		self.setVariableValues({
 			[variableId.TimerTotalMs]: val.current ?? 0,
+			[variableId.TimeN]: timer.negative,
 			[variableId.Time]: timer.hoursMinutesSeconds,
 			[variableId.TimeHM]: timer.hoursMinutes,
 			[variableId.TimeH]: timer.hours,
