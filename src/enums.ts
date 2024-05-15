@@ -84,7 +84,7 @@ export enum variableId {
 	TimeH = 'time_h',
 	TimeM = 'time_m',
 	TimeS = 'time_s',
-	TimeN = 'time_n',
+	TimeN = 'time_sign',
 
 	IdNow = 'idNow',
 	TitleNow = 'titleNow',
