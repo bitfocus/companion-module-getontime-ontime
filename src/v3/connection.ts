@@ -132,9 +132,10 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		const actualStart = msToSplitTime(val.actualStart)
 		const plannedEnd = msToSplitTime(val.plannedEnd)
 		const expectedEnd = msToSplitTime(val.expectedEnd)
+		const selectedEventIndex = val.selectedEventIndex === null ? undefined : val.selectedEventIndex + 1
 		self.setVariableValues({
 			[variableId.NumberOfEvents]: val.numEvents,
-			[variableId.SelectedEventIndex]: val.selectedEventIndex ?? undefined,
+			[variableId.SelectedEventIndex]: selectedEventIndex,
 			[variableId.RundownOffset]: offset.hoursMinutesSeconds,
 			[variableId.PlannedStart]: plannedStart.hoursMinutesSeconds,
 			[variableId.ActualStart]: actualStart.hoursMinutesSeconds,
