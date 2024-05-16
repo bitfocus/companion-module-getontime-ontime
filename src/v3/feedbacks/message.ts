@@ -29,7 +29,7 @@ export function createMessageFeedbacks(ontime: OntimeV3): { [id: string]: Compan
 						{ id: 'timer', label: 'Timer' },
 					],
 				},
-				{ type: 'checkbox', id: 'reqText', default: false, label: 'Requere matching text' },
+				{ type: 'checkbox', id: 'reqText', default: false, label: 'Require matching text' },
 				{ type: 'textinput', id: 'text', label: 'Text', isVisible: (options) => options.reqText == true },
 			],
 			callback: messageVisible,

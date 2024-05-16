@@ -8,7 +8,7 @@ import { MessageState } from '../ontime-types'
 export function createMessageActions(ontime: OntimeV3): { [id: string]: CompanionActionDefinition } {
 	function messageVisibility(action: CompanionActionEvent): void {
 		const destination = action.options.destination as keyof MessageState
-		const visible = action.options.value === 2 ? !ontime.state.message[destination] : action.options.value
+		const visible = action.options.value === 2 ? !ontime.state.message[destination].visible : action.options.value
 		socketSendJson('message', { [destination]: { visible } })
 	}
 
@@ -28,9 +28,7 @@ export function createMessageActions(ontime: OntimeV3): { [id: string]: Companio
 			options: [
 				{
 					type: 'dropdown',
-					choices: [
-						{ id: 'timer', label: 'Timer' },
-					],
+					choices: [{ id: 'timer', label: 'Timer' }],
 					default: 'timer',
 					id: 'destination',
 					label: 'Message Destination',
