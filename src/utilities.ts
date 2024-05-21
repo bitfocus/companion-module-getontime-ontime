@@ -14,6 +14,7 @@ const defaultTimerObject = {
 	hoursMinutes: '--:--',
 	hoursMinutesSeconds: '--:--:--',
 	delayString: '0',
+	negative: '',
 }
 
 type SplitTime = typeof defaultTimerObject
@@ -35,19 +36,20 @@ export function msToSplitTime(time: number | null): SplitTime {
 
 	const seconds = padTo2Digits(s)
 	const minutes = padTo2Digits(m)
-	const hours = (negative ? '-' : '') + padTo2Digits(h)
+	const hours = padTo2Digits(h)
+	const negativeSign = negative ? '-' : ''
 
 	const hoursMinutes = `${hours}:${minutes}`
-	const hoursMinutesSeconds = `${hoursMinutes}:${seconds}`
+	const hoursMinutesSeconds = `${negativeSign}${hoursMinutes}:${seconds}`
 
 	let delayString = '00'
 
 	if (h && !m && !s) {
-		delayString = `${negative ? '-' : '+'}${h}h`
+		delayString = `${negativeSign}${h}h`
 	} else if (!h && m && !s) {
-		delayString = `${negative ? '-' : '+'}${m}m`
+		delayString = `${negativeSign}${m}m`
 	} else if (!h && !m && s) {
-		delayString = `${negative ? '-' : '+'}${s}s`
+		delayString = `${negativeSign}${s}s`
 	}
 
 	return {
@@ -57,6 +59,7 @@ export function msToSplitTime(time: number | null): SplitTime {
 		hoursMinutes,
 		hoursMinutesSeconds,
 		delayString,
+		negative: negativeSign,
 	}
 }
 

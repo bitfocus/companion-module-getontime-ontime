@@ -46,6 +46,10 @@ export function variables(): CompanionVariableDefinition[] {
 			name: 'Current event state Seconds',
 			variableId: variableId.TimeS,
 		},
+		{
+			name: 'Current event timer Sign',
+			variableId: variableId.TimeN,
+		},
 		//timer.duration
 		//timer.elapsed
 		//timer.expectedFinish
