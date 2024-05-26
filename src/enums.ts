@@ -53,6 +53,9 @@ export enum feedbackId {
 	TimerZone = 'timerZone',
 
 	RundownOffset = 'rundownOffset',
+
+	AuxTimerPlayback = 'auxTimerPlayback',
+	AuxTimerNegative = 'auxTimerNegativePlayback',
 }
 
 export enum deprecatedFeedbackId {
