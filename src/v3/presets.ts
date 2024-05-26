@@ -620,7 +620,7 @@ const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 	current_time_hms: {
 		type: 'button',
 		category: 'Aux Timer',
-		name: 'Current timer ',
+		name: 'Current aux time',
 		style: {
 			...defaultStyle,
 			text: `$(ontime:auxTimer_current_hms-1)`,
