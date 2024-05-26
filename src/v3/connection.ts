@@ -108,7 +108,6 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 
 		self.checkFeedbacks(
 			feedbackId.ColorPlayback,
-			feedbackId.ColorNegative,
 			feedbackId.ColorAddRemove,
 			feedbackId.TimerZone
 		)

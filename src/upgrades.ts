@@ -10,6 +10,7 @@ import {
 } from '@companion-module/base'
 import type { OntimeConfig } from './config'
 import { feedbackId, ActionId, deprecatedActionId, deprecatedFeedbackId } from './enums'
+import { TimerZone } from './v3/ontime-types'
 
 function update2x4x0(
 	_context: CompanionUpgradeContext<OntimeConfig>,
@@ -235,6 +236,10 @@ function update3x4x0(
 				feedback.feedbackId = feedbackId.MessageVisible
 				feedback.options.source = 'timer'
 				feedback.options.reqText = false
+				result.updatedFeedbacks.push(feedback)
+			} else if (feedback.feedbackId === deprecatedFeedbackId.ColorNegative) {
+				feedback.feedbackId = feedbackId.TimerZone
+				feedback.options.state = TimerZone.Overtime
 				result.updatedFeedbacks.push(feedback)
 			}
 		}

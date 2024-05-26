@@ -45,7 +45,6 @@ export enum deprecatedActionId {
 
 export enum feedbackId {
 	ColorPlayback = 'colorPlayback',
-	ColorNegative = 'timer_negative',
 	ColorAddRemove = 'state_color_add_remove',
 	OnAir = 'onAir',
 	MessageVisible = 'messageVisible',
@@ -66,6 +65,7 @@ export enum deprecatedFeedbackId {
 	ColorPaused = 'state_color_paused',
 	ColorStopped = 'state_color_stopped',
 	ColorRoll = 'state_color_roll',
+	ColorNegative = 'timer_negative',
 }
 
 export enum variableId {
