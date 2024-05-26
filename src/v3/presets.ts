@@ -9,7 +9,7 @@ import { ActionId, feedbackId } from '../enums'
 import { TimerZone } from './ontime-types'
 
 export function presets(): CompanionPresetDefinitions {
-	return { ...playbackPresets, ...timerPresets }
+	return { ...playbackPresets, ...timerPresets, ...auxTimerPresets }
 }
 
 const White = combineRgb(255, 255, 255)
@@ -533,13 +533,13 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		style: {
 			...defaultStyle,
 			size: 44,
-			text: `$(ontime:time_h)`,
+			text: `$(ontime:time_sign)$(ontime:time_h)`,
 			alignment: 'center:center',
 		},
 		previewStyle: {
 			...defaultStyle,
-			size: 44,
-			text: 'HH',
+			size: 'auto',
+			text: '+/-HH',
 			alignment: 'center:center',
 			bgcolor: NormalGray,
 			color: Black,
@@ -603,5 +603,123 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			},
 		],
 		feedbacks: timerZoneAndPauseFeedback,
+	},
+}
+
+const auxTimerNegative = [
+	{
+		feedbackId: feedbackId.AuxTimerNegative,
+		options: {},
+		style: {
+			color: DangerRed,
+		},
+	},
+]
+
+const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
+	current_time_hms: {
+		type: 'button',
+		category: 'Aux Timer',
+		name: 'Current aux time',
+		style: {
+			...defaultStyle,
+			text: `$(ontime:auxTimer_current_hms-1)`,
+			size: '14',
+			alignment: 'center:center',
+		},
+		previewStyle: {
+			...defaultStyle,
+			text: 'HH:MM:SS',
+			size: '14',
+			alignment: 'center:center',
+		},
+		steps: [
+			{
+				down: [],
+				up: [],
+			},
+		],
+		feedbacks: auxTimerNegative,
+	},
+	start_stop_auxtimer: {
+		type: 'button',
+		category: 'Aux Timer',
+		name: 'Start/Stop Aux Timer',
+		style: {
+			...defaultWithIconStyle,
+			png64: icons.PlaybackStart,
+			text: 'START',
+			color: PlaybackGreen,
+		},
+		previewStyle: {
+			...defaultWithIconStyle,
+			png64: icons.PlaybackStart,
+			text: 'START/STOP',
+			bgcolor: PlaybackGreen,
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: ActionId.AuxTimerPlayState,
+						options: { value: 'toggleSS' },
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.AuxTimerPlayback,
+				options: {
+					state: 'start',
+				},
+				style: {
+					color: PlaybackRed,
+					png64: icons.PlaybackStop,
+					text: 'STOP',
+				},
+			},
+		],
+	},
+	pause_auxtimer: {
+		type: 'button',
+		category: 'Aux Timer',
+		name: 'Pause Aux Timer',
+		style: {
+			...defaultWithIconStyle,
+			png64: icons.PlaybackPause,
+			text: 'PAUSE',
+			color: PauseOrange,
+		},
+		previewStyle: {
+			...defaultWithIconStyle,
+			png64: icons.PlaybackPause,
+			text: 'PAUSE',
+			bgcolor: PauseOrange,
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: ActionId.AuxTimerPlayState,
+						options: { value: 'pause' },
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.AuxTimerPlayback,
+				options: {
+					state: 'pause',
+				},
+				style: {
+					bgcolor: PauseOrange,
+					color: White,
+				},
+			},
+		],
 	},
 }

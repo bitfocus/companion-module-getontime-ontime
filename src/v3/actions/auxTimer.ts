@@ -3,13 +3,13 @@ import { socketSendJson } from '../connection'
 import { ActionId } from '../../enums'
 import { OntimeV3 } from '../ontimev3'
 import { ActionCommand } from './commands'
-import { RuntimeStore, SimpleDirection, SimplePlayback, SimpleTimerState } from '../ontime-types'
+import { SimpleDirection, SimplePlayback } from '../ontime-types'
+import { getAuxTimerState } from '../../utilities'
 
 export function createAuxTimerActions(ontime: OntimeV3): { [id: string]: CompanionActionDefinition } {
 	function togglePlayState(action: CompanionActionEvent): void {
-		const id = action.options.destination as string
-		const timer = ontime.state[('timer' + id) as keyof RuntimeStore] as SimpleTimerState
-
+		const id = (action.options.destination ?? '1') as string
+		const timer = getAuxTimerState(ontime)
 		if (action.options.value === 'toggleSS') {
 			socketSendJson(ActionCommand.AuxTimer, {
 				[id]: timer.playback === SimplePlayback.Start ? SimplePlayback.Stop : SimplePlayback.Start,
@@ -111,10 +111,10 @@ export function createAuxTimerActions(ontime: OntimeV3): { [id: string]: Compani
 			options: [
 				{
 					type: 'dropdown',
-					choices: [{ id: '1', label: 'Extra Timer 1' }],
+					choices: [{ id: '1', label: 'Aux Timer 1' }],
 					default: '1',
 					id: 'destination',
-					label: 'Select Extra Timer',
+					label: 'Select Aux Timer',
 					isVisible: () => false, //This Stays hidden for now
 				},
 				{

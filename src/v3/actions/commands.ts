@@ -8,5 +8,5 @@ export enum ActionCommand {
 	Add = 'addtime',
 	Message = 'message',
 	Change = 'change',
-	AuxTimer = 'extraTimer',
+	AuxTimer = 'auxtimer',
 }

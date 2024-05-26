@@ -73,7 +73,7 @@ export type RuntimeStore = {
 	// publicEventNext: OntimeEvent | null
 
 	// extra timers
-	timer1: SimpleTimerState
+	auxtimer1: SimpleTimerState
 }
 
 export type TimerState = {

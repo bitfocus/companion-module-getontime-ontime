@@ -30,7 +30,7 @@ const stateobj: RuntimeStore & { companionSpecific: { timerZone: TimerZone } } =
 	},
 	eventNow: null,
 	eventNext: null,
-	timer1: {
+	auxtimer1: {
 		duration: 0,
 		current: 0,
 		playback: SimplePlayback.Stop,

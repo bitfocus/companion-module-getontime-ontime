@@ -106,12 +106,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			[variableId.PlayState]: val.playback,
 		})
 
-		self.checkFeedbacks(
-			feedbackId.ColorPlayback,
-			feedbackId.ColorNegative,
-			feedbackId.ColorAddRemove,
-			feedbackId.TimerZone
-		)
+		self.checkFeedbacks(feedbackId.ColorPlayback, feedbackId.ColorAddRemove, feedbackId.TimerZone)
 	}
 
 	const updateMessage = (val: MessageState) => {
@@ -167,7 +162,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 	}
 
 	const updateAuxTimer1 = (val: SimpleTimerState) => {
-		ontime.state.timer1 = val
+		ontime.state.auxtimer1 = val
 		const duration = msToSplitTime(val.duration)
 		const current = msToSplitTime(val.current)
 
@@ -179,6 +174,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			[variableId.AuxTimerPalyback + '-1']: val.playback,
 			[variableId.AuxTimerDirection + '-1']: val.direction,
 		})
+		self.checkFeedbacks(feedbackId.AuxTimerNegative, feedbackId.AuxTimerPlayback)
 	}
 
 	ws.onmessage = (event: any) => {

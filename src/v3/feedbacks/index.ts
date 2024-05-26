@@ -4,6 +4,7 @@ import { createPlaybackFeedbacks } from './playback'
 import { createMessageFeedbacks } from './message'
 import { createTimerZoneFeedback } from './timerZone'
 import { createOffsetFeedbacks } from './offset'
+import { createAuxTimerFeedbacks } from './auxTimer'
 
 export function feedbacks(ontime: OntimeV3): CompanionFeedbackDefinitions {
 	const feedbacks: { [id: string]: CompanionFeedbackDefinition | undefined } = {
@@ -11,6 +12,7 @@ export function feedbacks(ontime: OntimeV3): CompanionFeedbackDefinitions {
 		...createMessageFeedbacks(ontime),
 		...createTimerZoneFeedback(ontime),
 		...createOffsetFeedbacks(ontime),
+		...createAuxTimerFeedbacks(ontime),
 	}
 
 	return feedbacks

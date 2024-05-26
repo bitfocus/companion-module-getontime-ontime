@@ -1,5 +1,6 @@
 import { DropdownChoice } from '@companion-module/base'
-import { OntimeEvent, TimerZone } from './v3/ontime-types.js'
+import { OntimeEvent, RuntimeStore, SimpleTimerState, TimerZone } from './v3/ontime-types.js'
+import { OntimeV3 } from './v3/ontimev3.js'
 
 export const joinTime = (...args: string[]) => args.join(':')
 
@@ -86,4 +87,8 @@ export function extractTimerZone(
 		return TimerZone.Danger
 	}
 	return TimerZone.Overtime
+}
+
+export function getAuxTimerState(ontime: OntimeV3, index = 'auxtimer1') {
+	return ontime.state[index as keyof RuntimeStore] as unknown as SimpleTimerState
 }
