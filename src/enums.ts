@@ -1,3 +1,5 @@
+// import { TimeDisplayTypes } from './v3/variables/time-variables'
+
 export enum ActionId {
 	Start = 'start',
 	Load = 'load',
@@ -71,15 +73,39 @@ export enum deprecatedFeedbackId {
 	ColorNegative = 'timer_negative',
 }
 
+export const TIME_VARIABLES = {
+	clock: { label: 'Clock', description: 'System clock', defaultValues: ['combine'] },
+	timer_added: {
+		label: 'Added time',
+		description: 'User added time to current event',
+		defaultValues: ['combine', 'nice'],
+	},
+	timer_start: {
+		label: 'Start time',
+		description: 'Start time of current timer',
+		defaultValues: ['combine'],
+	},
+	timer_finish: {
+		label: 'Finish time',
+		description: 'Expected finish of current timer',
+		defaultValues: ['combine'],
+	},
+	timer: {
+		label: 'Current timer',
+		description: 'Current timer',
+		defaultValues: ['combine', 'ms', 'hh', 'mm', 'ss', 'sign', 'hhmm'],
+	},
+} as const
+
 export enum variableId {
 	PlayState = 'playState',
 
-	Clock = 'clock',
+	// Clock = 'clock',
 
-	TimerStart = 'timer_start',
-	TimerFinish = 'timer_finish',
-	TimerAdded = 'timer_added',
-	TimerAddedNice = 'timer_added_nice',
+	// TimerStart = 'timer_start',
+	// TimerFinish = 'timer_finish',
+	// TimerAdded = 'timer_added',
+	// TimerAddedNice = 'timer_added_nice',
 	TimerTotalMs = 'timer_total_ms',
 	TimerZone = 'time_zone',
 	Time = 'time',

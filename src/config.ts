@@ -1,4 +1,6 @@
 import { SomeCompanionConfigField, Regex } from '@companion-module/base'
+import { TimeDisplayTypes, getTimeVariablesConfigOption } from './v3/variables/time-variables'
+import { TIME_VARIABLES } from './enums'
 
 export interface OntimeConfig {
 	host: string
@@ -65,5 +67,15 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			isVisible: (config) => config.reconnect === true,
 			tooltip: 'The interval in seconds between each reconnect attempt.',
 		},
+		{
+			label: 'Variable Generation',
+			id: 'variable_info',
+			type: 'static-text',
+			value: 'select what type of variables you want to be generated',
+			width: 12,
+		},
+		...Object.entries(TIME_VARIABLES).map(([id, value]) =>
+			getTimeVariablesConfigOption(value.label, id, value.defaultValues as unknown as TimeDisplayTypes[])
+		),
 	]
 }

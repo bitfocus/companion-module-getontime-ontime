@@ -14,6 +14,7 @@ import { actions } from './actions/index'
 import { feedbacks } from './feedbacks/index'
 import { variables } from './variables'
 import { presets } from './presets'
+import { OntimeConfig } from '../config'
 
 export class OntimeV3 implements OntimeClient {
 	instance: OnTimeInstance
@@ -33,8 +34,8 @@ export class OntimeV3 implements OntimeClient {
 		disconnectSocket()
 	}
 
-	getVariables(): CompanionVariableDefinition[] {
-		return variables()
+	getVariables(config: OntimeConfig): CompanionVariableDefinition[] {
+		return variables(config)
 	}
 
 	getActions(): CompanionActionDefinitions {

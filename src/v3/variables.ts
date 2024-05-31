@@ -1,62 +1,59 @@
 import { CompanionVariableDefinition } from '@companion-module/base'
 import { variableId } from '../enums'
+import { createTimeVariablesFromConfig } from './variables/time-variables'
+import { OntimeConfig } from '../config'
 
-export function variables(): CompanionVariableDefinition[] {
+export function variables(config: OntimeConfig): CompanionVariableDefinition[] {
 	const variables: CompanionVariableDefinition[] = [
-		//clock
-		{
-			name: 'Clock (hh:mm:ss)',
-			variableId: variableId.Clock,
-		},
-		//timer.addedTime
-		{
-			name: 'User added time to current event (hh:mm:ss)',
-			variableId: variableId.TimerAdded,
-		},
-		{
-			name: 'User added time to current event (smallest unit)',
-			variableId: variableId.TimerAddedNice,
-		},
+		...createTimeVariablesFromConfig(config),
+		// {
+		// 	name: 'User added time to current event (hh:mm:ss)',
+		// 	variableId: variableId.TimerAdded,
+		// },
+		// {
+		// 	name: 'User added time to current event (smallest unit)',
+		// 	variableId: variableId.TimerAddedNice,
+		// },
 		//timer.current
 		{
 			name: 'Current timer progress (Normal/Warning/Danger/Overtime)',
 			variableId: variableId.TimerZone,
 		},
 		{
-			name: 'Current timer (milliseconds)',
+			name: '(DEPRECATED) Current timer (milliseconds)',
 			variableId: variableId.TimerTotalMs,
 		},
 		{
-			name: 'Current timer (hh:mm:ss)',
+			name: '(DEPRECATED) Current timer (hh:mm:ss)',
 			variableId: variableId.Time,
 		},
 		{
-			name: 'Current time of event (hh:mm)',
+			name: '(DEPRECATED) Current time of event (hh:mm)',
 			variableId: variableId.TimeHM,
 		},
 		{
-			name: 'Current event state Hours',
+			name: '(DEPRECATED) Current event state Hours',
 			variableId: variableId.TimeH,
 		},
 		{
-			name: 'Current event state Minutes',
+			name: '(DEPRECATED) Current event state Minutes',
 			variableId: variableId.TimeM,
 		},
 		{
-			name: 'Current event state Seconds',
+			name: '(DEPRECATED) Current event state Seconds',
 			variableId: variableId.TimeS,
 		},
 		{
-			name: 'Current event timer Sign',
+			name: '(DEPRECATED) Current event timer Sign',
 			variableId: variableId.TimeN,
 		},
 		//timer.duration
 		//timer.elapsed
 		//timer.expectedFinish
-		{
-			name: 'Expected finish of event (hh:mm:ss)',
-			variableId: variableId.TimerFinish,
-		},
+		// {
+		// 	name: 'Expected finish of event (hh:mm:ss)',
+		// 	variableId: variableId.TimerFinish,
+		// },
 		//timer.finishedAt
 		//timer.playback
 		{
@@ -65,10 +62,10 @@ export function variables(): CompanionVariableDefinition[] {
 		},
 		//timer.secondaryTimer
 		//timer.startedAt
-		{
-			name: 'Start time of current timer (hh:mm:ss)',
-			variableId: variableId.TimerStart,
-		},
+		// {
+		// 	name: 'Start time of current timer (hh:mm:ss)',
+		// 	variableId: variableId.TimerStart,
+		// },
 		//message.timer.text
 		{
 			name: 'Timer Message',
