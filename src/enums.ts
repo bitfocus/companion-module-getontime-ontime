@@ -95,6 +95,31 @@ export const TIME_VARIABLES = {
 		description: 'Current timer',
 		defaultValues: ['combine', 'ms', 'hh', 'mm', 'ss', 'sign', 'hhmm'],
 	},
+	rundown_offset: {
+		label: 'Rundown offset',
+		description: 'Rundown offset',
+		defaultValues: ['combine'],
+	},
+	rundown_planned_start: {
+		label: 'Rundown planned start',
+		description: 'Rundown planned start',
+		defaultValues: ['combine'],
+	},
+	rundown_planned_end: {
+		label: 'Rundown planned end',
+		description: 'Rundown planned end',
+		defaultValues: ['combine'],
+	},
+	rundown_actual_start: {
+		label: 'Rundown actual start',
+		description: 'Rundown actual start',
+		defaultValues: ['combine'],
+	},
+	rundown_expected_end: {
+		label: 'Rundown expected end',
+		description: 'Rundown expected end',
+		defaultValues: ['combine'],
+	},
 } as const
 
 export enum variableId {

@@ -79,16 +79,6 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 
 	const updateTimer = (val: TimerState) => {
 		ontime.state.timer = val
-		const timer = msToSplitTime(val.current)
-		// const timer_start = msToSplitTime(val.startedAt)
-		// const timer_finish = msToSplitTime(val.expectedFinish)
-
-		self.setVariableValues({
-			...getTimeVariableUpdate('timer_added', val.addedTime),
-			...getTimeVariableUpdate('timer_start', val.startedAt),
-			...getTimeVariableUpdate('timer_finish', val.expectedFinish),
-			// ...getTimeVariableUpdate('timer', val.current),
-		})
 
 		let timerZone = TimerZone.None
 		if (ontime.state.eventNow) {
@@ -97,7 +87,17 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		}
 		ontime.state.companionSpecific.timerZone = timerZone
 
+		self.setVariableValues({
+			...getTimeVariableUpdate('timer_added', val.addedTime),
+			...getTimeVariableUpdate('timer_start', val.startedAt),
+			...getTimeVariableUpdate('timer_finish', val.expectedFinish),
+			...getTimeVariableUpdate('timer', val.current),
+			[variableId.TimerZone]: timerZone,
+			[variableId.PlayState]: val.playback,
+		})
+
 		/**@deprecated */
+		const timer = msToSplitTime(val.current)
 		self.setVariableValues({
 			[variableId.TimerTotalMs]: val.current ?? 0,
 			[variableId.TimeN]: timer.sign,
@@ -106,12 +106,6 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			[variableId.TimeH]: timer.hh,
 			[variableId.TimeM]: timer.mm,
 			[variableId.TimeS]: timer.ss,
-			[variableId.TimerZone]: timerZone,
-			// [variableId.TimerStart]: timer_start.combine,
-			// [variableId.TimerFinish]: timer_finish.combine,
-			// [variableId.TimerAdded]: added.combine,
-			// [variableId.TimerAddedNice]: added.nice,
-			[variableId.PlayState]: val.playback,
 		})
 
 		self.checkFeedbacks(feedbackId.ColorPlayback, feedbackId.ColorAddRemove, feedbackId.TimerZone)
@@ -131,22 +125,33 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 
 	const updateRuntime = (val: Runtime) => {
 		ontime.state.runtime = val
+
+		const selectedEventIndex = val.selectedEventIndex === null ? undefined : val.selectedEventIndex + 1
+
+		self.setVariableValues({
+			...getTimeVariableUpdate('rundown_offset', val.offset),
+			...getTimeVariableUpdate('rundown_planned_start', val.plannedStart),
+			...getTimeVariableUpdate('rundown_actual_start', val.actualStart),
+			...getTimeVariableUpdate('rundown_planned_end', val.plannedEnd),
+			...getTimeVariableUpdate('rundown_expected_end', val.expectedEnd),
+			[variableId.SelectedEventIndex]: selectedEventIndex,
+			[variableId.NumberOfEvents]: val.numEvents,
+		})
+		self.checkFeedbacks(feedbackId.RundownOffset)
+
+		/**@deprecated */
 		const offset = msToSplitTime(ontime.state.runtime.offset)
 		const plannedStart = msToSplitTime(val.plannedStart)
 		const actualStart = msToSplitTime(val.actualStart)
 		const plannedEnd = msToSplitTime(val.plannedEnd)
 		const expectedEnd = msToSplitTime(val.expectedEnd)
-		const selectedEventIndex = val.selectedEventIndex === null ? undefined : val.selectedEventIndex + 1
 		self.setVariableValues({
-			[variableId.NumberOfEvents]: val.numEvents,
-			[variableId.SelectedEventIndex]: selectedEventIndex,
 			[variableId.RundownOffset]: offset.combine,
 			[variableId.PlannedStart]: plannedStart.combine,
 			[variableId.ActualStart]: actualStart.combine,
 			[variableId.PlannedEnd]: plannedEnd.combine,
 			[variableId.ExpectedEnd]: expectedEnd.combine,
 		})
-		self.checkFeedbacks(feedbackId.RundownOffset)
 	}
 
 	const updateEventNow = (val: OntimeEvent) => {

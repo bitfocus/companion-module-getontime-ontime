@@ -94,24 +94,24 @@ export function variables(config: OntimeConfig): CompanionVariableDefinition[] {
 			name: 'Selected event index',
 			variableId: variableId.SelectedEventIndex,
 		},
+		// {
+		// 	name: 'Rundown offset (hh:mm:ss)',
+		// 	variableId: variableId.RundownOffset,
+		// },
 		{
-			name: 'Rundown offset (hh:mm:ss)',
-			variableId: variableId.RundownOffset,
-		},
-		{
-			name: 'Rundown planned start (hh:mm:ss)',
+			name: '(DEPRECATED) Rundown planned start (hh:mm:ss)',
 			variableId: variableId.PlannedStart,
 		},
 		{
-			name: 'Rundown planned end (hh:mm:ss)',
+			name: '(DEPRECATED) Rundown planned end (hh:mm:ss)',
 			variableId: variableId.PlannedEnd,
 		},
 		{
-			name: 'Rundown actual start (hh:mm:ss)',
+			name: '(DEPRECATED) Rundown actual start (hh:mm:ss)',
 			variableId: variableId.ActualStart,
 		},
 		{
-			name: 'Rundown expected end (hh:mm:ss)',
+			name: '(DEPRECATED) Rundown expected end (hh:mm:ss)',
 			variableId: variableId.ExpectedEnd,
 		},
 		//eventNow.id
@@ -156,19 +156,19 @@ export function variables(config: OntimeConfig): CompanionVariableDefinition[] {
 		},
 		//aux timer
 		{
-			name: 'Aux timer 1 duration (milliseconds)',
+			name: '(DEPRECATED) Aux timer 1 duration (milliseconds)',
 			variableId: variableId.AuxTimerDurationMs + '-1',
 		},
 		{
-			name: 'Aux timer 1 current (milliseconds)',
+			name: '(DEPRECATED) Aux timer 1 current (milliseconds)',
 			variableId: variableId.AuxTimerDurationMs + '-1',
 		},
 		{
-			name: 'Aux timer 1 duration (hh:mm:ss)',
+			name: '(DEPRECATED) Aux timer 1 duration (hh:mm:ss)',
 			variableId: variableId.AuxTimerDurationMs + '-1',
 		},
 		{
-			name: 'Aux timer 1 current (hh:mm:ss)',
+			name: '(DEPRECATED) Aux timer 1 current (hh:mm:ss)',
 			variableId: variableId.AuxTimerCurrent + '-1',
 		},
 		{
