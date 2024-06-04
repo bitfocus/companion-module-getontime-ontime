@@ -1,6 +1,7 @@
 import { DropdownChoice } from '@companion-module/base'
 import { OntimeEvent, RuntimeStore, SimpleTimerState, TimerZone } from './v3/ontime-types.js'
 import { OntimeV3 } from './v3/ontimev3.js'
+import { TimeDisplayTypes } from './v3/variables/time-variables.js'
 
 export const joinTime = (...args: string[]) => args.join(':')
 
@@ -8,17 +9,18 @@ function padTo2Digits(number: number) {
 	return number.toString().padStart(2, '0')
 }
 
-const defaultTimerObject = {
-	hours: '--',
-	minutes: '--',
-	seconds: '--',
-	hoursMinutes: '--:--',
-	hoursMinutesSeconds: '--:--:--',
-	delayString: '0',
-	negative: '',
+const defaultTimerObject: Record<TimeDisplayTypes, string | number> = {
+	hh: '--',
+	mm: '--',
+	ss: '--',
+	hhmm: '--:--',
+	combine: '--:--:--',
+	nice: '0',
+	sign: '',
+	ms: 0,
 }
 
-type SplitTime = typeof defaultTimerObject
+export type SplitTime = typeof defaultTimerObject
 
 export function msToSplitTime(time: number | null): SplitTime {
 	if (time === null) {
@@ -54,13 +56,14 @@ export function msToSplitTime(time: number | null): SplitTime {
 	}
 
 	return {
-		hours,
-		minutes,
-		seconds,
-		hoursMinutes,
-		hoursMinutesSeconds,
-		delayString,
-		negative: negativeSign,
+		hh: hours,
+		mm: minutes,
+		ss: seconds,
+		hhmm: hoursMinutes,
+		combine: hoursMinutesSeconds,
+		nice: delayString,
+		sign: negativeSign,
+		ms: time,
 	}
 }
 

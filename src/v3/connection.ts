@@ -7,6 +7,7 @@ import { MessageState, OntimeEvent, Runtime, SimpleTimerState, TimerState } from
 import { OntimeV3 } from './ontimev3'
 import { CustomFields } from './ontime-types'
 import { TimerZone } from './ontime-types'
+import { getTimeVariableUpdate } from './variables/time-variables'
 
 let ws: Websocket | null = null
 let reconnectionTimeout: NodeJS.Timeout | null = null
@@ -73,16 +74,11 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 
 	const updateClock = (val: number) => {
 		ontime.state.clock = val
-		const clock = msToSplitTime(val)
-		self.setVariableValues({ [variableId.Clock]: clock.hoursMinutesSeconds })
+		self.setVariableValues(getTimeVariableUpdate('clock', val))
 	}
 
 	const updateTimer = (val: TimerState) => {
 		ontime.state.timer = val
-		const timer = msToSplitTime(val.current)
-		const timer_start = msToSplitTime(val.startedAt)
-		const timer_finish = msToSplitTime(val.expectedFinish)
-		const added = msToSplitTime(val.addedTime)
 
 		let timerZone = TimerZone.None
 		if (ontime.state.eventNow) {
@@ -90,20 +86,26 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			timerZone = extractTimerZone(ontime.state.timer.current, { timeWarning, timeDanger })
 		}
 		ontime.state.companionSpecific.timerZone = timerZone
+
+		self.setVariableValues({
+			...getTimeVariableUpdate('timer_added', val.addedTime),
+			...getTimeVariableUpdate('timer_start', val.startedAt),
+			...getTimeVariableUpdate('timer_finish', val.expectedFinish),
+			...getTimeVariableUpdate('timer', val.current),
+			[variableId.TimerZone]: timerZone,
+			[variableId.PlayState]: val.playback,
+		})
+
+		/**@deprecated */
+		const timer = msToSplitTime(val.current)
 		self.setVariableValues({
 			[variableId.TimerTotalMs]: val.current ?? 0,
-			[variableId.TimeN]: timer.negative,
-			[variableId.Time]: timer.hoursMinutesSeconds,
-			[variableId.TimeHM]: timer.hoursMinutes,
-			[variableId.TimeH]: timer.hours,
-			[variableId.TimeM]: timer.minutes,
-			[variableId.TimeS]: timer.seconds,
-			[variableId.TimerZone]: timerZone,
-			[variableId.TimerStart]: timer_start.hoursMinutesSeconds,
-			[variableId.TimerFinish]: timer_finish.hoursMinutesSeconds,
-			[variableId.TimerAdded]: added.hoursMinutesSeconds,
-			[variableId.TimerAddedNice]: added.delayString,
-			[variableId.PlayState]: val.playback,
+			[variableId.TimeN]: timer.sign,
+			[variableId.Time]: timer.combine,
+			// [variableId.TimeHM]: timer.hoursMinutes,
+			[variableId.TimeH]: timer.hh,
+			[variableId.TimeM]: timer.mm,
+			[variableId.TimeS]: timer.ss,
 		})
 
 		self.checkFeedbacks(feedbackId.ColorPlayback, feedbackId.ColorAddRemove, feedbackId.TimerZone)
@@ -123,22 +125,33 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 
 	const updateRuntime = (val: Runtime) => {
 		ontime.state.runtime = val
+
+		const selectedEventIndex = val.selectedEventIndex === null ? undefined : val.selectedEventIndex + 1
+
+		self.setVariableValues({
+			...getTimeVariableUpdate('rundown_offset', val.offset),
+			...getTimeVariableUpdate('rundown_planned_start', val.plannedStart),
+			...getTimeVariableUpdate('rundown_actual_start', val.actualStart),
+			...getTimeVariableUpdate('rundown_planned_end', val.plannedEnd),
+			...getTimeVariableUpdate('rundown_expected_end', val.expectedEnd),
+			[variableId.SelectedEventIndex]: selectedEventIndex,
+			[variableId.NumberOfEvents]: val.numEvents,
+		})
+		self.checkFeedbacks(feedbackId.RundownOffset)
+
+		/**@deprecated */
 		const offset = msToSplitTime(ontime.state.runtime.offset)
 		const plannedStart = msToSplitTime(val.plannedStart)
 		const actualStart = msToSplitTime(val.actualStart)
 		const plannedEnd = msToSplitTime(val.plannedEnd)
 		const expectedEnd = msToSplitTime(val.expectedEnd)
-		const selectedEventIndex = val.selectedEventIndex === null ? undefined : val.selectedEventIndex + 1
 		self.setVariableValues({
-			[variableId.NumberOfEvents]: val.numEvents,
-			[variableId.SelectedEventIndex]: selectedEventIndex,
-			[variableId.RundownOffset]: offset.hoursMinutesSeconds,
-			[variableId.PlannedStart]: plannedStart.hoursMinutesSeconds,
-			[variableId.ActualStart]: actualStart.hoursMinutesSeconds,
-			[variableId.PlannedEnd]: plannedEnd.hoursMinutesSeconds,
-			[variableId.ExpectedEnd]: expectedEnd.hoursMinutesSeconds,
+			[variableId.RundownOffset]: offset.combine,
+			[variableId.PlannedStart]: plannedStart.combine,
+			[variableId.ActualStart]: actualStart.combine,
+			[variableId.PlannedEnd]: plannedEnd.combine,
+			[variableId.ExpectedEnd]: expectedEnd.combine,
 		})
-		self.checkFeedbacks(feedbackId.RundownOffset)
 	}
 
 	const updateEventNow = (val: OntimeEvent) => {
@@ -169,8 +182,8 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		self.setVariableValues({
 			[variableId.AuxTimerDurationMs + '-1']: val.duration,
 			[variableId.AuxTimerCurrentMs + '-1']: val.current,
-			[variableId.AuxTimerDirection + '-1']: duration.hoursMinutesSeconds,
-			[variableId.AuxTimerCurrent + '-1']: current.hoursMinutesSeconds,
+			[variableId.AuxTimerDirection + '-1']: duration.combine,
+			[variableId.AuxTimerCurrent + '-1']: current.combine,
 			[variableId.AuxTimerPalyback + '-1']: val.playback,
 			[variableId.AuxTimerDirection + '-1']: val.direction,
 		})
