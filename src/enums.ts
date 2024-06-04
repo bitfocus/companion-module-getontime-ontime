@@ -69,6 +69,7 @@ export enum deprecatedFeedbackId {
 	ColorStopped = 'state_color_stopped',
 	ColorRoll = 'state_color_roll',
 	ColorNegative = 'timer_negative',
+	TimerZone = 'timerZone',
 }
 
 export enum variableId {

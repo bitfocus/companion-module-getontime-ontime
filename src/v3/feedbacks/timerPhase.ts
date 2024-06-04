@@ -9,8 +9,8 @@ export function createTimerPhaseFeedback(ontime: OntimeV3): {
 	return {
 		[feedbackId.TimerPhase]: {
 			type: 'boolean',
-			name: 'Timer zone',
-			description: 'Timer zones use Ontimes warn and danger times to change colour depending on timer progress',
+			name: 'Timer phase',
+			description: 'Timer phase use Ontimes warn and danger times to change colour depending on timer progress',
 			defaultStyle: {
 				color: combineRgb(255, 255, 255),
 				bgcolor: combineRgb(255, 0, 0),
@@ -19,19 +19,19 @@ export function createTimerPhaseFeedback(ontime: OntimeV3): {
 				{
 					type: 'dropdown',
 					label: 'State',
-					id: 'zone',
+					id: 'phase',
 					choices: [
 						{ id: TimerPhase.None, label: 'None' },
-						{ id: TimerPhase.Default, label: 'Normal' },
+						{ id: TimerPhase.Default, label: 'Default' },
 						{ id: TimerPhase.Warning, label: 'Warning' },
 						{ id: TimerPhase.Danger, label: 'Danger' },
-						{ id: TimerPhase.Negative, label: 'Overtime' },
+						{ id: TimerPhase.Negative, label: 'Negative' },
 					],
 					default: TimerPhase.Danger,
 				},
 			],
 			callback: (feedback) => {
-				return ontime.state.timer.phase === feedback.options.zone
+				return ontime.state.timer.phase === feedback.options.phase
 			},
 		},
 	}

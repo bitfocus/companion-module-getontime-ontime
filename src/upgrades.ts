@@ -248,4 +248,47 @@ function update3x4x0(
 	return result
 }
 
-export const UpgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [update2x4x0, update3x4x0]
+function update4xx(
+	_context: CompanionUpgradeContext<OntimeConfig>,
+	props: CompanionStaticUpgradeProps<OntimeConfig>
+): CompanionStaticUpgradeResult<OntimeConfig> {
+	const result = {
+		updatedConfig: null,
+		updatedActions: new Array<CompanionMigrationAction>(),
+		updatedFeedbacks: new Array<CompanionMigrationFeedback>(),
+	}
+
+	for (const feedback of props.feedbacks) {
+		if (feedback.feedbackId === deprecatedFeedbackId.TimerZone) {
+			feedback.feedbackId = feedbackId.TimerPhase
+
+			switch (feedback.options.zone) {
+				case '': {
+					feedback.options.phase = TimerPhase.None
+					break
+				}
+				case 'normal': {
+					feedback.options.phase = TimerPhase.Default
+					break
+				}
+				case 'warning': {
+					feedback.options.phase = TimerPhase.Warning
+					break
+				}
+				case 'danger': {
+					feedback.options.phase = TimerPhase.Danger
+					break
+				}
+				case 'overtime': {
+					feedback.options.phase = TimerPhase.Negative
+					break
+				}
+			}
+			delete feedback.options.zone
+			result.updatedFeedbacks.push(feedback)
+		}
+	}
+	return result
+}
+
+export const UpgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [update2x4x0, update3x4x0, update4xx]
