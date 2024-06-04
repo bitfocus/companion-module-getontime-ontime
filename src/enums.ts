@@ -81,7 +81,7 @@ export enum variableId {
 	TimerAdded = 'timer_added',
 	TimerAddedNice = 'timer_added_nice',
 	TimerTotalMs = 'timer_total_ms',
-	TimerPhase = 'time_phase',
+	TimerPhase = 'timer_phase',
 	Time = 'time',
 	TimeHM = 'time_hm',
 	TimeH = 'time_h',
