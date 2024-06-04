@@ -1,11 +1,3 @@
-export enum TimerZone {
-	None = '',
-	Normal = 'normal',
-	Warning = 'warning',
-	Danger = 'danger',
-	Overtime = 'overtime',
-}
-
 //Playbeck
 
 export enum Playback {
@@ -76,6 +68,17 @@ export type RuntimeStore = {
 	auxtimer1: SimpleTimerState
 }
 
+export enum TimerPhase {
+	None = 'none',
+	Default = 'default',
+	Warning = 'warning',
+	Danger = 'danger',
+	Negative = 'negative',
+}
+
+/**
+ * {@link https://github.com/cpvalente/ontime/blob/master/packages/types/src/definitions/runtime/TimerState.type.ts GitHub}
+ */
 export type TimerState = {
 	addedTime: number // time added by user, can be negative
 	current: number | null // running countdown
@@ -83,6 +86,7 @@ export type TimerState = {
 	elapsed: number | null // elapsed time in current timer
 	expectedFinish: number | null // time we expect timer to finish
 	finishedAt: number | null // only if timer has already finished
+	phase: TimerPhase
 	playback: Playback
 	secondaryTimer: number | null // used for roll mode
 	startedAt: number | null // only if timer has already started

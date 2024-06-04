@@ -1,5 +1,5 @@
 import { DropdownChoice } from '@companion-module/base'
-import { OntimeEvent, RuntimeStore, SimpleTimerState, TimerZone } from './v3/ontime-types.js'
+import { OntimeEvent, RuntimeStore, SimpleTimerState } from './v3/ontime-types.js'
 import { OntimeV3 } from './v3/ontimev3.js'
 
 export const joinTime = (...args: string[]) => args.join(':')
@@ -68,25 +68,6 @@ export function eventsToChoices(events: OntimeEvent[]): DropdownChoice[] {
 	return events.map(({ id, cue, title }) => {
 		return { id, label: `${cue} | ${title}` }
 	})
-}
-
-export function extractTimerZone(
-	timer: number | null,
-	currentEvent: { timeWarning: number; timeDanger: number } = { timeWarning: 2, timeDanger: 1 }
-): TimerZone {
-	if (timer === null) {
-		return TimerZone.None
-	}
-	if (timer > currentEvent.timeWarning) {
-		return TimerZone.Normal
-	}
-	if (timer > currentEvent.timeDanger) {
-		return TimerZone.Warning
-	}
-	if (timer > 0) {
-		return TimerZone.Danger
-	}
-	return TimerZone.Overtime
 }
 
 export function getAuxTimerState(ontime: OntimeV3, index = 'auxtimer1') {

@@ -6,7 +6,7 @@ import {
 } from '@companion-module/base'
 import * as icons from '../assets/icons'
 import { ActionId, feedbackId } from '../enums'
-import { TimerZone } from './ontime-types'
+import { TimerPhase } from './ontime-types'
 
 export function presets(): CompanionPresetDefinitions {
 	return { ...playbackPresets, ...timerPresets, ...auxTimerPresets }
@@ -353,31 +353,31 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 	},
 }
 
-const timerZoneFeedback = [
+const timerPhaseFeedback = [
 	{
-		feedbackId: feedbackId.TimerZone,
-		options: { zone: TimerZone.Normal },
+		feedbackId: feedbackId.TimerPhase,
+		options: { zone: TimerPhase.Default },
 		style: { bgcolor: NormalGray, color: Black },
 	},
 	{
-		feedbackId: feedbackId.TimerZone,
-		options: { zone: TimerZone.Warning },
+		feedbackId: feedbackId.TimerPhase,
+		options: { zone: TimerPhase.Warning },
 		style: { bgcolor: WarningOrange, color: Black },
 	},
 	{
-		feedbackId: feedbackId.TimerZone,
-		options: { zone: TimerZone.Danger },
+		feedbackId: feedbackId.TimerPhase,
+		options: { zone: TimerPhase.Danger },
 		style: { bgcolor: DangerRed, color: Black },
 	},
 	{
-		feedbackId: feedbackId.TimerZone,
-		options: { zone: TimerZone.Overtime },
+		feedbackId: feedbackId.TimerPhase,
+		options: { zone: TimerPhase.Negative },
 		style: { bgcolor: Black, color: DangerRed },
 	},
 ]
 
-const timerZoneAndPauseFeedback = [
-	...timerZoneFeedback,
+const timerPhaseAndPauseFeedback = [
+	...timerPhaseFeedback,
 	{
 		feedbackId: feedbackId.ColorPlayback,
 		options: { state: 'pause' },
@@ -524,7 +524,7 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				up: [],
 			},
 		],
-		feedbacks: timerZoneAndPauseFeedback,
+		feedbacks: timerPhaseAndPauseFeedback,
 	},
 	current_time_h: {
 		type: 'button',
@@ -550,7 +550,7 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				up: [],
 			},
 		],
-		feedbacks: timerZoneAndPauseFeedback,
+		feedbacks: timerPhaseAndPauseFeedback,
 	},
 	current_time_m: {
 		type: 'button',
@@ -576,7 +576,7 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				up: [],
 			},
 		],
-		feedbacks: timerZoneAndPauseFeedback,
+		feedbacks: timerPhaseAndPauseFeedback,
 	},
 	current_time_s: {
 		type: 'button',
@@ -602,7 +602,7 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				up: [],
 			},
 		],
-		feedbacks: timerZoneAndPauseFeedback,
+		feedbacks: timerPhaseAndPauseFeedback,
 	},
 }
 

@@ -1,12 +1,13 @@
 import { CompanionFeedbackDefinition, combineRgb } from '@companion-module/base'
-import { TimerZone } from '../ontime-types.js'
+import { TimerPhase } from '../ontime-types.js'
 import { feedbackId } from '../../enums.js'
+import { OntimeV3 } from '../ontimev3.js'
 
-export function createTimerZoneFeedback(ontime: { state: { companionSpecific: { timerZone: TimerZone } } }): {
+export function createTimerPhaseFeedback(ontime: OntimeV3): {
 	[id: string]: CompanionFeedbackDefinition
 } {
 	return {
-		[feedbackId.TimerZone]: {
+		[feedbackId.TimerPhase]: {
 			type: 'boolean',
 			name: 'Timer zone',
 			description: 'Timer zones use Ontimes warn and danger times to change colour depending on timer progress',
@@ -20,17 +21,17 @@ export function createTimerZoneFeedback(ontime: { state: { companionSpecific: { 
 					label: 'State',
 					id: 'zone',
 					choices: [
-						{ id: TimerZone.None, label: 'None' },
-						{ id: TimerZone.Normal, label: 'Normal' },
-						{ id: TimerZone.Warning, label: 'Warning' },
-						{ id: TimerZone.Danger, label: 'Danger' },
-						{ id: TimerZone.Overtime, label: 'Overtime' },
+						{ id: TimerPhase.None, label: 'None' },
+						{ id: TimerPhase.Default, label: 'Normal' },
+						{ id: TimerPhase.Warning, label: 'Warning' },
+						{ id: TimerPhase.Danger, label: 'Danger' },
+						{ id: TimerPhase.Negative, label: 'Overtime' },
 					],
-					default: TimerZone.Danger,
+					default: TimerPhase.Danger,
 				},
 			],
 			callback: (feedback) => {
-				return ontime.state.companionSpecific.timerZone === feedback.options.zone
+				return ontime.state.timer.phase === feedback.options.zone
 			},
 		},
 	}
