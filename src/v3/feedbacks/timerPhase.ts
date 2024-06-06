@@ -17,7 +17,7 @@ export function createTimerPhaseFeedback(ontime: OntimeV3): {
 			},
 			options: [
 				{
-					type: 'dropdown',
+					type: 'multidropdown',
 					label: 'State',
 					id: 'phase',
 					choices: [
@@ -28,11 +28,11 @@ export function createTimerPhaseFeedback(ontime: OntimeV3): {
 						{ id: TimerPhase.Overtime, label: 'Overtime' },
 						{ id: TimerPhase.Pending, label: 'Pending Roll' },
 					],
-					default: TimerPhase.Danger,
+					default: [TimerPhase.Danger],
 				},
 			],
 			callback: (feedback) => {
-				return ontime.state.timer.phase === feedback.options.phase
+				return (feedback.options.phase as TimerPhase[]).some((value) => value === ontime.state.timer.phase)
 			},
 		},
 	}

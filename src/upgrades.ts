@@ -239,7 +239,7 @@ function update3x4x0(
 				result.updatedFeedbacks.push(feedback)
 			} else if (feedback.feedbackId === deprecatedFeedbackId.ColorNegative) {
 				feedback.feedbackId = feedbackId.TimerPhase
-				feedback.options.state = TimerPhase.Overtime
+				feedback.options.state = [TimerPhase.Overtime]
 				result.updatedFeedbacks.push(feedback)
 			}
 		}
@@ -264,23 +264,23 @@ function update4xx(
 
 			switch (feedback.options.zone) {
 				case '': {
-					feedback.options.phase = TimerPhase.None
+					feedback.options.phase = [TimerPhase.None]
 					break
 				}
 				case 'normal': {
-					feedback.options.phase = TimerPhase.Default
+					feedback.options.phase = [TimerPhase.Default]
 					break
 				}
 				case 'warning': {
-					feedback.options.phase = TimerPhase.Warning
+					feedback.options.phase = [TimerPhase.Warning]
 					break
 				}
 				case 'danger': {
-					feedback.options.phase = TimerPhase.Danger
+					feedback.options.phase = [TimerPhase.Danger]
 					break
 				}
 				case 'overtime': {
-					feedback.options.phase = TimerPhase.Overtime
+					feedback.options.phase = [TimerPhase.Overtime]
 					break
 				}
 			}
