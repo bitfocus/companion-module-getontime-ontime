@@ -239,7 +239,7 @@ function update3x4x0(
 				result.updatedFeedbacks.push(feedback)
 			} else if (feedback.feedbackId === deprecatedFeedbackId.ColorNegative) {
 				feedback.feedbackId = feedbackId.TimerPhase
-				feedback.options.state = TimerPhase.Negative
+				feedback.options.state = TimerPhase.Overtime
 				result.updatedFeedbacks.push(feedback)
 			}
 		}
@@ -280,7 +280,7 @@ function update4xx(
 					break
 				}
 				case 'overtime': {
-					feedback.options.phase = TimerPhase.Negative
+					feedback.options.phase = TimerPhase.Overtime
 					break
 				}
 			}

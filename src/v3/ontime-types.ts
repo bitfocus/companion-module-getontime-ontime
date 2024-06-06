@@ -68,12 +68,16 @@ export type RuntimeStore = {
 	auxtimer1: SimpleTimerState
 }
 
+/**
+ * {@link https://github.com/cpvalente/ontime/blob/master/packages/types/src/definitions/runtime/TimerState.type.ts GitHub}
+ */
 export enum TimerPhase {
 	None = 'none',
 	Default = 'default',
 	Warning = 'warning',
 	Danger = 'danger',
-	Negative = 'negative',
+	Overtime = 'overtime',
+	Pending = 'pending', // used for waiting to roll
 }
 
 /**

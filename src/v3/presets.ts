@@ -371,7 +371,7 @@ const timerPhaseFeedback = [
 	},
 	{
 		feedbackId: feedbackId.TimerPhase,
-		options: { zone: TimerPhase.Negative },
+		options: { zone: TimerPhase.Overtime },
 		style: { bgcolor: Black, color: DangerRed },
 	},
 ]
