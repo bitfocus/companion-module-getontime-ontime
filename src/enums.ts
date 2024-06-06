@@ -50,7 +50,7 @@ export enum feedbackId {
 	MessageVisible = 'messageVisible',
 	TimerBlink = 'timerBlink',
 	TimerBlackout = 'timerBlackout',
-	TimerZone = 'timerZone',
+	TimerPhase = 'timerPhase',
 
 	RundownOffset = 'rundownOffset',
 
@@ -69,6 +69,7 @@ export enum deprecatedFeedbackId {
 	ColorStopped = 'state_color_stopped',
 	ColorRoll = 'state_color_roll',
 	ColorNegative = 'timer_negative',
+	TimerZone = 'timerZone',
 }
 
 export enum variableId {
@@ -81,7 +82,7 @@ export enum variableId {
 	TimerAdded = 'timer_added',
 	TimerAddedNice = 'timer_added_nice',
 	TimerTotalMs = 'timer_total_ms',
-	TimerZone = 'time_zone',
+	TimerPhase = 'timer_phase',
 	Time = 'time',
 	TimeHM = 'time_hm',
 	TimeH = 'time_h',

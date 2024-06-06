@@ -1,12 +1,11 @@
 import { InputValue, InstanceStatus } from '@companion-module/base'
 import { OnTimeInstance } from '..'
 import Websocket from 'ws'
-import { extractTimerZone, msToSplitTime } from '../utilities'
+import { msToSplitTime } from '../utilities'
 import { feedbackId, variableId } from '../enums'
 import { MessageState, OntimeEvent, Runtime, SimpleTimerState, TimerState } from './ontime-types'
 import { OntimeV3 } from './ontimev3'
 import { CustomFields } from './ontime-types'
-import { TimerZone } from './ontime-types'
 
 let ws: Websocket | null = null
 let reconnectionTimeout: NodeJS.Timeout | null = null
@@ -84,12 +83,6 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		const timer_finish = msToSplitTime(val.expectedFinish)
 		const added = msToSplitTime(val.addedTime)
 
-		let timerZone = TimerZone.None
-		if (ontime.state.eventNow) {
-			const { timeWarning, timeDanger } = ontime.state.eventNow
-			timerZone = extractTimerZone(ontime.state.timer.current, { timeWarning, timeDanger })
-		}
-		ontime.state.companionSpecific.timerZone = timerZone
 		self.setVariableValues({
 			[variableId.TimerTotalMs]: val.current ?? 0,
 			[variableId.TimeN]: timer.negative,
@@ -98,7 +91,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			[variableId.TimeH]: timer.hours,
 			[variableId.TimeM]: timer.minutes,
 			[variableId.TimeS]: timer.seconds,
-			[variableId.TimerZone]: timerZone,
+			[variableId.TimerPhase]: val.phase,
 			[variableId.TimerStart]: timer_start.hoursMinutesSeconds,
 			[variableId.TimerFinish]: timer_finish.hoursMinutesSeconds,
 			[variableId.TimerAdded]: added.hoursMinutesSeconds,
@@ -106,7 +99,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			[variableId.PlayState]: val.playback,
 		})
 
-		self.checkFeedbacks(feedbackId.ColorPlayback, feedbackId.ColorAddRemove, feedbackId.TimerZone)
+		self.checkFeedbacks(feedbackId.ColorPlayback, feedbackId.ColorAddRemove, feedbackId.TimerPhase)
 	}
 
 	const updateMessage = (val: MessageState) => {
