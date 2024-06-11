@@ -64,7 +64,7 @@ export function changePicker(
 		},
 		{
 			type: 'number',
-			label: 'Duration in seconds',
+			label: 'Duration',
 			id: 'duration',
 			default: 0,
 			min: 0,
@@ -74,7 +74,7 @@ export function changePicker(
 		},
 		{
 			type: 'number',
-			label: 'Start time in seconds',
+			label: 'Start Time',
 			id: 'timeStart',
 			default: 0,
 			min: 0,
@@ -84,7 +84,7 @@ export function changePicker(
 		},
 		{
 			type: 'number',
-			label: 'End time in seconds',
+			label: 'End Time',
 			id: 'timeEnd',
 			default: 0,
 			min: 0,
@@ -94,7 +94,7 @@ export function changePicker(
 		},
 		{
 			type: 'number',
-			label: 'Warning time in seconds',
+			label: 'Warning Time',
 			id: 'timeWarning',
 			default: 0,
 			min: 0,
@@ -104,7 +104,7 @@ export function changePicker(
 		},
 		{
 			type: 'number',
-			label: 'Danger time in seconds',
+			label: 'Danger Time',
 			id: 'timeDanger',
 			default: 0,
 			min: 0,
@@ -112,6 +112,20 @@ export function changePicker(
 			step: 1,
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeDanger'),
 		},
+		{
+			type: 'dropdown',
+			label: 'End Action',
+			id: 'endAction',
+			choices: [
+				{ id: 'load-next', label: 'Load Next' },
+				{ id: 'none', label: 'None' },
+				{ id: 'stop', label: 'Stop' },
+				{ id: 'play-next', label: 'Play Next' },
+			],
+			default: 'none',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('endAction'),
+		},
+		
 		...generateCustomFieldsOptions(ontime),
 	]
 
