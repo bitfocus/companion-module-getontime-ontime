@@ -125,7 +125,19 @@ export function changePicker(
 			default: 'none',
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('endAction'),
 		},
-		
+		{
+			type: 'dropdown',
+			label: 'Timer Type',
+			id: 'timerType',
+			choices: [
+				{ id: 'count-down', label: 'Count Down' },
+				{ id: 'count-up', label: 'Count Up' },
+				{ id: 'time-to-end', label: 'Time To End' },
+				{ id: 'clock', label: 'Clock' },
+			],
+			default: 'count-down',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timerType'),
+		},
 		...generateCustomFieldsOptions(ontime),
 	]
 
