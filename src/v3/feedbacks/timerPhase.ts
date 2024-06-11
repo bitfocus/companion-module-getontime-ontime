@@ -32,6 +32,9 @@ export function createTimerPhaseFeedback(ontime: OntimeV3): {
 				},
 			],
 			callback: (feedback) => {
+				if (typeof feedback.options.phase === 'string') {
+					return feedback.options.phase === ontime.state.timer.phase
+				}
 				return (feedback.options.phase as TimerPhase[]).some((value) => value === ontime.state.timer.phase)
 			},
 		},
