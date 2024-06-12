@@ -11,6 +11,8 @@ import {
 import { OntimeV3 } from '../ontimev3'
 import { MAX_TIME_SECONDS } from '../../enums'
 
+const throttledEndpointText =
+	'This propertiy will cause a recalculation of the rundwon\nand id therfor throttled by ontime'
 
 export function changePicker(
 	ontime: OntimeV3
@@ -52,6 +54,7 @@ export function changePicker(
 		{
 			type: 'checkbox',
 			label: 'Skip',
+			tooltip: throttledEndpointText,
 			id: 'skip',
 			default: false,
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('skip'),
@@ -67,6 +70,7 @@ export function changePicker(
 		{
 			type: 'number',
 			label: 'Duration',
+			tooltip: 'In Seconds\n' + throttledEndpointText,
 			id: 'duration',
 			default: 0,
 			min: 0,
@@ -77,6 +81,7 @@ export function changePicker(
 		{
 			type: 'number',
 			label: 'Start Time',
+			tooltip: 'In Seconds\n' + throttledEndpointText,
 			id: 'timeStart',
 			default: 0,
 			min: 0,
@@ -87,6 +92,7 @@ export function changePicker(
 		{
 			type: 'number',
 			label: 'End Time',
+			tooltip: 'In Seconds\n' + throttledEndpointText,
 			id: 'timeEnd',
 			default: 0,
 			min: 0,
