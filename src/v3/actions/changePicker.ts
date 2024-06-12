@@ -9,6 +9,8 @@ import {
 	combineRgb,
 } from '@companion-module/base'
 import { OntimeV3 } from '../ontimev3'
+import { MAX_TIME_SECONDS } from '../../enums'
+
 
 export function changePicker(
 	ontime: OntimeV3
@@ -68,7 +70,7 @@ export function changePicker(
 			id: 'duration',
 			default: 0,
 			min: 0,
-			max: 86399,
+			max: MAX_TIME_SECONDS,
 			step: 1,
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('duration'),
 		},
@@ -78,7 +80,7 @@ export function changePicker(
 			id: 'timeStart',
 			default: 0,
 			min: 0,
-			max: 86399,
+			max: MAX_TIME_SECONDS,
 			step: 1,
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeStart'),
 		},
@@ -88,7 +90,7 @@ export function changePicker(
 			id: 'timeEnd',
 			default: 0,
 			min: 0,
-			max: 86399,
+			max: MAX_TIME_SECONDS,
 			step: 1,
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeEnd'),
 		},
@@ -98,7 +100,7 @@ export function changePicker(
 			id: 'timeWarning',
 			default: 0,
 			min: 0,
-			max: 86399,
+			max: MAX_TIME_SECONDS,
 			step: 1,
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeWarning'),
 		},
@@ -108,7 +110,7 @@ export function changePicker(
 			id: 'timeDanger',
 			default: 0,
 			min: 0,
-			max: 86399,
+			max: MAX_TIME_SECONDS,
 			step: 1,
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeDanger'),
 		},
