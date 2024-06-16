@@ -1,3 +1,8 @@
+/**
+ * maximum allowed time 23:59:59 as seconds
+ */
+export const MAX_TIME_SECONDS = (23*60*60) + (59*60) + 59
+
 export enum ActionId {
 	Start = 'start',
 	Load = 'load',

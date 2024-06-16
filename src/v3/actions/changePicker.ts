@@ -9,6 +9,10 @@ import {
 	combineRgb,
 } from '@companion-module/base'
 import { OntimeV3 } from '../ontimev3'
+import { MAX_TIME_SECONDS } from '../../enums'
+
+const throttledEndpointText =
+	'This propertiy will cause a recalculation of the rundwon\nand id therfor throttled by ontime'
 
 export function changePicker(
 	ontime: OntimeV3
@@ -41,16 +45,6 @@ export function changePicker(
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('cue'),
 		},
 		{
-			type: 'number',
-			label: 'Duration in Seconds',
-			id: 'duration',
-			default: 0,
-			min: 0,
-			max: 3600,
-			step: 1,
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('duration'),
-		},
-		{
 			type: 'checkbox',
 			label: 'Is Public',
 			id: 'isPublic',
@@ -60,6 +54,7 @@ export function changePicker(
 		{
 			type: 'checkbox',
 			label: 'Skip',
+			tooltip: throttledEndpointText,
 			id: 'skip',
 			default: false,
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('skip'),
@@ -71,6 +66,85 @@ export function changePicker(
 			default: combineRgb(255, 255, 255),
 			returnType: 'string',
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('colour'),
+		},
+		{
+			type: 'number',
+			label: 'Duration',
+			tooltip: 'In Seconds\n' + throttledEndpointText,
+			id: 'duration',
+			default: 0,
+			min: 0,
+			max: MAX_TIME_SECONDS,
+			step: 1,
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('duration'),
+		},
+		{
+			type: 'number',
+			label: 'Start Time',
+			tooltip: 'In Seconds\n' + throttledEndpointText,
+			id: 'timeStart',
+			default: 0,
+			min: 0,
+			max: MAX_TIME_SECONDS,
+			step: 1,
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeStart'),
+		},
+		{
+			type: 'number',
+			label: 'End Time',
+			tooltip: 'In Seconds\n' + throttledEndpointText,
+			id: 'timeEnd',
+			default: 0,
+			min: 0,
+			max: MAX_TIME_SECONDS,
+			step: 1,
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeEnd'),
+		},
+		{
+			type: 'number',
+			label: 'Warning Time',
+			id: 'timeWarning',
+			default: 0,
+			min: 0,
+			max: MAX_TIME_SECONDS,
+			step: 1,
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeWarning'),
+		},
+		{
+			type: 'number',
+			label: 'Danger Time',
+			id: 'timeDanger',
+			default: 0,
+			min: 0,
+			max: MAX_TIME_SECONDS,
+			step: 1,
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeDanger'),
+		},
+		{
+			type: 'dropdown',
+			label: 'End Action',
+			id: 'endAction',
+			choices: [
+				{ id: 'load-next', label: 'Load Next' },
+				{ id: 'none', label: 'None' },
+				{ id: 'stop', label: 'Stop' },
+				{ id: 'play-next', label: 'Play Next' },
+			],
+			default: 'none',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('endAction'),
+		},
+		{
+			type: 'dropdown',
+			label: 'Timer Type',
+			id: 'timerType',
+			choices: [
+				{ id: 'count-down', label: 'Count Down' },
+				{ id: 'count-up', label: 'Count Up' },
+				{ id: 'time-to-end', label: 'Time To End' },
+				{ id: 'clock', label: 'Clock' },
+			],
+			default: 'count-down',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timerType'),
 		},
 		...generateCustomFieldsOptions(ontime),
 	]
