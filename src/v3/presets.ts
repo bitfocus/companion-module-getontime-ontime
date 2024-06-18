@@ -356,22 +356,22 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 const timerPhaseFeedback = [
 	{
 		feedbackId: feedbackId.TimerPhase,
-		options: { zone: TimerPhase.Default },
+		options: { phase: [TimerPhase.Default] },
 		style: { bgcolor: NormalGray, color: Black },
 	},
 	{
 		feedbackId: feedbackId.TimerPhase,
-		options: { zone: TimerPhase.Warning },
+		options: { phase: [TimerPhase.Warning] },
 		style: { bgcolor: WarningOrange, color: Black },
 	},
 	{
 		feedbackId: feedbackId.TimerPhase,
-		options: { zone: TimerPhase.Danger },
+		options: { phase: [TimerPhase.Danger] },
 		style: { bgcolor: DangerRed, color: Black },
 	},
 	{
 		feedbackId: feedbackId.TimerPhase,
-		options: { zone: TimerPhase.Overtime },
+		options: { phase: [TimerPhase.Overtime] },
 		style: { bgcolor: Black, color: DangerRed },
 	},
 ]
