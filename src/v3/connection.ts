@@ -288,11 +288,9 @@ export async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Pr
 			return
 		}
 		rundownEtag = response.headers.get('Etag') ?? ''
-		const data = (await response.json()) as OntimeEvent[]
-		self.log('debug', `fetched ${data.length} events`)
-		ontime.events = data
-
-		self.init_actions()
+		const data = (await response.json()) as OntimeBaseEvent[]
+		ontime.events = data.filter((entry) => entry.type === SupportedEvent.Event) as OntimeEvent[]
+		self.log('debug', `fetched ${ontime.events.length} events`)
 	} catch (e: any) {
 		ontime.events = []
 		self.log('error', 'failed to fetch events from ontime')
