@@ -95,6 +95,11 @@ export enum variableId {
 	TimeS = 'time_s',
 	TimeN = 'time_sign',
 
+	IdPrevious = 'idPrevious',
+	TitlePrevious = 'titlePrevious',
+	NotePrevious = 'notePrevious',
+	CuePrevious = 'cuePrevious',
+
 	IdNow = 'idNow',
 	TitleNow = 'titleNow',
 	NoteNow = 'noteNow',

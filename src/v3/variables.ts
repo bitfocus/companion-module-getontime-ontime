@@ -117,7 +117,22 @@ export function variables(): CompanionVariableDefinition[] {
 			name: 'Rundown expected end (hh:mm:ss)',
 			variableId: variableId.ExpectedEnd,
 		},
-		//eventNow.id
+		{
+			name: 'ID of previous event',
+			variableId: variableId.IdPrevious,
+		},
+		{
+			name: 'Title of previous event',
+			variableId: variableId.TitlePrevious,
+		},
+		{
+			name: 'Note of previous event',
+			variableId: variableId.NotePrevious,
+		},
+		{
+			name: 'Cue of previous event',
+			variableId: variableId.CuePrevious,
+		},
 		{
 			name: 'ID of current event',
 			variableId: variableId.IdNow,

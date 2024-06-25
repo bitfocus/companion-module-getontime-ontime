@@ -1,9 +1,17 @@
 import { InputValue, InstanceStatus } from '@companion-module/base'
 import { OnTimeInstance } from '..'
 import Websocket from 'ws'
-import { msToSplitTime } from '../utilities'
+import { findPreviousPlayableEvent, msToSplitTime } from '../utilities'
 import { feedbackId, variableId } from '../enums'
-import { MessageState, OntimeEvent, Runtime, SimpleTimerState, TimerState } from './ontime-types'
+import {
+	MessageState,
+	OntimeBaseEvent,
+	OntimeEvent,
+	Runtime,
+	SimpleTimerState,
+	SupportedEvent,
+	TimerState,
+} from './ontime-types'
 import { OntimeV3 } from './ontimev3'
 import { CustomFields } from './ontime-types'
 
@@ -134,23 +142,33 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		self.checkFeedbacks(feedbackId.RundownOffset)
 	}
 
-	const updateEventNow = (val: OntimeEvent) => {
+	const updateEventNow = (val: OntimeEvent | null) => {
 		ontime.state.eventNow = val
 		self.setVariableValues({
-			[variableId.TitleNow]: val.title ?? '',
-			[variableId.NoteNow]: val.note ?? '',
-			[variableId.CueNow]: val.cue ?? '',
-			[variableId.IdNow]: val.id ?? '',
+			[variableId.TitleNow]: val?.title ?? '',
+			[variableId.NoteNow]: val?.note ?? '',
+			[variableId.CueNow]: val?.cue ?? '',
+			[variableId.IdNow]: val?.id ?? '',
 		})
 	}
 
-	const updateEventNext = (val: OntimeEvent) => {
+	const updateEventPrevious = (val: OntimeEvent | null) => {
+		self.log('debug', JSON.stringify(val))
+		self.setVariableValues({
+			[variableId.TitlePrevious]: val?.title ?? '',
+			[variableId.NotePrevious]: val?.note ?? '',
+			[variableId.CuePrevious]: val?.cue ?? '',
+			[variableId.IdPrevious]: val?.id ?? '',
+		})
+	}
+
+	const updateEventNext = (val: OntimeEvent | null) => {
 		ontime.state.eventNext = val
 		self.setVariableValues({
-			[variableId.TitleNext]: val.title ?? '',
-			[variableId.NoteNext]: val.note ?? '',
-			[variableId.CueNext]: val.cue ?? '',
-			[variableId.IdNext]: val.id ?? '',
+			[variableId.TitleNext]: val?.title ?? '',
+			[variableId.NoteNext]: val?.note ?? '',
+			[variableId.CueNext]: val?.cue ?? '',
+			[variableId.IdNext]: val?.id ?? '',
 		})
 	}
 
@@ -198,7 +216,12 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 				}
 
 				case 'ontime-eventNow': {
+					self.log('debug', `now Cue ${payload?.cue}`)
 					updateEventNow(payload)
+					const prev = findPreviousPlayableEvent(ontime)
+					updateEventPrevious(prev)
+					self.log('debug', `prev Cue ${prev?.cue}`)
+
 					break
 				}
 				case 'ontime-eventNext': {
@@ -242,7 +265,8 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					self.log('debug', 'refetching events')
 					fetchAllEvents(self, ontime)
 					self.init_actions()
-
+					const prev = findPreviousPlayableEvent(ontime)
+					updateEventPrevious(prev)
 					break
 				}
 			}
