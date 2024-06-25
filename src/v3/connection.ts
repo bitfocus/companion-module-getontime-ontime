@@ -222,6 +222,9 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					const majorVersion = payload.split('.').at(0)
 					if (majorVersion === '3') {
 						self.updateStatus(InstanceStatus.Ok, payload)
+						self.log('debug', 'refetching events')
+						fetchAllEvents(self, ontime)
+						self.init_actions()
 					} else {
 						self.updateStatus(InstanceStatus.ConnectionFailure, 'Unsupported version: see log')
 						self.log(
@@ -237,14 +240,9 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 						break
 					}
 					self.log('debug', 'refetching events')
-					void fetchAllEvents(self, ontime).then(
-						() => {
-							self.init_actions()
-						},
-						(e: any) => {
-							self.log('debug', e)
-						}
-					)
+					fetchAllEvents(self, ontime)
+					self.init_actions()
+
 					break
 				}
 			}
