@@ -73,3 +73,24 @@ export function eventsToChoices(events: OntimeEvent[]): DropdownChoice[] {
 export function getAuxTimerState(ontime: OntimeV3, index = 'auxtimer1') {
 	return ontime.state[index as keyof RuntimeStore] as unknown as SimpleTimerState
 }
+
+export function findPreviousPlayableEvent(ontime: OntimeV3): OntimeEvent | null {
+	if (ontime.state.eventNow === null) {
+		return null
+	}
+
+	const nowId = ontime.state.eventNow.id
+	let now = false
+
+	for (let i = ontime.events.length - 1; i >= 0; i--) {
+		if (!now && ontime.events[i].id === nowId) {
+			now = true
+			continue
+		}
+		if (now && !ontime.events[i].skip ) { 
+			return ontime.events[i]
+		}
+	}
+
+	return null
+}
