@@ -153,7 +153,6 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 	}
 
 	const updateEventPrevious = (val: OntimeEvent | null) => {
-		self.log('debug', JSON.stringify(val))
 		self.setVariableValues({
 			[variableId.TitlePrevious]: val?.title ?? '',
 			[variableId.NotePrevious]: val?.note ?? '',
@@ -216,12 +215,9 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 				}
 
 				case 'ontime-eventNow': {
-					self.log('debug', `now Cue ${payload?.cue}`)
 					updateEventNow(payload)
 					const prev = findPreviousPlayableEvent(ontime)
 					updateEventPrevious(prev)
-					self.log('debug', `prev Cue ${prev?.cue}`)
-
 					break
 				}
 				case 'ontime-eventNext': {
@@ -246,8 +242,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					if (majorVersion === '3') {
 						self.updateStatus(InstanceStatus.Ok, payload)
 						self.log('debug', 'refetching events')
-						fetchAllEvents(self, ontime)
-						self.init_actions()
+						fetchAllEvents(self, ontime).then(() => self.init_actions())
 					} else {
 						self.updateStatus(InstanceStatus.ConnectionFailure, 'Unsupported version: see log')
 						self.log(
@@ -262,11 +257,11 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					if (self.config.refetchEvents === false) {
 						break
 					}
-					self.log('debug', 'refetching events')
-					fetchAllEvents(self, ontime)
-					self.init_actions()
-					const prev = findPreviousPlayableEvent(ontime)
-					updateEventPrevious(prev)
+					fetchAllEvents(self, ontime).then(() => {
+						self.init_actions()
+						const prev = findPreviousPlayableEvent(ontime)
+						updateEventPrevious(prev)
+					})
 					break
 				}
 			}
@@ -309,6 +304,7 @@ export async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Pr
 			return
 		}
 		if (response.status === 304) {
+			self.log('debug', '304 -> nothing change in rundown')
 			return
 		}
 		rundownEtag = response.headers.get('Etag') ?? ''
