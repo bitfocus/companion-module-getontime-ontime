@@ -242,7 +242,11 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					if (majorVersion === '3') {
 						self.updateStatus(InstanceStatus.Ok, payload)
 						self.log('debug', 'refetching events')
-						fetchAllEvents(self, ontime).then(() => self.init_actions())
+						fetchAllEvents(self, ontime).then(() => {
+							self.init_actions()
+							const prev = findPreviousPlayableEvent(ontime)
+							updateEventPrevious(prev)
+						})
 					} else {
 						self.updateStatus(InstanceStatus.ConnectionFailure, 'Unsupported version: see log')
 						self.log(
