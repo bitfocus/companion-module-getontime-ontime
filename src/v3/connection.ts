@@ -1,9 +1,17 @@
 import { InputValue, InstanceStatus } from '@companion-module/base'
 import { OnTimeInstance } from '..'
 import Websocket from 'ws'
-import { msToSplitTime } from '../utilities'
+import { findPreviousPlayableEvent, msToSplitTime } from '../utilities'
 import { feedbackId, variableId } from '../enums'
-import { MessageState, OntimeEvent, Runtime, SimpleTimerState, TimerState } from './ontime-types'
+import {
+	MessageState,
+	OntimeBaseEvent,
+	OntimeEvent,
+	Runtime,
+	SimpleTimerState,
+	SupportedEvent,
+	TimerState,
+} from './ontime-types'
 import { OntimeV3 } from './ontimev3'
 import { CustomFields } from './ontime-types'
 
@@ -134,23 +142,32 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		self.checkFeedbacks(feedbackId.RundownOffset)
 	}
 
-	const updateEventNow = (val: OntimeEvent) => {
+	const updateEventNow = (val: OntimeEvent | null) => {
 		ontime.state.eventNow = val
 		self.setVariableValues({
-			[variableId.TitleNow]: val.title ?? '',
-			[variableId.NoteNow]: val.note ?? '',
-			[variableId.CueNow]: val.cue ?? '',
-			[variableId.IdNow]: val.id ?? '',
+			[variableId.TitleNow]: val?.title ?? '',
+			[variableId.NoteNow]: val?.note ?? '',
+			[variableId.CueNow]: val?.cue ?? '',
+			[variableId.IdNow]: val?.id ?? '',
 		})
 	}
 
-	const updateEventNext = (val: OntimeEvent) => {
+	const updateEventPrevious = (val: OntimeEvent | null) => {
+		self.setVariableValues({
+			[variableId.TitlePrevious]: val?.title ?? '',
+			[variableId.NotePrevious]: val?.note ?? '',
+			[variableId.CuePrevious]: val?.cue ?? '',
+			[variableId.IdPrevious]: val?.id ?? '',
+		})
+	}
+
+	const updateEventNext = (val: OntimeEvent | null) => {
 		ontime.state.eventNext = val
 		self.setVariableValues({
-			[variableId.TitleNext]: val.title ?? '',
-			[variableId.NoteNext]: val.note ?? '',
-			[variableId.CueNext]: val.cue ?? '',
-			[variableId.IdNext]: val.id ?? '',
+			[variableId.TitleNext]: val?.title ?? '',
+			[variableId.NoteNext]: val?.note ?? '',
+			[variableId.CueNext]: val?.cue ?? '',
+			[variableId.IdNext]: val?.id ?? '',
 		})
 	}
 
@@ -199,6 +216,8 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 
 				case 'ontime-eventNow': {
 					updateEventNow(payload)
+					const prev = findPreviousPlayableEvent(ontime)
+					updateEventPrevious(prev)
 					break
 				}
 				case 'ontime-eventNext': {
@@ -222,6 +241,12 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					const majorVersion = payload.split('.').at(0)
 					if (majorVersion === '3') {
 						self.updateStatus(InstanceStatus.Ok, payload)
+						self.log('debug', 'refetching events')
+						fetchAllEvents(self, ontime).then(() => {
+							self.init_actions()
+							const prev = findPreviousPlayableEvent(ontime)
+							updateEventPrevious(prev)
+						})
 					} else {
 						self.updateStatus(InstanceStatus.ConnectionFailure, 'Unsupported version: see log')
 						self.log(
@@ -236,15 +261,11 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					if (self.config.refetchEvents === false) {
 						break
 					}
-					self.log('debug', 'refetching events')
-					void fetchAllEvents(self, ontime).then(
-						() => {
-							self.init_actions()
-						},
-						(e: any) => {
-							self.log('debug', e)
-						}
-					)
+					fetchAllEvents(self, ontime).then(() => {
+						self.init_actions()
+						const prev = findPreviousPlayableEvent(ontime)
+						updateEventPrevious(prev)
+					})
 					break
 				}
 			}
@@ -287,14 +308,13 @@ export async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Pr
 			return
 		}
 		if (response.status === 304) {
+			self.log('debug', '304 -> nothing change in rundown')
 			return
 		}
 		rundownEtag = response.headers.get('Etag') ?? ''
-		const data = (await response.json()) as OntimeEvent[]
-		self.log('debug', `fetched ${data.length} events`)
-		ontime.events = data
-
-		self.init_actions()
+		const data = (await response.json()) as OntimeBaseEvent[]
+		ontime.events = data.filter((entry) => entry.type === SupportedEvent.Event) as OntimeEvent[]
+		self.log('debug', `fetched ${ontime.events.length} events`)
 	} catch (e: any) {
 		ontime.events = []
 		self.log('error', 'failed to fetch events from ontime')
