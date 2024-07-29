@@ -249,6 +249,11 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					updateMessage(payload.message)
 					updateEventNow(payload.eventNow)
 					updateEventNext(payload.eventNext)
+
+					// currentBlock dons't exist in ontime prior to v3.5.0
+					if ('currentBlock' in payload) {
+						updateCurrentBlock(payload.currentBlock)
+					}
 					break
 				}
 				case 'version': {
