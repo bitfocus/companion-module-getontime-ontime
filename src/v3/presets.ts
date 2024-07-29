@@ -9,7 +9,7 @@ import { ActionId, feedbackId } from '../enums'
 import { TimerPhase } from './ontime-types'
 
 export function presets(): CompanionPresetDefinitions {
-	return { ...playbackPresets, ...timerPresets, ...auxTimerPresets }
+	return { ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...rundownPresets }
 }
 
 const White = combineRgb(255, 255, 255)
@@ -384,6 +384,31 @@ const timerPhaseAndPauseFeedback = [
 		style: { color: PauseOrange },
 	},
 ]
+
+const rundownPresets: { [id: string]: CompanionButtonPresetDefinition } = {
+	currentBlock: {
+		type: 'button',
+		category: 'Rundown',
+		name: 'Title of current block',
+		style: {
+			...defaultStyle,
+			size: 'auto',
+			text: '$(ontime:currentBlockTitle)',
+		},
+		previewStyle: {
+			...defaultStyle,
+			size: 'auto',
+			text: 'Current Block',
+		},
+		steps: [
+			{
+				down: [],
+				up: [],
+			},
+		],
+		feedbacks: [],
+	},
+}
 
 const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 	add_1_min: {
