@@ -118,6 +118,18 @@ export function variables(): CompanionVariableDefinition[] {
 			variableId: variableId.ExpectedEnd,
 		},
 		{
+			name: 'Title of current block',
+			variableId: variableId.CurrentBlockTitle,
+		},
+		{
+			name: 'Start time of current block (hh:mm:ss)',
+			variableId: variableId.CurrentBlockStartedAt,
+		},
+		{
+			name: 'Start time of current block (milliseconds)',
+			variableId: variableId.CurrentBlockStartedAtMs,
+		},
+		{
 			name: 'ID of previous event',
 			variableId: variableId.IdPrevious,
 		},

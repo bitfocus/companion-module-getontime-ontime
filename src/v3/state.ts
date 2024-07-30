@@ -31,6 +31,7 @@ const stateobj: RuntimeStore = {
 	},
 	eventNow: null,
 	eventNext: null,
+	currentBlock: { block: null, startedAt: null },
 	auxtimer1: {
 		duration: 0,
 		current: 0,

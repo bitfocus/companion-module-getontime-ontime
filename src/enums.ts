@@ -110,6 +110,10 @@ export enum variableId {
 	NoteNext = 'noteNext',
 	CueNext = 'cueNext',
 
+	CurrentBlockTitle = 'currentBlockTitle',
+	CurrentBlockStartedAt = 'currentBlockStartedAt_hms',
+	CurrentBlockStartedAtMs = 'currentBlockStartedAt_ms',
+
 	TimerMessage = 'timerMessage',
 	TimerMessageVisible = 'timerMessageVisible',
 	TimerBlink = 'timerBlink',

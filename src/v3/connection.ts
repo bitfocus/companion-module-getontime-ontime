@@ -4,6 +4,7 @@ import Websocket from 'ws'
 import { findPreviousPlayableEvent, msToSplitTime } from '../utilities'
 import { feedbackId, variableId } from '../enums'
 import {
+	CurrentBlockState,
 	MessageState,
 	OntimeBaseEvent,
 	OntimeEvent,
@@ -171,6 +172,16 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		})
 	}
 
+	const updateCurrentBlock = (val: CurrentBlockState) => {
+		ontime.state.currentBlock = val
+		const startedAt = msToSplitTime(val.startedAt)
+		self.setVariableValues({
+			[variableId.CurrentBlockStartedAt]: startedAt.hoursMinutesSeconds,
+			[variableId.CurrentBlockStartedAtMs]: val.startedAt ?? 0,
+			[variableId.CurrentBlockTitle]: val.block?.title ?? '',
+		})
+	}
+
 	const updateAuxTimer1 = (val: SimpleTimerState) => {
 		ontime.state.auxtimer1 = val
 		const duration = msToSplitTime(val.duration)
@@ -228,12 +239,21 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					updateAuxTimer1(payload)
 					break
 				}
+				case 'ontime-currentBlock': {
+					updateCurrentBlock(payload)
+					break
+				}
 				case 'ontime': {
 					updateTimer(payload.timer)
 					updateClock(payload.clock)
 					updateMessage(payload.message)
 					updateEventNow(payload.eventNow)
 					updateEventNext(payload.eventNext)
+
+					// currentBlock dons't exist in ontime prior to v3.5.0
+					if ('currentBlock' in payload) {
+						updateCurrentBlock(payload.currentBlock)
+					}
 					break
 				}
 				case 'version': {
@@ -241,7 +261,6 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					const majorVersion = payload.split('.').at(0)
 					if (majorVersion === '3') {
 						self.updateStatus(InstanceStatus.Ok, payload)
-						self.log('debug', 'refetching events')
 						fetchAllEvents(self, ontime).then(() => {
 							self.init_actions()
 							const prev = findPreviousPlayableEvent(ontime)
@@ -304,6 +323,7 @@ export async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Pr
 			headers: { Etag: rundownEtag },
 		})
 		if (!response.ok) {
+			ontime.events = []
 			self.log('error', `uable to fetch events: ${response.statusText}`)
 			return
 		}
@@ -318,7 +338,7 @@ export async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Pr
 	} catch (e: any) {
 		ontime.events = []
 		self.log('error', 'failed to fetch events from ontime')
-		self.log('error', e)
+		self.log('error', e.message)
 	}
 }
 

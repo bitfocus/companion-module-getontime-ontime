@@ -63,7 +63,7 @@ export type RuntimeStore = {
 	// publicEventNow: OntimeEvent | null
 	eventNext: OntimeEvent | null
 	// publicEventNext: OntimeEvent | null
-
+	currentBlock: CurrentBlockState
 	// extra timers
 	auxtimer1: SimpleTimerState
 }
@@ -179,4 +179,14 @@ export type SimpleTimerState = {
 	current: number
 	playback: SimplePlayback
 	direction: SimpleDirection
+}
+
+export type OntimeBlock = OntimeBaseEvent & {
+	type: SupportedEvent.Block
+	title: string
+}
+
+export type CurrentBlockState = {
+	block: OntimeBlock | null
+	startedAt: number | null
 }
