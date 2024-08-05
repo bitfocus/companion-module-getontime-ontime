@@ -314,6 +314,13 @@
   dependencies:
     undici-types "~5.26.4"
 
+"@types/pngjs@^6.0.1":
+  version "6.0.5"
+  resolved "https://registry.yarnpkg.com/@types/pngjs/-/pngjs-6.0.5.tgz#6dec2f7eb8284543ca4e423f3c09b119fa939ea3"
+  integrity sha512-0k5eKfrA83JOZPppLtS2C7OUtyNAl2wKNxfyYl9Q5g9lPkgBl/9hNyAu6HuEH2J4XmIv2znEpkDd0SaZVxW6iQ==
+  dependencies:
+    "@types/node" "*"
+
 "@types/ps-tree@^1.1.2":
   version "1.1.2"
   resolved "https://registry.npmjs.org/@types/ps-tree/-/ps-tree-1.1.2.tgz"
@@ -917,6 +924,14 @@ commander@^2.20.0:
   version "2.20.3"
   resolved "https://registry.npmjs.org/commander/-/commander-2.20.3.tgz"
   integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
+
+companion-module-utils@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/companion-module-utils/-/companion-module-utils-0.5.0.tgz#ffc2a9b7b78eb09fec05d4595befdfc946de130f"
+  integrity sha512-5bWcJ/ozTmD29Tq07fdd7ilq+kIUBsTmlGuE9BVraiBHXGFD3Fw7sE5VaVvim9LkYvtFuChpssgx5bO31BdezA==
+  dependencies:
+    "@types/pngjs" "^6.0.1"
+    pngjs "^7.0.0"
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -2196,6 +2211,11 @@ pkg-dir@^4.2.0:
   integrity sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==
   dependencies:
     find-up "^4.0.0"
+
+pngjs@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-7.0.0.tgz#a8b7446020ebbc6ac739db6c5415a65d17090e26"
+  integrity sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==
 
 prelude-ls@^1.2.1:
   version "1.2.1"
