@@ -58,6 +58,7 @@ export enum feedbackId {
 	TimerPhase = 'timerPhase',
 
 	TimerProgressBar = 'timerProgressBar',
+	TimerProgressBarMulti = 'timerProgressBarMulti',
 
 	RundownOffset = 'rundownOffset',
 
