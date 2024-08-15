@@ -7,6 +7,7 @@ import {
 import * as icons from '../assets/icons'
 import { ActionId, feedbackId } from '../enums'
 import { TimerPhase } from './ontime-types'
+import { graphics } from 'companion-module-utils'
 
 export function presets(): CompanionPresetDefinitions {
 	return { ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...rundownPresets }
@@ -528,20 +529,41 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 	current_time_hms: {
 		type: 'button',
 		category: 'Timer Management',
-		name: 'Current timer ',
+		name: 'Current time',
 		style: {
 			...defaultStyle,
+			size: 14,
 			text: `$(ontime:time)`,
-			size: '14',
 			alignment: 'center:center',
 		},
 		previewStyle: {
 			...defaultStyle,
+			size: 14,
 			text: 'HH:MM:SS',
-			size: '14',
 			alignment: 'center:center',
-			bgcolor: NormalGray,
-			color: Black,
+			png64: graphics.toPNG64({
+				image: graphics.bar({
+					width: 72,
+					height: 72,
+					colors: [
+						{
+							size: 100,
+							color: NormalGray,
+							background: NormalGray,
+							backgroundOpacity: 150,
+						},
+					],
+					barLength: 72,
+					barWidth: 10,
+					value: 50,
+					type: 'horizontal',
+					offsetX: 0,
+					offsetY: 72 - 10,
+					opacity: 255,
+				}),
+				width: 72,
+				height: 72,
+			}),
 		},
 		steps: [
 			{
@@ -549,7 +571,16 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				up: [],
 			},
 		],
-		feedbacks: timerPhaseAndPauseFeedback,
+		feedbacks: [
+			{
+				feedbackId: feedbackId.TimerProgressBar,
+				options: {
+					normal: NormalGray,
+					warning: WarningOrange,
+					danger: DangerRed,
+				},
+			},
+		],
 	},
 	current_time_h: {
 		type: 'button',
@@ -642,7 +673,7 @@ const auxTimerNegative = [
 ]
 
 const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
-	current_time_hms: {
+	current_auxtime_hms: {
 		type: 'button',
 		category: 'Aux Timer',
 		name: 'Current aux time',

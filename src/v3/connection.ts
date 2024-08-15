@@ -108,7 +108,13 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			[variableId.PlayState]: val.playback,
 		})
 
-		self.checkFeedbacks(feedbackId.ColorPlayback, feedbackId.ColorAddRemove, feedbackId.TimerPhase)
+		self.checkFeedbacks(
+			feedbackId.ColorPlayback,
+			feedbackId.ColorAddRemove,
+			feedbackId.TimerPhase,
+			feedbackId.TimerProgressBar,
+			feedbackId.TimerProgressBarMulti
+		)
 	}
 
 	const updateMessage = (val: MessageState) => {
