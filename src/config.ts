@@ -3,6 +3,7 @@ import { SomeCompanionConfigField, Regex } from '@companion-module/base'
 export interface OntimeConfig {
 	host: string
 	port: string
+	ssl: boolean
 	version: string
 	refetchEvents: boolean
 	reconnect: boolean
@@ -39,11 +40,19 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			tooltip: 'Ontime server port. Default is 4001',
 		},
 		{
+			label: 'Use SSL',
+			id: 'ssl',
+			type: 'checkbox',
+			default: false,
+			width: 2,
+			tooltip: 'Use SSL to connect to the Ontime server.',
+		},
+		{
 			label: 'Refetch events',
 			id: 'refetchEvents',
 			type: 'checkbox',
 			default: true,
-			width: 4,
+			width: 3,
 			tooltip: 'Whether Companion should keep the rundown updated with Ontime by refetching on change.',
 		},
 		{
@@ -51,7 +60,7 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			id: 'reconnect',
 			type: 'checkbox',
 			default: true,
-			width: 4,
+			width: 3,
 			tooltip: 'Chose if you want Companion to try to reconnect to ontime when the connection is lost.',
 		},
 		{

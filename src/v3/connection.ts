@@ -46,7 +46,9 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		host.replace(pattern, '')
 	}
 
-	ws = new Websocket(`ws://${host}:${port}/ws`)
+	const prefix = self.config.ssl ? 'wss' : 'ws'
+
+	ws = new Websocket(`${prefix}://${host}:${port}/ws`)
 
 	ws.onopen = () => {
 		clearTimeout(reconnectionTimeout as NodeJS.Timeout)
