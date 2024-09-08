@@ -318,9 +318,11 @@ export function socketSendJson(type: string, payload?: InputValue | object): voi
 let rundownEtag: string = ''
 
 export async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
+	const prefix = self.config.ssl ? 'https' : 'http'
+
 	self.log('debug', 'fetching events from ontime')
 	try {
-		const response = await fetch(`http://${self.config.host}:${self.config.port}/data/rundown`, {
+		const response = await fetch(`${prefix}://${self.config.host}:${self.config.port}/data/rundown`, {
 			method: 'GET',
 			headers: { Etag: rundownEtag },
 		})
@@ -348,13 +350,15 @@ let customFieldsEtag: string = ''
 let customFieldsTimeout: NodeJS.Timeout
 
 export async function fetchCustomFields(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
+	const prefix = self.config.ssl ? 'https' : 'http'
+
 	clearTimeout(customFieldsTimeout)
 	if (self.config.refetchEvents) {
 		customFieldsTimeout = setTimeout(() => fetchCustomFields(self, ontime), 60000)
 	}
 	self.log('debug', 'fetching custom-fields from ontime')
 	try {
-		const response = await fetch(`http://${self.config.host}:${self.config.port}/data/custom-fields`, {
+		const response = await fetch(`${prefix}://${self.config.host}:${self.config.port}/data/custom-fields`, {
 			method: 'GET',
 			headers: { Etag: customFieldsEtag },
 		})
