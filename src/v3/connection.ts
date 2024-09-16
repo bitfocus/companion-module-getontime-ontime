@@ -1,7 +1,7 @@
 import { InputValue, InstanceStatus } from '@companion-module/base'
 import { OnTimeInstance } from '..'
 import Websocket from 'ws'
-import { findPreviousPlayableEvent, msToSplitTime } from '../utilities'
+import { findPreviousPlayableEvent, msToSplitTime, sanitizeHost } from '../utilities'
 import { feedbackId, variableId } from '../enums'
 import {
 	CurrentBlockState,
@@ -26,7 +26,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 	reconnectInterval = self.config.reconnectInterval * 1000
 	shouldReconnect = self.config.reconnect
 
-	const host = self.config.host
+	const host = sanitizeHost(self.config.host)
 	const port = self.config.port
 
 	if (!host || !port) {
@@ -38,12 +38,6 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 
 	if (ws) {
 		ws.close()
-	}
-
-	const pattern = /^((http|https):\/\/)/
-
-	if (pattern.test(host)) {
-		host.replace(pattern, '')
 	}
 
 	const prefix = self.config.ssl ? 'wss' : 'ws'
@@ -325,10 +319,11 @@ let rundownEtag: string = ''
 
 export async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
 	const prefix = self.config.ssl ? 'https' : 'http'
+	const host = sanitizeHost(self.config.host)
 
 	self.log('debug', 'fetching events from ontime')
 	try {
-		const response = await fetch(`${prefix}://${self.config.host}:${self.config.port}/data/rundown`, {
+		const response = await fetch(`${prefix}://${host}:${self.config.port}/data/rundown`, {
 			method: 'GET',
 			headers: { Etag: rundownEtag },
 		})
@@ -357,6 +352,7 @@ let customFieldsTimeout: NodeJS.Timeout
 
 export async function fetchCustomFields(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
 	const prefix = self.config.ssl ? 'https' : 'http'
+	const host = sanitizeHost(self.config.host)
 
 	clearTimeout(customFieldsTimeout)
 	if (self.config.refetchEvents) {
@@ -364,7 +360,7 @@ export async function fetchCustomFields(self: OnTimeInstance, ontime: OntimeV3):
 	}
 	self.log('debug', 'fetching custom-fields from ontime')
 	try {
-		const response = await fetch(`${prefix}://${self.config.host}:${self.config.port}/data/custom-fields`, {
+		const response = await fetch(`${prefix}://${host}:${self.config.port}/data/custom-fields`, {
 			method: 'GET',
 			headers: { Etag: customFieldsEtag },
 		})
