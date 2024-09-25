@@ -58,7 +58,7 @@ export function createMessageActions(ontime: OntimeV3): { [id: string]: Companio
 			],
 			callback: ({ options }) =>
 				socketSendJson(ActionCommand.Message, {
-					[options.destination as string]: { text: options.value },
+					timer: { text: options.value },
 				}),
 		},
 

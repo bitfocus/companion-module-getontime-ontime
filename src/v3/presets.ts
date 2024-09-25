@@ -10,7 +10,7 @@ import { TimerPhase } from './ontime-types'
 import { graphics } from 'companion-module-utils'
 
 export function presets(): CompanionPresetDefinitions {
-	return { ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...rundownPresets }
+	return { ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...rundownPresets, ...messagePresets }
 }
 
 const White = combineRgb(255, 255, 255)
@@ -20,6 +20,8 @@ const PlaybackGreen = combineRgb(51, 158, 78)
 const PlaybackRed = combineRgb(228, 40, 30)
 const PauseOrange = combineRgb(192, 86, 33)
 const RollBlue = combineRgb(2, 116, 182)
+
+const ActiveBlue = combineRgb(43, 90, 188)
 
 const NormalGray = combineRgb(211, 211, 211)
 const WarningOrange = combineRgb(255, 171, 51)
@@ -408,6 +410,132 @@ const rundownPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			},
 		],
 		feedbacks: [],
+	},
+}
+
+const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
+	showMessage: {
+		type: 'button',
+		category: 'Message',
+		name: 'Show Message',
+		style: {
+			...defaultStyle,
+			size: 'auto',
+			text: 'Show\nHurry Up',
+		},
+		previewStyle: {
+			...defaultStyle,
+			size: 'auto',
+			text: 'Show\nHurry Up',
+		},
+		steps: [
+			{
+				down: [
+					{ actionId: ActionId.MessageText, options: { value: 'Would you please hurry up and get off stage' } },
+					{ actionId: ActionId.MessageVisibility, options: { value: 2 } },
+				],
+				up: [],
+			},
+		],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.MessageVisible,
+				options: { reqText: true, text: 'Would you please hurry up and get off stage' },
+				style: {
+					bgcolor: ActiveBlue,
+				},
+			},
+		],
+	},
+	showSelectedMessage: {
+		type: 'button',
+		category: 'Message',
+		name: 'Show Selected Message',
+		style: {
+			...defaultStyle,
+			size: 'auto',
+			text: 'Show\n$(ontime:timerMessage)',
+		},
+		previewStyle: {
+			...defaultStyle,
+			size: 'auto',
+			text: 'Show\nSelected Message',
+		},
+		steps: [
+			{
+				down: [{ actionId: ActionId.MessageVisibility, options: { value: 2 } }],
+				up: [],
+			},
+		],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.MessageVisible,
+				options: {},
+				style: {
+					bgcolor: ActiveBlue,
+				},
+			},
+		],
+	},
+	selectMessage1: {
+		type: 'button',
+		category: 'Message',
+		name: 'Selected Message 1',
+		style: {
+			...defaultStyle,
+			size: 'auto',
+			text: 'Select Msg 1',
+		},
+		previewStyle: {
+			...defaultStyle,
+			size: 'auto',
+			text: 'Select Msg 1',
+		},
+		steps: [
+			{
+				down: [{ actionId: ActionId.MessageText, options: { value: 'Message 1' } }],
+				up: [],
+			},
+		],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.MessageVisible,
+				options: { reqText: true, text: 'Message 1' },
+				style: {
+					bgcolor: ActiveBlue,
+				},
+			},
+		],
+	},
+	selectMessage2: {
+		type: 'button',
+		category: 'Message',
+		name: 'Selected Message 2',
+		style: {
+			...defaultStyle,
+			size: 'auto',
+			text: 'Select Msg 2',
+		},
+		previewStyle: {
+			...defaultStyle,
+			size: 'auto',
+			text: 'Select Msg 2',
+		},
+		steps: [
+			{
+				down: [{ actionId: ActionId.MessageText, options: { value: 'Message 2' } }],
+				up: [],
+			},
+		],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.MessageVisible,
+				options: { reqText: true, text: 'Message 2' },
+				style: {
+					bgcolor: ActiveBlue,
+				},
+			},
+		],
 	},
 }
 
