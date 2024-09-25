@@ -1,13 +1,16 @@
 import { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition, combineRgb } from '@companion-module/base'
 import { OntimeV3 } from '../ontimev3'
 import { feedbackId } from '../../enums'
-import { MessageState } from '../ontime-types'
 
 export function createMessageFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
 	function messageVisible(feedback: CompanionFeedbackBooleanEvent): boolean {
-		const source = feedback.options.source as keyof MessageState
-		const { text, visible } = ontime.state.message[source] as { text: string; visible: boolean }
+		const { text, visible } = ontime.state.message.timer as { text: string; visible: boolean }
 		return feedback.options.reqText ? visible && text === feedback.options.text : visible
+	}
+
+	function secondaryVisible(feedback: CompanionFeedbackBooleanEvent): boolean {
+		const secondarySource = ontime.state.message.timer.secondarySource as string
+		return secondarySource === feedback.options.source
 	}
 
 	return {
@@ -20,19 +23,32 @@ export function createMessageFeedbacks(ontime: OntimeV3): { [id: string]: Compan
 				bgcolor: combineRgb(255, 0, 0),
 			},
 			options: [
-				{
-					type: 'dropdown',
-					id: 'source',
-					label: 'Source',
-					default: 'timer',
-					choices: [
-						{ id: 'timer', label: 'Timer' },
-					],
-				},
 				{ type: 'checkbox', id: 'reqText', default: false, label: 'Require matching text' },
 				{ type: 'textinput', id: 'text', label: 'Text', isVisible: (options) => options.reqText == true },
 			],
 			callback: messageVisible,
+		},
+		[feedbackId.MessageSecondarySourceVisible]: {
+			type: 'boolean',
+			name: 'Message secondary source visibility',
+			description: 'Change the colors if secondary source is visible',
+			defaultStyle: {
+				color: combineRgb(255, 255, 255),
+				bgcolor: combineRgb(255, 0, 0),
+			},
+			options: [
+				{
+					type: 'dropdown',
+					id: 'source',
+					label: 'Source',
+					default: 'external',
+					choices: [
+						{ id: 'external', label: 'External' },
+						{ id: 'aux', label: 'Aux timer' },
+					],
+				},
+			],
+			callback: secondaryVisible,
 		},
 		[feedbackId.TimerBlink]: {
 			type: 'boolean',

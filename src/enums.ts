@@ -53,7 +53,9 @@ export enum feedbackId {
 	ColorPlayback = 'colorPlayback',
 	ColorAddRemove = 'state_color_add_remove',
 	OnAir = 'onAir',
+
 	MessageVisible = 'messageVisible',
+	MessageSecondarySourceVisible = 'messageSecondarySourceVisible',
 	TimerBlink = 'timerBlink',
 	TimerBlackout = 'timerBlackout',
 	TimerPhase = 'timerPhase',

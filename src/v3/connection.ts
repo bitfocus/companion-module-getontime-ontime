@@ -126,7 +126,12 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			[variableId.TimerBlink]: val.timer.blink,
 		})
 
-		self.checkFeedbacks(feedbackId.MessageVisible, feedbackId.TimerBlackout, feedbackId.TimerBlink)
+		self.checkFeedbacks(
+			feedbackId.MessageVisible,
+			feedbackId.TimerBlackout,
+			feedbackId.TimerBlink,
+			feedbackId.MessageSecondarySourceVisible
+		)
 	}
 
 	const updateRuntime = (val: Runtime) => {
