@@ -19,7 +19,7 @@ export function variables(): CompanionVariableDefinition[] {
 		},
 		//timer.current
 		{
-			name: 'Current timer progress (Normal/Warning/Danger/Overtime)',
+			name: 'Current timer progress (Default/Warning/Danger/Overtime)',
 			variableId: variableId.TimerPhase,
 		},
 		{
