@@ -124,6 +124,8 @@ export enum variableId {
 	TimerMessageVisible = 'timerMessageVisible',
 	TimerBlink = 'timerBlink',
 	TimerBlackout = 'timerBlackout',
+	ExternalMessage = 'externalMessage',
+	TimerSecondarySource = 'timerSecondarySource',
 
 	AuxTimerDurationMs = 'auxTimer_duration_ms',
 	AuxTimerPlayback = 'auxTimer_playback',

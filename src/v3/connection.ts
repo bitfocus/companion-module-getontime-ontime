@@ -121,9 +121,11 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		ontime.state.message = val
 		self.setVariableValues({
 			[variableId.TimerMessage]: val.timer.text,
+			[variableId.ExternalMessage]: val.external,
 			[variableId.TimerMessageVisible]: val.timer.visible,
 			[variableId.TimerBlackout]: val.timer.blackout,
 			[variableId.TimerBlink]: val.timer.blink,
+			[variableId.TimerSecondarySource]: val.timer.secondarySource as string,
 		})
 
 		self.checkFeedbacks(
