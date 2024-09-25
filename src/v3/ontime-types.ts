@@ -142,12 +142,15 @@ export enum TimeStrategy {
 
 export type MessageState = {
 	timer: TimerMessage
-	external: Message
+	external: string
 }
 
-type TimerMessage = Message & {
+export type TimerMessage = {
+	text: string
+	visible: boolean
 	blink: boolean
 	blackout: boolean
+	secondarySource: 'aux' | 'external' | null
 }
 
 // Custom fields

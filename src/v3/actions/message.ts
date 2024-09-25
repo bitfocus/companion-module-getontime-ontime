@@ -3,13 +3,11 @@ import { socketSendJson } from '../connection'
 import { ActionId } from '../../enums'
 import { ActionCommand } from './commands'
 import { OntimeV3 } from '../ontimev3'
-import { MessageState } from '../ontime-types'
 
 export function createMessageActions(ontime: OntimeV3): { [id: string]: CompanionActionDefinition } {
 	function messageVisibility(action: CompanionActionEvent): void {
-		const destination = action.options.destination as keyof MessageState
-		const visible = action.options.value === 2 ? !ontime.state.message[destination].visible : action.options.value
-		socketSendJson('message', { [destination]: { visible } })
+		const visible = action.options.value === 2 ? !ontime.state.message.timer.visible : action.options.value
+		socketSendJson('message', { timer: { visible } })
 	}
 
 	function timerBlackout(action: CompanionActionEvent): void {
@@ -22,17 +20,18 @@ export function createMessageActions(ontime: OntimeV3): { [id: string]: Companio
 		socketSendJson(ActionCommand.Message, { timer: { blink } })
 	}
 
+	function setSecondarySource(action: CompanionActionEvent): void {
+		const source = action.options.source
+		const isActive = ontime.state.message.timer.secondarySource === source
+		const shouldShow = action.options.value === 2 ? !isActive : action.options.value
+		const secondarySource = shouldShow ? source : 'off'
+		socketSendJson(ActionCommand.Message, { timer: { secondarySource } })
+	}
+
 	return {
 		[ActionId.MessageVisibility]: {
 			name: 'Toggle/On/Off visibility of message',
 			options: [
-				{
-					type: 'dropdown',
-					choices: [{ id: 'timer', label: 'Timer' }],
-					default: 'timer',
-					id: 'destination',
-					label: 'Message Destination',
-				},
 				{
 					type: 'dropdown',
 					choices: [
@@ -51,17 +50,6 @@ export function createMessageActions(ontime: OntimeV3): { [id: string]: Companio
 			name: 'Set text for message',
 			options: [
 				{
-					type: 'dropdown',
-					choices: [
-						{ id: 'timer', label: 'Timer' },
-						{ id: 'lower', label: 'Lower' },
-						{ id: 'public', label: 'Public' },
-					],
-					default: 'timer',
-					id: 'destination',
-					label: 'Message Destination',
-				},
-				{
 					type: 'textinput',
 					label: 'Timer message',
 					id: 'value',
@@ -75,7 +63,7 @@ export function createMessageActions(ontime: OntimeV3): { [id: string]: Companio
 		},
 
 		[ActionId.TimerBlackout]: {
-			name: 'Toggle/On/Off Blackout of timer',
+			name: 'Toggle/On/Off blackout timer',
 			options: [
 				{
 					type: 'dropdown',
@@ -107,6 +95,33 @@ export function createMessageActions(ontime: OntimeV3): { [id: string]: Companio
 				},
 			],
 			callback: timerBlink,
+		},
+		[ActionId.MessageSecondarySource]: {
+			name: 'Toggle/On/Off visibility of secondary source',
+			options: [
+				{
+					type: 'dropdown',
+					choices: [
+						{ id: 'external', label: 'External' },
+						{ id: 'aux', label: 'Aux timer' },
+					],
+					default: 'external',
+					id: 'source',
+					label: 'Source',
+				},
+				{
+					type: 'dropdown',
+					choices: [
+						{ id: 2, label: 'Toggle' },
+						{ id: 1, label: 'On' },
+						{ id: 0, label: 'Off' },
+					],
+					default: 2,
+					id: 'value',
+					label: 'Action',
+				},
+			],
+			callback: setSecondarySource,
 		},
 	}
 }
