@@ -18,6 +18,11 @@ const defaultTimerObject = {
 	negative: '',
 }
 
+export function sanitizeHost(host: string) {
+	const pattern = /^((http|https):\/\/)/
+	return host.replace(pattern, '')
+}
+
 type SplitTime = typeof defaultTimerObject
 
 export function msToSplitTime(time: number | null): SplitTime {
@@ -87,7 +92,7 @@ export function findPreviousPlayableEvent(ontime: OntimeV3): OntimeEvent | null 
 			now = true
 			continue
 		}
-		if (now && !ontime.events[i].skip ) { 
+		if (now && !ontime.events[i].skip) {
 			return ontime.events[i]
 		}
 	}
