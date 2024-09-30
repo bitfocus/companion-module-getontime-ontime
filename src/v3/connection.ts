@@ -276,7 +276,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					self.log('debug', version)
 					if (version.at(0) === '3') {
 						if (Number(version.at(1)) < 6) {
-							self.updateStatus(InstanceStatus.BadConfig, 'Out of date Ontime version, some features are not available')
+							self.updateStatus(InstanceStatus.BadConfig, 'Ontime version is too old (required >3.6.0) some features are not available')
 						} else {
 							self.updateStatus(InstanceStatus.Ok, payload)
 						}
