@@ -11,7 +11,10 @@ export function createMessageFeedbacks(ontime: OntimeV3): { [id: string]: Compan
 
 	function secondaryVisible(feedback: CompanionFeedbackBooleanEvent): boolean {
 		const secondarySource = ontime.state.message.timer.secondarySource as string
-		return secondarySource === feedback.options.source
+
+		return (
+			(feedback.options.source === 'any' && secondarySource !== null) || secondarySource === feedback.options.source
+		)
 	}
 
 	return {
@@ -46,6 +49,7 @@ export function createMessageFeedbacks(ontime: OntimeV3): { [id: string]: Compan
 					choices: [
 						{ id: 'external', label: 'External' },
 						{ id: 'aux', label: 'Aux timer' },
+						{ id: 'any', label: 'Any' },
 					],
 				},
 			],
