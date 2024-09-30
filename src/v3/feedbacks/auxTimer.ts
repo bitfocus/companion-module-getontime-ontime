@@ -1,8 +1,9 @@
-import { CompanionFeedbackDefinition, combineRgb } from '@companion-module/base'
+import { CompanionFeedbackDefinition } from '@companion-module/base'
 import { OntimeV3 } from '../ontimev3'
 import { feedbackId } from '../../enums'
 import { SimplePlayback } from '../ontime-types'
 import { getAuxTimerState } from '../../utilities'
+import { DangerRed, PlaybackGreen, White } from '../../assets/colours'
 
 export function createAuxTimerFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
 	return {
@@ -11,8 +12,8 @@ export function createAuxTimerFeedbacks(ontime: OntimeV3): { [id: string]: Compa
 			name: 'Aux Timer Playback state',
 			description: 'Indicator colour for playback state',
 			defaultStyle: {
-				color: combineRgb(255, 255, 255),
-				bgcolor: combineRgb(0, 204, 0),
+				color: White,
+				bgcolor: PlaybackGreen,
 			},
 			options: [
 				{
@@ -43,8 +44,8 @@ export function createAuxTimerFeedbacks(ontime: OntimeV3): { [id: string]: Compa
 			name: 'Aux Timer negative',
 			description: 'Indicator colour for Aux Timer negative',
 			defaultStyle: {
-				color: combineRgb(255, 255, 255),
-				bgcolor: combineRgb(0, 204, 0),
+				color: White,
+				bgcolor: DangerRed,
 			},
 			options: [
 				{

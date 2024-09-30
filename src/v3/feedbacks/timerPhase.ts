@@ -1,7 +1,8 @@
-import { CompanionFeedbackDefinition, combineRgb } from '@companion-module/base'
+import { CompanionFeedbackDefinition } from '@companion-module/base'
 import { TimerPhase } from '../ontime-types.js'
 import { feedbackId } from '../../enums.js'
 import { OntimeV3 } from '../ontimev3.js'
+import { DangerRed, White } from '../../assets/colours.js'
 
 export function createTimerPhaseFeedback(ontime: OntimeV3): {
 	[id: string]: CompanionFeedbackDefinition
@@ -12,8 +13,8 @@ export function createTimerPhaseFeedback(ontime: OntimeV3): {
 			name: 'Timer phase',
 			description: 'Timer phase use Ontimes warn and danger times to change colour depending on timer progress',
 			defaultStyle: {
-				color: combineRgb(255, 255, 255),
-				bgcolor: combineRgb(255, 0, 0),
+				color: White,
+				bgcolor: DangerRed,
 			},
 			options: [
 				{

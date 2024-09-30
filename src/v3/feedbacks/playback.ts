@@ -1,7 +1,8 @@
-import { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition, combineRgb } from '@companion-module/base'
+import { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition } from '@companion-module/base'
 import { OntimeV3 } from '../ontimev3'
 import { feedbackId } from '../../enums'
 import { Playback } from '../ontime-types'
+import { PauseOrange, PlaybackGreen, White } from '../../assets/colours'
 
 export function createPlaybackFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
 	function addTime(feedback: CompanionFeedbackBooleanEvent): boolean {
@@ -28,8 +29,8 @@ export function createPlaybackFeedbacks(ontime: OntimeV3): { [id: string]: Compa
 			name: 'Playback state',
 			description: 'Indicator colour for playback state',
 			defaultStyle: {
-				color: combineRgb(255, 255, 255),
-				bgcolor: combineRgb(0, 204, 0),
+				color: White,
+				bgcolor: PlaybackGreen,
 			},
 			options: [
 				{
@@ -53,8 +54,8 @@ export function createPlaybackFeedbacks(ontime: OntimeV3): { [id: string]: Compa
 			name: 'Added/removed time',
 			description: 'Indicator colour for whether timer has user added time',
 			defaultStyle: {
-				color: combineRgb(255, 255, 255),
-				bgcolor: combineRgb(254, 124, 19),
+				color: White,
+				bgcolor: PauseOrange,
 			},
 			options: [
 				{

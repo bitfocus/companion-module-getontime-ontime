@@ -1,6 +1,7 @@
-import { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition, combineRgb } from '@companion-module/base'
+import { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition } from '@companion-module/base'
 import { OntimeV3 } from '../ontimev3'
 import { feedbackId } from '../../enums'
+import { ActiveBlue, White } from '../../assets/colours'
 
 export function createMessageFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
 	function messageVisible(feedback: CompanionFeedbackBooleanEvent): boolean {
@@ -19,8 +20,8 @@ export function createMessageFeedbacks(ontime: OntimeV3): { [id: string]: Compan
 			name: 'Message visibility',
 			description: 'Change the colors if message is visible',
 			defaultStyle: {
-				color: combineRgb(255, 255, 255),
-				bgcolor: combineRgb(255, 0, 0),
+				color: White,
+				bgcolor: ActiveBlue,
 			},
 			options: [
 				{ type: 'checkbox', id: 'reqText', default: false, label: 'Require matching text' },
@@ -33,8 +34,8 @@ export function createMessageFeedbacks(ontime: OntimeV3): { [id: string]: Compan
 			name: 'Message secondary source visibility',
 			description: 'Change the colors if secondary source is visible',
 			defaultStyle: {
-				color: combineRgb(255, 255, 255),
-				bgcolor: combineRgb(255, 0, 0),
+				color: White,
+				bgcolor: ActiveBlue,
 			},
 			options: [
 				{
@@ -55,8 +56,8 @@ export function createMessageFeedbacks(ontime: OntimeV3): { [id: string]: Compan
 			name: 'Timer is blinking',
 			description: 'Change the colors of a button if timer is blinking',
 			defaultStyle: {
-				color: combineRgb(255, 255, 255),
-				bgcolor: combineRgb(229, 62, 62),
+				color: White,
+				bgcolor: ActiveBlue,
 			},
 			options: [],
 			callback: () => ontime.state.message.timer.blink,
@@ -66,8 +67,7 @@ export function createMessageFeedbacks(ontime: OntimeV3): { [id: string]: Compan
 			name: 'Timer is blacked out',
 			description: 'Change the colors of a button if timer is blacked out',
 			defaultStyle: {
-				color: combineRgb(255, 255, 255),
-				bgcolor: combineRgb(229, 62, 62),
+				bgcolor: ActiveBlue,
 			},
 			options: [],
 			callback: () => ontime.state.message.timer.blackout,

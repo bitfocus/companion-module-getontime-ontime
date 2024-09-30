@@ -1,8 +1,9 @@
-import { CompanionFeedbackAdvancedEvent, CompanionFeedbackDefinition, combineRgb } from '@companion-module/base'
+import { CompanionFeedbackAdvancedEvent, CompanionFeedbackDefinition } from '@companion-module/base'
 import { OntimeV3 } from '../ontimev3'
 import { feedbackId } from '../../enums'
 import { graphics } from 'companion-module-utils'
 import { TimerPhase } from '../ontime-types'
+import { DangerRed, NormalGray, WarningOrange } from '../../assets/colours'
 
 export function createProgressFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
 	function progressbar(feedback: CompanionFeedbackAdvancedEvent) {
@@ -70,9 +71,9 @@ export function createProgressFeedbacks(ontime: OntimeV3): { [id: string]: Compa
 			description: 'Progressbar indicating the main timer progression',
 			options: [
 				{ type: 'checkbox', id: 'big', label: 'Big graphic', default: false },
-				{ type: 'colorpicker', id: 'normal', label: 'Normal', default: combineRgb(207, 207, 207) },
-				{ type: 'colorpicker', id: 'warning', label: 'Warning', default: combineRgb(255, 171, 51) },
-				{ type: 'colorpicker', id: 'danger', label: 'Danger', default: combineRgb(237, 51, 51) },
+				{ type: 'colorpicker', id: 'normal', label: 'Normal', default: NormalGray },
+				{ type: 'colorpicker', id: 'warning', label: 'Warning', default: WarningOrange },
+				{ type: 'colorpicker', id: 'danger', label: 'Danger', default: DangerRed },
 			],
 			callback: (feedback) => progressbar(feedback),
 		},
@@ -82,9 +83,9 @@ export function createProgressFeedbacks(ontime: OntimeV3): { [id: string]: Compa
 			description: 'Progressbar across multiple buttons indicating the main timer progression',
 			options: [
 				{ type: 'checkbox', id: 'big', label: 'Big graphic', default: true },
-				{ type: 'colorpicker', id: 'normal', label: 'Normal', default: combineRgb(207, 207, 207) },
-				{ type: 'colorpicker', id: 'warning', label: 'Warning', default: combineRgb(255, 171, 51) },
-				{ type: 'colorpicker', id: 'danger', label: 'Danger', default: combineRgb(237, 51, 51) },
+				{ type: 'colorpicker', id: 'normal', label: 'Normal', default: NormalGray },
+				{ type: 'colorpicker', id: 'warning', label: 'Warning', default: WarningOrange },
+				{ type: 'colorpicker', id: 'danger', label: 'Danger', default: DangerRed },
 				{ type: 'number', id: 'amount', label: 'Amount', default: 3, min: 1, max: 8 },
 				{
 					type: 'number',

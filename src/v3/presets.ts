@@ -2,30 +2,27 @@ import {
 	CompanionButtonPresetDefinition,
 	CompanionButtonStyleProps,
 	CompanionPresetDefinitions,
-	combineRgb,
 } from '@companion-module/base'
 import * as icons from '../assets/icons'
 import { ActionId, feedbackId } from '../enums'
 import { TimerPhase } from './ontime-types'
 import { graphics } from 'companion-module-utils'
+import {
+	ActiveBlue,
+	Black,
+	DangerRed,
+	NormalGray,
+	PauseOrange,
+	PlaybackGreen,
+	PlaybackRed,
+	RollBlue,
+	WarningOrange,
+	White,
+} from '../assets/colours'
 
 export function presets(): CompanionPresetDefinitions {
 	return { ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...rundownPresets, ...messagePresets }
 }
-
-const White = combineRgb(255, 255, 255)
-const Black = combineRgb(0, 0, 0)
-
-const PlaybackGreen = combineRgb(51, 158, 78)
-const PlaybackRed = combineRgb(228, 40, 30)
-const PauseOrange = combineRgb(192, 86, 33)
-const RollBlue = combineRgb(2, 116, 182)
-
-const ActiveBlue = combineRgb(43, 90, 188)
-
-const NormalGray = combineRgb(211, 211, 211)
-const WarningOrange = combineRgb(255, 171, 51)
-const DangerRed = combineRgb(237, 51, 51)
 
 const defaultStyle: CompanionButtonStyleProps = {
 	size: '24',
