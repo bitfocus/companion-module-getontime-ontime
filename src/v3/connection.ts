@@ -271,9 +271,15 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 				}
 				case 'version': {
 					clearTimeout(versionTimeout as NodeJS.Timeout)
-					const majorVersion = payload.split('.').at(0)
-					if (majorVersion === '3') {
-						self.updateStatus(InstanceStatus.Ok, payload)
+					const version = payload.split('.')
+					self.log('info', `Ontime version "${payload}"`)
+					self.log('debug', version)
+					if (version.at(0) === '3') {
+						if (Number(version.at(1)) < 6) {
+							self.updateStatus(InstanceStatus.BadConfig, 'Out of date Ontime version, some features are not available')
+						} else {
+							self.updateStatus(InstanceStatus.Ok, payload)
+						}
 						fetchAllEvents(self, ontime).then(() => {
 							self.init_actions()
 							const prev = findPreviousPlayableEvent(ontime)
