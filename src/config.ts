@@ -4,7 +4,7 @@ export interface OntimeConfig {
 	host: string
 	port: string
 	ssl: boolean
-	version: string
+	_version_: string
 	refetchEvents: boolean
 	reconnect: boolean
 	reconnectInterval: number
@@ -35,7 +35,7 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			type: 'textinput',
 			default: '4001',
 			required: true,
-			width: 6,
+			width: 3,
 			regex: Regex.PORT,
 			tooltip: 'Ontime server port. Default is 4001',
 		},
@@ -44,23 +44,16 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			id: 'ssl',
 			type: 'checkbox',
 			default: false,
-			width: 2,
+			width: 3,
 			tooltip: 'Use SSL to connect to the Ontime server.',
 		},
-		{
-			label: 'Refetch events',
-			id: 'refetchEvents',
-			type: 'checkbox',
-			default: true,
-			width: 3,
-			tooltip: 'Whether Companion should keep the rundown updated with Ontime by refetching on change.',
-		},
+		//New line
 		{
 			label: 'Reconnect',
 			id: 'reconnect',
 			type: 'checkbox',
 			default: true,
-			width: 3,
+			width: 4,
 			tooltip: 'Chose if you want Companion to try to reconnect to ontime when the connection is lost.',
 		},
 		{
@@ -73,6 +66,14 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			width: 4,
 			isVisible: (config) => config.reconnect === true,
 			tooltip: 'The interval in seconds between each reconnect attempt.',
+		},
+		{
+			label: 'Refetch events',
+			id: 'refetchEvents',
+			type: 'checkbox',
+			default: true,
+			width: 4,
+			tooltip: 'Whether Companion should keep the rundown updated with Ontime by refetching on change.',
 		},
 	]
 }
