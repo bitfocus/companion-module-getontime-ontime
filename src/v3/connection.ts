@@ -200,7 +200,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		self.checkFeedbacks(feedbackId.AuxTimerNegative, feedbackId.AuxTimerPlayback)
 	}
 
-	ws.onmessage = (event: any) => {
+	ws.onmessage = async (event: any) => {
 		try {
 			const data = JSON.parse(event.data)
 			const { type, payload } = data
@@ -263,11 +263,11 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					const majorVersion = payload.split('.').at(0)
 					if (majorVersion === '3') {
 						self.updateStatus(InstanceStatus.Ok, payload)
-						fetchAllEvents(self, ontime).then(() => {
-							self.init_actions()
-							const prev = findPreviousPlayableEvent(ontime)
-							updateEventPrevious(prev)
-						})
+						await fetchCustomFields(self, ontime)
+						await fetchAllEvents(self, ontime)
+						self.init_actions()
+						const prev = findPreviousPlayableEvent(ontime)
+						updateEventPrevious(prev)
 					} else {
 						self.updateStatus(InstanceStatus.ConnectionFailure, 'Unsupported version: see log')
 						self.log(
@@ -282,11 +282,11 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					if (self.config.refetchEvents === false) {
 						break
 					}
-					fetchAllEvents(self, ontime).then(() => {
-						self.init_actions()
-						const prev = findPreviousPlayableEvent(ontime)
-						updateEventPrevious(prev)
-					})
+					await fetchCustomFields(self, ontime)
+					await fetchAllEvents(self, ontime)
+					self.init_actions()
+					const prev = findPreviousPlayableEvent(ontime)
+					updateEventPrevious(prev)
 					break
 				}
 			}
@@ -317,7 +317,7 @@ export function socketSendJson(type: string, payload?: InputValue | object): voi
 
 let rundownEtag: string = ''
 
-export async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
+async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
 	const prefix = self.config.ssl ? 'https' : 'http'
 	const host = sanitizeHost(self.config.host)
 
@@ -348,16 +348,12 @@ export async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Pr
 }
 
 let customFieldsEtag: string = ''
-let customFieldsTimeout: NodeJS.Timeout
 
-export async function fetchCustomFields(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
+//TODO: this might need to be updated on an interval
+async function fetchCustomFields(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
 	const prefix = self.config.ssl ? 'https' : 'http'
 	const host = sanitizeHost(self.config.host)
 
-	clearTimeout(customFieldsTimeout)
-	if (self.config.refetchEvents) {
-		customFieldsTimeout = setTimeout(() => fetchCustomFields(self, ontime), 60000)
-	}
 	self.log('debug', 'fetching custom-fields from ontime')
 	try {
 		const response = await fetch(`${prefix}://${host}:${self.config.port}/data/custom-fields`, {
@@ -365,15 +361,14 @@ export async function fetchCustomFields(self: OnTimeInstance, ontime: OntimeV3):
 			headers: { Etag: customFieldsEtag },
 		})
 		if (response.status === 304) {
+			self.log('debug', '304 -> nothing change custom fields')
 			return
 		}
 		customFieldsEtag = response.headers.get('Etag') ?? ''
 		const data = (await response.json()) as CustomFields
 		ontime.customFields = data
-
-		self.init_actions()
 	} catch (e: any) {
 		ontime.events = []
-		self.log('error', `unable to fetch events: ${e}`)
+		self.log('error', `unable to fetch custom fields: ${e}`)
 	}
 }
