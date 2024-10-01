@@ -1,7 +1,7 @@
 import { InputValue, InstanceStatus } from '@companion-module/base'
 import { OnTimeInstance } from '..'
 import Websocket from 'ws'
-import { findPreviousPlayableEvent, msToSplitTime, sanitizeHost } from '../utilities'
+import { findPreviousPlayableEvent, msToSplitTime, sanitizeHost, variablesFromCustomFields } from '../utilities'
 import { feedbackId, variableId } from '../enums'
 import {
 	CurrentBlockState,
@@ -148,11 +148,14 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 	const updateEventNow = (val: OntimeEvent | null) => {
 		ontime.state.eventNow = val
 		self.setVariableValues({
-			[variableId.TitleNow]: val?.title ?? '',
-			[variableId.NoteNow]: val?.note ?? '',
-			[variableId.CueNow]: val?.cue ?? '',
-			[variableId.IdNow]: val?.id ?? '',
+			[variableId.TitleNow]: val?.title,
+			[variableId.NoteNow]: val?.note,
+			[variableId.CueNow]: val?.cue,
+			[variableId.IdNow]: val?.id,
 		})
+		if (self.config.customToVariable) {
+			self.setVariableValues(variablesFromCustomFields(ontime, 'Now', val?.custom))
+		}
 	}
 
 	const updateEventPrevious = (val: OntimeEvent | null) => {
@@ -162,6 +165,9 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			[variableId.CuePrevious]: val?.cue ?? '',
 			[variableId.IdPrevious]: val?.id ?? '',
 		})
+		if (self.config.customToVariable) {
+			self.setVariableValues(variablesFromCustomFields(ontime, 'Previous', val?.custom))
+		}
 	}
 
 	const updateEventNext = (val: OntimeEvent | null) => {
@@ -172,6 +178,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			[variableId.CueNext]: val?.cue ?? '',
 			[variableId.IdNext]: val?.id ?? '',
 		})
+		self.setVariableValues(variablesFromCustomFields(ontime, 'Next', val?.custom))
 	}
 
 	const updateCurrentBlock = (val: CurrentBlockState) => {
@@ -200,7 +207,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		self.checkFeedbacks(feedbackId.AuxTimerNegative, feedbackId.AuxTimerPlayback)
 	}
 
-	ws.onmessage = (event: any) => {
+	ws.onmessage = async (event: any) => {
 		try {
 			const data = JSON.parse(event.data)
 			const { type, payload } = data
@@ -263,11 +270,14 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					const majorVersion = payload.split('.').at(0)
 					if (majorVersion === '3') {
 						self.updateStatus(InstanceStatus.Ok, payload)
-						fetchAllEvents(self, ontime).then(() => {
-							self.init_actions()
-							const prev = findPreviousPlayableEvent(ontime)
-							updateEventPrevious(prev)
-						})
+						await fetchCustomFields(self, ontime)
+						await fetchAllEvents(self, ontime)
+						self.init_actions()
+						const prev = findPreviousPlayableEvent(ontime)
+						updateEventPrevious(prev)
+						if (self.config.customToVariable) {
+							self.setVariableDefinitions(ontime.getVariables(true))
+						}
 					} else {
 						self.updateStatus(InstanceStatus.ConnectionFailure, 'Unsupported version: see log')
 						self.log(
@@ -279,14 +289,16 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					break
 				}
 				case 'ontime-refetch': {
-					if (self.config.refetchEvents === false) {
-						break
-					}
-					fetchAllEvents(self, ontime).then(() => {
-						self.init_actions()
+					if (self.config.refetchEvents) {
+						await fetchAllEvents(self, ontime)
 						const prev = findPreviousPlayableEvent(ontime)
 						updateEventPrevious(prev)
-					})
+						self.init_actions()
+					}
+					const change = await fetchCustomFields(self, ontime)
+					if (change && self.config.customToVariable) {
+						self.setVariableDefinitions(ontime.getVariables(true))
+					}
 					break
 				}
 			}
@@ -317,7 +329,7 @@ export function socketSendJson(type: string, payload?: InputValue | object): voi
 
 let rundownEtag: string = ''
 
-export async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
+async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
 	const prefix = self.config.ssl ? 'https' : 'http'
 	const host = sanitizeHost(self.config.host)
 
@@ -325,7 +337,7 @@ export async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Pr
 	try {
 		const response = await fetch(`${prefix}://${host}:${self.config.port}/data/rundown`, {
 			method: 'GET',
-			headers: { Etag: rundownEtag },
+			headers: { 'if-none-match': rundownEtag, 'cache-control': '3600', pragma: '' },
 		})
 		if (!response.ok) {
 			ontime.events = []
@@ -348,32 +360,29 @@ export async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Pr
 }
 
 let customFieldsEtag: string = ''
-let customFieldsTimeout: NodeJS.Timeout
 
-export async function fetchCustomFields(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
+//TODO: this might need to be updated on an interval
+async function fetchCustomFields(self: OnTimeInstance, ontime: OntimeV3): Promise<boolean> {
 	const prefix = self.config.ssl ? 'https' : 'http'
 	const host = sanitizeHost(self.config.host)
 
-	clearTimeout(customFieldsTimeout)
-	if (self.config.refetchEvents) {
-		customFieldsTimeout = setTimeout(() => fetchCustomFields(self, ontime), 60000)
-	}
 	self.log('debug', 'fetching custom-fields from ontime')
 	try {
 		const response = await fetch(`${prefix}://${host}:${self.config.port}/data/custom-fields`, {
 			method: 'GET',
-			headers: { Etag: customFieldsEtag },
+			headers: { 'if-none-match': customFieldsEtag, 'cache-control': '3600', pragma: '' },
 		})
 		if (response.status === 304) {
-			return
+			self.log('debug', '304 -> nothing change custom fields')
+			return false
 		}
 		customFieldsEtag = response.headers.get('Etag') ?? ''
 		const data = (await response.json()) as CustomFields
 		ontime.customFields = data
-
-		self.init_actions()
+		return true
 	} catch (e: any) {
 		ontime.events = []
-		self.log('error', `unable to fetch events: ${e}`)
+		self.log('error', `unable to fetch custom fields: ${e}`)
+		return false
 	}
 }
