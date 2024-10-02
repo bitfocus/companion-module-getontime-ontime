@@ -90,6 +90,14 @@ export function variables(): CompanionVariableDefinition[] {
 			variableId: variableId.TimerBlink,
 		},
 		{
+			name: 'External Message',
+			variableId: variableId.ExternalMessage,
+		},
+		{
+			name: 'Timer Message Secondary Source',
+			variableId: variableId.TimerSecondarySource,
+		},
+		{
 			name: 'Number of events',
 			variableId: variableId.NumberOfEvents,
 		},

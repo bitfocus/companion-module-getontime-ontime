@@ -17,8 +17,8 @@ const stateobj: RuntimeStore = {
 	},
 	onAir: false,
 	message: {
-		timer: { text: '', visible: false, blink: false, blackout: false },
-		external: { text: '', visible: false },
+		timer: { text: '', visible: false, blink: false, blackout: false, secondarySource: null },
+		external: '',
 	},
 	runtime: {
 		numEvents: 0,

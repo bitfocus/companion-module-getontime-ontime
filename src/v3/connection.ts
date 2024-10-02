@@ -117,12 +117,19 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		ontime.state.message = val
 		self.setVariableValues({
 			[variableId.TimerMessage]: val.timer.text,
+			[variableId.ExternalMessage]: val.external,
 			[variableId.TimerMessageVisible]: val.timer.visible,
 			[variableId.TimerBlackout]: val.timer.blackout,
 			[variableId.TimerBlink]: val.timer.blink,
+			[variableId.TimerSecondarySource]: val.timer.secondarySource as string,
 		})
 
-		self.checkFeedbacks(feedbackId.MessageVisible, feedbackId.TimerBlackout, feedbackId.TimerBlink)
+		self.checkFeedbacks(
+			feedbackId.MessageVisible,
+			feedbackId.TimerBlackout,
+			feedbackId.TimerBlink,
+			feedbackId.MessageSecondarySourceVisible
+		)
 	}
 
 	const updateRuntime = (val: Runtime) => {
@@ -260,9 +267,15 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 				}
 				case 'version': {
 					clearTimeout(versionTimeout as NodeJS.Timeout)
-					const majorVersion = payload.split('.').at(0)
-					if (majorVersion === '3') {
-						self.updateStatus(InstanceStatus.Ok, payload)
+					const version = payload.split('.')
+					self.log('info', `Ontime version "${payload}"`)
+					self.log('debug', version)
+					if (version.at(0) === '3') {
+						if (Number(version.at(1)) < 6) {
+							self.updateStatus(InstanceStatus.BadConfig, 'Ontime version is too old (required >3.6.0) some features are not available')
+						} else {
+							self.updateStatus(InstanceStatus.Ok, payload)
+						}
 						fetchAllEvents(self, ontime).then(() => {
 							self.init_actions()
 							const prev = findPreviousPlayableEvent(ontime)

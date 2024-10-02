@@ -18,6 +18,8 @@ export enum ActionId {
 	TimerBlackout = 'TimerBlackout',
 	TimerBlink = 'TimerBlink',
 	MessageVisibility = 'setMessageVisibility',
+	MessageVisibilityAndText = 'setMessageVisibilityAndText',
+	MessageSecondarySource = 'setMessageSecondarySource',
 	MessageText = 'setMessage',
 
 	AuxTimerDuration = 'auxTimerDuration',
@@ -52,7 +54,9 @@ export enum feedbackId {
 	ColorPlayback = 'colorPlayback',
 	ColorAddRemove = 'state_color_add_remove',
 	OnAir = 'onAir',
+
 	MessageVisible = 'messageVisible',
+	MessageSecondarySourceVisible = 'messageSecondarySourceVisible',
 	TimerBlink = 'timerBlink',
 	TimerBlackout = 'timerBlackout',
 	TimerPhase = 'timerPhase',
@@ -121,6 +125,8 @@ export enum variableId {
 	TimerMessageVisible = 'timerMessageVisible',
 	TimerBlink = 'timerBlink',
 	TimerBlackout = 'timerBlackout',
+	ExternalMessage = 'externalMessage',
+	TimerSecondarySource = 'timerSecondarySource',
 
 	AuxTimerDurationMs = 'auxTimer_duration_ms',
 	AuxTimerPlayback = 'auxTimer_playback',

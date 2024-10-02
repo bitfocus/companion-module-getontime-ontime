@@ -1,6 +1,7 @@
-import { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition, combineRgb } from '@companion-module/base'
+import { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition } from '@companion-module/base'
 import { OntimeV3 } from '../ontimev3'
 import { feedbackId } from '../../enums'
+import { DangerRed, White } from '../../assets/colours'
 
 export function createOffsetFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
 	function offset(feedback: CompanionFeedbackBooleanEvent): boolean {
@@ -27,7 +28,8 @@ export function createOffsetFeedbacks(ontime: OntimeV3): { [id: string]: Compani
 			name: 'Rundown Offset',
 			description: 'Colour of indicator for rundown offset state',
 			defaultStyle: {
-				bgcolor: combineRgb(255, 0, 0),
+				color: White,
+				bgcolor: DangerRed,
 			},
 			options: [
 				{
