@@ -98,7 +98,7 @@ export function createMessageActions(ontime: OntimeV3): { [id: string]: Companio
 		[ActionId.MessageVisibilityAndText]: {
 			name: 'Toggle/On/Off visibility and text for message',
 			description:
-				'Combinde action for setting the text and visibility. "Toggle" will swap out the message if another is showen and "Off" will only turn off if this message is visible',
+				'Combined action for setting the text and visibility. "Toggle" will replace the current message. "Off" will disable the message visibility',
 			options: [
 				{
 					type: 'textinput',
