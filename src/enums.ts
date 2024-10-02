@@ -18,6 +18,7 @@ export enum ActionId {
 	TimerBlackout = 'TimerBlackout',
 	TimerBlink = 'TimerBlink',
 	MessageVisibility = 'setMessageVisibility',
+	MessageVisibilityAndText = 'setMessageVisibilityAndText',
 	MessageSecondarySource = 'setMessageSecondarySource',
 	MessageText = 'setMessage',
 

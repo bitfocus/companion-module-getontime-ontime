@@ -417,18 +417,18 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		name: 'Show Message',
 		style: {
 			...defaultStyle,
-			size: 'auto',
-			text: 'Show\nHurry Up',
+			size: '18',
+			text: 'Time\'s up',
 		},
 		previewStyle: {
 			...defaultStyle,
-			size: 'auto',
-			text: 'Show\nHurry Up',
+			size: '18',
+			text: 'Time\'s up',
 		},
 		steps: [
 			{
 				down: [
-					{ actionId: ActionId.MessageText, options: { value: 'Would you please hurry up and get off stage' } },
+					{ actionId: ActionId.MessageText, options: { value: 'Your time is up' } },
 					{ actionId: ActionId.MessageVisibility, options: { value: 2 } },
 				],
 				up: [],
@@ -437,7 +437,7 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		feedbacks: [
 			{
 				feedbackId: feedbackId.MessageVisible,
-				options: { reqText: true, text: 'Would you please hurry up and get off stage' },
+				options: { reqText: true, text: 'Your time is up' },
 				style: {
 					bgcolor: ActiveBlue,
 				},
