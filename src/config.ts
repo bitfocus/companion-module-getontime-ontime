@@ -6,6 +6,7 @@ export interface OntimeConfig {
 	ssl: boolean
 	_version_: string
 	refetchEvents: boolean
+	customToVariable: boolean
 	reconnect: boolean
 	reconnectInterval: number
 }
@@ -62,18 +63,28 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			type: 'number',
 			min: 1,
 			max: 60,
-			default: 5,
+			default: 8,
 			width: 4,
 			isVisible: (config) => config.reconnect === true,
 			tooltip: 'The interval in seconds between each reconnect attempt.',
 		},
+		//New line
 		{
 			label: 'Refetch events',
 			id: 'refetchEvents',
 			type: 'checkbox',
 			default: true,
-			width: 4,
+			width: 12,
 			tooltip: 'Whether Companion should keep the rundown updated with Ontime by refetching on change.',
+		},
+		//New line
+		{
+			label: 'Custom variables',
+			id: 'customToVariable',
+			type: 'checkbox',
+			default: true,
+			width: 12,
+			tooltip: 'Whether Ontime custom fields should be written to variables.',
 		},
 	]
 }
