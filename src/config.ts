@@ -4,7 +4,7 @@ export interface OntimeConfig {
 	host: string
 	port: string
 	ssl: boolean
-	_version_: string
+	version: string //TODO: remove
 	refetchEvents: boolean
 	customToVariable: boolean
 	reconnect: boolean

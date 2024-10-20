@@ -12,7 +12,6 @@ import type { OntimeConfig } from './config'
 import { feedbackId, ActionId, deprecatedActionId, deprecatedFeedbackId } from './enums'
 import { TimerPhase } from './v3/ontime-types'
 
-
 function update2x4x0(
 	_context: CompanionUpgradeContext<OntimeConfig>,
 	props: CompanionStaticUpgradeProps<OntimeConfig>
@@ -22,7 +21,7 @@ function update2x4x0(
 		updatedActions: new Array<CompanionMigrationAction>(),
 		updatedFeedbacks: new Array<CompanionMigrationFeedback>(),
 	}
-	if (_context.currentConfig._version_ === 'v1') {
+	if (_context.currentConfig.version === 'v1') {
 		for (const action of props.actions) {
 			if (action.actionId === 'setSpeakerMessageVisibility') {
 				action.actionId = deprecatedActionId.SetTimerMessageVisibility
@@ -41,7 +40,7 @@ function update2x4x0(
 				result.updatedFeedbacks.push(feedback)
 			}
 		}
-	} else if (_context.currentConfig._version_ === 'v2') {
+	} else if (_context.currentConfig.version === 'v2') {
 		for (const action of props.actions) {
 			if (action.actionId === 'setSpeakerMessageVisibility') {
 				action.actionId = deprecatedActionId.SetTimerMessageVisibility
@@ -78,7 +77,7 @@ function update3x4x0(
 		updatedActions: new Array<CompanionMigrationAction>(),
 		updatedFeedbacks: new Array<CompanionMigrationFeedback>(),
 	}
-	if (_context.currentConfig._version_ === 'v2') {
+	if (_context.currentConfig.version === 'v2') {
 		for (const action of props.actions) {
 			if (action.actionId === ActionId.Change) {
 				if ('val' in action.options) {
