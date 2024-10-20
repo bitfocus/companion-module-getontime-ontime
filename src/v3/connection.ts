@@ -338,7 +338,7 @@ async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Promise<v
 	try {
 		const response = await fetch(`${prefix}://${host}:${self.config.port}/data/rundown`, {
 			method: 'GET',
-			headers: { Etag: rundownEtag },
+			headers: { 'if-none-match': rundownEtag, 'cache-control': '3600', pragma: '' },
 		})
 		if (!response.ok) {
 			ontime.events = []
@@ -371,7 +371,7 @@ async function fetchCustomFields(self: OnTimeInstance, ontime: OntimeV3): Promis
 	try {
 		const response = await fetch(`${prefix}://${host}:${self.config.port}/data/custom-fields`, {
 			method: 'GET',
-			headers: { Etag: customFieldsEtag },
+			headers: { 'if-none-match': customFieldsEtag, 'cache-control': '3600', pragma: '' },
 		})
 		if (response.status === 304) {
 			self.log('debug', '304 -> nothing change custom fields')
