@@ -44,10 +44,10 @@ export class OntimeV3 implements OntimeClient {
 					{ name: `Custom "${name}" value of next event`, variableId: `${variableId}_CustomNext` },
 				]
 			})
-			
-			return variables.concat(...customVariables)
+
+			return variables().concat(...customVariables)
 		}
-		return variables
+		return variables()
 	}
 
 	getActions(): CompanionActionDefinitions {
