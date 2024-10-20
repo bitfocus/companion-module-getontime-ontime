@@ -162,6 +162,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		})
 		if (self.config.customToVariable) {
 			self.setVariableValues(variablesFromCustomFields(ontime, 'Now', val?.custom))
+			self.checkFeedbacks(feedbackId.CustomFieldsValue)
 		}
 	}
 
@@ -185,7 +186,10 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			[variableId.CueNext]: val?.cue ?? '',
 			[variableId.IdNext]: val?.id ?? '',
 		})
-		self.setVariableValues(variablesFromCustomFields(ontime, 'Next', val?.custom))
+		if (self.config.customToVariable) {
+			self.setVariableValues(variablesFromCustomFields(ontime, 'Next', val?.custom))
+			self.checkFeedbacks(feedbackId.CustomFieldsValue)
+		}
 	}
 
 	const updateCurrentBlock = (val: CurrentBlockState) => {
@@ -279,13 +283,17 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					self.log('debug', version)
 					if (version.at(0) === '3') {
 						if (Number(version.at(1)) < 6) {
-							self.updateStatus(InstanceStatus.BadConfig, 'Ontime version is too old (required >3.6.0) some features are not available')
+							self.updateStatus(
+								InstanceStatus.BadConfig,
+								'Ontime version is too old (required >3.6.0) some features are not available'
+							)
 						} else {
 							self.updateStatus(InstanceStatus.Ok, payload)
 						}
 						await fetchCustomFields(self, ontime)
 						await fetchAllEvents(self, ontime)
 						self.init_actions()
+						self.init_feedbacks()
 						const prev = findPreviousPlayableEvent(ontime)
 						updateEventPrevious(prev)
 						if (self.config.customToVariable) {
@@ -311,6 +319,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					const change = await fetchCustomFields(self, ontime)
 					if (change && self.config.customToVariable) {
 						self.setVariableDefinitions(ontime.getVariables(true))
+						self.init_feedbacks()
 					}
 					break
 				}

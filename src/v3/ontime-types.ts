@@ -162,7 +162,7 @@ export type CustomField = {
 }
 
 export type CustomFields = Record<string, CustomField>
-export type EventCustomFields = Record<string, { value: string }>
+export type EventCustomFields = Record<string, string>
 
 //Extra timer
 

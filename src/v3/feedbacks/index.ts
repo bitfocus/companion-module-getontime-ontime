@@ -6,6 +6,7 @@ import { createTimerPhaseFeedback } from './timerPhase'
 import { createOffsetFeedbacks } from './offset'
 import { createAuxTimerFeedbacks } from './auxTimer'
 import { createProgressFeedbacks } from './progress'
+import { createCustomFieldsFeedbacks } from './customFields'
 
 export function feedbacks(ontime: OntimeV3): CompanionFeedbackDefinitions {
 	const feedbacks: { [id: string]: CompanionFeedbackDefinition | undefined } = {
@@ -15,6 +16,7 @@ export function feedbacks(ontime: OntimeV3): CompanionFeedbackDefinitions {
 		...createProgressFeedbacks(ontime),
 		...createOffsetFeedbacks(ontime),
 		...createAuxTimerFeedbacks(ontime),
+		...createCustomFieldsFeedbacks(ontime),
 	}
 
 	return feedbacks

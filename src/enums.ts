@@ -66,6 +66,8 @@ export enum feedbackId {
 
 	RundownOffset = 'rundownOffset',
 
+	CustomFieldsValue = 'customFieldsValue',
+
 	AuxTimerPlayback = 'auxTimerPlayback',
 	AuxTimerNegative = 'auxTimerNegativePlayback',
 }
