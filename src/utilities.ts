@@ -105,13 +105,16 @@ export function variablesFromCustomFields(
 	postFix: string,
 	val: EventCustomFields | undefined
 ): CompanionVariableValues {
+	const companionVariableValues: CompanionVariableValues = {}
 	if (typeof val === 'undefined') {
-		return Object.keys(ontime.customFields).reduce((p, id) => {
-			return Object.assign(p, { [`${id}_Custom${postFix}`]: undefined })
-		}, {})
+		Object.keys(ontime.customFields).forEach((key) => {
+			companionVariableValues[`${key}_Custom${postFix}`] = undefined
+		})
+		return companionVariableValues
 	}
 
-	return Object.keys(ontime.customFields).reduce((p, id) => {
-		return Object.assign(p, { [`${id}_Custom${postFix}`]: val[id] })
-	}, {})
+	Object.keys(ontime.customFields).forEach((key) => {
+		companionVariableValues[`${key}_Custom${postFix}`] = val[key]
+	})
+	return companionVariableValues
 }
