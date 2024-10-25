@@ -33,7 +33,20 @@ export class OntimeV3 implements OntimeClient {
 		disconnectSocket()
 	}
 
-	getVariables(): CompanionVariableDefinition[] {
+	getVariables(includeCustom: boolean = false): CompanionVariableDefinition[] {
+		if (includeCustom) {
+			const customVariables = Object.entries(this.customFields).map((value) => {
+				const name = value[1].label
+				const variableId = value[0]
+				return [
+					{ name: `Custom "${name}" value of previous event`, variableId: `${variableId}_CustomPrevious` },
+					{ name: `Custom "${name}" value of current event`, variableId: `${variableId}_CustomNow` },
+					{ name: `Custom "${name}" value of next event`, variableId: `${variableId}_CustomNext` },
+				]
+			})
+
+			return variables().concat(...customVariables)
+		}
 		return variables()
 	}
 
