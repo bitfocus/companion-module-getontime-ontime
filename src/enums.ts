@@ -25,6 +25,8 @@ export enum ActionId {
 	AuxTimerDuration = 'auxTimerDuration',
 	AuxTimerPlayState = 'auxTimerPlayState',
 	AuxTimerDirection = 'auxTimerDirection',
+
+	Freeze = 'freeze',
 }
 
 export enum deprecatedActionId {
@@ -70,6 +72,8 @@ export enum feedbackId {
 
 	AuxTimerPlayback = 'auxTimerPlayback',
 	AuxTimerNegative = 'auxTimerNegativePlayback',
+
+	Frozen = 'frozen',
 }
 
 export enum deprecatedFeedbackId {
@@ -144,6 +148,8 @@ export enum variableId {
 	ActualStart = 'actualStart_hms',
 	PlannedEnd = 'plannedEnd_hms',
 	ExpectedEnd = 'expectedEnd_hms',
+
+	Frozen = 'frozen',
 }
 
 export enum deprecatedVariableId {

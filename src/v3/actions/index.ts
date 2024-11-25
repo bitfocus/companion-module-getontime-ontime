@@ -5,6 +5,7 @@ import { createMessageActions } from './message'
 import { createChangeActions } from './change'
 import { OntimeV3 } from '../ontimev3'
 import { createAuxTimerActions } from './auxTimer'
+import { createFreezeActions } from './frozen'
 
 /**
  * Returns all implemented actions.
@@ -18,6 +19,7 @@ export function actions(ontime: OntimeV3): CompanionActionDefinitions {
 		...createPlaybackActions(ontime),
 		...createChangeActions(ontime),
 		...createAuxTimerActions(ontime),
+		...createFreezeActions(ontime),
 	}
 	return actions
 }

@@ -66,6 +66,9 @@ export type RuntimeStore = {
 	currentBlock: CurrentBlockState
 	// extra timers
 	auxtimer1: SimpleTimerState
+
+	// flags
+	frozen: boolean
 }
 
 /**
