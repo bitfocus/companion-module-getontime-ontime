@@ -2,6 +2,12 @@ import { CompanionVariableValues, DropdownChoice } from '@companion-module/base'
 import { EventCustomFields, OntimeEvent, RuntimeStore, SimpleTimerState } from './v3/ontime-types.js'
 import { OntimeV3 } from './v3/ontimev3.js'
 
+export enum ToggleOnOff {
+	Off = 0,
+	On = 1,
+	Toggle = 2,
+}
+
 export const joinTime = (...args: string[]) => args.join(':')
 
 function padTo2Digits(number: number) {

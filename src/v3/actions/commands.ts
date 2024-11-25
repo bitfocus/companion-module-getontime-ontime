@@ -9,4 +9,5 @@ export enum ActionCommand {
 	Message = 'message',
 	Change = 'change',
 	AuxTimer = 'auxtimer',
+	Freeze = 'freeze',
 }

@@ -217,5 +217,9 @@ export function variables(): CompanionVariableDefinition[] {
 			name: 'Aux timer 1 direction (count-up/count-down)',
 			variableId: variableId.AuxTimerDirection + '-1',
 		},
+		{
+			name: 'Frozen Rundown',
+			variableId: variableId.Frozen,
+		},
 	]
 }

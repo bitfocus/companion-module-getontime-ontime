@@ -3,18 +3,13 @@ import { socketSendJson } from '../connection'
 import { ActionId } from '../../enums'
 import { ActionCommand } from './commands'
 import { OntimeV3 } from '../ontimev3'
-
-enum ToggleOnOff {
-	Off = 0,
-	On = 1,
-	Toggle = 2,
-}
+import { ToggleOnOff } from '../../utilities'
 
 export function createMessageActions(ontime: OntimeV3): { [id: string]: CompanionActionDefinition } {
 	function messageVisibility(action: CompanionActionEvent): void {
 		const value = action.options.value as ToggleOnOff
 		const visible = value === ToggleOnOff.Toggle ? !ontime.state.message.timer.visible : value
-		socketSendJson('message', { timer: { visible } })
+		socketSendJson(ActionCommand.Message, { timer: { visible } })
 	}
 
 	function messageVisibilityAndText(action: CompanionActionEvent): void {
@@ -25,17 +20,17 @@ export function createMessageActions(ontime: OntimeV3): { [id: string]: Companio
 		switch (value) {
 			case ToggleOnOff.Off:
 				if (thisTextIsVisible) {
-					socketSendJson('message', { timer: { visible: false } })
+					socketSendJson(ActionCommand.Message, { timer: { visible: false } })
 				}
 				break
 			case ToggleOnOff.On:
-				socketSendJson('message', { timer: { visible: true, text } })
+				socketSendJson(ActionCommand.Message, { timer: { visible: true, text } })
 				break
 			case ToggleOnOff.Toggle:
 				if (thisTextIsVisible) {
-					socketSendJson('message', { timer: { visible: false, text } })
+					socketSendJson(ActionCommand.Message, { timer: { visible: false, text } })
 				} else {
-					socketSendJson('message', { timer: { visible: true, text } })
+					socketSendJson(ActionCommand.Message, { timer: { visible: true, text } })
 				}
 				break
 		}

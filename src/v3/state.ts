@@ -38,6 +38,8 @@ const stateobj: RuntimeStore = {
 		playback: SimplePlayback.Stop,
 		direction: SimpleDirection.CountDown,
 	},
+
+	frozen: false,
 }
 
 export { stateobj }

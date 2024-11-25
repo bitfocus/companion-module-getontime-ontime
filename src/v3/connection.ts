@@ -202,6 +202,12 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		})
 	}
 
+	const updateFrozen = (val: boolean) => {
+		ontime.state.frozen = val
+		self.setVariableValues({ [variableId.Frozen]: val })
+		self.checkFeedbacks(feedbackId.Frozen)
+	}
+
 	const updateAuxTimer1 = (val: SimpleTimerState) => {
 		ontime.state.auxtimer1 = val
 		const duration = msToSplitTime(val.duration)
@@ -263,6 +269,10 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					updateCurrentBlock(payload)
 					break
 				}
+				case 'ontime-frozen': {
+					updateFrozen(payload)
+					break
+				}
 				case 'ontime': {
 					updateTimer(payload.timer)
 					updateClock(payload.clock)
@@ -273,6 +283,11 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					// currentBlock dons't exist in ontime prior to v3.5.0
 					if ('currentBlock' in payload) {
 						updateCurrentBlock(payload.currentBlock)
+					}
+
+					// currentBlock dons't exist in ontime prior to v3.9.0
+					if ('frozen' in payload) {
+						updateFrozen(payload.frozen)
 					}
 					break
 				}
