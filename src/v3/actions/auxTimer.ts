@@ -34,6 +34,13 @@ export function createAuxTimerActions(ontime: OntimeV3): { [id: string]: Compani
 		socketSendJson(ActionCommand.AuxTimer, { [id]: { duration: val } })
 	}
 
+	function addTime(action: CompanionActionEvent): void {
+		const id = action.options.destination as string
+		const { hours, minutes, seconds, addremove } = action.options
+		const val = ((Number(hours) * 60 + Number(minutes)) * 60 + Number(seconds)) * (addremove == 'remove' ? -1 : 1)
+		socketSendJson(ActionCommand.AuxTimer, { [id]: { addtime: val } })
+	}
+
 	return {
 		[ActionId.AuxTimerPlayState]: {
 			name: 'Start/Stop/Pause the aux timer',
@@ -130,6 +137,60 @@ export function createAuxTimerActions(ontime: OntimeV3): { [id: string]: Compani
 			],
 			callback: ({ options }) =>
 				socketSendJson(ActionCommand.AuxTimer, { [options.destination as string]: { direction: options.direction } }),
+		},
+		[ActionId.AuxTimerAdd]: {
+			name: 'Add / remove time to aux timer',
+			options: [
+				{
+					type: 'dropdown',
+					choices: [{ id: '1', label: 'Aux Timer 1' }],
+					default: '1',
+					id: 'destination',
+					label: 'Select Aux Timer',
+					isVisible: () => false, //This Stays hidden for now
+				},
+				{
+					id: 'addremove',
+					type: 'dropdown',
+					choices: [
+						{ id: 'add', label: 'Add Time' },
+						{ id: 'remove', label: 'Remove Time' },
+					],
+					label: 'Add or Remove',
+					default: 'add',
+				},
+				{
+					type: 'number',
+					id: 'hours',
+					label: 'Hours',
+					default: 0,
+					step: 1,
+					min: 0,
+					max: 24,
+					required: true,
+				},
+				{
+					type: 'number',
+					id: 'minutes',
+					label: 'Minutes',
+					default: 1,
+					step: 1,
+					min: 0,
+					max: 1440,
+					required: true,
+				},
+				{
+					type: 'number',
+					id: 'seconds',
+					label: 'Seconds',
+					default: 0,
+					min: 0,
+					max: 86400,
+					step: 1,
+					required: true,
+				},
+			],
+			callback: addTime,
 		},
 	}
 }
