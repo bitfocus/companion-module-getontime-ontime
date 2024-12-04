@@ -25,6 +25,7 @@ export enum ActionId {
 	AuxTimerDuration = 'auxTimerDuration',
 	AuxTimerPlayState = 'auxTimerPlayState',
 	AuxTimerDirection = 'auxTimerDirection',
+	AuxTimerAdd = 'auxTimerAdd',
 }
 
 export enum deprecatedActionId {
