@@ -410,7 +410,7 @@ const rundownPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 	},
 	offset: {
 		type: 'button',
-		category: 'rundown',
+		category: 'Rundown',
 		name: 'Current offset',
 		style: {
 			...defaultStyle,
@@ -420,7 +420,7 @@ const rundownPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		previewStyle: {
 			...defaultStyle,
 			size: '14',
-			text: '00:05:00',
+			text: '00:00:05',
 		},
 		feedbacks: [
 			{
