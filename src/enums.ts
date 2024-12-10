@@ -146,6 +146,13 @@ export enum variableId {
 	ExpectedEnd = 'expectedEnd_hms',
 }
 
+export enum OffsetState {
+	On = 'on',
+	Behind = 'behind',
+	Ahead = 'ahead',
+	Both = 'both',
+}
+
 export enum deprecatedVariableId {
 	SubtitleNow = 'subtitleNow',
 	SpeakerNow = 'speakerNow',
