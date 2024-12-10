@@ -1,21 +1,23 @@
 import { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition } from '@companion-module/base'
 import { OntimeV3 } from '../ontimev3'
-import { feedbackId } from '../../enums'
+import {feedbackId, OffsetState} from '../../enums'
 import { DangerRed, White } from '../../assets/colours'
 
 export function createOffsetFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
 	function offset(feedback: CompanionFeedbackBooleanEvent): boolean {
-		const state = feedback.options.state
+		let state = feedback.options.state
+		if (!state) return false
+		state = state as OffsetState;
 		const margin = Number(feedback.options.margin)
 		const offset = (ontime.state.runtime.offset ?? 0) / 1000
 		switch (state) {
-			case 'on':
+			case OffsetState.On:
 				return offset > -margin && offset < margin
-			case 'both':
+			case OffsetState.Both:
 				return offset < -margin || offset > margin
-			case 'over':
+			case OffsetState.Behind:
 				return offset < -margin
-			case 'under':
+			case OffsetState.Ahead:
 				return offset > margin
 		}
 
@@ -37,10 +39,10 @@ export function createOffsetFeedbacks(ontime: OntimeV3): { [id: string]: Compani
 					label: 'State',
 					id: 'state',
 					choices: [
-						{ id: 'on', label: 'On time' },
-						{ id: 'behind', label: 'Behind schedule' },
-						{ id: 'ahead', label: 'Ahead of schedule' },
-						{ id: 'both', label: 'Behind or Ahead of schedule' },
+						{ id: OffsetState.On, label: 'On time' },
+						{ id: OffsetState.Behind, label: 'Behind schedule' },
+						{ id: OffsetState.Ahead, label: 'Ahead of schedule' },
+						{ id: OffsetState.Both, label: 'Behind or Ahead of schedule' },
 					],
 					default: 'behind',
 				},
