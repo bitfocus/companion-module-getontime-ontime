@@ -22,9 +22,9 @@ export function createOffsetFeedbacks(ontime: OntimeV3): { [id: string]: Compani
 				return offset > -margin && offset < margin
 			case OffsetState.Both:
 				return offset < -margin || offset > margin
-			case OffsetState.Ahead:
-				return offset < -margin
 			case OffsetState.Behind:
+				return offset < -margin
+			case OffsetState.Ahead:
 				return offset > margin
 		}
 
