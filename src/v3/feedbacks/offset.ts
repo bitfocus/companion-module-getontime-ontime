@@ -12,9 +12,8 @@ enum OffsetState {
 
 export function createOffsetFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
 	function offset(feedback: CompanionFeedbackBooleanEvent): boolean {
-		let state = feedback.options.state
+		const state = feedback.options.state as OffsetState | undefined
 		if (!state) return false
-		state = state as OffsetState;
 		const margin = Number(feedback.options.margin)
 		const offset = (ontime.state.runtime.offset ?? 0) / 1000
 		switch (state) {
