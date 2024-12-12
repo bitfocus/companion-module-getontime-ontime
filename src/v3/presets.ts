@@ -418,12 +418,12 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		style: {
 			...defaultStyle,
 			size: '18',
-			text: 'Time\'s up',
+			text: "Time's up",
 		},
 		previewStyle: {
 			...defaultStyle,
 			size: '18',
-			text: 'Time\'s up',
+			text: "Time's up",
 		},
 		steps: [
 			{
@@ -843,7 +843,7 @@ const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				down: [
 					{
 						actionId: ActionId.AuxTimerPlayState,
-						options: { value: 'toggleSS' },
+						options: { value: 'toggleSS', destination: '1' },
 					},
 				],
 				up: [],
@@ -884,7 +884,7 @@ const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				down: [
 					{
 						actionId: ActionId.AuxTimerPlayState,
-						options: { value: 'pause' },
+						options: { value: 'pause', destination: '1' },
 					},
 				],
 				up: [],
@@ -902,5 +902,55 @@ const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				},
 			},
 		],
+	},
+	add_auxtimer: {
+		type: 'button',
+		category: 'Aux Timer',
+		name: 'Add timer to Aux Timer',
+		style: {
+			...defaultStyle,
+			text: '+5m',
+		},
+		previewStyle: {
+			...defaultStyle,
+			text: '+5m',
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: ActionId.AuxTimerAdd,
+						options: { hours: 0, minutes: 5, seconds: 0, addremove: 'add', destination: '1' },
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [],
+	},
+	remove_auxtimer: {
+		type: 'button',
+		category: 'Aux Timer',
+		name: 'Remove timer to Aux Timer',
+		style: {
+			...defaultStyle,
+			text: '-5m',
+		},
+		previewStyle: {
+			...defaultStyle,
+			text: '-5m',
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: ActionId.AuxTimerAdd,
+						options: { hours: 0, minutes: 5, seconds: 0, addremove: 'remove', destination: '1' },
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [],
 	},
 }
