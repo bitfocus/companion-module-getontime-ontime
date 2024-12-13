@@ -124,7 +124,7 @@ export function changePicker(
 			tooltip: throttledEndpointText,
 			id: 'timeEnd_hhmmss',
 			default: '00:00:00',
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeEnd'),
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeEnd_hhmmss'),
 			useVariables: true,
 		},
 		{
