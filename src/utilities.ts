@@ -118,3 +118,16 @@ export function variablesFromCustomFields(
 	})
 	return companionVariableValues
 }
+
+export function strictTimerStringToSeconds(str: string) {
+	const [hh, mm, ss] = str.split(':')
+
+	if (hh === undefined || mm === undefined || ss === undefined) {
+		return 'undefined'
+	}
+
+	const isNegative = hh.startsWith('-') ? -1 : 1
+	hh.replace('-', '')
+
+	return isNegative * (Number(ss) + Number(mm) * 60 + Number(hh) * 60 * 60)
+}

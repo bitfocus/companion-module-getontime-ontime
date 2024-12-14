@@ -12,7 +12,7 @@ import { OntimeV3 } from '../ontimev3'
 import { MAX_TIME_SECONDS } from '../../enums'
 
 const throttledEndpointText =
-	'This propertiy will cause a recalculation of the rundwon\nand id therfor throttled by ontime'
+	'This property will cause a recalculation of the rundwon\nand id therfor throttled by ontime'
 
 export function changePicker(
 	ontime: OntimeV3
@@ -79,6 +79,15 @@ export function changePicker(
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('duration'),
 		},
 		{
+			type: 'textinput',
+			label: 'Duration (hh:mm:ss)',
+			tooltip: throttledEndpointText,
+			id: 'duration_hhmmss',
+			default: '00:00:00',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('duration_hhmmss'),
+			useVariables: true,
+		},
+		{
 			type: 'number',
 			label: 'Start Time',
 			tooltip: 'In Seconds\n' + throttledEndpointText,
@@ -88,6 +97,15 @@ export function changePicker(
 			max: MAX_TIME_SECONDS,
 			step: 1,
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeStart'),
+		},
+		{
+			type: 'textinput',
+			label: 'Start Time (hh:mm:ss)',
+			tooltip: 'The variable should result in (hh:mm:ss)\n' + throttledEndpointText,
+			id: 'timeStart_hhmmss',
+			default: '00:00:00',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeStart_hhmmss'),
+			useVariables: true,
 		},
 		{
 			type: 'number',
@@ -101,6 +119,15 @@ export function changePicker(
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeEnd'),
 		},
 		{
+			type: 'textinput',
+			label: 'End Time (hh:mm:ss)',
+			tooltip: throttledEndpointText,
+			id: 'timeEnd_hhmmss',
+			default: '00:00:00',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeEnd_hhmmss'),
+			useVariables: true,
+		},
+		{
 			type: 'number',
 			label: 'Warning Time',
 			id: 'timeWarning',
@@ -111,6 +138,14 @@ export function changePicker(
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeWarning'),
 		},
 		{
+			type: 'textinput',
+			label: 'Warning Time (hh:mm:ss)',
+			id: 'timeWarning_hhmmss',
+			default: '00:00:00',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeWarning_hhmmss'),
+			useVariables: true,
+		},
+		{
 			type: 'number',
 			label: 'Danger Time',
 			id: 'timeDanger',
@@ -119,6 +154,14 @@ export function changePicker(
 			max: MAX_TIME_SECONDS,
 			step: 1,
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeDanger'),
+		},
+		{
+			type: 'textinput',
+			label: 'Danger Time (hh:mm:ss)',
+			id: 'timeDanger_hhmmss',
+			default: '00:00:00',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeDanger_hhmmss'),
+			useVariables: true,
 		},
 		{
 			type: 'dropdown',
