@@ -1,14 +1,7 @@
 import { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition } from '@companion-module/base'
 import { OntimeV3 } from '../ontimev3'
-import { feedbackId } from '../../enums'
+import {feedbackId, OffsetState} from '../../enums'
 import { DangerRed, White } from '../../assets/colours'
-
-enum OffsetState {
-	On = 'on',
-	Behind = 'behind',
-	Ahead = 'ahead',
-	Both = 'both',
-}
 
 export function createOffsetFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
 	function offset(feedback: CompanionFeedbackBooleanEvent): boolean {

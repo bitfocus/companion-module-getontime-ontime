@@ -4,7 +4,7 @@ import {
 	CompanionPresetDefinitions,
 } from '@companion-module/base'
 import * as icons from '../assets/icons'
-import { ActionId, feedbackId } from '../enums'
+import {ActionId, feedbackId, OffsetState} from '../enums'
 import { TimerPhase } from './ontime-types'
 import { graphics } from 'companion-module-utils'
 import {
@@ -408,6 +408,44 @@ const rundownPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		],
 		feedbacks: [],
 	},
+	offset: {
+		type: 'button',
+		category: 'Rundown',
+		name: 'Current offset',
+		style: {
+			...defaultStyle,
+			size: '14',
+			text: '$(ontime:rundown_offset_hms)',
+		},
+		previewStyle: {
+			...defaultStyle,
+			size: '14',
+			text: '00:00:05',
+		},
+		feedbacks: [
+			{
+				feedbackId: feedbackId.RundownOffset,
+				options: {
+					state: OffsetState.Ahead,
+					margin: 10
+				},
+				style: {
+					bgcolor: PlaybackGreen,
+				},
+			},
+			{
+				feedbackId: feedbackId.RundownOffset,
+				options: {
+					state: OffsetState.Behind,
+					margin: 10
+				},
+				style: {
+					bgcolor: PlaybackRed,
+				},
+			},
+		],
+		steps: []
+	}
 }
 
 const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
