@@ -291,4 +291,30 @@ function update4xx(
 	return result
 }
 
-export const UpgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [update2x4x0, update3x4x0, update4xx]
+function update46x(_context: CompanionUpgradeContext<OntimeConfig>, props: CompanionStaticUpgradeProps<OntimeConfig>) {
+	const result: CompanionStaticUpgradeResult<OntimeConfig> = {
+		updatedConfig: null,
+		updatedActions: new Array<CompanionMigrationAction>(),
+		updatedFeedbacks: new Array<CompanionMigrationFeedback>(),
+	}
+
+	if (props.config === null) {
+		return result
+	}
+
+	const { host, port } = props.config
+	if (port === null) {
+		return result
+	}
+
+	const newAddress = `${host}:${port}`
+	result.updatedConfig = { ...props.config, host: newAddress, port: null }
+	return result
+}
+
+export const UpgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [
+	update2x4x0,
+	update3x4x0,
+	update4xx,
+	update46x,
+]

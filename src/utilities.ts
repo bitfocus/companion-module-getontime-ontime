@@ -19,8 +19,13 @@ const defaultTimerObject = {
 }
 
 export function sanitizeHost(host: string) {
-	const pattern = /^((http|https):\/\/)/
-	return host.replace(pattern, '')
+	let url = URL.canParse(host) ? new URL(host) : URL.canParse(`http://${host}`) ? new URL(`http://${host}`) : undefined
+
+	if (url === undefined) return
+
+	url.pathname = url.pathname.endsWith('/') ? url.pathname : url.pathname + '/'
+
+	return url
 }
 
 type SplitTime = typeof defaultTimerObject
