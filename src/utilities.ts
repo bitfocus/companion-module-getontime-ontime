@@ -19,17 +19,13 @@ const defaultTimerObject = {
 }
 
 export function sanitizeHost(host: string) {
-	try {
-		const url = new URL(host)
-		return url
-	} catch (_) {
-		try {
-			const url = new URL(`http://${host}`)
-			return url
-		} catch (_) {
-			return
-		}
-	}
+	let url = URL.canParse(host) ? new URL(host) : URL.canParse(`http://${host}`) ? new URL(`http://${host}`) : undefined
+
+	if (url === undefined) return
+
+	url.pathname = url.pathname.endsWith('/') ? url.pathname : url.pathname + '/'
+
+	return url
 }
 
 type SplitTime = typeof defaultTimerObject

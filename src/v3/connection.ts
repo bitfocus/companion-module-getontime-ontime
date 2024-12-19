@@ -49,10 +49,11 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 
 	// set WS location
 	url.protocol = self.config.ssl ? 'wss' : 'ws'
-	url.pathname += 'ws'
-	serverWs = new URL(url)
+	serverWs = new URL(`ws`, url)
 
 	ws = new Websocket(serverWs)
+
+	self.log('info', `connection to server with: ${serverWs}`)
 
 	ws.onopen = () => {
 		clearTimeout(reconnectionTimeout as NodeJS.Timeout)
