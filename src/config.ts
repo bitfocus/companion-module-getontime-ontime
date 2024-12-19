@@ -1,8 +1,8 @@
-import { SomeCompanionConfigField, Regex } from '@companion-module/base'
+import { SomeCompanionConfigField } from '@companion-module/base'
 
 export interface OntimeConfig {
 	host: string
-	port: string
+	port: string | null //TODO: remove
 	ssl: boolean
 	version: string //TODO: remove
 	refetchEvents: boolean
@@ -28,17 +28,7 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			default: '127.0.0.1',
 			width: 6,
 			required: true,
-			tooltip: 'Ontime server address. Valid are IP or URL',
-		},
-		{
-			label: 'Ontime server port ',
-			id: 'port',
-			type: 'textinput',
-			default: '4001',
-			required: true,
-			width: 3,
-			regex: Regex.PORT,
-			tooltip: 'Ontime server port. Default is 4001',
+			tooltip: 'Ontime server address. eg. http://127.0.0.1:4001',
 		},
 		{
 			label: 'Use SSL',
