@@ -202,10 +202,6 @@ export function variables(): CompanionVariableDefinition[] {
 			variableId: variableId.AuxTimerDurationMs + '-1',
 		},
 		{
-			name: 'Aux timer 1 duration (hh:mm:ss)',
-			variableId: variableId.AuxTimerDurationMs + '-1',
-		},
-		{
 			name: 'Aux timer 1 current (hh:mm:ss)',
 			variableId: variableId.AuxTimerCurrent + '-1',
 		},
