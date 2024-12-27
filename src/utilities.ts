@@ -18,12 +18,25 @@ const defaultTimerObject = {
 	negative: '',
 }
 
+function ensureTrailingSlash(url: URL): URL {
+	if (!url.pathname.endsWith('/')) {
+		url.pathname += '/'
+	}
+	return url
+}
+
 export function sanitizeHost(host: string) {
-	let url = URL.canParse(host) ? new URL(host) : URL.canParse(`http://${host}`) ? new URL(`http://${host}`) : undefined
+	let url: URL | undefined
+
+	if (URL.canParse(host)) {
+		url = new URL(host)
+	} else if (URL.canParse(`http://${host}`)) {
+		url = new URL(`http://${host}`)
+	}
 
 	if (url === undefined) return
 
-	url.pathname = url.pathname.endsWith('/') ? url.pathname : url.pathname + '/'
+	url = ensureTrailingSlash(url)
 
 	return url
 }
