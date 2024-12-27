@@ -1,7 +1,7 @@
 import { InputValue, InstanceStatus } from '@companion-module/base'
 import { OnTimeInstance } from '..'
 import Websocket from 'ws'
-import { findPreviousPlayableEvent, msToSplitTime, sanitizeHost, variablesFromCustomFields } from '../utilities'
+import { findPreviousPlayableEvent, msToSplitTime, makeURL, variablesFromCustomFields } from '../utilities'
 import { feedbackId, variableId } from '../enums'
 import {
 	CurrentBlockState,
@@ -29,27 +29,21 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 	reconnectInterval = self.config.reconnectInterval * 1000
 	shouldReconnect = self.config.reconnect
 
-	const url = sanitizeHost(self.config.host)
+	const urls = makeURL(self.config.host, self.config.ssl)
 
-	if (!url) {
+	if (!urls) {
 		self.updateStatus(InstanceStatus.BadConfig, `host format error`)
 		return
 	}
+
+	serverWs = urls.ws
+	serverHttp = urls.http
 
 	self.updateStatus(InstanceStatus.Connecting, 'Trying WS connection')
 
 	if (ws) {
 		ws.close()
 	}
-
-	// set http location
-	url.protocol = self.config.ssl ? 'https' : 'http'
-	self.config.host = url.href
-	serverHttp = new URL(url)
-
-	// set WS location
-	url.protocol = self.config.ssl ? 'wss' : 'ws'
-	serverWs = new URL(`ws`, url)
 
 	ws = new Websocket(serverWs)
 
