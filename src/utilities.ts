@@ -18,9 +18,38 @@ const defaultTimerObject = {
 	negative: '',
 }
 
-export function sanitizeHost(host: string) {
-	const pattern = /^((http|https):\/\/)/
-	return host.replace(pattern, '')
+function ensureTrailingSlash(url: URL): URL {
+	if (!url.pathname.endsWith('/')) {
+		url.pathname += '/'
+	}
+	return url
+}
+
+export function makeURL(host: string, ssl: boolean) {
+	let url: URL | undefined
+
+	if (URL.canParse(host)) {
+		url = new URL(host)
+	} else if (URL.canParse(`http://${host}`)) {
+		url = new URL(`http://${host}`)
+	}
+
+	if (url === undefined) return
+
+	url = ensureTrailingSlash(url)
+
+	const http = new URL(url)
+	const ws = new URL(url)
+
+	if (ssl) {
+		http.protocol = 'https'
+		ws.protocol = 'wss'
+	} else {
+		http.protocol = 'http'
+		ws.protocol = 'ws'
+	}
+
+	return {http, ws}
 }
 
 type SplitTime = typeof defaultTimerObject
