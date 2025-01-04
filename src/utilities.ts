@@ -25,7 +25,7 @@ function ensureTrailingSlash(url: URL): URL {
 	return url
 }
 
-export function makeURL(host: string, ssl: boolean) {
+export function makeURL(host: string, path = '', ssl = false, ws = false) {
 	let url: URL | undefined
 
 	if (URL.canParse(host)) {
@@ -37,19 +37,15 @@ export function makeURL(host: string, ssl: boolean) {
 	if (url === undefined) return
 
 	url = ensureTrailingSlash(url)
-
-	const http = new URL(url)
-	const ws = new URL(url)
+	url.pathname += path
 
 	if (ssl) {
-		http.protocol = 'https'
-		ws.protocol = 'wss'
+		url.protocol = ws ? 'wss' : 'https'
 	} else {
-		http.protocol = 'http'
-		ws.protocol = 'ws'
+		url.protocol = ws ? 'ws' : 'http'
 	}
 
-	return {http, ws}
+	return url
 }
 
 type SplitTime = typeof defaultTimerObject

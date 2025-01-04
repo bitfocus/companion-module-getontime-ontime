@@ -22,22 +22,16 @@ let versionTimeout: NodeJS.Timeout | null = null
 let reconnectInterval: number
 let shouldReconnect = false
 
-let serverWs: URL | null = null
-let serverHttp: URL | null = null
-
 export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 	reconnectInterval = self.config.reconnectInterval * 1000
 	shouldReconnect = self.config.reconnect
 
-	const urls = makeURL(self.config.host, self.config.ssl)
+	const wsUrls = makeURL(self.config.host, 'ws', self.config.ssl, true)
 
-	if (!urls) {
+	if (!wsUrls) {
 		self.updateStatus(InstanceStatus.BadConfig, `host format error`)
 		return
 	}
-
-	serverWs = urls.ws
-	serverHttp = urls.http
 
 	self.updateStatus(InstanceStatus.Connecting, 'Trying WS connection')
 
@@ -45,9 +39,9 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		ws.close()
 	}
 
-	ws = new Websocket(serverWs)
+	ws = new Websocket(wsUrls)
 
-	self.log('info', `connection to server with: ${serverWs}`)
+	self.log('info', `connection to server with: ${wsUrls}`)
 
 	ws.onopen = () => {
 		clearTimeout(reconnectionTimeout as NodeJS.Timeout)
@@ -357,22 +351,23 @@ export function socketSendJson(type: string, payload?: InputValue | object): voi
 let rundownEtag: string = ''
 
 async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
-	if (serverHttp === null) {
+	const serverHttp = makeURL(self.config.host, 'data/rundown', self.config.ssl)
+	if (!serverHttp) {
 		return
 	}
 	self.log('debug', 'fetching events from ontime')
 	try {
-		const response = await fetch(`${serverHttp.href}data/rundown`, {
+		const response = await fetch(serverHttp.href, {
 			method: 'GET',
 			headers: { 'if-none-match': rundownEtag, 'cache-control': '3600', pragma: '' },
 		})
+		if (response.status === 304) {
+			self.log('debug', '304 -> nothing change in rundown')
+			return
+		}
 		if (!response.ok) {
 			ontime.events = []
 			self.log('error', `uable to fetch events: ${response.statusText}`)
-			return
-		}
-		if (response.status === 304) {
-			self.log('debug', '304 -> nothing change in rundown')
 			return
 		}
 		rundownEtag = response.headers.get('Etag') ?? ''
@@ -390,17 +385,23 @@ let customFieldsEtag: string = ''
 
 //TODO: this might need to be updated on an interval
 async function fetchCustomFields(self: OnTimeInstance, ontime: OntimeV3): Promise<boolean> {
-	if (serverHttp === null) {
+	const serverHttp = makeURL(self.config.host, 'data/custom-fields', self.config.ssl)
+	if (!serverHttp) {
 		return false
 	}
 	self.log('debug', 'fetching custom-fields from ontime')
 	try {
-		const response = await fetch(`${serverHttp.href}data/custom-fields`, {
+		const response = await fetch(serverHttp, {
 			method: 'GET',
 			headers: { 'if-none-match': customFieldsEtag, 'cache-control': '3600', pragma: '' },
 		})
 		if (response.status === 304) {
 			self.log('debug', '304 -> nothing change custom fields')
+			return false
+		}
+		if (!response.ok) {
+			ontime.events = []
+			self.log('error', `uable to fetch events: ${response.statusText}`)
 			return false
 		}
 		customFieldsEtag = response.headers.get('Etag') ?? ''
