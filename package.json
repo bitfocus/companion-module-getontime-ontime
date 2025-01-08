@@ -9,38 +9,37 @@
 		"url": "git+https://github.com/bitfocus/companion-module-getontime-ontime.git"
 	},
 	"scripts": {
-		"prepare": "husky install",
-		"dev": "yarn build:watch",
-		"build": "rimraf dist && yarn build:main",
-		"build:main": "tsc -p tsconfig.build.json",
-		"build:watch": "tsc -p tsconfig.build.json --watch",
-		"lint": "eslint ./src --ext .ts",
-		"lint:raw": "eslint --ext .ts --ext .js --ignore-pattern dist --ignore-pattern pkg",
+		"postinstall": "husky",
 		"format": "prettier -w .",
-		"package": "yarn build && companion-module-build",
-		"postinstall": "yarn build"
+		"package": "run build && companion-module-build",
+		"build": "rimraf dist && run build:main",
+		"build:main": "tsc -p tsconfig.build.json",
+		"dev": "tsc -p tsconfig.build.json --watch",
+		"lint:raw": "eslint",
+		"lint": "run lint:raw ."
 	},
 	"engines": {
-		"node": ">=18.16.0"
+		"node": "^22.10.2"
 	},
 	"dependencies": {
-		"@companion-module/base": "^1.7.0",
+		"@companion-module/base": "~1.11.2",
 		"companion-module-utils": "^0.5.0",
 		"ws": "^8.17.1"
 	},
 	"devDependencies": {
-		"@companion-module/tools": "^1.5.0",
-		"@types/node": "^18.16.0",
-		"@types/ws": "^8.5.4",
-		"@typescript-eslint/eslint-plugin": "^5.53.0",
-		"@typescript-eslint/parser": "^5.53.0",
-		"eslint": "^8.34.0",
-		"eslint-plugin-prettier": "^4.0.0",
-		"husky": "^7.0.4",
-		"lint-staged": "^13.1.2",
-		"prettier": "^2.8.4",
-		"rimraf": "^3.0.2",
-		"typescript": "~5.3.3"
+		"@companion-module/tools": "^2.1.1",
+		"@types/node": "^22.10.2",
+		"@types/ws": "^8.5.13",
+		"@typescript-eslint/eslint-plugin": "^8.19.0",
+		"@typescript-eslint/parser": "^8.19.0",
+		"eslint": "^9.17.0",
+		"eslint-plugin-prettier": "^5.2.1",
+		"husky": "^9.1.7",
+		"lint-staged": "^15.2.11",
+		"prettier": "^3.4.2",
+		"rimraf": "^6.0.1",
+		"typescript": "~5.5.4",
+		"typescript-eslint": "^8.18.1"
 	},
 	"lint-staged": {
 		"*.{js,json,md}": [
@@ -49,5 +48,6 @@
 		"*.ts": [
 			"yarn lint --fix"
 		]
-	}
+	},
+	"packageManager": "yarn@4.5.3"
 }

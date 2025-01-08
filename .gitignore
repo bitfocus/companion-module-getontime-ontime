@@ -4,6 +4,8 @@ package-lock.json
 .DS_STORE
 
 .idea
+.yarn
 /pkg
 /pkg.tgz
 DEBUG-PACKAGED
+.yarnrc.yml
