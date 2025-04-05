@@ -47,6 +47,7 @@ body:
       render: shell
   - type: checkboxes
     id: cloud
+    label: Ontime Cloud
     attributes:
       options:
         - label: Used with Ontime Cloud
