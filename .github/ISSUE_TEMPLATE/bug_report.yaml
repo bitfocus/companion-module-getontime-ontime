@@ -1,0 +1,62 @@
+name: Bug Report
+description: File a bug report.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you see!
+      value: "A bug happened!"
+    validations:
+      required: true
+  - type: textarea
+    id: ot-version
+    attributes:
+      label: Ontime Version
+      description: What version of Ontime are you running?
+      placeholder: vX.X.X
+    validations:
+      required: true
+  - type: textarea
+    id: c-version
+    attributes:
+      label: Companion Version
+      description: What version of Companion are you running?
+      placeholder: vX.X.X
+    validations:
+      required: true
+  - type: textarea
+    id: c-version
+    attributes:
+      label: Companion Version
+      description: What version of Companion are you running?
+      placeholder: vX.X.X
+    validations:
+      required: true
+  - type: textarea
+    id: m-version
+    attributes:
+      label: Module Version
+      description: What version is the ontime module in the companion instance?
+      placeholder: vX.X.X
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+  - type: checkboxes
+    id: cloud
+    attributes:
+      label: Ontime Cloud
+      options:
+        - label: Used with Ontime Cloud
