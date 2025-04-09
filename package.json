@@ -42,10 +42,10 @@
 	},
 	"lint-staged": {
 		"*.{js,json,md}": [
-			"prettier --write"
+			"run prettier --write"
 		],
 		"*.ts": [
-			"yarn lint --fix"
+			"run lint --fix"
 		]
 	},
 	"packageManager": "yarn@4.8.1"
