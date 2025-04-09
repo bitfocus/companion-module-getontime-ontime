@@ -8,6 +8,7 @@
 		"type": "git",
 		"url": "git+https://github.com/bitfocus/companion-module-getontime-ontime.git"
 	},
+	"type": "module",
 	"scripts": {
 		"prepare": "husky install",
 		"dev": "yarn build:watch",
