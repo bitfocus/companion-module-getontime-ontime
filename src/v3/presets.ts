@@ -1,11 +1,11 @@
-import {
+import type {
 	CompanionButtonPresetDefinition,
 	CompanionButtonStyleProps,
 	CompanionPresetDefinitions,
 } from '@companion-module/base'
-import * as icons from '../assets/icons'
-import {ActionId, feedbackId, OffsetState} from '../enums'
-import { TimerPhase } from './ontime-types'
+import * as icons from '../assets/icons.js'
+import { ActionId, feedbackId, OffsetState } from '../enums.js'
+import { TimerPhase } from './ontime-types.js'
 import { graphics } from 'companion-module-utils'
 import {
 	ActiveBlue,
@@ -18,7 +18,7 @@ import {
 	RollBlue,
 	WarningOrange,
 	White,
-} from '../assets/colours'
+} from '../assets/colours.js'
 
 export function presets(): CompanionPresetDefinitions {
 	return { ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...rundownPresets, ...messagePresets }
@@ -427,7 +427,7 @@ const rundownPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				feedbackId: feedbackId.RundownOffset,
 				options: {
 					state: OffsetState.Ahead,
-					margin: 10
+					margin: 10,
 				},
 				style: {
 					bgcolor: PlaybackGreen,
@@ -437,15 +437,15 @@ const rundownPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				feedbackId: feedbackId.RundownOffset,
 				options: {
 					state: OffsetState.Behind,
-					margin: 10
+					margin: 10,
 				},
 				style: {
 					bgcolor: PlaybackRed,
 				},
 			},
 		],
-		steps: []
-	}
+		steps: [],
+	},
 }
 
 const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {

@@ -1,9 +1,9 @@
-import { CompanionFeedbackAdvancedEvent, CompanionFeedbackDefinition } from '@companion-module/base'
-import { OntimeV3 } from '../ontimev3'
-import { feedbackId } from '../../enums'
+import type { CompanionFeedbackAdvancedEvent, CompanionFeedbackDefinition } from '@companion-module/base'
+import { OntimeV3 } from '../ontimev3.js'
+import { feedbackId } from '../../enums.js'
 import { graphics } from 'companion-module-utils'
-import { TimerPhase } from '../ontime-types'
-import { DangerRed, NormalGray, WarningOrange } from '../../assets/colours'
+import { TimerPhase } from '../ontime-types.js'
+import { DangerRed, NormalGray, WarningOrange } from '../../assets/colours.js'
 
 export function createProgressFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
 	function progressbar(feedback: CompanionFeedbackAdvancedEvent) {

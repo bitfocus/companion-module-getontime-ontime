@@ -1,7 +1,7 @@
-import { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition } from '@companion-module/base'
-import { OntimeV3 } from '../ontimev3'
-import { feedbackId } from '../../enums'
-import { ActiveBlue, White } from '../../assets/colours'
+import type { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition } from '@companion-module/base'
+import { OntimeV3 } from '../ontimev3.js'
+import { feedbackId } from '../../enums.js'
+import { ActiveBlue, White } from '../../assets/colours.js'
 
 export function createMessageFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
 	function messageVisible(feedback: CompanionFeedbackBooleanEvent): boolean {

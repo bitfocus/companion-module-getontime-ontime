@@ -1,10 +1,10 @@
-import { CompanionActionDefinition, CompanionActionEvent } from '@companion-module/base'
-import { socketSendJson } from '../connection'
-import { ActionId } from '../../enums'
-import { OntimeV3 } from '../ontimev3'
-import { ActionCommand } from './commands'
-import { SimpleDirection, SimplePlayback } from '../ontime-types'
-import { getAuxTimerState } from '../../utilities'
+import type { CompanionActionDefinition, CompanionActionEvent } from '@companion-module/base'
+import { socketSendJson } from '../connection.js'
+import { ActionId } from '../../enums.js'
+import { OntimeV3 } from '../ontimev3.js'
+import { ActionCommand } from './commands.js'
+import { SimpleDirection, SimplePlayback } from '../ontime-types.js'
+import { getAuxTimerState } from '../../utilities.js'
 
 export function createAuxTimerActions(ontime: OntimeV3): { [id: string]: CompanionActionDefinition } {
 	function togglePlayState(action: CompanionActionEvent): void {

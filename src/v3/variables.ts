@@ -1,5 +1,5 @@
-import { CompanionVariableDefinition } from '@companion-module/base'
-import { variableId } from '../enums'
+import type { CompanionVariableDefinition } from '@companion-module/base'
+import { variableId } from '../enums.js'
 
 export function variables(): CompanionVariableDefinition[] {
 	return [
@@ -207,7 +207,7 @@ export function variables(): CompanionVariableDefinition[] {
 		},
 		{
 			name: 'Aux timer 1 playback',
-			variableId: variableId.AuxTimerPalyback + '-1',
+			variableId: variableId.AuxTimerPlayback + '-1',
 		},
 		{
 			name: 'Aux timer 1 direction (count-up/count-down)',

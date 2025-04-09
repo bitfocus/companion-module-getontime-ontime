@@ -1,8 +1,8 @@
-import { CompanionVariableValues, DropdownChoice } from '@companion-module/base'
-import { EventCustomFields, OntimeEvent, RuntimeStore, SimpleTimerState } from './v3/ontime-types.js'
+import type { CompanionVariableValues, DropdownChoice } from '@companion-module/base'
+import type { EventCustomFields, OntimeEvent, RuntimeStore, SimpleTimerState } from './v3/ontime-types.js'
 import { OntimeV3 } from './v3/ontimev3.js'
 
-export const joinTime = (...args: string[]) => args.join(':')
+export const joinTime = (...args: string[]): string => args.join(':')
 
 function padTo2Digits(number: number) {
 	return number.toString().padStart(2, '0')
@@ -25,7 +25,7 @@ function ensureTrailingSlash(url: URL): URL {
 	return url
 }
 
-export function makeURL(host: string, path = '', ssl = false, ws = false) {
+export function makeURL(host: string, path = '', ssl = false, ws = false): URL | undefined {
 	let url: URL | undefined
 
 	if (URL.canParse(host)) {
@@ -100,7 +100,7 @@ export function eventsToChoices(events: OntimeEvent[]): DropdownChoice[] {
 	})
 }
 
-export function getAuxTimerState(ontime: OntimeV3, index = 'auxtimer1') {
+export function getAuxTimerState(ontime: OntimeV3, index = 'auxtimer1'): SimpleTimerState {
 	return ontime.state[index as keyof RuntimeStore] as unknown as SimpleTimerState
 }
 
@@ -128,7 +128,7 @@ export function findPreviousPlayableEvent(ontime: OntimeV3): OntimeEvent | null 
 export function variablesFromCustomFields(
 	ontime: OntimeV3,
 	postFix: string,
-	val: EventCustomFields | undefined
+	val: EventCustomFields | undefined,
 ): CompanionVariableValues {
 	const companionVariableValues: CompanionVariableValues = {}
 	if (typeof val === 'undefined') {
@@ -144,7 +144,7 @@ export function variablesFromCustomFields(
 	return companionVariableValues
 }
 
-export function strictTimerStringToSeconds(str: string) {
+export function strictTimerStringToSeconds(str: string): string | number {
 	const [hh, mm, ss] = str.split(':')
 
 	if (hh === undefined || mm === undefined || ss === undefined) {

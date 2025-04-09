@@ -1,8 +1,8 @@
-import { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition } from '@companion-module/base'
-import { OntimeV3 } from '../ontimev3'
-import { feedbackId } from '../../enums'
-import { Playback } from '../ontime-types'
-import { PauseOrange, PlaybackGreen, White } from '../../assets/colours'
+import type { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition } from '@companion-module/base'
+import { OntimeV3 } from '../ontimev3.js'
+import { feedbackId } from '../../enums.js'
+import { Playback } from '../ontime-types.js'
+import { PauseOrange, PlaybackGreen, White } from '../../assets/colours.js'
 
 export function createPlaybackFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
 	function addTime(feedback: CompanionFeedbackBooleanEvent): boolean {

@@ -133,9 +133,8 @@ export enum variableId {
 
 	AuxTimerDurationMs = 'auxTimer_duration_ms',
 	AuxTimerPlayback = 'auxTimer_playback',
-	AuxTimerCurrentMs = 'auxTimer_current_hms',
+	AuxTimerCurrentMs = 'auxTimer_current_ms',
 	AuxTimerCurrent = 'auxTimer_current_hms',
-	AuxTimerPalyback = 'auxTimer_playback',
 	AuxTimerDirection = 'auxTimer_direction',
 
 	NumberOfEvents = 'numEvents',

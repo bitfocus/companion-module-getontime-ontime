@@ -1,20 +1,21 @@
-import {
+/* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
+import type {
 	// CreateConvertToBooleanFeedbackUpgradeScript,
-	type CompanionStaticUpgradeProps,
-	type CompanionStaticUpgradeResult,
-	type CompanionUpgradeContext,
+	CompanionStaticUpgradeProps,
+	CompanionStaticUpgradeResult,
+	CompanionUpgradeContext,
 	// type InputValue,
-	type CompanionStaticUpgradeScript,
-	type CompanionMigrationAction,
-	type CompanionMigrationFeedback,
+	CompanionStaticUpgradeScript,
+	CompanionMigrationAction,
+	CompanionMigrationFeedback,
 } from '@companion-module/base'
-import type { OntimeConfig } from './config'
-import { feedbackId, ActionId, deprecatedActionId, deprecatedFeedbackId } from './enums'
-import { TimerPhase } from './v3/ontime-types'
+import type { OntimeConfig } from './config.js'
+import { feedbackId, ActionId, deprecatedActionId, deprecatedFeedbackId } from './enums.js'
+import { TimerPhase } from './v3/ontime-types.js'
 
 function update2x4x0(
 	_context: CompanionUpgradeContext<OntimeConfig>,
-	props: CompanionStaticUpgradeProps<OntimeConfig>
+	props: CompanionStaticUpgradeProps<OntimeConfig>,
 ): CompanionStaticUpgradeResult<OntimeConfig> {
 	const result = {
 		updatedConfig: null,
@@ -70,7 +71,7 @@ function update2x4x0(
 
 function update3x4x0(
 	_context: CompanionUpgradeContext<OntimeConfig>,
-	props: CompanionStaticUpgradeProps<OntimeConfig>
+	props: CompanionStaticUpgradeProps<OntimeConfig>,
 ): CompanionStaticUpgradeResult<OntimeConfig> {
 	const result = {
 		updatedConfig: null,
@@ -250,7 +251,7 @@ function update3x4x0(
 
 function update4xx(
 	_context: CompanionUpgradeContext<OntimeConfig>,
-	props: CompanionStaticUpgradeProps<OntimeConfig>
+	props: CompanionStaticUpgradeProps<OntimeConfig>,
 ): CompanionStaticUpgradeResult<OntimeConfig> {
 	const result = {
 		updatedConfig: null,
@@ -291,7 +292,10 @@ function update4xx(
 	return result
 }
 
-function update46x(_context: CompanionUpgradeContext<OntimeConfig>, props: CompanionStaticUpgradeProps<OntimeConfig>) {
+function update46x(
+	_context: CompanionUpgradeContext<OntimeConfig>,
+	props: CompanionStaticUpgradeProps<OntimeConfig>,
+): CompanionStaticUpgradeResult<OntimeConfig> {
 	const result: CompanionStaticUpgradeResult<OntimeConfig> = {
 		updatedConfig: null,
 		updatedActions: new Array<CompanionMigrationAction>(),

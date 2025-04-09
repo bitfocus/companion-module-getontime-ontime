@@ -1,9 +1,17 @@
-node_modules/
-dist/
-package-lock.json
-.DS_STORE
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 
-.idea
-/pkg
-/pkg.tgz
-DEBUG-PACKAGED
+node_modules/
+
+dist/
+pkg
+pkg.tgz
+DEBUG-*
+/.vscode
+
+.DS_STORE
