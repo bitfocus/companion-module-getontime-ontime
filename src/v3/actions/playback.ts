@@ -1,10 +1,10 @@
-import { CompanionActionDefinition, CompanionActionEvent } from '@companion-module/base'
-import { socketSendJson } from '../connection'
-import { ActionId } from '../../enums'
-import { ActionCommand } from './commands'
-import { eventPicker } from './eventPicker'
-import { OntimeV3 } from '../ontimev3'
-import { Playback } from '../ontime-types'
+import type { CompanionActionDefinition, CompanionActionEvent } from '@companion-module/base'
+import { socketSendJson } from '../connection.js'
+import { ActionId } from '../../enums.js'
+import { ActionCommand } from './commands.js'
+import { eventPicker } from './eventPicker.js'
+import { OntimeV3 } from '../ontimev3.js'
+import { Playback } from '../ontime-types.js'
 
 export function createPlaybackActions(ontime: OntimeV3): { [id: string]: CompanionActionDefinition } {
 	function start(action: CompanionActionEvent): void {

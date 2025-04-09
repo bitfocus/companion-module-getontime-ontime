@@ -1,16 +1,17 @@
-import {
-	runEntrypoint,
-	InstanceBase,
-	InstanceStatus,
+import type {
 	SomeCompanionConfigField,
 	CompanionActionDefinitions,
 	CompanionPresetDefinitions,
 	CompanionVariableDefinition,
 	CompanionFeedbackDefinitions,
 } from '@companion-module/base'
-import { OntimeConfig, GetConfigFields } from './config'
-import { OntimeV3 } from './v3/ontimev3'
-import { UpgradeScripts } from './upgrades'
+import { runEntrypoint, InstanceBase, InstanceStatus } from '@companion-module/base'
+
+import type { OntimeConfig } from './config.js'
+import { GetConfigFields } from './config.js'
+import { OntimeV3 } from './v3/ontimev3.js'
+import { UpgradeScripts } from './upgrades.js'
+
 export interface OntimeClient {
 	instance: OnTimeInstance
 

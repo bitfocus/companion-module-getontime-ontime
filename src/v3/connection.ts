@@ -1,20 +1,20 @@
-import { InputValue, InstanceStatus } from '@companion-module/base'
-import { OnTimeInstance } from '..'
+import { type InputValue, InstanceStatus } from '@companion-module/base'
+import { OnTimeInstance } from '../index.js'
 import Websocket from 'ws'
-import { findPreviousPlayableEvent, msToSplitTime, makeURL, variablesFromCustomFields } from '../utilities'
-import { feedbackId, variableId } from '../enums'
-import {
+import { findPreviousPlayableEvent, msToSplitTime, makeURL, variablesFromCustomFields } from '../utilities.js'
+import { feedbackId, variableId } from '../enums.js'
+import type {
 	CurrentBlockState,
 	MessageState,
 	OntimeBaseEvent,
 	OntimeEvent,
 	Runtime,
 	SimpleTimerState,
-	SupportedEvent,
 	TimerState,
-} from './ontime-types'
-import { OntimeV3 } from './ontimev3'
-import { CustomFields } from './ontime-types'
+	CustomFields,
+} from './ontime-types.js'
+import { SupportedEvent } from './ontime-types.js'
+import { OntimeV3 } from './ontimev3.js'
 
 let ws: Websocket | null = null
 let reconnectionTimeout: NodeJS.Timeout | null = null
@@ -52,7 +52,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			self.updateStatus(InstanceStatus.ConnectionFailure, 'Unsupported version: see log')
 			self.log(
 				'error',
-				'The version request timed out, this is most likely do to an old ontime version. You can download the latest version of Ontime through the website https://www.getontime.no/'
+				'The version request timed out, this is most likely do to an old ontime version. You can download the latest version of Ontime through the website https://www.getontime.no/',
 			)
 			ws?.close()
 		}, 500)
@@ -108,7 +108,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			feedbackId.ColorAddRemove,
 			feedbackId.TimerPhase,
 			feedbackId.TimerProgressBar,
-			feedbackId.TimerProgressBarMulti
+			feedbackId.TimerProgressBarMulti,
 		)
 	}
 
@@ -127,7 +127,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			feedbackId.MessageVisible,
 			feedbackId.TimerBlackout,
 			feedbackId.TimerBlink,
-			feedbackId.MessageSecondarySourceVisible
+			feedbackId.MessageSecondarySourceVisible,
 		)
 	}
 
@@ -211,12 +211,13 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			[variableId.AuxTimerCurrentMs + '-1']: val.current,
 			[variableId.AuxTimerDirection + '-1']: duration.hoursMinutesSeconds,
 			[variableId.AuxTimerCurrent + '-1']: current.hoursMinutesSeconds,
-			[variableId.AuxTimerPalyback + '-1']: val.playback,
+			[variableId.AuxTimerPlayback + '-1']: val.playback,
 			[variableId.AuxTimerDirection + '-1']: val.direction,
 		})
 		self.checkFeedbacks(feedbackId.AuxTimerNegative, feedbackId.AuxTimerPlayback)
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises -- TODO: not sure how to fix this
 	ws.onmessage = async (event: any) => {
 		try {
 			const data = JSON.parse(event.data)
@@ -284,7 +285,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 						if (Number(version.at(1)) < 6) {
 							self.updateStatus(
 								InstanceStatus.BadConfig,
-								'Ontime version is too old (required >3.6.0) some features are not available'
+								'Ontime version is too old (required >3.6.0) some features are not available',
 							)
 						} else {
 							self.updateStatus(InstanceStatus.Ok, payload)
@@ -302,7 +303,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 						self.updateStatus(InstanceStatus.ConnectionFailure, 'Unsupported version: see log')
 						self.log(
 							'error',
-							`Unsupported version "${payload}" You can download the latest version of Ontime through the website https://www.getontime.no/`
+							`Unsupported version "${payload}" You can download the latest version of Ontime through the website https://www.getontime.no/`,
 						)
 						ws?.close()
 					}
@@ -343,7 +344,7 @@ export function socketSendJson(type: string, payload?: InputValue | object): voi
 			JSON.stringify({
 				type,
 				payload,
-			})
+			}),
 		)
 	}
 }

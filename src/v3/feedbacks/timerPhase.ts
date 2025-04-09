@@ -1,4 +1,4 @@
-import { CompanionFeedbackDefinition } from '@companion-module/base'
+import type { CompanionFeedbackDefinition } from '@companion-module/base'
 import { TimerPhase } from '../ontime-types.js'
 import { feedbackId } from '../../enums.js'
 import { OntimeV3 } from '../ontimev3.js'
@@ -34,7 +34,7 @@ export function createTimerPhaseFeedback(ontime: OntimeV3): {
 			],
 			callback: (feedback) => {
 				if (typeof feedback.options.phase === 'string') {
-					return feedback.options.phase === ontime.state.timer.phase
+					return feedback.options.phase === ontime.state.timer.phase // eslint-disable-line @typescript-eslint/no-unsafe-enum-comparison
 				}
 				return (feedback.options.phase as TimerPhase[]).some((value) => value === ontime.state.timer.phase)
 			},

@@ -1,16 +1,12 @@
-import {
-	CompanionActionDefinition,
-	CompanionActionEvent,
-	splitHex,
-	CompanionActionContext,
-} from '@companion-module/base'
-import { socketSendJson } from '../connection'
-import { ActionId } from '../../enums'
-import { ActionCommand } from './commands'
-import { changePicker } from './changePicker'
-import { eventPicker } from './eventPicker'
-import { OntimeV3 } from '../ontimev3'
-import { strictTimerStringToSeconds } from '../../utilities'
+import type { CompanionActionDefinition, CompanionActionEvent, CompanionActionContext } from '@companion-module/base'
+import { splitHex } from '@companion-module/base'
+import { socketSendJson } from '../connection.js'
+import { ActionId } from '../../enums.js'
+import { ActionCommand } from './commands.js'
+import { changePicker } from './changePicker.js'
+import { eventPicker } from './eventPicker.js'
+import { OntimeV3 } from '../ontimev3.js'
+import { strictTimerStringToSeconds } from '../../utilities.js'
 
 export function createChangeActions(ontime: OntimeV3): { [id: string]: CompanionActionDefinition } {
 	async function changeEvent(action: CompanionActionEvent, context: CompanionActionContext): Promise<void> {
