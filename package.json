@@ -21,7 +21,7 @@
 		"postinstall": "yarn build"
 	},
 	"engines": {
-		"node": ">=18.16.0"
+		"node": "^22.2"
 	},
 	"dependencies": {
 		"@companion-module/base": "^1.11.3",
@@ -49,5 +49,6 @@
 		"*.ts": [
 			"yarn lint --fix"
 		]
-	}
+	},
+	"packageManager": "yarn@4.8.1"
 }
