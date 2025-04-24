@@ -1,4 +1,4 @@
-import {
+import type {
 	CompanionInputFieldCheckbox,
 	CompanionInputFieldColor,
 	CompanionInputFieldDropdown,
@@ -6,16 +6,16 @@ import {
 	CompanionInputFieldNumber,
 	CompanionInputFieldStaticText,
 	CompanionInputFieldTextInput,
-	combineRgb,
 } from '@companion-module/base'
-import { OntimeV3 } from '../ontimev3'
-import { MAX_TIME_SECONDS } from '../../enums'
+import { combineRgb } from '@companion-module/base'
+import { OntimeV3 } from '../ontimev3.js'
+import { MAX_TIME_SECONDS } from '../../enums.js'
 
 const throttledEndpointText =
 	'This property will cause a recalculation of the rundwon\nand id therfor throttled by ontime'
 
 export function changePicker(
-	ontime: OntimeV3
+	ontime: OntimeV3,
 ): Array<
 	| CompanionInputFieldNumber
 	| CompanionInputFieldCheckbox

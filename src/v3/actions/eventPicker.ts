@@ -1,6 +1,6 @@
-import { SomeCompanionActionInputField, DropdownChoice } from '@companion-module/base'
-import { eventsToChoices } from '../../utilities'
-import { OntimeEvent } from '../ontime-types'
+import type { SomeCompanionActionInputField, DropdownChoice } from '@companion-module/base'
+import { eventsToChoices } from '../../utilities.js'
+import type { OntimeEvent } from '../ontime-types.js'
 
 type SelectOptions = 'list' | 'loaded' | 'previous' | 'next' | 'cue' | 'id' | 'index' | 'go'
 const selectOptions: DropdownChoice[] = [
@@ -16,7 +16,7 @@ const selectOptions: DropdownChoice[] = [
 
 export function eventPicker(
 	events: OntimeEvent[],
-	options: SelectOptions[] = ['list', 'next', 'previous', 'loaded', 'cue', 'id', 'index']
+	options: SelectOptions[] = ['list', 'next', 'previous', 'loaded', 'cue', 'id', 'index'],
 ): SomeCompanionActionInputField[] {
 	const selectChoices = new Array<DropdownChoice>()
 	selectOptions.forEach((choice) => {

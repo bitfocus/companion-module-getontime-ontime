@@ -1,5 +1,5 @@
-import { Playback, TimerPhase } from './ontime-types'
-import { RuntimeStore, SimpleDirection, SimplePlayback } from './ontime-types'
+import { Playback, TimerPhase, SimpleDirection, SimplePlayback } from './ontime-types.js'
+import type { RuntimeStore } from './ontime-types.js'
 
 const stateobj: RuntimeStore = {
 	clock: 0,

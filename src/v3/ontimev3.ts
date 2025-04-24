@@ -1,19 +1,19 @@
-import {
+import type {
 	CompanionActionDefinitions,
 	CompanionFeedbackDefinitions,
 	CompanionPresetDefinitions,
 	CompanionVariableDefinition,
 } from '@companion-module/base'
-import { OnTimeInstance, OntimeClient } from '..'
+import { OnTimeInstance, type OntimeClient } from '../index.js'
 
-import { connect, disconnectSocket } from './connection'
-import { CustomFields, OntimeEvent } from './ontime-types'
-import { stateobj } from './state'
+import { connect, disconnectSocket } from './connection.js'
+import type { CustomFields, OntimeEvent } from './ontime-types.js'
+import { stateobj } from './state.js'
 
-import { actions } from './actions/index'
-import { feedbacks } from './feedbacks/index'
-import { variables } from './variables'
-import { presets } from './presets'
+import { actions } from './actions/index.js'
+import { feedbacks } from './feedbacks/index.js'
+import { variables } from './variables.js'
+import { presets } from './presets.js'
 
 export class OntimeV3 implements OntimeClient {
 	instance: OnTimeInstance
