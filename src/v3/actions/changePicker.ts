@@ -215,8 +215,9 @@ function generateCustomFieldsOptions(ontime: OntimeV3): Array<CompanionInputFiel
 			type: 'textinput',
 			id,
 			label: `Custom: ${customFields[field].label}`,
-			isVisibleData: id,
-			isVisible: (opts, data) => Array.isArray(opts.properties) && opts.properties.includes(data),
+			// TODO: this will be deprecated at some point
+			isVisibleData: { id },
+			isVisible: (opts, data) => Array.isArray(opts.properties) && opts.properties.includes(data.id),
 		})
 	}
 
