@@ -22,24 +22,24 @@
 		"postinstall": "yarn build"
 	},
 	"engines": {
-		"node": "^22.2"
+		"node": "22.2"
 	},
 	"dependencies": {
-		"@companion-module/base": "^1.11.3",
-		"companion-module-utils": "^0.5.0",
-		"ws": "^8.17.1"
+		"@companion-module/base": "1.12.0",
+		"companion-module-utils": "0.5.0",
+		"ws": "8.18.2"
 	},
 	"devDependencies": {
-		"@companion-module/tools": "2.2.2",
-		"@types/node": "^22.14.0",
-		"@types/ws": "^8.5.4",
-		"eslint": "^9.24.0",
-		"husky": "^9.1.7",
-		"lint-staged": "^15.5.0",
-		"prettier": "^3.5.3",
-		"rimraf": "^6.0.1",
-		"typescript": "~5.6.3",
-		"typescript-eslint": "^8.29.0"
+		"@companion-module/tools": "2.3.0",
+		"@types/node": "22.15.19",
+		"@types/ws": "8.18.1",
+		"eslint": "9.27.0",
+		"husky": "9.1.7",
+		"lint-staged": "16.0.0",
+		"prettier": "3.5.3",
+		"rimraf": "6.0.1",
+		"typescript": "5.8.3",
+		"typescript-eslint": "8.32.1"
 	},
 	"lint-staged": {
 		"*.{js,json,md}": [
