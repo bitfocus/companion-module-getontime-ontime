@@ -301,18 +301,34 @@ function update46x(
 		updatedActions: new Array<CompanionMigrationAction>(),
 		updatedFeedbacks: new Array<CompanionMigrationFeedback>(),
 	}
+	if (props.config) {
+		const { host, port } = props.config
+		if (port) {
+			const newAddress = `${host}:${port}`
+			result.updatedConfig = { ...props.config, host: newAddress, port: null }
+		}
+	}
+	return result
+}
 
-	if (props.config === null) {
-		return result
+function update462(
+	_context: CompanionUpgradeContext<OntimeConfig>,
+	props: CompanionStaticUpgradeProps<OntimeConfig>,
+): CompanionStaticUpgradeResult<OntimeConfig> {
+	const result: CompanionStaticUpgradeResult<OntimeConfig> = {
+		updatedConfig: null,
+		updatedActions: new Array<CompanionMigrationAction>(),
+		updatedFeedbacks: new Array<CompanionMigrationFeedback>(),
 	}
 
-	const { host, port } = props.config
-	if (port === null) {
-		return result
+	for (const action of props.actions) {
+		if (action.actionId === deprecatedActionId.Reload) {
+			action.actionId = ActionId.Load
+			action.options.method = 'loaded'
+			result.updatedActions.push(action)
+		}
 	}
 
-	const newAddress = `${host}:${port}`
-	result.updatedConfig = { ...props.config, host: newAddress, port: null }
 	return result
 }
 
@@ -321,4 +337,5 @@ export const UpgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [
 	update3x4x0,
 	update4xx,
 	update46x,
+	update462,
 ]

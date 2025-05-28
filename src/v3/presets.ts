@@ -304,8 +304,8 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				down: [
 					{
-						actionId: ActionId.Reload,
-						options: {},
+						actionId: ActionId.Load,
+						options: { method: 'loaded' },
 					},
 				],
 				up: [],

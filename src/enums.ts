@@ -8,7 +8,6 @@ export enum ActionId {
 	Load = 'load',
 	Pause = 'pause',
 	Stop = 'stop',
-	Reload = 'reload',
 	Roll = 'roll',
 
 	Add = 'add',
@@ -49,6 +48,7 @@ export enum deprecatedActionId {
 	LoadCue = 'loadCue',
 	SetTimerBlackout = 'setTimerBlackout',
 	SetTimerBlink = 'setTimerBlink',
+	Reload = 'reload',
 }
 
 export enum feedbackId {

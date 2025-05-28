@@ -111,11 +111,6 @@ export function createPlaybackActions(ontime: OntimeV3): { [id: string]: Compani
 			options: [],
 			callback: () => socketSendJson(ActionCommand.Stop),
 		},
-		[ActionId.Reload]: {
-			name: 'Reload selected event',
-			options: [],
-			callback: () => socketSendJson(ActionCommand.Reload),
-		},
 
 		[ActionId.Roll]: {
 			name: 'Start roll mode',
