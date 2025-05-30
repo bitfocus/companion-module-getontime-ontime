@@ -7,7 +7,7 @@ import type {
 import { OnTimeInstance, type OntimeClient } from '../index.js'
 
 import { connect, disconnectSocket } from './connection.js'
-import type { CustomFields, OntimeEvent } from './ontime-types.js'
+import type { CustomFields, OntimeEvent, RuntimeStore } from './ontime-types.js'
 import { stateobj } from './state.js'
 
 import { actions } from './actions/index.js'
@@ -19,7 +19,7 @@ export class OntimeV3 implements OntimeClient {
 	instance: OnTimeInstance
 	public events: OntimeEvent[] = []
 	public customFields: CustomFields = {}
-	public state = stateobj
+	public state: RuntimeStore = stateobj
 
 	constructor(instance: OnTimeInstance) {
 		this.instance = instance

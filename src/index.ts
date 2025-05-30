@@ -20,7 +20,7 @@ export interface OntimeClient {
 
 	getVariables(): CompanionVariableDefinition[]
 	getActions(): CompanionActionDefinitions
-	getFeedbacks(self: OnTimeInstance): CompanionFeedbackDefinitions
+	getFeedbacks(): CompanionFeedbackDefinitions
 	getPresets(): CompanionPresetDefinitions
 }
 
@@ -89,7 +89,7 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 
 	init_feedbacks(): void {
 		this.log('debug', 'Initializing feedbacks')
-		this.setFeedbackDefinitions(this.ontime.getFeedbacks(this))
+		this.setFeedbackDefinitions(this.ontime.getFeedbacks())
 	}
 
 	init_presets(): void {
