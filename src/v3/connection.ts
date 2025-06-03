@@ -276,6 +276,17 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					}
 					break
 				}
+				case 'ontime-patch': {
+					if ('clock' in payload) updateClock(payload.clock)
+					if ('timer' in payload) updateTimer(payload.timer)
+					if ('message' in payload) updateMessage(payload.message)
+					if ('runtime' in payload) updateRuntime(payload.runtime)
+					if ('eventNow' in payload) updateEventNow(payload.eventNow)
+					if ('eventNext' in payload) updateEventNext(payload.eventNext)
+					if ('auxtimer1' in payload) updateAuxTimer1(payload.auxtimer1)
+					if ('currentBlock' in payload) updateTimer(payload.currentBlock)
+					break
+				}
 				case 'version': {
 					clearTimeout(versionTimeout as NodeJS.Timeout)
 					const version = payload.split('.')
