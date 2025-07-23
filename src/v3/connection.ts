@@ -269,11 +269,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					updateMessage(payload.message)
 					updateEventNow(payload.eventNow)
 					updateEventNext(payload.eventNext)
-
-					// currentBlock dons't exist in ontime prior to v3.5.0
-					if ('currentBlock' in payload) {
-						updateCurrentBlock(payload.currentBlock)
-					}
+					updateCurrentBlock(payload.currentBlock)
 					break
 				}
 				case 'ontime-patch': {
@@ -289,18 +285,12 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 				}
 				case 'version': {
 					clearTimeout(versionTimeout as NodeJS.Timeout)
+					console.log(payload)
 					const version = payload.split('.')
 					self.log('info', `Ontime version "${payload}"`)
 					self.log('debug', version)
-					if (version.at(0) === '3') {
-						if (Number(version.at(1)) < 6) {
-							self.updateStatus(
-								InstanceStatus.BadConfig,
-								'Ontime version is too old (required >3.6.0) some features are not available',
-							)
-						} else {
-							self.updateStatus(InstanceStatus.Ok, payload)
-						}
+					if (version.at(0) === '4') {
+						self.updateStatus(InstanceStatus.Ok, payload)
 						await fetchCustomFields(self, ontime)
 						await fetchAllEvents(self, ontime)
 						self.init_actions()
@@ -353,7 +343,7 @@ export function socketSendJson(type: string, payload?: InputValue | object): voi
 	if (ws && ws.readyState === ws.OPEN) {
 		ws.send(
 			JSON.stringify({
-				type,
+				tag: type,
 				payload,
 			}),
 		)

@@ -18,7 +18,7 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			id: 'info',
 			type: 'static-text',
 			value:
-				'This module will establish a connection to Ontime v3. If you are upgrading from V2 to V3 we suggest backing up your configuration file.',
+				'This module will establish a connection to Ontime v4. If you are upgrading from V2 to V3 we suggest backing up your configuration file.',
 			width: 12,
 		},
 		{
