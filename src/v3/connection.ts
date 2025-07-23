@@ -228,50 +228,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			}
 			//https://docs.getontime.no/api/runtime-data/
 			switch (type) {
-				case 'ontime-clock': {
-					updateClock(payload)
-					break
-				}
-				case 'ontime-timer': {
-					updateTimer(payload)
-					break
-				}
-				case 'ontime-message': {
-					updateMessage(payload)
-					break
-				}
-				case 'ontime-runtime': {
-					updateRuntime(payload)
-					break
-				}
-
-				case 'ontime-eventNow': {
-					updateEventNow(payload)
-					const prev = findPreviousPlayableEvent(ontime)
-					updateEventPrevious(prev)
-					break
-				}
-				case 'ontime-eventNext': {
-					updateEventNext(payload)
-					break
-				}
-				case 'ontime-auxtimer1': {
-					updateAuxTimer1(payload)
-					break
-				}
-				case 'ontime-currentBlock': {
-					updateCurrentBlock(payload)
-					break
-				}
-				case 'ontime': {
-					updateTimer(payload.timer)
-					updateClock(payload.clock)
-					updateMessage(payload.message)
-					updateEventNow(payload.eventNow)
-					updateEventNext(payload.eventNext)
-					updateCurrentBlock(payload.currentBlock)
-					break
-				}
+				case 'ontime':
 				case 'ontime-patch': {
 					if ('clock' in payload) updateClock(payload.clock)
 					if ('timer' in payload) updateTimer(payload.timer)
@@ -280,7 +237,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					if ('eventNow' in payload) updateEventNow(payload.eventNow)
 					if ('eventNext' in payload) updateEventNext(payload.eventNext)
 					if ('auxtimer1' in payload) updateAuxTimer1(payload.auxtimer1)
-					if ('currentBlock' in payload) updateTimer(payload.currentBlock)
+					if ('currentBlock' in payload) updateCurrentBlock(payload.currentBlock)
 					break
 				}
 				case 'version': {
