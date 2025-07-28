@@ -201,18 +201,19 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		})
 	}
 
-	const updateAuxTimer1 = (val: SimpleTimerState) => {
-		ontime.state.auxtimer1 = val
+	const updateAuxTimer = (val: SimpleTimerState, timer: 'auxtimer1' | 'auxtimer2' | 'auxtimer3') => {
+		ontime.state[timer] = val
+		const index = timer.at(-1)
 		const duration = msToSplitTime(val.duration)
 		const current = msToSplitTime(val.current)
 
 		self.setVariableValues({
-			[variableId.AuxTimerDurationMs + '-1']: val.duration,
-			[variableId.AuxTimerCurrentMs + '-1']: val.current,
-			[variableId.AuxTimerDirection + '-1']: duration.hoursMinutesSeconds,
-			[variableId.AuxTimerCurrent + '-1']: current.hoursMinutesSeconds,
-			[variableId.AuxTimerPlayback + '-1']: val.playback,
-			[variableId.AuxTimerDirection + '-1']: val.direction,
+			[variableId.AuxTimerDurationMs + '-' + index]: val.duration,
+			[variableId.AuxTimerCurrentMs + '-' + index]: val.current,
+			[variableId.AuxTimerDirection + '-' + index]: duration.hoursMinutesSeconds,
+			[variableId.AuxTimerCurrent + '-' + index]: current.hoursMinutesSeconds,
+			[variableId.AuxTimerPlayback + '-' + index]: val.playback,
+			[variableId.AuxTimerDirection + '-' + index]: val.direction,
 		})
 		self.checkFeedbacks(feedbackId.AuxTimerNegative, feedbackId.AuxTimerPlayback)
 	}
@@ -236,7 +237,9 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					if ('runtime' in payload) updateRuntime(payload.runtime)
 					if ('eventNow' in payload) updateEventNow(payload.eventNow)
 					if ('eventNext' in payload) updateEventNext(payload.eventNext)
-					if ('auxtimer1' in payload) updateAuxTimer1(payload.auxtimer1)
+					if ('auxtimer1' in payload) updateAuxTimer(payload.auxtimer1, 'auxtimer1')
+					if ('auxtimer2' in payload) updateAuxTimer(payload.auxtimer2, 'auxtimer2')
+					if ('auxtimer3' in payload) updateAuxTimer(payload.auxtimer3, 'auxtimer3')
 					if ('currentBlock' in payload) updateCurrentBlock(payload.currentBlock)
 					break
 				}
