@@ -6,7 +6,6 @@ import { feedbackId, variableId } from '../enums.js'
 import type {
 	CurrentBlockState,
 	MessageState,
-	OntimeBaseEvent,
 	OntimeEvent,
 	Runtime,
 	SimpleTimerState,
@@ -323,7 +322,7 @@ export function socketSendJson(tag: string, payload?: InputValue | object): void
 let rundownEtag: string = ''
 
 async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
-	const serverHttp = makeURL(self.config.host, 'data/rundown', self.config.ssl)
+	const serverHttp = makeURL(self.config.host, 'data/rundown/current', self.config.ssl)
 	if (!serverHttp) {
 		return
 	}
@@ -339,12 +338,20 @@ async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Promise<v
 		}
 		if (!response.ok) {
 			ontime.events = []
-			self.log('error', `uable to fetch events: ${response.statusText}`)
+			self.log('error', `unable to fetch events: ${response.statusText}`)
 			return
 		}
 		rundownEtag = response.headers.get('Etag') ?? ''
-		const data = (await response.json()) as OntimeBaseEvent[]
-		ontime.events = data.filter((entry) => entry.type === SupportedEvent.Event) as OntimeEvent[]
+		const { flatOrder, entries } = (await response.json()) as {
+			id: string
+			title: string
+			order: string[]
+			flatOrder: string[]
+			entries: Record<string, OntimeEvent>
+			revision: number
+		}
+
+		ontime.events = flatOrder.map((id) => entries[id]).filter((entry) => entry.type === SupportedEvent.Event)
 		self.log('debug', `fetched ${ontime.events.length} events`)
 	} catch (e: any) {
 		ontime.events = []
