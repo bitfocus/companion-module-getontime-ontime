@@ -38,6 +38,18 @@ const stateobj: RuntimeStore = {
 		playback: SimplePlayback.Stop,
 		direction: SimpleDirection.CountDown,
 	},
+	auxtimer2: {
+		duration: 0,
+		current: 0,
+		playback: SimplePlayback.Stop,
+		direction: SimpleDirection.CountDown,
+	},
+	auxtimer3: {
+		duration: 0,
+		current: 0,
+		playback: SimplePlayback.Stop,
+		direction: SimpleDirection.CountDown,
+	},
 }
 
 export { stateobj }

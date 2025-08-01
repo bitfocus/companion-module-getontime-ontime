@@ -201,18 +201,19 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		})
 	}
 
-	const updateAuxTimer1 = (val: SimpleTimerState) => {
-		ontime.state.auxtimer1 = val
+	const updateAuxTimer = (val: SimpleTimerState, timer: 'auxtimer1' | 'auxtimer2' | 'auxtimer3') => {
+		ontime.state[timer] = val
+		const index = timer.at(-1)
 		const duration = msToSplitTime(val.duration)
 		const current = msToSplitTime(val.current)
 
 		self.setVariableValues({
-			[variableId.AuxTimerDurationMs + '-1']: val.duration,
-			[variableId.AuxTimerCurrentMs + '-1']: val.current,
-			[variableId.AuxTimerDirection + '-1']: duration.hoursMinutesSeconds,
-			[variableId.AuxTimerCurrent + '-1']: current.hoursMinutesSeconds,
-			[variableId.AuxTimerPlayback + '-1']: val.playback,
-			[variableId.AuxTimerDirection + '-1']: val.direction,
+			[variableId.AuxTimerDurationMs + '-' + index]: val.duration,
+			[variableId.AuxTimerCurrentMs + '-' + index]: val.current,
+			[variableId.AuxTimerDirection + '-' + index]: duration.hoursMinutesSeconds,
+			[variableId.AuxTimerCurrent + '-' + index]: current.hoursMinutesSeconds,
+			[variableId.AuxTimerPlayback + '-' + index]: val.playback,
+			[variableId.AuxTimerDirection + '-' + index]: val.direction,
 		})
 		self.checkFeedbacks(feedbackId.AuxTimerNegative, feedbackId.AuxTimerPlayback)
 	}
@@ -228,68 +229,28 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 			}
 			//https://docs.getontime.no/api/runtime-data/
 			switch (type) {
-				case 'ontime-clock': {
-					updateClock(payload)
-					break
-				}
-				case 'ontime-timer': {
-					updateTimer(payload)
-					break
-				}
-				case 'ontime-message': {
-					updateMessage(payload)
-					break
-				}
-				case 'ontime-runtime': {
-					updateRuntime(payload)
-					break
-				}
-
-				case 'ontime-eventNow': {
-					updateEventNow(payload)
-					const prev = findPreviousPlayableEvent(ontime)
-					updateEventPrevious(prev)
-					break
-				}
-				case 'ontime-eventNext': {
-					updateEventNext(payload)
-					break
-				}
-				case 'ontime-auxtimer1': {
-					updateAuxTimer1(payload)
-					break
-				}
-				case 'ontime-currentBlock': {
-					updateCurrentBlock(payload)
-					break
-				}
-				case 'ontime': {
-					updateTimer(payload.timer)
-					updateClock(payload.clock)
-					updateMessage(payload.message)
-					updateEventNow(payload.eventNow)
-					updateEventNext(payload.eventNext)
-
-					// currentBlock dons't exist in ontime prior to v3.5.0
-					if ('currentBlock' in payload) {
-						updateCurrentBlock(payload.currentBlock)
-					}
+				case 'ontime':
+				case 'ontime-patch': {
+					if ('clock' in payload) updateClock(payload.clock)
+					if ('timer' in payload) updateTimer(payload.timer)
+					if ('message' in payload) updateMessage(payload.message)
+					if ('runtime' in payload) updateRuntime(payload.runtime)
+					if ('eventNow' in payload) updateEventNow(payload.eventNow)
+					if ('eventNext' in payload) updateEventNext(payload.eventNext)
+					if ('auxtimer1' in payload) updateAuxTimer(payload.auxtimer1, 'auxtimer1')
+					if ('auxtimer2' in payload) updateAuxTimer(payload.auxtimer2, 'auxtimer2')
+					if ('auxtimer3' in payload) updateAuxTimer(payload.auxtimer3, 'auxtimer3')
+					if ('currentBlock' in payload) updateCurrentBlock(payload.currentBlock)
 					break
 				}
 				case 'version': {
 					clearTimeout(versionTimeout as NodeJS.Timeout)
+					console.log(payload)
 					const version = payload.split('.')
 					self.log('info', `Ontime version "${payload}"`)
 					self.log('debug', version)
-					if (version.at(0) === '3') {
-						if (Number(version.at(1)) < 6) {
-							self.updateStatus(
-								InstanceStatus.BadConfig,
-								'Ontime version is too old (required >3.6.0) some features are not available',
-							)
-						} else {
-							self.updateStatus(InstanceStatus.Ok, payload)
-						}
+					if (version.at(0) === '4') {
+						self.updateStatus(InstanceStatus.Ok, payload)
 						await fetchCustomFields(self, ontime)
 						await fetchAllEvents(self, ontime)
 						self.init_actions()
@@ -342,7 +303,7 @@ export function socketSendJson(type: string, payload?: InputValue | object): voi
 	if (ws && ws.readyState === ws.OPEN) {
 		ws.send(
 			JSON.stringify({
-				type,
+				tag: type,
 				payload,
 			}),
 		)

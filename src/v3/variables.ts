@@ -213,5 +213,47 @@ export function variables(): CompanionVariableDefinition[] {
 			name: 'Aux timer 1 direction (count-up/count-down)',
 			variableId: variableId.AuxTimerDirection + '-1',
 		},
+		//aux timer
+		{
+			name: 'Aux timer 2 duration (milliseconds)',
+			variableId: variableId.AuxTimerDurationMs + '-2',
+		},
+		{
+			name: 'Aux timer 2 current (milliseconds)',
+			variableId: variableId.AuxTimerDurationMs + '-2',
+		},
+		{
+			name: 'Aux timer 2 current (hh:mm:ss)',
+			variableId: variableId.AuxTimerCurrent + '-2',
+		},
+		{
+			name: 'Aux timer 2 playback',
+			variableId: variableId.AuxTimerPlayback + '-2',
+		},
+		{
+			name: 'Aux timer 2 direction (count-up/count-down)',
+			variableId: variableId.AuxTimerDirection + '-2',
+		},
+		//aux timer
+		{
+			name: 'Aux timer 3 duration (milliseconds)',
+			variableId: variableId.AuxTimerDurationMs + '-3',
+		},
+		{
+			name: 'Aux timer 3 current (milliseconds)',
+			variableId: variableId.AuxTimerDurationMs + '-3',
+		},
+		{
+			name: 'Aux timer 3 current (hh:mm:ss)',
+			variableId: variableId.AuxTimerCurrent + '-3',
+		},
+		{
+			name: 'Aux timer 3 playback',
+			variableId: variableId.AuxTimerPlayback + '-3',
+		},
+		{
+			name: 'Aux timer 3 direction (count-up/count-down)',
+			variableId: variableId.AuxTimerDirection + '-3',
+		},
 	]
 }
