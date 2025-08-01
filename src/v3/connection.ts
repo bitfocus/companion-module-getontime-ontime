@@ -222,15 +222,30 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 	ws.onmessage = async (event: any) => {
 		try {
 			const data = JSON.parse(event.data)
-			const { type, payload } = data
+			const { tag, payload, type } = data
 
-			if (!type) {
+			if (type === 'version') {
+				clearTimeout(versionTimeout as NodeJS.Timeout)
+				self.updateStatus(InstanceStatus.Ok, payload)
+				await fetchCustomFields(self, ontime)
+				await fetchAllEvents(self, ontime)
+				self.init_actions()
+				self.init_feedbacks()
+				const prev = findPreviousPlayableEvent(ontime)
+				updateEventPrevious(prev)
+				if (self.config.customToVariable) {
+					self.setVariableDefinitions(ontime.getVariables(true))
+				}
+			}
+
+			if (!tag) {
 				return
 			}
+
 			//https://docs.getontime.no/api/runtime-data/
-			switch (type) {
-				case 'ontime':
-				case 'ontime-patch': {
+			switch (tag) {
+				case 'runtime-data':
+				case 'runtime-patch': {
 					if ('clock' in payload) updateClock(payload.clock)
 					if ('timer' in payload) updateTimer(payload.timer)
 					if ('message' in payload) updateMessage(payload.message)
@@ -250,16 +265,16 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					// self.log('info', `Ontime version "${payload}"`)
 					// self.log('debug', version)
 					// if (version.at(0) === '4') {
-						self.updateStatus(InstanceStatus.Ok, payload)
-						await fetchCustomFields(self, ontime)
-						await fetchAllEvents(self, ontime)
-						self.init_actions()
-						self.init_feedbacks()
-						const prev = findPreviousPlayableEvent(ontime)
-						updateEventPrevious(prev)
-						if (self.config.customToVariable) {
-							self.setVariableDefinitions(ontime.getVariables(true))
-						}
+					// self.updateStatus(InstanceStatus.Ok, payload)
+					// await fetchCustomFields(self, ontime)
+					// await fetchAllEvents(self, ontime)
+					// self.init_actions()
+					// self.init_feedbacks()
+					// const prev = findPreviousPlayableEvent(ontime)
+					// updateEventPrevious(prev)
+					// if (self.config.customToVariable) {
+					// 	self.setVariableDefinitions(ontime.getVariables(true))
+					// }
 					// } else {
 					// 	self.updateStatus(InstanceStatus.ConnectionFailure, 'Unsupported version: see log')
 					// 	self.log(
@@ -299,14 +314,9 @@ export function disconnectSocket(): void {
 	ws?.close()
 }
 
-export function socketSendJson(type: string, payload?: InputValue | object): void {
+export function socketSendJson(tag: string, payload?: InputValue | object): void {
 	if (ws && ws.readyState === ws.OPEN) {
-		ws.send(
-			JSON.stringify({
-				tag: type,
-				payload,
-			}),
-		)
+		ws.send(JSON.stringify({ tag, payload }))
 	}
 }
 
