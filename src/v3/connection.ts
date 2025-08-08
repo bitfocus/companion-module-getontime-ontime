@@ -221,21 +221,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 	ws.onmessage = async (event: any) => {
 		try {
 			const data = JSON.parse(event.data)
-			const { tag, payload, type } = data
-
-			if (type === 'version') {
-				clearTimeout(versionTimeout as NodeJS.Timeout)
-				self.updateStatus(InstanceStatus.Ok, payload)
-				await fetchCustomFields(self, ontime)
-				await fetchAllEvents(self, ontime)
-				self.init_actions()
-				self.init_feedbacks()
-				const prev = findPreviousPlayableEvent(ontime)
-				updateEventPrevious(prev)
-				if (self.config.customToVariable) {
-					self.setVariableDefinitions(ontime.getVariables(true))
-				}
-			}
+			const { tag, payload } = data
 
 			if (!tag) {
 				return
@@ -258,30 +244,30 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 					break
 				}
 				case 'version': {
-					// clearTimeout(versionTimeout as NodeJS.Timeout)
-					// console.log(payload)
-					// const version = payload.split('.')
-					// self.log('info', `Ontime version "${payload}"`)
-					// self.log('debug', version)
-					// if (version.at(0) === '4') {
-					// self.updateStatus(InstanceStatus.Ok, payload)
-					// await fetchCustomFields(self, ontime)
-					// await fetchAllEvents(self, ontime)
-					// self.init_actions()
-					// self.init_feedbacks()
-					// const prev = findPreviousPlayableEvent(ontime)
-					// updateEventPrevious(prev)
-					// if (self.config.customToVariable) {
-					// 	self.setVariableDefinitions(ontime.getVariables(true))
-					// }
-					// } else {
-					// 	self.updateStatus(InstanceStatus.ConnectionFailure, 'Unsupported version: see log')
-					// 	self.log(
-					// 		'error',
-					// 		`Unsupported version "${payload}" You can download the latest version of Ontime through the website https://www.getontime.no/`,
-					// 	)
-					// 	ws?.close()
-					// }
+					clearTimeout(versionTimeout as NodeJS.Timeout)
+					console.log(payload)
+					const version = payload.split('.')
+					self.log('info', `Ontime version "${payload}"`)
+					self.log('debug', version)
+					if (version.at(0) === '4') {
+						self.updateStatus(InstanceStatus.Ok, payload)
+						await fetchCustomFields(self, ontime)
+						await fetchAllEvents(self, ontime)
+						self.init_actions()
+						self.init_feedbacks()
+						const prev = findPreviousPlayableEvent(ontime)
+						updateEventPrevious(prev)
+						if (self.config.customToVariable) {
+							self.setVariableDefinitions(ontime.getVariables(true))
+						}
+					} else {
+						self.updateStatus(InstanceStatus.ConnectionFailure, 'Unsupported version: see log')
+						self.log(
+							'error',
+							`Unsupported version "${payload}" You can download the latest version of Ontime through the website https://www.getontime.no/`,
+						)
+						ws?.close()
+					}
 					break
 				}
 				case 'ontime-refetch': {

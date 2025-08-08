@@ -39,7 +39,7 @@ export class OnTimeInstance extends InstanceBase<OntimeConfig> {
 		this.updateStatus(InstanceStatus.Disconnected)
 
 		this.ontime = new OntimeV3(this)
-		this.updateStatus(InstanceStatus.Connecting, 'starting V3')
+		this.updateStatus(InstanceStatus.Connecting, 'starting V4')
 
 		this.initConnection()
 		this.init_variables()
