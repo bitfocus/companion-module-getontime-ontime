@@ -6,7 +6,6 @@ import { feedbackId, variableId } from '../enums.js'
 import type {
 	CurrentBlockState,
 	MessageState,
-	OntimeBaseEvent,
 	OntimeEvent,
 	Runtime,
 	SimpleTimerState,
@@ -222,15 +221,16 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 	ws.onmessage = async (event: any) => {
 		try {
 			const data = JSON.parse(event.data)
-			const { type, payload } = data
+			const { tag, payload } = data
 
-			if (!type) {
+			if (!tag) {
 				return
 			}
+
 			//https://docs.getontime.no/api/runtime-data/
-			switch (type) {
-				case 'ontime':
-				case 'ontime-patch': {
+			switch (tag) {
+				case 'runtime-data':
+				case 'runtime-patch': {
 					if ('clock' in payload) updateClock(payload.clock)
 					if ('timer' in payload) updateTimer(payload.timer)
 					if ('message' in payload) updateMessage(payload.message)
@@ -299,21 +299,16 @@ export function disconnectSocket(): void {
 	ws?.close()
 }
 
-export function socketSendJson(type: string, payload?: InputValue | object): void {
+export function socketSendJson(tag: string, payload?: InputValue | object): void {
 	if (ws && ws.readyState === ws.OPEN) {
-		ws.send(
-			JSON.stringify({
-				tag: type,
-				payload,
-			}),
-		)
+		ws.send(JSON.stringify({ tag, payload }))
 	}
 }
 
 let rundownEtag: string = ''
 
 async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Promise<void> {
-	const serverHttp = makeURL(self.config.host, 'data/rundown', self.config.ssl)
+	const serverHttp = makeURL(self.config.host, 'data/rundown/current', self.config.ssl)
 	if (!serverHttp) {
 		return
 	}
@@ -329,12 +324,20 @@ async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Promise<v
 		}
 		if (!response.ok) {
 			ontime.events = []
-			self.log('error', `uable to fetch events: ${response.statusText}`)
+			self.log('error', `unable to fetch events: ${response.statusText}`)
 			return
 		}
 		rundownEtag = response.headers.get('Etag') ?? ''
-		const data = (await response.json()) as OntimeBaseEvent[]
-		ontime.events = data.filter((entry) => entry.type === SupportedEvent.Event) as OntimeEvent[]
+		const { flatOrder, entries } = (await response.json()) as {
+			id: string
+			title: string
+			order: string[]
+			flatOrder: string[]
+			entries: Record<string, OntimeEvent>
+			revision: number
+		}
+
+		ontime.events = flatOrder.map((id) => entries[id]).filter((entry) => entry.type === SupportedEvent.Event)
 		self.log('debug', `fetched ${ontime.events.length} events`)
 	} catch (e: any) {
 		ontime.events = []

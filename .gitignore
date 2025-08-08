@@ -15,3 +15,5 @@ DEBUG-*
 /.vscode
 
 .DS_STORE
+
+*.tgz
