@@ -3,10 +3,13 @@ import { variableId } from '../enums.js'
 
 export function variables(): CompanionVariableDefinition[] {
 	return [
-		//clock
 		{
 			name: 'Clock (hh:mm:ss)',
 			variableId: variableId.Clock,
+		},
+		{
+			name: 'Clock Milliseconds',
+			variableId: variableId.ClockMs,
 		},
 		//timer.addedTime
 		{
@@ -124,18 +127,6 @@ export function variables(): CompanionVariableDefinition[] {
 		{
 			name: 'Rundown expected end (hh:mm:ss)',
 			variableId: variableId.ExpectedEnd,
-		},
-		{
-			name: 'Title of current block',
-			variableId: variableId.CurrentBlockTitle,
-		},
-		{
-			name: 'Start time of current block (hh:mm:ss)',
-			variableId: variableId.CurrentBlockStartedAt,
-		},
-		{
-			name: 'Start time of current block (milliseconds)',
-			variableId: variableId.CurrentBlockStartedAtMs,
 		},
 		{
 			name: 'ID of previous event',

@@ -4,16 +4,16 @@ import type {
 	CompanionPresetDefinitions,
 	CompanionVariableDefinition,
 } from '@companion-module/base'
-import { OnTimeInstance, type OntimeClient } from '../index.js'
+import { OnTimeInstance, type OntimeClient } from './index.js'
 
-import { connect, disconnectSocket } from './connection.js'
-import type { CustomFields, OntimeEvent } from './ontime-types.js'
-import { stateobj } from './state.js'
+import { connect, disconnectSocket } from './v3/connection.js'
+import { stateobj } from './v3/state.js'
 
-import { actions } from './actions/index.js'
-import { feedbacks } from './feedbacks/index.js'
-import { variables } from './variables.js'
-import { presets } from './presets.js'
+import { actions } from './v3/actions/index.js'
+import { feedbacks } from './v3/feedbacks/index.js'
+import { variables } from './v3/variables.js'
+import { presets } from './v3/presets.js'
+import type { CustomFields, OntimeEvent } from '@getontime/types'
 
 export class OntimeV3 implements OntimeClient {
 	instance: OnTimeInstance

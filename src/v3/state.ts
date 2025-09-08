@@ -1,5 +1,5 @@
-import { Playback, TimerPhase, SimpleDirection, SimplePlayback } from './ontime-types.js'
-import type { RuntimeStore } from './ontime-types.js'
+import { Playback, TimerPhase, SimpleDirection, SimplePlayback, OffsetMode } from '@getontime/types'
+import type { RuntimeStore } from '@getontime/types'
 
 const stateobj: RuntimeStore = {
 	clock: 0,
@@ -9,29 +9,33 @@ const stateobj: RuntimeStore = {
 		expectedFinish: null,
 		addedTime: 0,
 		startedAt: null,
-		finishedAt: null,
 		secondaryTimer: null,
 		duration: null,
 		phase: TimerPhase.None,
 		playback: Playback.Stop,
 	},
-	onAir: false,
 	message: {
 		timer: { text: '', visible: false, blink: false, blackout: false, secondarySource: null },
-		external: '',
+		secondary: '',
 	},
-	runtime: {
+	offset: {
+		absolute: 0,
+		relative: 0,
+		mode: OffsetMode.Absolute,
+		expectedGroupEnd: null,
+		expectedRundownEnd: null,
+		expectedFlagStart: null,
+	},
+	rundown: {
 		numEvents: 0,
 		selectedEventIndex: 0,
-		offset: 0,
 		plannedStart: 0,
 		actualStart: 0,
-		plannedEnd: 0,
-		expectedEnd: 0,
+		plannedEnd: null,
 	},
 	eventNow: null,
 	eventNext: null,
-	currentBlock: { block: null, startedAt: null },
+	groupNow: null,
 	auxtimer1: {
 		duration: 0,
 		current: 0,
@@ -50,6 +54,8 @@ const stateobj: RuntimeStore = {
 		playback: SimplePlayback.Stop,
 		direction: SimpleDirection.CountDown,
 	},
+	eventFlag: null,
+	ping: 0,
 }
 
 export { stateobj }

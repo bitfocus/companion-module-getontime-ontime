@@ -1,8 +1,8 @@
 import type { CompanionFeedbackDefinition } from '@companion-module/base'
-import { TimerPhase } from '../ontime-types.js'
 import { feedbackId } from '../../enums.js'
-import { OntimeV3 } from '../ontimev3.js'
+import { OntimeV3 } from '../../ontimev3.js'
 import { DangerRed, White } from '../../assets/colours.js'
+import { TimerPhase } from '@getontime/types'
 
 export function createTimerPhaseFeedback(ontime: OntimeV3): {
 	[id: string]: CompanionFeedbackDefinition

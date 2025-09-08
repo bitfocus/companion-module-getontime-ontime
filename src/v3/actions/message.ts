@@ -2,7 +2,7 @@ import type { CompanionActionDefinition, CompanionActionEvent } from '@companion
 import { socketSendJson } from '../connection.js'
 import { ActionId } from '../../enums.js'
 import { ActionCommand } from './commands.js'
-import { OntimeV3 } from '../ontimev3.js'
+import { OntimeV3 } from '../../ontimev3.js'
 
 enum ToggleOnOff {
 	Off = 0,

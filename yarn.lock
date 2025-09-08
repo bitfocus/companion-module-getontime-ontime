@@ -186,6 +186,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@getontime/types@file:./@getontime-types::locator=getontime-ontime%40workspace%3A.":
+  version: 4.0.0-beta.2
+  resolution: "@getontime/types@file:./@getontime-types#./@getontime-types::hash=7411f8&locator=getontime-ontime%40workspace%3A."
+  checksum: 10c0/9bd927dc0b0fe86580be1aee323e7db7ce2d63dae6ae60f7dba921e199caeefbab7f3c726a9cd5566e71cf503c8e8d2653da365478fa8c4b1ae180262bf78173
+  languageName: node
+  linkType: hard
+
 "@humanfs/core@npm:^0.19.1":
   version: 0.19.1
   resolution: "@humanfs/core@npm:0.19.1"
@@ -413,7 +420,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ws@npm:8.18.1":
+"@types/ws@npm:^8.18.1":
   version: 8.18.1
   resolution: "@types/ws@npm:8.18.1"
   dependencies:
@@ -1595,8 +1602,9 @@ __metadata:
   dependencies:
     "@companion-module/base": "npm:1.12.0"
     "@companion-module/tools": "npm:2.3.0"
+    "@getontime/types": "file:./@getontime-types"
     "@types/node": "npm:22.15.19"
-    "@types/ws": "npm:8.18.1"
+    "@types/ws": "npm:^8.18.1"
     companion-module-utils: "npm:0.5.0"
     eslint: "npm:9.27.0"
     husky: "npm:9.1.7"
@@ -1605,7 +1613,7 @@ __metadata:
     rimraf: "npm:6.0.1"
     typescript: "npm:5.8.3"
     typescript-eslint: "npm:8.32.1"
-    ws: "npm:8.18.2"
+    ws: "npm:^8.18.1"
   languageName: unknown
   linkType: soft
 
@@ -3192,9 +3200,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:8.18.2":
-  version: 8.18.2
-  resolution: "ws@npm:8.18.2"
+"ws@npm:^8.18.1":
+  version: 8.18.3
+  resolution: "ws@npm:8.18.3"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ">=5.0.2"
@@ -3203,7 +3211,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 10c0/4b50f67931b8c6943c893f59c524f0e4905bbd183016cfb0f2b8653aa7f28dad4e456b9d99d285bbb67cca4fedd9ce90dfdfaa82b898a11414ebd66ee99141e4
+  checksum: 10c0/eac918213de265ef7cb3d4ca348b891a51a520d839aa51cdb8ca93d4fa7ff9f6ccb339ccee89e4075324097f0a55157c89fa3f7147bde9d8d7e90335dc087b53
   languageName: node
   linkType: hard
 

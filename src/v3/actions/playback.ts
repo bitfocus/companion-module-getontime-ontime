@@ -3,8 +3,8 @@ import { socketSendJson } from '../connection.js'
 import { ActionId } from '../../enums.js'
 import { ActionCommand } from './commands.js'
 import { eventPicker } from './eventPicker.js'
-import { OntimeV3 } from '../ontimev3.js'
-import { Playback } from '../ontime-types.js'
+import { OntimeV3 } from '../../ontimev3.js'
+import { Playback } from '@getontime/types'
 
 export function createPlaybackActions(ontime: OntimeV3): { [id: string]: CompanionActionDefinition } {
 	function start(action: CompanionActionEvent): void {

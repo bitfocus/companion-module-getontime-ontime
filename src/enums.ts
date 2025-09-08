@@ -88,16 +88,16 @@ export enum deprecatedFeedbackId {
 }
 
 export enum variableId {
-	PlayState = 'playState',
-
+	/** Clock */
 	Clock = 'clock',
+	ClockMs = 'clock_ms',
 
-	TimerStart = 'timer_start',
-	TimerFinish = 'timer_finish',
+	/** Timer */
 	TimerAdded = 'timer_added',
 	TimerAddedNice = 'timer_added_nice',
+	PlayState = 'playState',
+	/** Timer.current */
 	TimerTotalMs = 'timer_total_ms',
-	TimerPhase = 'timer_phase',
 	Time = 'time',
 	TimeHM = 'time_hm',
 	TimeH = 'time_h',
@@ -105,45 +105,60 @@ export enum variableId {
 	TimeS = 'time_s',
 	TimeN = 'time_sign',
 
-	IdPrevious = 'idPrevious',
-	TitlePrevious = 'titlePrevious',
-	NotePrevious = 'notePrevious',
-	CuePrevious = 'cuePrevious',
+	TimerFinish = 'timer_finish',
+	TimerStart = 'timer_start',
+	TimerPhase = 'timer_phase',
 
+	/** Event Now */
 	IdNow = 'idNow',
 	TitleNow = 'titleNow',
 	NoteNow = 'noteNow',
 	CueNow = 'cueNow',
 
+	/** Event Next */
 	IdNext = 'idNext',
 	TitleNext = 'titleNext',
 	NoteNext = 'noteNext',
 	CueNext = 'cueNext',
 
-	CurrentBlockTitle = 'currentBlockTitle',
-	CurrentBlockStartedAt = 'currentBlockStartedAt_hms',
-	CurrentBlockStartedAtMs = 'currentBlockStartedAt_ms',
+	/** Event Prev <- calculated local */
+	IdPrevious = 'idPrevious',
+	TitlePrevious = 'titlePrevious',
+	NotePrevious = 'notePrevious',
+	CuePrevious = 'cuePrevious',
 
+	/** Message */
+	/** message.timer.text */
 	TimerMessage = 'timerMessage',
+	/** message.timer.visible */
 	TimerMessageVisible = 'timerMessageVisible',
+	/** message.timer.blink */
 	TimerBlink = 'timerBlink',
+	/** message.timer.blackout */
 	TimerBlackout = 'timerBlackout',
-	ExternalMessage = 'externalMessage',
+	/** message.timer.secondarySource */
 	TimerSecondarySource = 'timerSecondarySource',
+	/** message.secondary */
+	ExternalMessage = 'externalMessage',
+
+	/** Rundown */
+	SelectedEventIndex = 'selectedEventIndex',
+	NumberOfEvents = 'numEvents',
+	PlannedStart = 'plannedStart_hms',
+	ActualStart = 'actualStart_hms',
+	PlannedEnd = 'plannedEnd_hms',
+
+	/** Offset */
+	RundownOffset = 'rundown_offset_hms',
+	//TODO: absolute relative
+	ExpectedEnd = 'expectedEnd_hms',
+	//TODO: mode, expectedGroupEnd, expectedRundownEnd, expectedFlagStart
 
 	AuxTimerDurationMs = 'auxTimer_duration_ms',
 	AuxTimerPlayback = 'auxTimer_playback',
 	AuxTimerCurrentMs = 'auxTimer_current_ms',
 	AuxTimerCurrent = 'auxTimer_current_hms',
 	AuxTimerDirection = 'auxTimer_direction',
-
-	NumberOfEvents = 'numEvents',
-	SelectedEventIndex = 'selectedEventIndex',
-	RundownOffset = 'rundown_offset_hms',
-	PlannedStart = 'plannedStart_hms',
-	ActualStart = 'actualStart_hms',
-	PlannedEnd = 'plannedEnd_hms',
-	ExpectedEnd = 'expectedEnd_hms',
 }
 
 export enum OffsetState {

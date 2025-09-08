@@ -1,6 +1,6 @@
 import type { CompanionVariableValues, DropdownChoice } from '@companion-module/base'
-import type { EventCustomFields, OntimeEvent, RuntimeStore, SimpleTimerState } from './v3/ontime-types.js'
-import { OntimeV3 } from './v3/ontimev3.js'
+import { OntimeV3 } from './ontimev3.js'
+import type { OntimeEvent, RuntimeStore, SimpleTimerState } from '@getontime/types'
 
 export const joinTime = (...args: string[]): string => args.join(':')
 
@@ -128,7 +128,7 @@ export function findPreviousPlayableEvent(ontime: OntimeV3): OntimeEvent | null 
 export function variablesFromCustomFields(
 	ontime: OntimeV3,
 	postFix: string,
-	val: EventCustomFields | undefined,
+	val: OntimeEvent['custom'] | undefined,
 ): CompanionVariableValues {
 	const companionVariableValues: CompanionVariableValues = {}
 	if (typeof val === 'undefined') {

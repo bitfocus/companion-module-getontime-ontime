@@ -9,6 +9,7 @@
 			"*": ["./node_modules/*"]
 		},
 		"module": "es2020",
+		"moduleResolution": "bundler",
 		"verbatimModuleSyntax": true
 	}
 }

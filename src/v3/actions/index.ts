@@ -3,7 +3,7 @@ import type { CompanionActionDefinition, CompanionActionDefinitions } from '@com
 import { createPlaybackActions } from './playback.js'
 import { createMessageActions } from './message.js'
 import { createChangeActions } from './change.js'
-import { OntimeV3 } from '../ontimev3.js'
+import { OntimeV3 } from '../../ontimev3.js'
 import { createAuxTimerActions } from './auxTimer.js'
 
 /**

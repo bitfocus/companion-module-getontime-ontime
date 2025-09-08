@@ -9,7 +9,7 @@ import { runEntrypoint, InstanceBase, InstanceStatus } from '@companion-module/b
 
 import type { OntimeConfig } from './config.js'
 import { GetConfigFields } from './config.js'
-import { OntimeV3 } from './v3/ontimev3.js'
+import { OntimeV3 } from './ontimev3.js'
 import { UpgradeScripts } from './upgrades.js'
 
 export interface OntimeClient {

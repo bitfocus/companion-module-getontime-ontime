@@ -1,5 +1,5 @@
 import type { CompanionFeedbackDefinition, CompanionFeedbackDefinitions } from '@companion-module/base'
-import { OntimeV3 } from '../ontimev3.js'
+import { OntimeV3 } from '../../ontimev3.js'
 import { createPlaybackFeedbacks } from './playback.js'
 import { createMessageFeedbacks } from './message.js'
 import { createTimerPhaseFeedback } from './timerPhase.js'

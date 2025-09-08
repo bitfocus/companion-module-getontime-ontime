@@ -11,7 +11,7 @@ import type {
 } from '@companion-module/base'
 import type { OntimeConfig } from './config.js'
 import { feedbackId, ActionId, deprecatedActionId, deprecatedFeedbackId } from './enums.js'
-import { TimerPhase } from './v3/ontime-types.js'
+import { TimerPhase } from '@getontime/types'
 
 function update2x4x0(
 	_context: CompanionUpgradeContext<OntimeConfig>,

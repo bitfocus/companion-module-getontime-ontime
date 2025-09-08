@@ -1,5 +1,5 @@
 import type { CompanionFeedbackDefinition } from '@companion-module/base'
-import { OntimeV3 } from '../ontimev3.js'
+import { OntimeV3 } from '../../ontimev3.js'
 import { feedbackId } from '../../enums.js'
 import { ActiveBlue, White } from '../../assets/colours.js'
 

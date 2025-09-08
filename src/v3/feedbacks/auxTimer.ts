@@ -1,9 +1,9 @@
 import type { CompanionFeedbackDefinition } from '@companion-module/base'
-import { OntimeV3 } from '../ontimev3.js'
+import { OntimeV3 } from '../../ontimev3.js'
 import { feedbackId } from '../../enums.js'
-import { SimplePlayback } from '../ontime-types.js'
 import { getAuxTimerState } from '../../utilities.js'
 import { DangerRed, PlaybackGreen, White } from '../../assets/colours.js'
+import { SimplePlayback } from '@getontime/types'
 
 export function createAuxTimerFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
 	return {

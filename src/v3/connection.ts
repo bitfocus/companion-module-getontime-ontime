@@ -3,17 +3,16 @@ import { OnTimeInstance } from '../index.js'
 import Websocket from 'ws'
 import { findPreviousPlayableEvent, msToSplitTime, makeURL, variablesFromCustomFields } from '../utilities.js'
 import { feedbackId, variableId } from '../enums.js'
+
+import { OntimeV3 } from '../ontimev3.js'
 import type {
-	CurrentBlockState,
-	MessageState,
-	OntimeEvent,
-	Runtime,
-	SimpleTimerState,
-	TimerState,
 	CustomFields,
-} from './ontime-types.js'
-import { SupportedEvent } from './ontime-types.js'
-import { OntimeV3 } from './ontimev3.js'
+	OntimeEvent,
+	SimpleTimerState,
+	WsPacketToClient,
+	ApiAction,
+} from '@getontime/types'
+import { MessageTag, SupportedEntry, RefetchKey } from '@getontime/types'
 
 let ws: Websocket | null = null
 let reconnectionTimeout: NodeJS.Timeout | null = null
@@ -73,97 +72,7 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		self.updateStatus(InstanceStatus.ConnectionFailure, `WebSocket error: ${event.message}`)
 	}
 
-	const updateClock = (val: number) => {
-		ontime.state.clock = val
-		const clock = msToSplitTime(val)
-		self.setVariableValues({ [variableId.Clock]: clock.hoursMinutesSeconds })
-	}
-
-	const updateTimer = (val: TimerState) => {
-		ontime.state.timer = val
-		const timer = msToSplitTime(val.current)
-		const timer_start = msToSplitTime(val.startedAt)
-		const timer_finish = msToSplitTime(val.expectedFinish)
-		const added = msToSplitTime(val.addedTime)
-
-		self.setVariableValues({
-			[variableId.TimerTotalMs]: val.current ?? 0,
-			[variableId.TimeN]: timer.negative,
-			[variableId.Time]: timer.hoursMinutesSeconds,
-			[variableId.TimeHM]: timer.hoursMinutes,
-			[variableId.TimeH]: timer.hours,
-			[variableId.TimeM]: timer.minutes,
-			[variableId.TimeS]: timer.seconds,
-			[variableId.TimerPhase]: val.phase,
-			[variableId.TimerStart]: timer_start.hoursMinutesSeconds,
-			[variableId.TimerFinish]: timer_finish.hoursMinutesSeconds,
-			[variableId.TimerAdded]: added.hoursMinutesSeconds,
-			[variableId.TimerAddedNice]: added.delayString,
-			[variableId.PlayState]: val.playback,
-		})
-
-		self.checkFeedbacks(
-			feedbackId.ColorPlayback,
-			feedbackId.ColorAddRemove,
-			feedbackId.TimerPhase,
-			feedbackId.TimerProgressBar,
-			feedbackId.TimerProgressBarMulti,
-		)
-	}
-
-	const updateMessage = (val: MessageState) => {
-		ontime.state.message = val
-		self.setVariableValues({
-			[variableId.TimerMessage]: val.timer.text,
-			[variableId.ExternalMessage]: val.external,
-			[variableId.TimerMessageVisible]: val.timer.visible,
-			[variableId.TimerBlackout]: val.timer.blackout,
-			[variableId.TimerBlink]: val.timer.blink,
-			[variableId.TimerSecondarySource]: val.timer.secondarySource as string,
-		})
-
-		self.checkFeedbacks(
-			feedbackId.MessageVisible,
-			feedbackId.TimerBlackout,
-			feedbackId.TimerBlink,
-			feedbackId.MessageSecondarySourceVisible,
-		)
-	}
-
-	const updateRuntime = (val: Runtime) => {
-		ontime.state.runtime = val
-		const offset = msToSplitTime(ontime.state.runtime.offset)
-		const plannedStart = msToSplitTime(val.plannedStart)
-		const actualStart = msToSplitTime(val.actualStart)
-		const plannedEnd = msToSplitTime(val.plannedEnd)
-		const expectedEnd = msToSplitTime(val.expectedEnd)
-		const selectedEventIndex = val.selectedEventIndex === null ? undefined : val.selectedEventIndex + 1
-		self.setVariableValues({
-			[variableId.NumberOfEvents]: val.numEvents,
-			[variableId.SelectedEventIndex]: selectedEventIndex,
-			[variableId.RundownOffset]: offset.hoursMinutesSeconds,
-			[variableId.PlannedStart]: plannedStart.hoursMinutesSeconds,
-			[variableId.ActualStart]: actualStart.hoursMinutesSeconds,
-			[variableId.PlannedEnd]: plannedEnd.hoursMinutesSeconds,
-			[variableId.ExpectedEnd]: expectedEnd.hoursMinutesSeconds,
-		})
-		self.checkFeedbacks(feedbackId.RundownOffset)
-	}
-
-	const updateEventNow = (val: OntimeEvent | null) => {
-		ontime.state.eventNow = val
-		self.setVariableValues({
-			[variableId.TitleNow]: val?.title,
-			[variableId.NoteNow]: val?.note,
-			[variableId.CueNow]: val?.cue,
-			[variableId.IdNow]: val?.id,
-		})
-		if (self.config.customToVariable) {
-			self.setVariableValues(variablesFromCustomFields(ontime, 'Now', val?.custom))
-			self.checkFeedbacks(feedbackId.CustomFieldsValue)
-		}
-	}
-
+	//TODO: should update when selected event changes
 	const updateEventPrevious = (val: OntimeEvent | null) => {
 		self.setVariableValues({
 			[variableId.TitlePrevious]: val?.title ?? '',
@@ -174,30 +83,6 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 		if (self.config.customToVariable) {
 			self.setVariableValues(variablesFromCustomFields(ontime, 'Previous', val?.custom))
 		}
-	}
-
-	const updateEventNext = (val: OntimeEvent | null) => {
-		ontime.state.eventNext = val
-		self.setVariableValues({
-			[variableId.TitleNext]: val?.title ?? '',
-			[variableId.NoteNext]: val?.note ?? '',
-			[variableId.CueNext]: val?.cue ?? '',
-			[variableId.IdNext]: val?.id ?? '',
-		})
-		if (self.config.customToVariable) {
-			self.setVariableValues(variablesFromCustomFields(ontime, 'Next', val?.custom))
-			self.checkFeedbacks(feedbackId.CustomFieldsValue)
-		}
-	}
-
-	const updateCurrentBlock = (val: CurrentBlockState) => {
-		ontime.state.currentBlock = val
-		const startedAt = msToSplitTime(val.startedAt)
-		self.setVariableValues({
-			[variableId.CurrentBlockStartedAt]: startedAt.hoursMinutesSeconds,
-			[variableId.CurrentBlockStartedAtMs]: val.startedAt ?? 0,
-			[variableId.CurrentBlockTitle]: val.block?.title ?? '',
-		})
 	}
 
 	const updateAuxTimer = (val: SimpleTimerState, timer: 'auxtimer1' | 'auxtimer2' | 'auxtimer3') => {
@@ -220,67 +105,189 @@ export function connect(self: OnTimeInstance, ontime: OntimeV3): void {
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises -- TODO: not sure how to fix this
 	ws.onmessage = async (event: any) => {
 		try {
-			const data = JSON.parse(event.data)
+			const data = JSON.parse(event.data) as WsPacketToClient
 			const { tag, payload } = data
 
 			if (!tag) {
 				return
 			}
 
-			//https://docs.getontime.no/api/runtime-data/
 			switch (tag) {
-				case 'runtime-data':
-				case 'runtime-patch': {
-					if ('clock' in payload) updateClock(payload.clock)
-					if ('timer' in payload) updateTimer(payload.timer)
-					if ('message' in payload) updateMessage(payload.message)
-					if ('runtime' in payload) updateRuntime(payload.runtime)
-					if ('eventNow' in payload) updateEventNow(payload.eventNow)
-					if ('eventNext' in payload) updateEventNext(payload.eventNext)
-					if ('auxtimer1' in payload) updateAuxTimer(payload.auxtimer1, 'auxtimer1')
-					if ('auxtimer2' in payload) updateAuxTimer(payload.auxtimer2, 'auxtimer2')
-					if ('auxtimer3' in payload) updateAuxTimer(payload.auxtimer3, 'auxtimer3')
-					if ('currentBlock' in payload) updateCurrentBlock(payload.currentBlock)
-					break
-				}
-				case 'version': {
-					clearTimeout(versionTimeout as NodeJS.Timeout)
-					console.log(payload)
-					const version = payload.split('.')
-					self.log('info', `Ontime version "${payload}"`)
-					self.log('debug', version)
-					if (version.at(0) === '4') {
-						self.updateStatus(InstanceStatus.Ok, payload)
-						await fetchCustomFields(self, ontime)
-						await fetchAllEvents(self, ontime)
-						self.init_actions()
-						self.init_feedbacks()
-						const prev = findPreviousPlayableEvent(ontime)
-						updateEventPrevious(prev)
-						if (self.config.customToVariable) {
-							self.setVariableDefinitions(ontime.getVariables(true))
-						}
-					} else {
-						self.updateStatus(InstanceStatus.ConnectionFailure, 'Unsupported version: see log')
-						self.log(
-							'error',
-							`Unsupported version "${payload}" You can download the latest version of Ontime through the website https://www.getontime.no/`,
+				case MessageTag.RuntimeData: {
+					if (payload.clock !== undefined) {
+						ontime.state.clock = payload.clock
+						const clock = msToSplitTime(payload.clock)
+						self.setVariableValues({ [variableId.Clock]: clock.hoursMinutesSeconds })
+						self.setVariableValues({ [variableId.ClockMs]: payload.clock })
+					}
+
+					if (payload.timer !== undefined) {
+						ontime.state.timer = payload.timer
+						const timer = msToSplitTime(payload.timer.current)
+						const timer_start = msToSplitTime(payload.timer.startedAt)
+						const timer_finish = msToSplitTime(payload.timer.expectedFinish)
+						const added = msToSplitTime(payload.timer.addedTime)
+
+						self.setVariableValues({
+							[variableId.TimerTotalMs]: payload.timer.current ?? 0,
+							[variableId.TimeN]: timer.negative,
+							[variableId.Time]: timer.hoursMinutesSeconds,
+							[variableId.TimeHM]: timer.hoursMinutes,
+							[variableId.TimeH]: timer.hours,
+							[variableId.TimeM]: timer.minutes,
+							[variableId.TimeS]: timer.seconds,
+							[variableId.TimerPhase]: payload.timer.phase,
+							[variableId.TimerStart]: timer_start.hoursMinutesSeconds,
+							[variableId.TimerFinish]: timer_finish.hoursMinutesSeconds,
+							[variableId.TimerAdded]: added.hoursMinutesSeconds,
+							[variableId.TimerAddedNice]: added.delayString,
+							[variableId.PlayState]: payload.timer.playback,
+						})
+					}
+
+					if (payload.message !== undefined) {
+						ontime.state.message = payload.message
+
+						self.setVariableValues({
+							[variableId.TimerMessage]: payload.message.timer.text,
+							[variableId.TimerMessageVisible]: payload.message.timer.visible,
+							[variableId.TimerBlackout]: payload.message.timer.blackout,
+							[variableId.TimerBlink]: payload.message.timer.blink,
+							[variableId.TimerSecondarySource]: payload.message.timer.secondarySource as string,
+						})
+
+						self.checkFeedbacks(
+							feedbackId.MessageVisible,
+							feedbackId.TimerBlackout,
+							feedbackId.TimerBlink,
+							feedbackId.MessageSecondarySourceVisible,
 						)
-						ws?.close()
+					}
+
+					if (payload.rundown !== undefined) {
+						ontime.state.rundown = payload.rundown
+						const plannedStart = msToSplitTime(payload.rundown.plannedStart)
+						const plannedEnd = msToSplitTime(payload.rundown.plannedEnd)
+						const actualStart = msToSplitTime(payload.rundown.actualStart)
+						const selectedEventIndex =
+							payload.rundown.selectedEventIndex === null ? undefined : payload.rundown.selectedEventIndex + 1
+
+						self.setVariableValues({
+							[variableId.NumberOfEvents]: payload.rundown.numEvents,
+							[variableId.SelectedEventIndex]: selectedEventIndex,
+							[variableId.PlannedStart]: plannedStart.hoursMinutesSeconds,
+							[variableId.ActualStart]: actualStart.hoursMinutesSeconds,
+							[variableId.PlannedEnd]: plannedEnd.hoursMinutesSeconds,
+						})
+					}
+
+					if (payload.offset !== undefined) {
+						ontime.state.offset = payload.offset
+						const offset = msToSplitTime(ontime.state.offset.absolute) // TODO: relative
+						const expectedEnd = msToSplitTime(payload.offset.expectedRundownEnd)
+						self.setVariableValues({
+							[variableId.RundownOffset]: offset.hoursMinutesSeconds,
+							[variableId.ExpectedEnd]: expectedEnd.hoursMinutesSeconds,
+						})
+						self.checkFeedbacks(feedbackId.RundownOffset)
+					}
+
+					if (payload.eventNow !== undefined) {
+						ontime.state.eventNow = payload.eventNow
+						self.setVariableValues({
+							[variableId.TitleNow]: payload.eventNow?.title,
+							[variableId.NoteNow]: payload.eventNow?.note,
+							[variableId.CueNow]: payload.eventNow?.cue,
+							[variableId.IdNow]: payload.eventNow?.id,
+						})
+						if (self.config.customToVariable) {
+							self.setVariableValues(variablesFromCustomFields(ontime, 'Now', payload.eventNow?.custom))
+							self.checkFeedbacks(feedbackId.CustomFieldsValue)
+						}
+					}
+
+					if (payload.eventNext !== undefined) {
+						ontime.state.eventNext = payload.eventNext
+						self.setVariableValues({
+							[variableId.TitleNext]: payload.eventNext?.title,
+							[variableId.NoteNext]: payload.eventNext?.note,
+							[variableId.CueNext]: payload.eventNext?.cue,
+							[variableId.IdNext]: payload.eventNext?.id,
+						})
+						if (self.config.customToVariable) {
+							self.setVariableValues(variablesFromCustomFields(ontime, 'Next', payload.eventNext?.custom))
+							self.checkFeedbacks(feedbackId.CustomFieldsValue)
+						}
+					}
+
+					if (payload.auxtimer1 !== undefined) {
+						updateAuxTimer(payload.auxtimer1, 'auxtimer1')
 					}
 					break
 				}
-				case 'ontime-refetch': {
-					if (self.config.refetchEvents) {
-						await fetchAllEvents(self, ontime)
-						const prev = findPreviousPlayableEvent(ontime)
-						updateEventPrevious(prev)
-						self.init_actions()
+
+				case MessageTag.Dialog:
+				case MessageTag.ClientInit:
+				case MessageTag.ClientList:
+				case MessageTag.ClientRedirect:
+				case MessageTag.ClientRename: {
+					/** void all client control packets */
+					break
+				}
+
+				case MessageTag.Pong:
+				case MessageTag.Log: {
+					//TODO: maybe...
+					break
+				}
+
+				case MessageTag.Refetch: {
+					switch (payload.target) {
+						case RefetchKey.Rundown: {
+							if (!self.config.refetchEvents) break
+							await fetchAllEvents(self, ontime)
+							const prev = findPreviousPlayableEvent(ontime)
+							updateEventPrevious(prev)
+							self.init_actions()
+							break
+						}
+						case RefetchKey.CustomFields: {
+							if (!self.config.customToVariable) break
+							const change = await fetchCustomFields(self, ontime)
+							if (!change) break
+							self.setVariableDefinitions(ontime.getVariables(true))
+							self.init_feedbacks()
+							break
+						}
 					}
-					const change = await fetchCustomFields(self, ontime)
-					if (change && self.config.customToVariable) {
-						self.setVariableDefinitions(ontime.getVariables(true))
-						self.init_feedbacks()
+					break
+				}
+				default: {
+					tag satisfies never
+					const apiReply = tag as ApiAction
+					if (apiReply === 'version') {
+						clearTimeout(versionTimeout as NodeJS.Timeout)
+						const version = (payload as string).split('.')
+						self.log('info', `Ontime version "${payload}"`)
+						if (version.at(0) === '4') {
+							self.updateStatus(InstanceStatus.Ok, payload)
+							await fetchCustomFields(self, ontime)
+							await fetchAllEvents(self, ontime)
+							self.init_actions()
+							self.init_feedbacks()
+							const prev = findPreviousPlayableEvent(ontime)
+							updateEventPrevious(prev)
+							if (self.config.customToVariable) {
+								self.setVariableDefinitions(ontime.getVariables(true))
+							}
+						} else {
+							self.updateStatus(InstanceStatus.ConnectionFailure, 'Unsupported version: see log')
+							self.log(
+								'error',
+								`Unsupported version "${payload}" You can download the latest version of Ontime through the website https://www.getontime.no/`,
+							)
+							ws?.close()
+						}
 					}
 					break
 				}
@@ -337,7 +344,7 @@ async function fetchAllEvents(self: OnTimeInstance, ontime: OntimeV3): Promise<v
 			revision: number
 		}
 
-		ontime.events = flatOrder.map((id) => entries[id]).filter((entry) => entry.type === SupportedEvent.Event)
+		ontime.events = flatOrder.map((id) => entries[id]).filter((entry) => entry.type === SupportedEntry.Event)
 		self.log('debug', `fetched ${ontime.events.length} events`)
 	} catch (e: any) {
 		ontime.events = []

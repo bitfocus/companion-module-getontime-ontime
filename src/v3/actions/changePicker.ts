@@ -8,7 +8,7 @@ import type {
 	CompanionInputFieldTextInput,
 } from '@companion-module/base'
 import { combineRgb } from '@companion-module/base'
-import { OntimeV3 } from '../ontimev3.js'
+import { OntimeV3 } from '../../ontimev3.js'
 import { MAX_TIME_SECONDS } from '../../enums.js'
 
 const throttledEndpointText =

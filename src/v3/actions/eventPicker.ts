@@ -1,6 +1,6 @@
 import type { SomeCompanionActionInputField, DropdownChoice } from '@companion-module/base'
 import { eventsToChoices } from '../../utilities.js'
-import type { OntimeEvent } from '../ontime-types.js'
+import type { OntimeEvent } from '@getontime/types'
 
 type SelectOptions = 'list' | 'loaded' | 'previous' | 'next' | 'cue' | 'id' | 'index' | 'go'
 const selectOptions: DropdownChoice[] = [

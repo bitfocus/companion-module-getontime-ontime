@@ -5,7 +5,6 @@ import type {
 } from '@companion-module/base'
 import * as icons from '../assets/icons.js'
 import { ActionId, feedbackId, OffsetState } from '../enums.js'
-import { TimerPhase } from './ontime-types.js'
 import { graphics } from 'companion-module-utils'
 import {
 	ActiveBlue,
@@ -19,6 +18,7 @@ import {
 	WarningOrange,
 	White,
 } from '../assets/colours.js'
+import { TimerPhase } from '@getontime/types'
 
 export function presets(): CompanionPresetDefinitions {
 	return { ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...rundownPresets, ...messagePresets }
