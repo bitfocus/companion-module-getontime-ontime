@@ -1,6 +1,5 @@
 import type { CompanionVariableValues, DropdownChoice } from '@companion-module/base'
-import type { EventCustomFields, OntimeEvent, RuntimeStore, SimpleTimerState } from './v3/ontime-types.js'
-import { OntimeV3 } from './v3/ontimev3.js'
+import type { CustomFields, EntryCustomFields, OntimeEvent } from '@getontime/resolver'
 
 export const joinTime = (...args: string[]): string => args.join(':')
 
@@ -25,7 +24,7 @@ function ensureTrailingSlash(url: URL): URL {
 	return url
 }
 
-export function makeURL(host: string, path = '', ssl = false, ws = false): URL | undefined {
+export function makeURL(host: string, path = '', ws = false): URL | undefined {
 	let url: URL | undefined
 
 	if (URL.canParse(host)) {
@@ -35,14 +34,13 @@ export function makeURL(host: string, path = '', ssl = false, ws = false): URL |
 	}
 
 	if (url === undefined) return
+	if (url.protocol !== 'http:' && url.protocol !== 'https:') return
 
 	url = ensureTrailingSlash(url)
 	url.pathname += path
 
-	if (ssl) {
-		url.protocol = ws ? 'wss' : 'https'
-	} else {
-		url.protocol = ws ? 'ws' : 'http'
+	if (ws) {
+		url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:'
 	}
 
 	return url
@@ -100,46 +98,42 @@ export function eventsToChoices(events: OntimeEvent[]): DropdownChoice[] {
 	})
 }
 
-export function getAuxTimerState(ontime: OntimeV3, index = 'auxtimer1'): SimpleTimerState {
-	return ontime.state[index as keyof RuntimeStore] as unknown as SimpleTimerState
-}
+// export function findPreviousPlayableEvent(ontime: OntimeV3): OntimeEvent | null {
+// 	if (ontime.state.eventNow === null) {
+// 		return null
+// 	}
 
-export function findPreviousPlayableEvent(ontime: OntimeV3): OntimeEvent | null {
-	if (ontime.state.eventNow === null) {
-		return null
-	}
+// 	const nowId = ontime.state.eventNow.id
+// 	let now = false
 
-	const nowId = ontime.state.eventNow.id
-	let now = false
+// 	for (let i = ontime.events.length - 1; i >= 0; i--) {
+// 		if (!now && ontime.events[i].id === nowId) {
+// 			now = true
+// 			continue
+// 		}
+// 		if (now && !ontime.events[i].skip) {
+// 			return ontime.events[i]
+// 		}
+// 	}
 
-	for (let i = ontime.events.length - 1; i >= 0; i--) {
-		if (!now && ontime.events[i].id === nowId) {
-			now = true
-			continue
-		}
-		if (now && !ontime.events[i].skip) {
-			return ontime.events[i]
-		}
-	}
-
-	return null
-}
+// 	return null
+// }
 
 export function variablesFromCustomFields(
-	ontime: OntimeV3,
+	customFields: CustomFields,
 	postFix: string,
-	val: EventCustomFields | undefined,
+	val: EntryCustomFields | undefined,
 ): CompanionVariableValues {
 	const companionVariableValues: CompanionVariableValues = {}
 	if (typeof val === 'undefined') {
-		Object.keys(ontime.customFields).forEach((key) => {
-			companionVariableValues[`${key}_Custom${postFix}`] = undefined
+		Object.keys(customFields).forEach((key) => {
+			companionVariableValues[`_custom_${key}_${postFix}`] = undefined
 		})
 		return companionVariableValues
 	}
 
-	Object.keys(ontime.customFields).forEach((key) => {
-		companionVariableValues[`${key}_Custom${postFix}`] = val[key]
+	Object.keys(customFields).forEach((key) => {
+		companionVariableValues[`_custom_${key}_${postFix}`] = val[key]
 	})
 	return companionVariableValues
 }

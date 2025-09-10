@@ -1,44 +1,50 @@
 import type { CompanionActionDefinition, CompanionActionEvent } from '@companion-module/base'
-import { socketSendJson } from '../connection.js'
-import { ActionId } from '../../enums.js'
-import { OntimeV3 } from '../ontimev3.js'
-import { ActionCommand } from './commands.js'
-import { SimpleDirection, SimplePlayback } from '../ontime-types.js'
-import { getAuxTimerState } from '../../utilities.js'
+import { ActionId } from '../enums.js'
+import { SimplePlayback, SimpleDirection } from '@getontime/resolver'
+import type { OntimeModule } from '../index.js'
 
-export function createAuxTimerActions(ontime: OntimeV3): { [id: string]: CompanionActionDefinition } {
+export function createAuxTimerActions(module: OntimeModule): { [id: string]: CompanionActionDefinition } {
 	function togglePlayState(action: CompanionActionEvent): void {
-		const id = (action.options.destination ?? '1') as string
-		const timer = getAuxTimerState(ontime)
+		const id = action.options.destination as '1' // | '2' | '3' FIXME: this should
+		const timer = module.ontime.state[`auxtimer${id}`]
 		if (action.options.value === 'toggleSS') {
-			socketSendJson(ActionCommand.AuxTimer, {
+			module.ontime.sendSocket('auxtimer', {
 				[id]: timer.playback === SimplePlayback.Start ? SimplePlayback.Stop : SimplePlayback.Start,
 			})
 			return
 		}
 
 		if (action.options.value === 'toggleSP') {
-			socketSendJson(ActionCommand.AuxTimer, {
+			module.ontime.sendSocket('auxtimer', {
 				[id]: timer.playback === SimplePlayback.Start ? SimplePlayback.Pause : SimplePlayback.Start,
 			})
 			return
 		}
 
-		socketSendJson(ActionCommand.AuxTimer, { [id]: action.options.value })
+		module.ontime.sendSocket('auxtimer', { [id]: action.options.value as SimplePlayback })
 	}
 
 	function duration(action: CompanionActionEvent): void {
-		const id = action.options.destination as string
-		const { hours, minutes, seconds } = action.options
-		const val = (Number(hours) * 60 + Number(minutes)) * 60 + Number(seconds)
-		socketSendJson(ActionCommand.AuxTimer, { [id]: { duration: val } })
+		const id = action.options.destination as '1' // | '2' | '3' // FIXME: this should
+		const { hours, minutes, seconds } = action.options as {
+			hours: number
+			minutes: number
+			seconds: number
+		}
+		const val = ((hours * 60 + minutes) * 60 + seconds) * 1000
+		module.ontime.sendSocket('auxtimer', { [id]: { duration: val } })
 	}
 
 	function addTime(action: CompanionActionEvent): void {
-		const id = action.options.destination as string
-		const { hours, minutes, seconds, addremove } = action.options
-		const val = ((Number(hours) * 60 + Number(minutes)) * 60 + Number(seconds)) * (addremove == 'remove' ? -1 : 1)
-		socketSendJson(ActionCommand.AuxTimer, { [id]: { addtime: val } })
+		const id = action.options.destination as '1' // | '2' | '3' FIXME: this should
+		const { hours, minutes, seconds, addremove } = action.options as {
+			hours: number
+			minutes: number
+			seconds: number
+			addremove: 'add' | 'remove'
+		}
+		const val = ((hours * 60 + minutes) * 60 + seconds) * 1000 * (addremove == 'remove' ? -1 : 1)
+		module.ontime.sendSocket('auxtimer', { [id]: { addtime: val } })
 	}
 
 	return {
@@ -47,11 +53,14 @@ export function createAuxTimerActions(ontime: OntimeV3): { [id: string]: Compani
 			options: [
 				{
 					type: 'dropdown',
-					choices: [{ id: '1', label: 'Aux Timer 1' }],
+					choices: [
+						{ id: '1', label: 'Aux Timer 1' },
+						{ id: '2', label: 'Aux Timer 2' },
+						{ id: '3', label: 'Aux Timer 3' },
+					],
 					default: '1',
 					id: 'destination',
 					label: 'Select Aux Timer',
-					isVisible: () => false, //This Stays hidden for now
 				},
 				{
 					type: 'dropdown',
@@ -74,11 +83,14 @@ export function createAuxTimerActions(ontime: OntimeV3): { [id: string]: Compani
 			options: [
 				{
 					type: 'dropdown',
-					choices: [{ id: '1', label: 'Aux Timer 1' }],
+					choices: [
+						{ id: '1', label: 'Aux Timer 1' },
+						{ id: '2', label: 'Aux Timer 2' },
+						{ id: '3', label: 'Aux Timer 3' },
+					],
 					default: '1',
 					id: 'destination',
 					label: 'Select Aux Timer',
-					isVisible: () => false, //This Stays hidden for now
 				},
 				{
 					type: 'number',
@@ -118,11 +130,14 @@ export function createAuxTimerActions(ontime: OntimeV3): { [id: string]: Compani
 			options: [
 				{
 					type: 'dropdown',
-					choices: [{ id: '1', label: 'Aux Timer 1' }],
+					choices: [
+						{ id: '1', label: 'Aux Timer 1' },
+						{ id: '2', label: 'Aux Timer 2' },
+						{ id: '3', label: 'Aux Timer 3' },
+					],
 					default: '1',
 					id: 'destination',
 					label: 'Select Aux Timer',
-					isVisible: () => false, //This Stays hidden for now
 				},
 				{
 					type: 'dropdown',
@@ -136,18 +151,23 @@ export function createAuxTimerActions(ontime: OntimeV3): { [id: string]: Compani
 				},
 			],
 			callback: ({ options }) =>
-				socketSendJson(ActionCommand.AuxTimer, { [options.destination as string]: { direction: options.direction } }),
+				module.ontime.sendSocket('auxtimer', {
+					[options.destination as '1']: { direction: options.direction as SimpleDirection },
+				}),
 		},
 		[ActionId.AuxTimerAdd]: {
 			name: 'Add / remove time to aux timer',
 			options: [
 				{
 					type: 'dropdown',
-					choices: [{ id: '1', label: 'Aux Timer 1' }],
+					choices: [
+						{ id: '1', label: 'Aux Timer 1' },
+						{ id: '2', label: 'Aux Timer 2' },
+						{ id: '3', label: 'Aux Timer 3' },
+					],
 					default: '1',
 					id: 'destination',
 					label: 'Select Aux Timer',
-					isVisible: () => false, //This Stays hidden for now
 				},
 				{
 					id: 'addremove',

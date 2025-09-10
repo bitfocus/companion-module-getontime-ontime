@@ -186,6 +186,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@getontime/resolver@file:C:/Users/omnivox/Documents/NodeJs/ontime/apps/resolver::locator=getontime-ontime%40workspace%3A.":
+  version: 4.0.0-beta.3
+  resolution: "@getontime/resolver@file:/C%3A/Users/omnivox/Documents/NodeJs/ontime/apps/resolver#/C%3A/Users/omnivox/Documents/NodeJs/ontime/apps/resolver::hash=552ce4&locator=getontime-ontime%40workspace%3A."
+  checksum: 10c0/8a6c7e6ee967af4855dc2cc3303d50fb9524d73ad0e11a5444c9afa6d1da1818592810670c4869b02baf809e7e91ca2e1d7306fe5738420a10b4e4df58c52509
+  languageName: node
+  linkType: hard
+
 "@humanfs/core@npm:^0.19.1":
   version: 0.19.1
   resolution: "@humanfs/core@npm:0.19.1"
@@ -410,6 +417,13 @@ __metadata:
   dependencies:
     "@types/node": "npm:*"
   checksum: 10c0/11979d0690e774046d3a1e8cfc613a6b53a613909d81c93831cf253800e93ba1a2d47950979b523aebd4fc023351b644d7f4aa2dfcc027c70816a2968420e7da
+  languageName: node
+  linkType: hard
+
+"@types/semver@npm:^7.7.1":
+  version: 7.7.1
+  resolution: "@types/semver@npm:7.7.1"
+  checksum: 10c0/c938aef3bf79a73f0f3f6037c16e2e759ff40c54122ddf0b2583703393d8d3127130823facb880e694caa324eb6845628186aac1997ee8b31dc2d18fafe26268
   languageName: node
   linkType: hard
 
@@ -1595,7 +1609,9 @@ __metadata:
   dependencies:
     "@companion-module/base": "npm:1.12.0"
     "@companion-module/tools": "npm:2.3.0"
+    "@getontime/resolver": "file:C:/Users/omnivox/Documents/NodeJs/ontime/apps/resolver"
     "@types/node": "npm:22.15.19"
+    "@types/semver": "npm:^7.7.1"
     "@types/ws": "npm:8.18.1"
     companion-module-utils: "npm:0.5.0"
     eslint: "npm:9.27.0"
@@ -1603,6 +1619,7 @@ __metadata:
     lint-staged: "npm:16.0.0"
     prettier: "npm:3.5.3"
     rimraf: "npm:6.0.1"
+    semver: "npm:^7.7.2"
     typescript: "npm:5.8.3"
     typescript-eslint: "npm:8.32.1"
     ws: "npm:8.18.2"
@@ -2695,6 +2712,15 @@ __metadata:
   bin:
     semver: bin/semver.js
   checksum: 10c0/88f33e148b210c153873cb08cfe1e281d518aaa9a666d4d148add6560db5cd3c582f3a08ccb91f38d5f379ead256da9931234ed122057f40bb5766e65e58adaf
+  languageName: node
+  linkType: hard
+
+"semver@npm:^7.7.2":
+  version: 7.7.2
+  resolution: "semver@npm:7.7.2"
+  bin:
+    semver: bin/semver.js
+  checksum: 10c0/aca305edfbf2383c22571cb7714f48cadc7ac95371b4b52362fb8eeffdfbc0de0669368b82b2b15978f8848f01d7114da65697e56cd8c37b0dab8c58e543f9ea
   languageName: node
   linkType: hard
 

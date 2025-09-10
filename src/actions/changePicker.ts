@@ -8,14 +8,14 @@ import type {
 	CompanionInputFieldTextInput,
 } from '@companion-module/base'
 import { combineRgb } from '@companion-module/base'
-import { OntimeV3 } from '../ontimev3.js'
-import { MAX_TIME_SECONDS } from '../../enums.js'
+import { MAX_TIME_SECONDS } from '../enums.js'
+import type { CustomFields } from '@getontime/resolver'
 
 const throttledEndpointText =
 	'This property will cause a recalculation of the rundwon\nand id therfor throttled by ontime'
 
 export function changePicker(
-	ontime: OntimeV3,
+	customFields: CustomFields,
 ): Array<
 	| CompanionInputFieldNumber
 	| CompanionInputFieldCheckbox
@@ -189,7 +189,7 @@ export function changePicker(
 			default: 'count-down',
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timerType'),
 		},
-		...generateCustomFieldsOptions(ontime),
+		...generateCustomFieldsOptions(customFields),
 	]
 
 	return [
@@ -205,8 +205,7 @@ export function changePicker(
 	]
 }
 
-function generateCustomFieldsOptions(ontime: OntimeV3): Array<CompanionInputFieldTextInput> {
-	const { customFields } = ontime
+function generateCustomFieldsOptions(customFields: CustomFields): Array<CompanionInputFieldTextInput> {
 	const customProps: ReturnType<typeof generateCustomFieldsOptions> = []
 
 	for (const field in customFields) {

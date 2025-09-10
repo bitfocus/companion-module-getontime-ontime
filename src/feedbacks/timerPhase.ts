@@ -1,10 +1,10 @@
 import type { CompanionFeedbackDefinition } from '@companion-module/base'
-import { TimerPhase } from '../ontime-types.js'
-import { feedbackId } from '../../enums.js'
-import { OntimeV3 } from '../ontimev3.js'
-import { DangerRed, White } from '../../assets/colours.js'
+import { TimerPhase } from '@getontime/resolver'
+import { feedbackId } from '../enums.js'
+import { DangerRed, White } from '../assets/colours.js'
+import type OntimeState from '../state.js'
 
-export function createTimerPhaseFeedback(ontime: OntimeV3): {
+export function createTimerPhaseFeedback(state: OntimeState): {
 	[id: string]: CompanionFeedbackDefinition
 } {
 	return {
@@ -32,12 +32,7 @@ export function createTimerPhaseFeedback(ontime: OntimeV3): {
 					default: [TimerPhase.Danger],
 				},
 			],
-			callback: (feedback) => {
-				if (typeof feedback.options.phase === 'string') {
-					return feedback.options.phase === ontime.state.timer.phase // eslint-disable-line @typescript-eslint/no-unsafe-enum-comparison
-				}
-				return (feedback.options.phase as TimerPhase[]).some((value) => value === ontime.state.timer.phase)
-			},
+			callback: (feedback) => (feedback.options.phase as TimerPhase[]).some((value) => value === state.timer.phase),
 		},
 	}
 }

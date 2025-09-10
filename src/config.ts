@@ -2,13 +2,6 @@ import type { SomeCompanionConfigField } from '@companion-module/base'
 
 export interface OntimeConfig {
 	host: string
-	port: string | null //TODO: remove
-	ssl: boolean
-	version: string //TODO: remove
-	refetchEvents: boolean
-	customToVariable: boolean
-	reconnect: boolean
-	reconnectInterval: number
 }
 
 export function GetConfigFields(): SomeCompanionConfigField[] {
@@ -28,53 +21,8 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			default: '127.0.0.1:4001',
 			width: 9,
 			required: true,
-			tooltip: 'Ontime server address. eg. http://127.0.0.1:4001',
-		},
-		{
-			label: 'Use SSL',
-			id: 'ssl',
-			type: 'checkbox',
-			default: false,
-			width: 3,
-			tooltip: 'Use SSL to connect to the Ontime server.',
-		},
-		//New line
-		{
-			label: 'Reconnect',
-			id: 'reconnect',
-			type: 'checkbox',
-			default: true,
-			width: 4,
-			tooltip: 'Chose if you want Companion to try to reconnect to ontime when the connection is lost.',
-		},
-		{
-			label: 'Reconnect interval (seconds)',
-			id: 'reconnectInterval',
-			type: 'number',
-			min: 1,
-			max: 60,
-			default: 8,
-			width: 4,
-			isVisible: (config) => config.reconnect === true,
-			tooltip: 'The interval in seconds between each reconnect attempt.',
-		},
-		//New line
-		{
-			label: 'Refetch events',
-			id: 'refetchEvents',
-			type: 'checkbox',
-			default: true,
-			width: 12,
-			tooltip: 'Whether Companion should keep the rundown updated with Ontime by refetching on change.',
-		},
-		//New line
-		{
-			label: 'Custom variables',
-			id: 'customToVariable',
-			type: 'checkbox',
-			default: true,
-			width: 12,
-			tooltip: 'Whether Ontime custom fields should be written to variables.',
+			tooltip:
+				'Ontime server address. eg. http://127.0.0.1:4001 or from cloud https://cloud.getontime.no/<private-key>',
 		},
 	]
 }

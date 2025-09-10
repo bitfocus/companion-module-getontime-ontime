@@ -1,14 +1,13 @@
 import type { CompanionActionDefinition, CompanionActionEvent, CompanionActionContext } from '@companion-module/base'
 import { splitHex } from '@companion-module/base'
-import { socketSendJson } from '../connection.js'
-import { ActionId } from '../../enums.js'
-import { ActionCommand } from './commands.js'
+import { ActionId } from '../enums.js'
 import { changePicker } from './changePicker.js'
 import { eventPicker } from './eventPicker.js'
-import { OntimeV3 } from '../ontimev3.js'
-import { strictTimerStringToSeconds } from '../../utilities.js'
+import { strictTimerStringToSeconds } from '../utilities.js'
+import type { OntimeModule } from '../index.js'
+import type { OntimeEvent } from '@getontime/resolver'
 
-export function createChangeActions(ontime: OntimeV3): { [id: string]: CompanionActionDefinition } {
+export function createChangeActions(module: OntimeModule): { [id: string]: CompanionActionDefinition } {
 	async function changeEvent(action: CompanionActionEvent, context: CompanionActionContext): Promise<void> {
 		const { properties, method, eventList, eventId } = action.options
 		let id: string | null = null
@@ -18,11 +17,11 @@ export function createChangeActions(ontime: OntimeV3): { [id: string]: Companion
 				break
 			}
 			case 'loaded': {
-				id = ontime.state.eventNow?.id ?? null
+				id = module.ontime.state.eventNow?.id ?? null
 				break
 			}
 			case 'next': {
-				id = ontime.state.eventNext?.id ?? null
+				id = module.ontime.state.eventNext?.id ?? null
 				break
 			}
 			case 'id': {
@@ -34,7 +33,7 @@ export function createChangeActions(ontime: OntimeV3): { [id: string]: Companion
 		if (id === null) {
 			return
 		}
-		const patch = {}
+		const patch: Partial<OntimeEvent> = {}
 		if (properties && Array.isArray(properties)) {
 			//remove unwanted placeholder value if present
 			if (properties.includes('pickOne')) {
@@ -65,14 +64,19 @@ export function createChangeActions(ontime: OntimeV3): { [id: string]: Companion
 
 				Object.assign(patch, { [property]: value })
 			}
-			socketSendJson(ActionCommand.Change, { [id]: patch })
+			module.ontime.sendSocket('change', {
+				[id]: patch,
+			})
 		}
 	}
 
 	return {
 		[ActionId.Change]: {
 			name: 'Change event property',
-			options: [...eventPicker(ontime.events, ['list', 'loaded', 'next', 'id']), ...changePicker(ontime)],
+			options: [
+				...eventPicker(module.ontime.state.events, ['list', 'loaded', 'next', 'id']),
+				...changePicker(module.ontime.state.customFields),
+			],
 			callback: changeEvent,
 		},
 	}

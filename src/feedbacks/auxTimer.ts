@@ -1,11 +1,10 @@
 import type { CompanionFeedbackDefinition } from '@companion-module/base'
-import { OntimeV3 } from '../ontimev3.js'
-import { feedbackId } from '../../enums.js'
-import { SimplePlayback } from '../ontime-types.js'
-import { getAuxTimerState } from '../../utilities.js'
-import { DangerRed, PlaybackGreen, White } from '../../assets/colours.js'
+import { feedbackId } from '../enums.js'
+import { SimplePlayback } from '@getontime/resolver'
+import { DangerRed, PlaybackGreen, White } from '../assets/colours.js'
+import type OntimeState from '../state.js'
 
-export function createAuxTimerFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
+export function createAuxTimerFeedbacks(state: OntimeState): { [id: string]: CompanionFeedbackDefinition } {
 	return {
 		[feedbackId.AuxTimerPlayback]: {
 			type: 'boolean',
@@ -18,11 +17,14 @@ export function createAuxTimerFeedbacks(ontime: OntimeV3): { [id: string]: Compa
 			options: [
 				{
 					type: 'dropdown',
-					choices: [{ id: 'auxtimer1', label: 'Aux Timer 1' }],
+					choices: [
+						{ id: 'auxtimer1', label: 'Aux Timer 1' },
+						{ id: 'auxtimer2', label: 'Aux Timer 2' },
+						{ id: 'auxtimer3', label: 'Aux Timer 3' },
+					],
 					default: 'auxtimer1',
 					id: 'destination',
 					label: 'Select Aux Timer',
-					isVisible: () => false, //This Stays hidden for now
 				},
 				{
 					type: 'dropdown',
@@ -37,7 +39,8 @@ export function createAuxTimerFeedbacks(ontime: OntimeV3): { [id: string]: Compa
 				},
 			],
 			callback: (feedback) =>
-				getAuxTimerState(ontime, feedback.options.id as string).playback === feedback.options.state,
+				state[feedback.options.destination as 'auxtimer1' | 'auxtimer2' | 'auxtimer3'].playback ===
+				feedback.options.state,
 		},
 		[feedbackId.AuxTimerNegative]: {
 			type: 'boolean',
@@ -50,14 +53,18 @@ export function createAuxTimerFeedbacks(ontime: OntimeV3): { [id: string]: Compa
 			options: [
 				{
 					type: 'dropdown',
-					choices: [{ id: 'auxtimer1', label: 'Aux Timer 1' }],
+					choices: [
+						{ id: 'auxtimer1', label: 'Aux Timer 1' },
+						{ id: 'auxtimer2', label: 'Aux Timer 2' },
+						{ id: 'auxtimer3', label: 'Aux Timer 3' },
+					],
 					default: 'auxtimer1',
 					id: 'destination',
 					label: 'Select Aux Timer',
-					isVisible: () => false, //This Stays hidden for now
 				},
 			],
-			callback: (feedback) => getAuxTimerState(ontime, feedback.options.id as string).current < 0,
+			callback: (feedback) =>
+				state[feedback.options.destination as 'auxtimer1' | 'auxtimer2' | 'auxtimer3'].current < 0,
 		},
 	}
 }

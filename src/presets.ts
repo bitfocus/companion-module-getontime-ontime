@@ -3,9 +3,8 @@ import type {
 	CompanionButtonStyleProps,
 	CompanionPresetDefinitions,
 } from '@companion-module/base'
-import * as icons from '../assets/icons.js'
-import { ActionId, feedbackId, OffsetState } from '../enums.js'
-import { TimerPhase } from './ontime-types.js'
+import * as icons from './assets/icons.js'
+import { ActionId, feedbackId, OffsetState } from './enums.js'
 import { graphics } from 'companion-module-utils'
 import {
 	ActiveBlue,
@@ -18,9 +17,10 @@ import {
 	RollBlue,
 	WarningOrange,
 	White,
-} from '../assets/colours.js'
+} from './assets/colours.js'
+import { TimerPhase } from '@getontime/resolver'
 
-export function presets(): CompanionPresetDefinitions {
+export function generatePresets(): CompanionPresetDefinitions {
 	return { ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...rundownPresets, ...messagePresets }
 }
 
@@ -828,7 +828,9 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 const auxTimerNegative = [
 	{
 		feedbackId: feedbackId.AuxTimerNegative,
-		options: {},
+		options: {
+			destination: 'auxtimer1',
+		},
 		style: {
 			color: DangerRed,
 		},
@@ -842,9 +844,10 @@ const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		name: 'Current aux time',
 		style: {
 			...defaultStyle,
-			text: `$(ontime:auxTimer_current_hms-1)`,
+			text: 'msToTimestamp($(ontime:aux_1_current),"HH:mm:ss")',
 			size: '14',
 			alignment: 'center:center',
+			textExpression: true,
 		},
 		previewStyle: {
 			...defaultStyle,
@@ -892,6 +895,7 @@ const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				feedbackId: feedbackId.AuxTimerPlayback,
 				options: {
 					state: 'start',
+					destination: 'auxtimer1',
 				},
 				style: {
 					color: PlaybackRed,
@@ -933,6 +937,7 @@ const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				feedbackId: feedbackId.AuxTimerPlayback,
 				options: {
 					state: 'pause',
+					destination: 'auxtimer1',
 				},
 				style: {
 					bgcolor: PauseOrange,

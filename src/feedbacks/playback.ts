@@ -1,24 +1,24 @@
 import type { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition } from '@companion-module/base'
-import { OntimeV3 } from '../ontimev3.js'
-import { feedbackId } from '../../enums.js'
-import { Playback } from '../ontime-types.js'
-import { PauseOrange, PlaybackGreen, White } from '../../assets/colours.js'
+import { Playback } from '@getontime/resolver'
+import { PauseOrange, PlaybackGreen, White } from '../assets/colours.js'
+import { feedbackId } from '../enums.js'
+import type OntimeState from '../state.js'
 
-export function createPlaybackFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
+export function createPlaybackFeedbacks(state: OntimeState): { [id: string]: CompanionFeedbackDefinition } {
 	function addTime(feedback: CompanionFeedbackBooleanEvent): boolean {
 		const { direction } = feedback.options
 
 		if (direction === 'add') {
-			return ontime.state.timer.addedTime > 0
+			return state.timer.addedTime > 0
 		}
 		if (direction === 'remove') {
-			return ontime.state.timer.addedTime < 0
+			return state.timer.addedTime < 0
 		}
 		if (direction === 'both') {
-			return ontime.state.timer.addedTime != 0
+			return state.timer.addedTime != 0
 		}
 		if (direction === 'none') {
-			return ontime.state.timer.addedTime == 0
+			return state.timer.addedTime == 0
 		}
 		return false
 	}
@@ -34,7 +34,7 @@ export function createPlaybackFeedbacks(ontime: OntimeV3): { [id: string]: Compa
 			},
 			options: [
 				{
-					type: 'dropdown',
+					type: 'multidropdown',
 					label: 'State',
 					id: 'state',
 					choices: [
@@ -44,10 +44,10 @@ export function createPlaybackFeedbacks(ontime: OntimeV3): { [id: string]: Compa
 						{ id: Playback.Armed, label: 'Armed' },
 						{ id: Playback.Roll, label: 'Roll' },
 					],
-					default: Playback.Play,
+					default: [Playback.Play],
 				},
 			],
-			callback: (feedback) => ontime.state.timer.playback === feedback.options.state,
+			callback: (feedback) => (feedback.options.state as Playback[]).some((val) => state.timer.playback === val),
 		},
 		[feedbackId.ColorAddRemove]: {
 			type: 'boolean',
