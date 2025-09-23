@@ -47,7 +47,7 @@ const canPlayFeedback = [
 	{
 		feedbackId: feedbackId.ColorPlayback,
 		options: {
-			state: 'play',
+			state: ['play'],
 		},
 		style: {
 			color: White,
@@ -57,7 +57,7 @@ const canPlayFeedback = [
 	{
 		feedbackId: feedbackId.ColorPlayback,
 		options: {
-			state: 'armed',
+			state: ['armed'],
 		},
 		style: {
 			color: PlaybackGreen,
@@ -66,7 +66,7 @@ const canPlayFeedback = [
 	{
 		feedbackId: feedbackId.ColorPlayback,
 		options: {
-			state: 'pause',
+			state: ['pause'],
 		},
 		style: {
 			color: PlaybackGreen,
@@ -148,7 +148,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.ColorPlayback,
 				options: {
-					state: 'stop',
+					state: ['stop'],
 				},
 				style: {
 					bgcolor: PlaybackRed,
@@ -187,7 +187,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.ColorPlayback,
 				options: {
-					state: 'pause',
+					state: ['pause'],
 				},
 				style: {
 					color: White,
@@ -197,7 +197,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.ColorPlayback,
 				options: {
-					state: 'play',
+					state: ['play'],
 				},
 				style: {
 					color: PauseOrange,
@@ -343,7 +343,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		feedbacks: [
 			{
 				feedbackId: feedbackId.ColorPlayback,
-				options: { state: 'roll' },
+				options: { state: ['roll'] },
 				style: {
 					color: White,
 					bgcolor: RollBlue,
@@ -380,7 +380,7 @@ const timerPhaseAndPauseFeedback = [
 	...timerPhaseFeedback,
 	{
 		feedbackId: feedbackId.ColorPlayback,
-		options: { state: 'pause' },
+		options: { state: ['pause'] },
 		style: { color: PauseOrange },
 	},
 ]
