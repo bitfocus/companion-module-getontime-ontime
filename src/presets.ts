@@ -4,7 +4,7 @@ import type {
 	CompanionPresetDefinitions,
 } from '@companion-module/base'
 import * as icons from './assets/icons.js'
-import { ActionId, feedbackId, OffsetState } from './enums.js'
+import { ActionId, feedbackId } from './enums.js'
 import { graphics } from 'companion-module-utils'
 import {
 	ActiveBlue,
@@ -21,7 +21,7 @@ import {
 import { TimerPhase } from '@getontime/resolver'
 
 export function generatePresets(): CompanionPresetDefinitions {
-	return { ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...rundownPresets, ...messagePresets }
+	return { ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...messagePresets }
 }
 
 const defaultStyle: CompanionButtonStyleProps = {
@@ -385,69 +385,6 @@ const timerPhaseAndPauseFeedback = [
 	},
 ]
 
-const rundownPresets: { [id: string]: CompanionButtonPresetDefinition } = {
-	currentBlock: {
-		type: 'button',
-		category: 'Rundown',
-		name: 'Title of current block',
-		style: {
-			...defaultStyle,
-			size: 'auto',
-			text: '$(ontime:currentBlockTitle)',
-		},
-		previewStyle: {
-			...defaultStyle,
-			size: 'auto',
-			text: 'Current Block',
-		},
-		steps: [
-			{
-				down: [],
-				up: [],
-			},
-		],
-		feedbacks: [],
-	},
-	offset: {
-		type: 'button',
-		category: 'Rundown',
-		name: 'Current offset',
-		style: {
-			...defaultStyle,
-			size: '14',
-			text: '$(ontime:rundown_offset_hms)',
-		},
-		previewStyle: {
-			...defaultStyle,
-			size: '14',
-			text: '00:00:05',
-		},
-		feedbacks: [
-			{
-				feedbackId: feedbackId.RundownOffset,
-				options: {
-					state: OffsetState.Ahead,
-					margin: 10,
-				},
-				style: {
-					bgcolor: PlaybackGreen,
-				},
-			},
-			{
-				feedbackId: feedbackId.RundownOffset,
-				options: {
-					state: OffsetState.Behind,
-					margin: 10,
-				},
-				style: {
-					bgcolor: PlaybackRed,
-				},
-			},
-		],
-		steps: [],
-	},
-}
-
 const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 	showMessage: {
 		type: 'button',
@@ -489,7 +426,7 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		style: {
 			...defaultStyle,
 			size: 'auto',
-			text: 'Show\n$(ontime:timerMessage)',
+			text: 'Show\n$(ontime:message_text)',
 		},
 		previewStyle: {
 			...defaultStyle,
