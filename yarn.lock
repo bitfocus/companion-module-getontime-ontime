@@ -186,10 +186,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@getontime/resolver@file:C:/Users/omnivox/Documents/NodeJs/ontime/apps/resolver::locator=getontime-ontime%40workspace%3A.":
-  version: 4.0.0-beta.3
-  resolution: "@getontime/resolver@file:/C%3A/Users/omnivox/Documents/NodeJs/ontime/apps/resolver#/C%3A/Users/omnivox/Documents/NodeJs/ontime/apps/resolver::hash=552ce4&locator=getontime-ontime%40workspace%3A."
-  checksum: 10c0/8a6c7e6ee967af4855dc2cc3303d50fb9524d73ad0e11a5444c9afa6d1da1818592810670c4869b02baf809e7e91ca2e1d7306fe5738420a10b4e4df58c52509
+"@getontime/resolver@npm:^4.0.0-beta.4":
+  version: 4.0.0-beta.4
+  resolution: "@getontime/resolver@npm:4.0.0-beta.4"
+  checksum: 10c0/e2f2f27239abecb9d6ef099ecd0e9fb97eb03821313e303b0cb62932ac97728efa48adab49ea8de049b47fddfe5aa54325ac87c868fbd8b51e9c309a480ce3c7
   languageName: node
   linkType: hard
 
@@ -1609,7 +1609,7 @@ __metadata:
   dependencies:
     "@companion-module/base": "npm:1.12.0"
     "@companion-module/tools": "npm:2.3.0"
-    "@getontime/resolver": "file:C:/Users/omnivox/Documents/NodeJs/ontime/apps/resolver"
+    "@getontime/resolver": "npm:^4.0.0-beta.4"
     "@types/node": "npm:22.15.19"
     "@types/semver": "npm:^7.7.1"
     "@types/ws": "npm:8.18.1"
