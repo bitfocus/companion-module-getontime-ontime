@@ -1,6 +1,6 @@
 import type { SomeCompanionActionInputField, DropdownChoice } from '@companion-module/base'
-import { eventsToChoices } from '../../utilities.js'
-import type { OntimeEvent } from '../ontime-types.js'
+import { eventsToChoices } from '../utilities.js'
+import type { OntimeEvent } from '@getontime/resolver'
 
 type SelectOptions = 'list' | 'loaded' | 'previous' | 'next' | 'cue' | 'id' | 'index' | 'go'
 const selectOptions: DropdownChoice[] = [
@@ -42,9 +42,9 @@ export function eventPicker(
 		},
 		{
 			type: 'static-text',
-			value: '',
+			value: 'NB! this will target the first event with a matching CUE name',
 			id: 'cuenote',
-			label: 'NB! this will target the first event with a matching CUE name',
+			label: '',
 			isVisible: (options) => options['method'] === 'cue',
 		},
 		{

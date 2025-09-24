@@ -1,16 +1,16 @@
 import type { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition } from '@companion-module/base'
-import { OntimeV3 } from '../ontimev3.js'
-import { feedbackId } from '../../enums.js'
-import { ActiveBlue, White } from '../../assets/colours.js'
+import { feedbackId } from '../enums.js'
+import { ActiveBlue, White } from '../assets/colours.js'
+import type OntimeState from '../state.js'
 
-export function createMessageFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
+export function createMessageFeedbacks(state: OntimeState): { [id: string]: CompanionFeedbackDefinition } {
 	function messageVisible(feedback: CompanionFeedbackBooleanEvent): boolean {
-		const { text, visible } = ontime.state.message.timer as { text: string; visible: boolean }
+		const { text, visible } = state.message.timer as { text: string; visible: boolean }
 		return feedback.options.reqText ? visible && text === feedback.options.text : visible
 	}
 
 	function secondaryVisible(feedback: CompanionFeedbackBooleanEvent): boolean {
-		const secondarySource = ontime.state.message.timer.secondarySource as string
+		const secondarySource = state.message.timer.secondarySource as string
 
 		return (
 			(feedback.options.source === 'any' && secondarySource !== null) || secondarySource === feedback.options.source
@@ -64,7 +64,7 @@ export function createMessageFeedbacks(ontime: OntimeV3): { [id: string]: Compan
 				bgcolor: ActiveBlue,
 			},
 			options: [],
-			callback: () => ontime.state.message.timer.blink,
+			callback: () => state.message.timer.blink,
 		},
 		[feedbackId.TimerBlackout]: {
 			type: 'boolean',
@@ -74,7 +74,7 @@ export function createMessageFeedbacks(ontime: OntimeV3): { [id: string]: Compan
 				bgcolor: ActiveBlue,
 			},
 			options: [],
-			callback: () => ontime.state.message.timer.blackout,
+			callback: () => state.message.timer.blackout,
 		},
 	}
 }

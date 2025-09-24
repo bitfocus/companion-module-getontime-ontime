@@ -1,67 +1,80 @@
 /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
-import type {
-	// CreateConvertToBooleanFeedbackUpgradeScript,
-	CompanionStaticUpgradeProps,
-	CompanionStaticUpgradeResult,
-	CompanionUpgradeContext,
-	// type InputValue,
-	CompanionStaticUpgradeScript,
-	CompanionMigrationAction,
-	CompanionMigrationFeedback,
+import {
+	type CompanionStaticUpgradeProps,
+	type CompanionStaticUpgradeResult,
+	type CompanionUpgradeContext,
+	type CompanionStaticUpgradeScript,
+	type CompanionMigrationAction,
+	type CompanionMigrationFeedback,
 } from '@companion-module/base'
 import type { OntimeConfig } from './config.js'
 import { feedbackId, ActionId, deprecatedActionId, deprecatedFeedbackId } from './enums.js'
-import { TimerPhase } from './v3/ontime-types.js'
+import { TimerPhase } from '@getontime/resolver'
+
+//TODO: look at using this pattern for future upgrade scripts https://github.com/bitfocus/companion-module-allenheath-sq/blob/main/src/upgrades.ts
+
+type old_v2_config = {
+	host: string
+	port: string | null
+	ssl: boolean
+	version: string
+	refetchEvents: boolean
+	customToVariable: boolean
+	reconnect: boolean
+	reconnectInterval: number
+}
 
 function update2x4x0(
-	_context: CompanionUpgradeContext<OntimeConfig>,
-	props: CompanionStaticUpgradeProps<OntimeConfig>,
+	_context: CompanionUpgradeContext<OntimeConfig | old_v2_config>,
+	props: CompanionStaticUpgradeProps<OntimeConfig | old_v2_config>,
 ): CompanionStaticUpgradeResult<OntimeConfig> {
 	const result = {
 		updatedConfig: null,
 		updatedActions: new Array<CompanionMigrationAction>(),
 		updatedFeedbacks: new Array<CompanionMigrationFeedback>(),
 	}
-	if (_context.currentConfig.version === 'v1') {
-		for (const action of props.actions) {
-			if (action.actionId === 'setSpeakerMessageVisibility') {
-				action.actionId = deprecatedActionId.SetTimerMessageVisibility
-				result.updatedActions.push(action)
-			} else if (action.actionId === 'setSpeakerMessage') {
-				action.actionId = deprecatedActionId.SetTimerMessage
-				result.updatedActions.push(action)
-			} else if (action.actionId === 'delay') {
-				action.actionId = ActionId.Add
-				result.updatedActions.push(action)
+	if ('version' in _context.currentConfig) {
+		if (_context.currentConfig.version === 'v1') {
+			for (const action of props.actions) {
+				if (action.actionId === 'setSpeakerMessageVisibility') {
+					action.actionId = deprecatedActionId.SetTimerMessageVisibility
+					result.updatedActions.push(action)
+				} else if (action.actionId === 'setSpeakerMessage') {
+					action.actionId = deprecatedActionId.SetTimerMessage
+					result.updatedActions.push(action)
+				} else if (action.actionId === 'delay') {
+					action.actionId = ActionId.Add
+					result.updatedActions.push(action)
+				}
 			}
-		}
-		for (const feedback of props.feedbacks) {
-			if (feedback.feedbackId === 'speakerMessageVisible') {
-				feedback.feedbackId = deprecatedFeedbackId.TimerMessageVisible
-				result.updatedFeedbacks.push(feedback)
+			for (const feedback of props.feedbacks) {
+				if (feedback.feedbackId === 'speakerMessageVisible') {
+					feedback.feedbackId = deprecatedFeedbackId.TimerMessageVisible
+					result.updatedFeedbacks.push(feedback)
+				}
 			}
-		}
-	} else if (_context.currentConfig.version === 'v2') {
-		for (const action of props.actions) {
-			if (action.actionId === 'setSpeakerMessageVisibility') {
-				action.actionId = deprecatedActionId.SetTimerMessageVisibility
-				result.updatedActions.push(action)
-			} else if (action.actionId === 'setSpeakerMessage') {
-				action.actionId = deprecatedActionId.SetTimerMessage
-				result.updatedActions.push(action)
-			} else if (action.actionId === 'delay') {
-				action.actionId = ActionId.Add
-				action.options.addremove = (action.options.value as number) >= 0 ? 'add' : 'remove'
-				action.options.minutes = Math.abs(action.options.value as number)
-				action.options.hours = 0
-				action.options.seconds = 0
-				result.updatedActions.push(action)
+		} else if (_context.currentConfig.version === 'v2') {
+			for (const action of props.actions) {
+				if (action.actionId === 'setSpeakerMessageVisibility') {
+					action.actionId = deprecatedActionId.SetTimerMessageVisibility
+					result.updatedActions.push(action)
+				} else if (action.actionId === 'setSpeakerMessage') {
+					action.actionId = deprecatedActionId.SetTimerMessage
+					result.updatedActions.push(action)
+				} else if (action.actionId === 'delay') {
+					action.actionId = ActionId.Add
+					action.options.addremove = (action.options.value as number) >= 0 ? 'add' : 'remove'
+					action.options.minutes = Math.abs(action.options.value as number)
+					action.options.hours = 0
+					action.options.seconds = 0
+					result.updatedActions.push(action)
+				}
 			}
-		}
-		for (const feedback of props.feedbacks) {
-			if (feedback.feedbackId === 'speakerMessageVisible') {
-				feedback.feedbackId = deprecatedFeedbackId.TimerMessageVisible
-				result.updatedFeedbacks.push(feedback)
+			for (const feedback of props.feedbacks) {
+				if (feedback.feedbackId === 'speakerMessageVisible') {
+					feedback.feedbackId = deprecatedFeedbackId.TimerMessageVisible
+					result.updatedFeedbacks.push(feedback)
+				}
 			}
 		}
 	}
@@ -69,16 +82,27 @@ function update2x4x0(
 	return result
 }
 
+type old_v3_config = {
+	host: string
+	port: string | null
+	ssl: boolean
+	version: string
+	refetchEvents: boolean
+	customToVariable: boolean
+	reconnect: boolean
+	reconnectInterval: number
+}
+
 function update3x4x0(
-	_context: CompanionUpgradeContext<OntimeConfig>,
-	props: CompanionStaticUpgradeProps<OntimeConfig>,
+	_context: CompanionUpgradeContext<OntimeConfig | old_v3_config>,
+	props: CompanionStaticUpgradeProps<OntimeConfig | old_v3_config>,
 ): CompanionStaticUpgradeResult<OntimeConfig> {
 	const result = {
 		updatedConfig: null,
 		updatedActions: new Array<CompanionMigrationAction>(),
 		updatedFeedbacks: new Array<CompanionMigrationFeedback>(),
 	}
-	if (_context.currentConfig.version === 'v2') {
+	if ('version' in _context.currentConfig && _context.currentConfig.version === 'v2') {
 		for (const action of props.actions) {
 			if (action.actionId === ActionId.Change) {
 				if ('val' in action.options) {
@@ -292,9 +316,20 @@ function update4xx(
 	return result
 }
 
+type old_v4_config = {
+	host: string
+	port: string | null
+	ssl: boolean
+	version: string
+	refetchEvents: boolean
+	customToVariable: boolean
+	reconnect: boolean
+	reconnectInterval: number
+}
+
 function update46x(
 	_context: CompanionUpgradeContext<OntimeConfig>,
-	props: CompanionStaticUpgradeProps<OntimeConfig>,
+	props: CompanionStaticUpgradeProps<old_v4_config | OntimeConfig>,
 ): CompanionStaticUpgradeResult<OntimeConfig> {
 	const result: CompanionStaticUpgradeResult<OntimeConfig> = {
 		updatedConfig: null,
@@ -306,13 +341,60 @@ function update46x(
 		return result
 	}
 
-	const { host, port } = props.config
-	if (port === null) {
+	if ('port' in props.config) {
+		const { host, port } = props.config
+
+		const newAddress = `${host}:${port}`
+		result.updatedConfig = { ...props.config, host: newAddress }
 		return result
 	}
+	return result
+}
 
-	const newAddress = `${host}:${port}`
-	result.updatedConfig = { ...props.config, host: newAddress, port: null }
+function update5(
+	_context: CompanionUpgradeContext<OntimeConfig | old_v4_config>,
+	props: CompanionStaticUpgradeProps<OntimeConfig | old_v4_config>,
+): CompanionStaticUpgradeResult<OntimeConfig> {
+	const result: CompanionStaticUpgradeResult<OntimeConfig> = {
+		updatedConfig: null,
+		updatedActions: new Array<CompanionMigrationAction>(),
+		updatedFeedbacks: new Array<CompanionMigrationFeedback>(),
+	}
+
+	for (const feedback of props.feedbacks) {
+		if (feedback.feedbackId === feedbackId.ColorPlayback) {
+			if (typeof feedback.options.state === 'string') {
+				feedback.options.state = [feedback.options.state]
+				result.updatedFeedbacks.push(feedback)
+			}
+		}
+		if (feedback.feedbackId === feedbackId.TimerPhase) {
+			if (typeof feedback.options.phase === 'string') {
+				feedback.options.phase = [feedback.options.phase]
+				result.updatedFeedbacks.push(feedback)
+			}
+		}
+		if (feedback.feedbackId === feedbackId.AuxTimerNegative) {
+			if (!feedback.options.destination) {
+				feedback.options.destination = 'auxtimer1'
+				result.updatedFeedbacks.push(feedback)
+			}
+		}
+
+		if (feedback.feedbackId === feedbackId.AuxTimerPlayback) {
+			if (!feedback.options.destination) {
+				feedback.options.destination = 'auxtimer1'
+				result.updatedFeedbacks.push(feedback)
+			}
+		}
+	}
+
+	if ('ssl' in _context.currentConfig) {
+		const host = new URL(_context.currentConfig.host)
+		host.protocol = _context.currentConfig.ssl ? 'https' : 'http'
+		result.updatedConfig = { host: _context.currentConfig.host }
+	}
+
 	return result
 }
 
@@ -321,4 +403,5 @@ export const UpgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [
 	update3x4x0,
 	update4xx,
 	update46x,
+	update5,
 ]

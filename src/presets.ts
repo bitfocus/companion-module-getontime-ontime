@@ -3,9 +3,8 @@ import type {
 	CompanionButtonStyleProps,
 	CompanionPresetDefinitions,
 } from '@companion-module/base'
-import * as icons from '../assets/icons.js'
-import { ActionId, feedbackId, OffsetState } from '../enums.js'
-import { TimerPhase } from './ontime-types.js'
+import * as icons from './assets/icons.js'
+import { ActionId, feedbackId } from './enums.js'
 import { graphics } from 'companion-module-utils'
 import {
 	ActiveBlue,
@@ -18,10 +17,10 @@ import {
 	RollBlue,
 	WarningOrange,
 	White,
-} from '../assets/colours.js'
+} from './assets/colours.js'
 
-export function presets(): CompanionPresetDefinitions {
-	return { ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...rundownPresets, ...messagePresets }
+export function generatePresets(): CompanionPresetDefinitions {
+	return { ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...messagePresets }
 }
 
 const defaultStyle: CompanionButtonStyleProps = {
@@ -47,7 +46,7 @@ const canPlayFeedback = [
 	{
 		feedbackId: feedbackId.ColorPlayback,
 		options: {
-			state: 'play',
+			state: ['play'],
 		},
 		style: {
 			color: White,
@@ -57,7 +56,7 @@ const canPlayFeedback = [
 	{
 		feedbackId: feedbackId.ColorPlayback,
 		options: {
-			state: 'armed',
+			state: ['armed'],
 		},
 		style: {
 			color: PlaybackGreen,
@@ -66,7 +65,7 @@ const canPlayFeedback = [
 	{
 		feedbackId: feedbackId.ColorPlayback,
 		options: {
-			state: 'pause',
+			state: ['pause'],
 		},
 		style: {
 			color: PlaybackGreen,
@@ -148,7 +147,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.ColorPlayback,
 				options: {
-					state: 'stop',
+					state: ['stop'],
 				},
 				style: {
 					bgcolor: PlaybackRed,
@@ -187,7 +186,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.ColorPlayback,
 				options: {
-					state: 'pause',
+					state: ['pause'],
 				},
 				style: {
 					color: White,
@@ -197,7 +196,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.ColorPlayback,
 				options: {
-					state: 'play',
+					state: ['play'],
 				},
 				style: {
 					color: PauseOrange,
@@ -343,108 +342,13 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		feedbacks: [
 			{
 				feedbackId: feedbackId.ColorPlayback,
-				options: { state: 'roll' },
+				options: { state: ['roll'] },
 				style: {
 					color: White,
 					bgcolor: RollBlue,
 				},
 			},
 		],
-	},
-}
-
-const timerPhaseFeedback = [
-	{
-		feedbackId: feedbackId.TimerPhase,
-		options: { phase: [TimerPhase.Default] },
-		style: { bgcolor: NormalGray, color: Black },
-	},
-	{
-		feedbackId: feedbackId.TimerPhase,
-		options: { phase: [TimerPhase.Warning] },
-		style: { bgcolor: WarningOrange, color: Black },
-	},
-	{
-		feedbackId: feedbackId.TimerPhase,
-		options: { phase: [TimerPhase.Danger] },
-		style: { bgcolor: DangerRed, color: Black },
-	},
-	{
-		feedbackId: feedbackId.TimerPhase,
-		options: { phase: [TimerPhase.Overtime] },
-		style: { bgcolor: Black, color: DangerRed },
-	},
-]
-
-const timerPhaseAndPauseFeedback = [
-	...timerPhaseFeedback,
-	{
-		feedbackId: feedbackId.ColorPlayback,
-		options: { state: 'pause' },
-		style: { color: PauseOrange },
-	},
-]
-
-const rundownPresets: { [id: string]: CompanionButtonPresetDefinition } = {
-	currentBlock: {
-		type: 'button',
-		category: 'Rundown',
-		name: 'Title of current block',
-		style: {
-			...defaultStyle,
-			size: 'auto',
-			text: '$(ontime:currentBlockTitle)',
-		},
-		previewStyle: {
-			...defaultStyle,
-			size: 'auto',
-			text: 'Current Block',
-		},
-		steps: [
-			{
-				down: [],
-				up: [],
-			},
-		],
-		feedbacks: [],
-	},
-	offset: {
-		type: 'button',
-		category: 'Rundown',
-		name: 'Current offset',
-		style: {
-			...defaultStyle,
-			size: '14',
-			text: '$(ontime:rundown_offset_hms)',
-		},
-		previewStyle: {
-			...defaultStyle,
-			size: '14',
-			text: '00:00:05',
-		},
-		feedbacks: [
-			{
-				feedbackId: feedbackId.RundownOffset,
-				options: {
-					state: OffsetState.Ahead,
-					margin: 10,
-				},
-				style: {
-					bgcolor: PlaybackGreen,
-				},
-			},
-			{
-				feedbackId: feedbackId.RundownOffset,
-				options: {
-					state: OffsetState.Behind,
-					margin: 10,
-				},
-				style: {
-					bgcolor: PlaybackRed,
-				},
-			},
-		],
-		steps: [],
 	},
 }
 
@@ -489,7 +393,7 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		style: {
 			...defaultStyle,
 			size: 'auto',
-			text: 'Show\n$(ontime:timerMessage)',
+			text: 'Show\n$(ontime:message_text)',
 		},
 		previewStyle: {
 			...defaultStyle,
@@ -668,9 +572,10 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		name: 'Amount of time added/removed from running timer',
 		style: {
 			...defaultStyle,
-			text: `Total added\n$(ontime:timer_added_nice)`,
+			text: '`Total added\n${msToTimestamp($(ontime:timer_added), "hh:mm:ss")}`',
 			size: 'auto',
 			alignment: 'center:center',
+			textExpression: true,
 		},
 		previewStyle: {
 			...defaultStyle,
@@ -696,8 +601,9 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		style: {
 			...defaultStyle,
 			size: 14,
-			text: `$(ontime:time)`,
+			text: 'msToTimestamp($(ontime:timer_current),"hh:mm:ss")',
 			alignment: 'center:center',
+			textExpression: true,
 		},
 		previewStyle: {
 			...defaultStyle,
@@ -745,90 +651,14 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			},
 		],
 	},
-	current_time_h: {
-		type: 'button',
-		category: 'Timer Management',
-		name: 'Current timer hour',
-		style: {
-			...defaultStyle,
-			size: 44,
-			text: `$(ontime:time_sign)$(ontime:time_h)`,
-			alignment: 'center:center',
-		},
-		previewStyle: {
-			...defaultStyle,
-			size: 'auto',
-			text: '+/-HH',
-			alignment: 'center:center',
-			bgcolor: NormalGray,
-			color: Black,
-		},
-		steps: [
-			{
-				down: [],
-				up: [],
-			},
-		],
-		feedbacks: timerPhaseAndPauseFeedback,
-	},
-	current_time_m: {
-		type: 'button',
-		category: 'Timer Management',
-		name: 'Current timer minutes',
-		style: {
-			...defaultStyle,
-			size: 44,
-			text: `$(ontime:time_m)`,
-			alignment: 'center:center',
-		},
-		previewStyle: {
-			...defaultStyle,
-			size: 28,
-			text: 'MM',
-			alignment: 'center:center',
-			bgcolor: NormalGray,
-			color: Black,
-		},
-		steps: [
-			{
-				down: [],
-				up: [],
-			},
-		],
-		feedbacks: timerPhaseAndPauseFeedback,
-	},
-	current_time_s: {
-		type: 'button',
-		category: 'Timer Management',
-		name: 'Current timer seconds',
-		style: {
-			...defaultStyle,
-			size: 44,
-			text: `$(ontime:time_s)`,
-			alignment: 'center:center',
-		},
-		previewStyle: {
-			...defaultStyle,
-			size: 28,
-			text: 'SS',
-			alignment: 'center:center',
-			bgcolor: NormalGray,
-			color: Black,
-		},
-		steps: [
-			{
-				down: [],
-				up: [],
-			},
-		],
-		feedbacks: timerPhaseAndPauseFeedback,
-	},
 }
 
 const auxTimerNegative = [
 	{
 		feedbackId: feedbackId.AuxTimerNegative,
-		options: {},
+		options: {
+			destination: 'auxtimer1',
+		},
 		style: {
 			color: DangerRed,
 		},
@@ -842,9 +672,10 @@ const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		name: 'Current aux time',
 		style: {
 			...defaultStyle,
-			text: `$(ontime:auxTimer_current_hms-1)`,
+			text: 'msToTimestamp($(ontime:aux_1_current),"HH:mm:ss")',
 			size: '14',
 			alignment: 'center:center',
+			textExpression: true,
 		},
 		previewStyle: {
 			...defaultStyle,
@@ -892,6 +723,7 @@ const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				feedbackId: feedbackId.AuxTimerPlayback,
 				options: {
 					state: 'start',
+					destination: 'auxtimer1',
 				},
 				style: {
 					color: PlaybackRed,
@@ -933,6 +765,7 @@ const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				feedbackId: feedbackId.AuxTimerPlayback,
 				options: {
 					state: 'pause',
+					destination: 'auxtimer1',
 				},
 				style: {
 					bgcolor: PauseOrange,

@@ -1,8 +1,6 @@
 import type { CompanionActionDefinition, CompanionActionEvent } from '@companion-module/base'
-import { socketSendJson } from '../connection.js'
-import { ActionId } from '../../enums.js'
-import { ActionCommand } from './commands.js'
-import { OntimeV3 } from '../ontimev3.js'
+import { ActionId } from '../enums.js'
+import type { OntimeV4 } from '../ontime.js'
 
 enum ToggleOnOff {
 	Off = 0,
@@ -10,11 +8,11 @@ enum ToggleOnOff {
 	Toggle = 2,
 }
 
-export function createMessageActions(ontime: OntimeV3): { [id: string]: CompanionActionDefinition } {
+export function createMessageActions(ontime: OntimeV4): { [id: string]: CompanionActionDefinition } {
 	function messageVisibility(action: CompanionActionEvent): void {
 		const value = action.options.value as ToggleOnOff
 		const visible = value === ToggleOnOff.Toggle ? !ontime.state.message.timer.visible : value
-		socketSendJson('message', { timer: { visible } })
+		ontime.sendSocket('message', { timer: { visible } })
 	}
 
 	function messageVisibilityAndText(action: CompanionActionEvent): void {
@@ -25,17 +23,17 @@ export function createMessageActions(ontime: OntimeV3): { [id: string]: Companio
 		switch (value) {
 			case ToggleOnOff.Off:
 				if (thisTextIsVisible) {
-					socketSendJson('message', { timer: { visible: false } })
+					ontime.sendSocket('message', { timer: { visible: false } })
 				}
 				break
 			case ToggleOnOff.On:
-				socketSendJson('message', { timer: { visible: true, text } })
+				ontime.sendSocket('message', { timer: { visible: true, text } })
 				break
 			case ToggleOnOff.Toggle:
 				if (thisTextIsVisible) {
-					socketSendJson('message', { timer: { visible: false, text } })
+					ontime.sendSocket('message', { timer: { visible: false, text } })
 				} else {
-					socketSendJson('message', { timer: { visible: true, text } })
+					ontime.sendSocket('message', { timer: { visible: true, text } })
 				}
 				break
 		}
@@ -44,13 +42,13 @@ export function createMessageActions(ontime: OntimeV3): { [id: string]: Companio
 	function timerBlackout(action: CompanionActionEvent): void {
 		const value = action.options.value as ToggleOnOff
 		const blackout = value === ToggleOnOff.Toggle ? !ontime.state.message.timer.blackout : value
-		socketSendJson(ActionCommand.Message, { timer: { blackout } })
+		ontime.sendSocket('message', { timer: { blackout } })
 	}
 
 	function timerBlink(action: CompanionActionEvent): void {
 		const value = action.options.value as ToggleOnOff
 		const blink = value === ToggleOnOff.Toggle ? !ontime.state.message.timer.blink : value
-		socketSendJson(ActionCommand.Message, { timer: { blink } })
+		ontime.sendSocket('message', { timer: { blink } })
 	}
 
 	function setSecondarySource(action: CompanionActionEvent): void {
@@ -59,7 +57,7 @@ export function createMessageActions(ontime: OntimeV3): { [id: string]: Companio
 		const isActive = ontime.state.message.timer.secondarySource === source
 		const shouldShow = value === ToggleOnOff.Toggle ? !isActive : value
 		const secondarySource = shouldShow ? source : 'off'
-		socketSendJson(ActionCommand.Message, { timer: { secondarySource } })
+		ontime.sendSocket('message', { timer: { secondarySource } })
 	}
 
 	return {
@@ -91,7 +89,7 @@ export function createMessageActions(ontime: OntimeV3): { [id: string]: Companio
 				},
 			],
 			callback: ({ options }) =>
-				socketSendJson(ActionCommand.Message, {
+				ontime.sendSocket('message', {
 					timer: { text: options.value },
 				}),
 		},

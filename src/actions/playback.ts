@@ -1,49 +1,49 @@
 import type { CompanionActionDefinition, CompanionActionEvent } from '@companion-module/base'
-import { socketSendJson } from '../connection.js'
-import { ActionId } from '../../enums.js'
-import { ActionCommand } from './commands.js'
+import { ActionId } from '../enums.js'
 import { eventPicker } from './eventPicker.js'
-import { OntimeV3 } from '../ontimev3.js'
-import { Playback } from '../ontime-types.js'
+import { Playback } from '@getontime/resolver'
+import type { OntimeModule } from '../index.js'
 
-export function createPlaybackActions(ontime: OntimeV3): { [id: string]: CompanionActionDefinition } {
+export function createPlaybackActions(module: OntimeModule): { [id: string]: CompanionActionDefinition } {
+	const timerState = module.ontime.state.timer
+
 	function start(action: CompanionActionEvent): void {
 		const { method, eventList, eventCue, eventId, eventIndex } = action.options
 		switch (method) {
 			case 'loaded': {
-				socketSendJson(ActionCommand.Start)
+				module.ontime.sendSocket('start', undefined)
 				break
 			}
 			case 'next': {
-				socketSendJson(ActionCommand.Start, 'next')
+				module.ontime.sendSocket('start', 'next')
 				break
 			}
 			case 'go': {
-				if (ontime.state.timer.playback === Playback.Armed || ontime.state.timer.playback === Playback.Pause) {
-					socketSendJson(ActionCommand.Start)
+				if (timerState.playback === Playback.Armed || timerState.playback === Playback.Pause) {
+					module.ontime.sendSocket('start', undefined)
 				} else {
-					socketSendJson(ActionCommand.Start, 'next')
+					module.ontime.sendSocket('start', 'next')
 				}
 				break
 			}
 			case 'previous': {
-				socketSendJson(ActionCommand.Start, 'previous')
+				module.ontime.sendSocket('start', 'previous')
 				break
 			}
 			case 'list': {
-				socketSendJson(ActionCommand.Start, { id: eventList })
+				module.ontime.sendSocket('start', { id: eventList as string })
 				break
 			}
 			case 'cue': {
-				socketSendJson(ActionCommand.Start, { cue: eventCue })
+				module.ontime.sendSocket('start', { cue: eventCue as string })
 				break
 			}
 			case 'id': {
-				socketSendJson(ActionCommand.Start, { id: eventId })
+				module.ontime.sendSocket('start', { id: eventId as string })
 				break
 			}
 			case 'index': {
-				socketSendJson(ActionCommand.Start, { index: eventIndex })
+				module.ontime.sendSocket('start', { index: eventIndex as number })
 				break
 			}
 		}
@@ -53,31 +53,31 @@ export function createPlaybackActions(ontime: OntimeV3): { [id: string]: Compani
 		const { method, eventList, eventCue, eventId, eventIndex } = action.options
 		switch (method) {
 			case 'loaded': {
-				socketSendJson(ActionCommand.Reload)
+				module.ontime.sendSocket('reload', undefined)
 				break
 			}
 			case 'next': {
-				socketSendJson(ActionCommand.Load, 'next')
+				module.ontime.sendSocket('load', 'next')
 				break
 			}
 			case 'previous': {
-				socketSendJson(ActionCommand.Load, 'previous')
+				module.ontime.sendSocket('load', 'previous')
 				break
 			}
 			case 'list': {
-				socketSendJson(ActionCommand.Load, { id: eventList })
+				module.ontime.sendSocket('load', { id: eventList as string })
 				break
 			}
 			case 'cue': {
-				socketSendJson(ActionCommand.Load, { cue: eventCue })
+				module.ontime.sendSocket('load', { cue: eventCue as string })
 				break
 			}
 			case 'id': {
-				socketSendJson(ActionCommand.Load, { id: eventId })
+				module.ontime.sendSocket('load', { id: eventId as string })
 				break
 			}
 			case 'index': {
-				socketSendJson(ActionCommand.Load, { index: eventIndex })
+				module.ontime.sendSocket('load', { index: eventIndex as number })
 				break
 			}
 		}
@@ -86,41 +86,43 @@ export function createPlaybackActions(ontime: OntimeV3): { [id: string]: Compani
 	function addTime(action: CompanionActionEvent): void {
 		const { hours, minutes, seconds, addremove } = action.options
 		const val = ((Number(hours) * 60 + Number(minutes)) * 60 + Number(seconds)) * (addremove == 'remove' ? -1 : 1)
-		socketSendJson(ActionCommand.Add, val)
+		module.ontime.sendSocket('addtime', val)
 	}
 
 	return {
 		[ActionId.Start]: {
 			name: 'Start an event',
-			options: [...eventPicker(ontime.events, ['list', 'next', 'previous', 'loaded', 'cue', 'id', 'index', 'go'])],
+			options: [
+				...eventPicker(module.ontime.state.events, ['list', 'next', 'previous', 'loaded', 'cue', 'id', 'index', 'go']),
+			],
 			callback: start,
 		},
 		[ActionId.Load]: {
 			name: 'Load an event',
-			options: [...eventPicker(ontime.events)],
+			options: [...eventPicker(module.ontime.state.events)],
 			callback: load,
 		},
 
 		[ActionId.Pause]: {
 			name: 'Pause running timer',
 			options: [],
-			callback: () => socketSendJson(ActionCommand.Pause),
+			callback: () => module.ontime.sendSocket('pause', undefined),
 		},
 		[ActionId.Stop]: {
 			name: 'Stop running timer',
 			options: [],
-			callback: () => socketSendJson(ActionCommand.Stop),
+			callback: () => module.ontime.sendSocket('stop', undefined),
 		},
 		[ActionId.Reload]: {
 			name: 'Reload selected event',
 			options: [],
-			callback: () => socketSendJson(ActionCommand.Reload),
+			callback: () => module.ontime.sendSocket('reload', undefined),
 		},
 
 		[ActionId.Roll]: {
 			name: 'Start roll mode',
 			options: [],
-			callback: () => socketSendJson(ActionCommand.Roll),
+			callback: () => module.ontime.sendSocket('roll', undefined),
 		},
 		[ActionId.Add]: {
 			name: 'Add / remove time to running timer',

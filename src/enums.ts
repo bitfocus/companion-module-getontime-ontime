@@ -88,62 +88,31 @@ export enum deprecatedFeedbackId {
 }
 
 export enum variableId {
-	PlayState = 'playState',
-
 	Clock = 'clock',
 
-	TimerStart = 'timer_start',
-	TimerFinish = 'timer_finish',
+	TimerCurrent = 'timer_current',
+	TimerDuration = 'timer_duration',
+	TimerElapsed = 'timer_elapsed',
 	TimerAdded = 'timer_added',
-	TimerAddedNice = 'timer_added_nice',
-	TimerTotalMs = 'timer_total_ms',
 	TimerPhase = 'timer_phase',
-	Time = 'time',
-	TimeHM = 'time_hm',
-	TimeH = 'time_h',
-	TimeM = 'time_m',
-	TimeS = 'time_s',
-	TimeN = 'time_sign',
+	PlayState = 'playState',
 
-	IdPrevious = 'idPrevious',
-	TitlePrevious = 'titlePrevious',
-	NotePrevious = 'notePrevious',
-	CuePrevious = 'cuePrevious',
+	MessageText = 'message_text',
+	MessageVisible = 'message_visible',
+	MessageBlink = 'timer_blink',
+	MessageBlackout = 'timer_blackout',
+	MessageSecondarySource = 'message_secondary_source',
+	MessageSecondary = 'message_secondary',
 
-	IdNow = 'idNow',
-	TitleNow = 'titleNow',
-	NoteNow = 'noteNow',
-	CueNow = 'cueNow',
+	TotalEvents = 'total_events',
+	SelectedIndex = 'selected_index',
 
-	IdNext = 'idNext',
-	TitleNext = 'titleNext',
-	NoteNext = 'noteNext',
-	CueNext = 'cueNext',
+	Offset = 'offset',
 
-	CurrentBlockTitle = 'currentBlockTitle',
-	CurrentBlockStartedAt = 'currentBlockStartedAt_hms',
-	CurrentBlockStartedAtMs = 'currentBlockStartedAt_ms',
-
-	TimerMessage = 'timerMessage',
-	TimerMessageVisible = 'timerMessageVisible',
-	TimerBlink = 'timerBlink',
-	TimerBlackout = 'timerBlackout',
-	ExternalMessage = 'externalMessage',
-	TimerSecondarySource = 'timerSecondarySource',
-
-	AuxTimerDurationMs = 'auxTimer_duration_ms',
-	AuxTimerPlayback = 'auxTimer_playback',
-	AuxTimerCurrentMs = 'auxTimer_current_ms',
-	AuxTimerCurrent = 'auxTimer_current_hms',
-	AuxTimerDirection = 'auxTimer_direction',
-
-	NumberOfEvents = 'numEvents',
-	SelectedEventIndex = 'selectedEventIndex',
-	RundownOffset = 'rundown_offset_hms',
-	PlannedStart = 'plannedStart_hms',
-	ActualStart = 'actualStart_hms',
-	PlannedEnd = 'plannedEnd_hms',
-	ExpectedEnd = 'expectedEnd_hms',
+	AuxTimerDuration = 'aux_duration',
+	AuxTimerPlayback = 'aux_playback',
+	AuxTimerCurrent = 'aux_current',
+	AuxTimerDirection = 'aux_direction',
 }
 
 export enum OffsetState {
@@ -151,11 +120,4 @@ export enum OffsetState {
 	Behind = 'behind',
 	Ahead = 'ahead',
 	Both = 'both',
-}
-
-export enum deprecatedVariableId {
-	SubtitleNow = 'subtitleNow',
-	SpeakerNow = 'speakerNow',
-	SubtitleNext = 'subtitleNext',
-	SpeakerNext = 'speakerNext',
 }

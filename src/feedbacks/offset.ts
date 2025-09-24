@@ -1,16 +1,16 @@
 import type { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition } from '@companion-module/base'
-import { OntimeV3 } from '../ontimev3.js'
-import { feedbackId, OffsetState } from '../../enums.js'
-import { DangerRed, White } from '../../assets/colours.js'
+import { feedbackId, OffsetState } from '../enums.js'
+import { DangerRed, White } from '../assets/colours.js'
+import type OntimeState from '../state.js'
 
-export function createOffsetFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
+export function createOffsetFeedbacks(state: OntimeState): { [id: string]: CompanionFeedbackDefinition } {
 	function offset(feedback: CompanionFeedbackBooleanEvent): boolean {
-		const state = feedback.options.state as OffsetState | undefined
-		if (!state) return false
-		if (ontime.state.runtime.offset === null || ontime.state.runtime.offset === undefined) return false
+		const offsetState = feedback.options.state as OffsetState | undefined
+		if (!offsetState) return false
+		if (state.helper.offset === null || state.helper.offset === undefined) return false
 		const margin = Number(feedback.options.margin)
-		const offset = ontime.state.runtime.offset / 1000
-		switch (state) {
+		const offset = state.helper.offset / 1000
+		switch (offsetState) {
 			case OffsetState.On:
 				return offset > -margin && offset < margin
 			case OffsetState.Both:

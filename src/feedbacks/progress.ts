@@ -1,18 +1,18 @@
 import type { CompanionFeedbackAdvancedEvent, CompanionFeedbackDefinition } from '@companion-module/base'
-import { OntimeV3 } from '../ontimev3.js'
-import { feedbackId } from '../../enums.js'
+import { feedbackId } from '../enums.js'
 import { graphics } from 'companion-module-utils'
-import { TimerPhase } from '../ontime-types.js'
-import { DangerRed, NormalGray, WarningOrange } from '../../assets/colours.js'
+import { TimerPhase } from '@getontime/resolver'
+import { DangerRed, NormalGray, WarningOrange } from '../assets/colours.js'
+import type OntimeState from '../state.js'
 
-export function createProgressFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
+export function createProgressFeedbacks(state: OntimeState): { [id: string]: CompanionFeedbackDefinition } {
 	function progressbar(feedback: CompanionFeedbackAdvancedEvent) {
 		if (!feedback.image) {
 			return {}
 		}
 
-		const { current, duration } = ontime.state.timer
-		const { phase } = ontime.state.timer
+		const { current, duration } = state.timer
+		const { phase } = state.timer
 		const { normal, warning, danger } = feedback.options as { [key: string]: number }
 
 		const amount = (feedback.options.amount as number) ?? 1

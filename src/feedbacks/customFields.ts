@@ -1,10 +1,9 @@
 import type { CompanionFeedbackDefinition } from '@companion-module/base'
-import { OntimeV3 } from '../ontimev3.js'
-import { feedbackId } from '../../enums.js'
-import { ActiveBlue, White } from '../../assets/colours.js'
+import { feedbackId } from '../enums.js'
+import { ActiveBlue, White } from '../assets/colours.js'
+import type OntimeState from '../state.js'
 
-export function createCustomFieldsFeedbacks(ontime: OntimeV3): { [id: string]: CompanionFeedbackDefinition } {
-	const { customFields } = ontime
+export function createCustomFieldsFeedbacks(state: OntimeState): { [id: string]: CompanionFeedbackDefinition } {
 	return {
 		[feedbackId.CustomFieldsValue]: {
 			type: 'boolean',
@@ -29,7 +28,7 @@ export function createCustomFieldsFeedbacks(ontime: OntimeV3): { [id: string]: C
 					type: 'dropdown',
 					id: 'field',
 					label: 'Custom Field',
-					choices: Object.entries(customFields).map(([key, field]) => {
+					choices: Object.entries(state).map(([key, field]) => {
 						return { id: key, label: field.label }
 					}),
 					default: '',
@@ -50,8 +49,7 @@ export function createCustomFieldsFeedbacks(ontime: OntimeV3): { [id: string]: C
 			learn: (action) => {
 				const target = action.options.target as string
 				const field = action.options.field as string
-				const fieldValue =
-					target === 'now' ? ontime.state.eventNow?.custom[field] : ontime.state.eventNext?.custom[field]
+				const fieldValue = target === 'now' ? state.eventNow?.custom[field] : state.eventNext?.custom[field]
 				return { ...action.options, requireValue: true, match: fieldValue ?? '' }
 			},
 			callback: (feedback) => {
@@ -59,8 +57,7 @@ export function createCustomFieldsFeedbacks(ontime: OntimeV3): { [id: string]: C
 				const field = feedback.options.field as string
 				const requireValue = feedback.options.requireValue as string
 				const match = feedback.options.match as string
-				const fieldValue =
-					target === 'now' ? ontime.state.eventNow?.custom[field] : ontime.state.eventNext?.custom[field]
+				const fieldValue = target === 'now' ? state.eventNow?.custom[field] : state.eventNext?.custom[field]
 
 				if (fieldValue === undefined || fieldValue === '') {
 					return false
