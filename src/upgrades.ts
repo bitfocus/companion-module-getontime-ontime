@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
-import type {
-	// CreateConvertToBooleanFeedbackUpgradeScript,
-	CompanionStaticUpgradeProps,
-	CompanionStaticUpgradeResult,
-	CompanionUpgradeContext,
-	// type InputValue,
-	CompanionStaticUpgradeScript,
-	CompanionMigrationAction,
-	CompanionMigrationFeedback,
+import {
+	type CompanionStaticUpgradeProps,
+	type CompanionStaticUpgradeResult,
+	type CompanionUpgradeContext,
+	type CompanionStaticUpgradeScript,
+	type CompanionMigrationAction,
+	type CompanionMigrationFeedback,
 } from '@companion-module/base'
 import type { OntimeConfig } from './config.js'
 import { feedbackId, ActionId, deprecatedActionId, deprecatedFeedbackId } from './enums.js'
 import { TimerPhase } from '@getontime/resolver'
+
+//TODO: look at using this pattern for future upgrade scripts https://github.com/bitfocus/companion-module-allenheath-sq/blob/main/src/upgrades.ts
 
 type old_v2_config = {
 	host: string
