@@ -18,7 +18,6 @@ import {
 	WarningOrange,
 	White,
 } from './assets/colours.js'
-import { TimerPhase } from '@getontime/resolver'
 
 export function generatePresets(): CompanionPresetDefinitions {
 	return { ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...messagePresets }
@@ -353,38 +352,6 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 	},
 }
 
-const timerPhaseFeedback = [
-	{
-		feedbackId: feedbackId.TimerPhase,
-		options: { phase: [TimerPhase.Default] },
-		style: { bgcolor: NormalGray, color: Black },
-	},
-	{
-		feedbackId: feedbackId.TimerPhase,
-		options: { phase: [TimerPhase.Warning] },
-		style: { bgcolor: WarningOrange, color: Black },
-	},
-	{
-		feedbackId: feedbackId.TimerPhase,
-		options: { phase: [TimerPhase.Danger] },
-		style: { bgcolor: DangerRed, color: Black },
-	},
-	{
-		feedbackId: feedbackId.TimerPhase,
-		options: { phase: [TimerPhase.Overtime] },
-		style: { bgcolor: Black, color: DangerRed },
-	},
-]
-
-const timerPhaseAndPauseFeedback = [
-	...timerPhaseFeedback,
-	{
-		feedbackId: feedbackId.ColorPlayback,
-		options: { state: ['pause'] },
-		style: { color: PauseOrange },
-	},
-]
-
 const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 	showMessage: {
 		type: 'button',
@@ -605,9 +572,10 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		name: 'Amount of time added/removed from running timer',
 		style: {
 			...defaultStyle,
-			text: `Total added\n$(ontime:timer_added_nice)`,
+			text: '`Total added\n${msToTimestamp($(ontime:timer_added), "hh:mm:ss")}`',
 			size: 'auto',
 			alignment: 'center:center',
+			textExpression: true,
 		},
 		previewStyle: {
 			...defaultStyle,
@@ -633,8 +601,9 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		style: {
 			...defaultStyle,
 			size: 14,
-			text: `$(ontime:time)`,
+			text: 'msToTimestamp($(ontime:timer_current),"hh:mm:ss")',
 			alignment: 'center:center',
+			textExpression: true,
 		},
 		previewStyle: {
 			...defaultStyle,
@@ -681,84 +650,6 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				},
 			},
 		],
-	},
-	current_time_h: {
-		type: 'button',
-		category: 'Timer Management',
-		name: 'Current timer hour',
-		style: {
-			...defaultStyle,
-			size: 44,
-			text: `$(ontime:time_sign)$(ontime:time_h)`,
-			alignment: 'center:center',
-		},
-		previewStyle: {
-			...defaultStyle,
-			size: 'auto',
-			text: '+/-HH',
-			alignment: 'center:center',
-			bgcolor: NormalGray,
-			color: Black,
-		},
-		steps: [
-			{
-				down: [],
-				up: [],
-			},
-		],
-		feedbacks: timerPhaseAndPauseFeedback,
-	},
-	current_time_m: {
-		type: 'button',
-		category: 'Timer Management',
-		name: 'Current timer minutes',
-		style: {
-			...defaultStyle,
-			size: 44,
-			text: `$(ontime:time_m)`,
-			alignment: 'center:center',
-		},
-		previewStyle: {
-			...defaultStyle,
-			size: 28,
-			text: 'MM',
-			alignment: 'center:center',
-			bgcolor: NormalGray,
-			color: Black,
-		},
-		steps: [
-			{
-				down: [],
-				up: [],
-			},
-		],
-		feedbacks: timerPhaseAndPauseFeedback,
-	},
-	current_time_s: {
-		type: 'button',
-		category: 'Timer Management',
-		name: 'Current timer seconds',
-		style: {
-			...defaultStyle,
-			size: 44,
-			text: `$(ontime:time_s)`,
-			alignment: 'center:center',
-		},
-		previewStyle: {
-			...defaultStyle,
-			size: 28,
-			text: 'SS',
-			alignment: 'center:center',
-			bgcolor: NormalGray,
-			color: Black,
-		},
-		steps: [
-			{
-				down: [],
-				up: [],
-			},
-		],
-		feedbacks: timerPhaseAndPauseFeedback,
 	},
 }
 
