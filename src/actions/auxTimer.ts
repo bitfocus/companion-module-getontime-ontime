@@ -5,7 +5,7 @@ import type { OntimeModule } from '../index.js'
 
 export function createAuxTimerActions(module: OntimeModule): { [id: string]: CompanionActionDefinition } {
 	function togglePlayState(action: CompanionActionEvent): void {
-		const id = action.options.destination as '1' // | '2' | '3' FIXME: this should work
+		const id = action.options.destination as '1' | '2' | '3'
 		const timer = module.ontime.state[`auxtimer${id}`]
 		if (action.options.value === 'toggleSS') {
 			module.ontime.sendSocket('auxtimer', {
@@ -25,7 +25,7 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 	}
 
 	function duration(action: CompanionActionEvent): void {
-		const id = action.options.destination as '1' // | '2' | '3' // FIXME: this should work
+		const id = action.options.destination as '1' | '2' | '3'
 		const { hours, minutes, seconds } = action.options as {
 			hours: number
 			minutes: number
@@ -36,7 +36,7 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 	}
 
 	function addTime(action: CompanionActionEvent): void {
-		const id = action.options.destination as '1' // | '2' | '3' FIXME: this should work
+		const id = action.options.destination as '1' | '2' | '3'
 		const { hours, minutes, seconds, addremove } = action.options as {
 			hours: number
 			minutes: number
