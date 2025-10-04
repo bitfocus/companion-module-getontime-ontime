@@ -12,7 +12,7 @@ const timerVariables: CompanionVariableDefinition[] = [
 		variableId: variableId.TimerDuration,
 	},
 	{
-		name: 'User added time to current event (milliseconds)',
+		name: 'User added time to current timer (milliseconds)',
 		variableId: variableId.TimerAdded,
 	},
 	{
@@ -25,7 +25,7 @@ const timerVariables: CompanionVariableDefinition[] = [
 		variableId: variableId.PlayState,
 	},
 	{
-		name: 'Expected finish of the current event (milliseconds)',
+		name: 'Expected finish of the current timer (milliseconds)',
 		variableId: variableId.TimerExpectedFinish,
 	},
 ]
