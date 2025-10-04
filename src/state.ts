@@ -108,6 +108,7 @@ export default class OntimeState {
 			[variableId.TimerAdded]: val.addedTime,
 			[variableId.TimerPhase]: val.phase,
 			[variableId.PlayState]: val.playback,
+			[variableId.TimerExpectedFinish]: val.expectedFinish ?? undefined,
 		})
 
 		this.module.checkFeedbacks(

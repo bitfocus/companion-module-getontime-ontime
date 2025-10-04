@@ -95,6 +95,7 @@ export enum variableId {
 	TimerElapsed = 'timer_elapsed',
 	TimerAdded = 'timer_added',
 	TimerPhase = 'timer_phase',
+	TimerExpectedFinish = 'timer_expected_finish',
 	PlayState = 'playState',
 
 	MessageText = 'message_text',
