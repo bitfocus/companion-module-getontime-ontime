@@ -8,7 +8,7 @@ import type {
 	CompanionInputFieldTextInput,
 } from '@companion-module/base'
 import { combineRgb } from '@companion-module/base'
-import { MAX_TIME_SECONDS } from '../enums.js'
+import { MAX_TIME_MS } from '../enums.js'
 import type { CustomFields } from '@getontime/resolver'
 
 const throttledEndpointText = 'This property will cause a recalculation of the rundown\nand is throttled by ontime'
@@ -62,11 +62,11 @@ export function changePicker(
 		{
 			type: 'number',
 			label: 'Duration',
-			tooltip: 'In Seconds\n' + throttledEndpointText,
+			tooltip: 'In milliseconds\n' + throttledEndpointText,
 			id: 'duration',
 			default: 0,
 			min: 0,
-			max: MAX_TIME_SECONDS,
+			max: MAX_TIME_MS,
 			step: 1,
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('duration'),
 		},
@@ -82,11 +82,11 @@ export function changePicker(
 		{
 			type: 'number',
 			label: 'Start Time',
-			tooltip: 'In Seconds\n' + throttledEndpointText,
+			tooltip: 'In milliseconds\n' + throttledEndpointText,
 			id: 'timeStart',
 			default: 0,
 			min: 0,
-			max: MAX_TIME_SECONDS,
+			max: MAX_TIME_MS,
 			step: 1,
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeStart'),
 		},
@@ -102,11 +102,11 @@ export function changePicker(
 		{
 			type: 'number',
 			label: 'End Time',
-			tooltip: 'In Seconds\n' + throttledEndpointText,
+			tooltip: 'In milliseconds\n' + throttledEndpointText,
 			id: 'timeEnd',
 			default: 0,
 			min: 0,
-			max: MAX_TIME_SECONDS,
+			max: MAX_TIME_MS,
 			step: 1,
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeEnd'),
 		},
@@ -125,7 +125,7 @@ export function changePicker(
 			id: 'timeWarning',
 			default: 0,
 			min: 0,
-			max: MAX_TIME_SECONDS,
+			max: MAX_TIME_MS,
 			step: 1,
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeWarning'),
 		},
@@ -143,7 +143,7 @@ export function changePicker(
 			id: 'timeDanger',
 			default: 0,
 			min: 0,
-			max: MAX_TIME_SECONDS,
+			max: MAX_TIME_MS,
 			step: 1,
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeDanger'),
 		},
