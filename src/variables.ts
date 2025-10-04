@@ -110,6 +110,37 @@ const eventVariables: (name: string, infix: string, customFields: CustomFields) 
 	]
 }
 
+const groupVariables: (name: string, infix: string, customFields: CustomFields) => CompanionVariableDefinition[] = (
+	name: string,
+	infix: string,
+	customFields?: CustomFields,
+) => {
+	const customVariables: CompanionVariableDefinition[] = customFields
+		? Object.entries(customFields).map(([customId, custom]) => {
+				return {
+					name: `Custom value "${custom.label}" value of ${name} group`,
+					variableId: variableGen('group', infix, 'custom', customId),
+				}
+			})
+		: []
+
+	return [
+		{
+			name: `ID of ${name} group`,
+			variableId: variableGen('group', infix, 'id'),
+		},
+		{
+			name: `Title of ${name} group`,
+			variableId: variableGen('group', infix, 'title'),
+		},
+		{
+			name: `Note of ${name} group`,
+			variableId: variableGen('group', infix, 'note'),
+		},
+		...customVariables,
+	]
+}
+
 /**
  * aut timer variables as split into `aux_[index]_[data]`
  * @param infix
@@ -159,15 +190,15 @@ export function generateVariables(customFields: CustomFields): CompanionVariable
 		...auxTimerVariables('1'),
 		...auxTimerVariables('2'),
 		...auxTimerVariables('3'),
-		//TODO: replace current block with group
 	]
 }
 
-type item = 'event' | 'aux'
+type item = 'event' | 'aux' | 'group'
 
 type prop = {
 	aux: 'duration' | 'current' | 'playback' | 'direction'
 	event: 'id' | 'title' | 'note' | 'cue' | 'custom'
+	group: 'id' | 'title' | 'note' | 'custom'
 }
 
 /**

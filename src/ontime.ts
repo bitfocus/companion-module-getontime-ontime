@@ -120,6 +120,7 @@ export class OntimeV4 {
 		this.state.eventNow = payload.eventNow
 		this.state.eventNext = payload.eventNext
 		this.state.eventFlag = payload.eventFlag
+		this.state.groupNow = payload.groupNow
 		this.state.auxtimer1 = payload.auxtimer1
 		this.state.auxtimer2 = payload.auxtimer2
 		this.state.auxtimer3 = payload.auxtimer3
