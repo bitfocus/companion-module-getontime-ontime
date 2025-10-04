@@ -58,7 +58,7 @@ export default class OntimeState {
 		}
 	}
 
-	private updateEvent(val: OntimeEvent | null, infix: 'now' | 'next') {
+	private updateEvent(val: OntimeEvent | null, infix: 'now' | 'next' | 'flag') {
 		const companionVariableValues: CompanionVariableValues = {}
 		Object.keys(this.customFields).forEach((customKey) => {
 			companionVariableValues[variableGen('event', infix, 'custom', customKey)] =
@@ -189,6 +189,16 @@ export default class OntimeState {
 		if (val === undefined) return
 		this.state.eventNext = val
 		this.updateEvent(val, 'next')
+	}
+
+	/** Event Flag */
+	get eventFlag(): OntimeEvent | null {
+		return this.state.eventFlag
+	}
+	set eventFlag(val: OntimeEvent | null | undefined) {
+		if (val === undefined) return
+		this.state.eventFlag = val
+		this.updateEvent(val, 'flag')
 	}
 
 	/** Auxtimer 1 */
