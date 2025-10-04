@@ -6,22 +6,22 @@ import type { OntimeModule } from '../index.js'
 export function createAuxTimerActions(module: OntimeModule): { [id: string]: CompanionActionDefinition } {
 	function togglePlayState(action: CompanionActionEvent): void {
 		const id = action.options.destination as '1' | '2' | '3'
-		const timer = module.ontime.state[`auxtimer${id}`]
+		const timer = module.connection.state[`auxtimer${id}`]
 		if (action.options.value === 'toggleSS') {
-			module.ontime.sendSocket('auxtimer', {
+			module.connection.sendSocket('auxtimer', {
 				[id]: timer.playback === SimplePlayback.Start ? SimplePlayback.Stop : SimplePlayback.Start,
 			})
 			return
 		}
 
 		if (action.options.value === 'toggleSP') {
-			module.ontime.sendSocket('auxtimer', {
+			module.connection.sendSocket('auxtimer', {
 				[id]: timer.playback === SimplePlayback.Start ? SimplePlayback.Pause : SimplePlayback.Start,
 			})
 			return
 		}
 
-		module.ontime.sendSocket('auxtimer', { [id]: action.options.value as SimplePlayback })
+		module.connection.sendSocket('auxtimer', { [id]: action.options.value as SimplePlayback })
 	}
 
 	function duration(action: CompanionActionEvent): void {
@@ -32,7 +32,7 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 			seconds: number
 		}
 		const val = ((hours * 60 + minutes) * 60 + seconds) * 1000
-		module.ontime.sendSocket('auxtimer', { [id]: { duration: val } })
+		module.connection.sendSocket('auxtimer', { [id]: { duration: val } })
 	}
 
 	function addTime(action: CompanionActionEvent): void {
@@ -44,7 +44,7 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 			addremove: 'add' | 'remove'
 		}
 		const val = ((hours * 60 + minutes) * 60 + seconds) * 1000 * (addremove == 'remove' ? -1 : 1)
-		module.ontime.sendSocket('auxtimer', { [id]: { addtime: val } })
+		module.connection.sendSocket('auxtimer', { [id]: { addtime: val } })
 	}
 
 	return {
@@ -151,7 +151,7 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 				},
 			],
 			callback: ({ options }) =>
-				module.ontime.sendSocket('auxtimer', {
+				module.connection.sendSocket('auxtimer', {
 					[options.destination as '1']: { direction: options.direction as SimpleDirection },
 				}),
 		},

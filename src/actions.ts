@@ -10,7 +10,7 @@ import type { CompanionActionDefinitions } from '@companion-module/base'
  */
 export function generateActions(module: OntimeModule): CompanionActionDefinitions {
 	return {
-		...createMessageActions(module.ontime),
+		...createMessageActions(module.connection),
 		...createPlaybackActions(module),
 		...createChangeActions(module),
 		...createAuxTimerActions(module),
