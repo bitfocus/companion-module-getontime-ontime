@@ -40,27 +40,27 @@ export class OntimeConnection {
 				}
 				case MessageTag.Refetch: {
 					const { target } = payload
-					const fetches: FetchPromiseArray = [Promise.resolve(false), Promise.resolve(false)]
 					switch (target) {
 						case RefetchKey.Rundown: {
-							fetches[0] = fetchAllEvents(this.module)
+							fetchAllEvents(this.module)
+								.then((maybeEvents) => {
+									if (maybeEvents) this.state.events = maybeEvents
+									this.state.applyPendingActionDefinition()
+								})
+								.catch((err) => this.module.log('error', err))
 							break
 						}
 						case RefetchKey.CustomFields: {
-							fetches[1] = fetchCustomFields(this.module)
+							fetchCustomFields(this.module)
+								.then((maybeCustom) => {
+									if (maybeCustom) this.state.customFields = maybeCustom
+									this.state.applyPendingVariableDefinition()
+									this.state.applyPendingActionDefinition()
+								})
+								.catch((err) => this.module.log('error', err))
 							break
 						}
 					}
-					Promise.all(fetches)
-						.then(([maybeEvents, maybeCustom]) => {
-							if (maybeEvents) this.state.events = maybeEvents
-							if (maybeCustom) this.state.customFields = maybeCustom
-						})
-						.catch(console.error)
-					setTimeout(() => {
-						this.state.applyPendingActionDefinition()
-						this.state.applyPendingVariableDefinition()
-					}, 100)
 					break
 				}
 				default: {
@@ -88,7 +88,7 @@ export class OntimeConnection {
 				if (maybeEvents) this.state.events = maybeEvents
 				if (maybeCustom) this.state.customFields = maybeCustom
 			})
-			.catch(console.error)
+			.catch((err) => this.module.log('error', err))
 			.finally(() => {
 				this.state.applyPendingActionDefinition(true)
 				this.state.applyPendingVariableDefinition(true)
