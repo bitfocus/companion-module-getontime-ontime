@@ -11,7 +11,14 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			id: 'info',
 			type: 'static-text',
 			value:
-				'This module will establish a connection to Ontime v4. If you are upgrading from V2 to V3 we suggest backing up your configuration file.',
+				'This module will establish a connection to Ontime v4. If you are upgrading from an older version, we suggest backing up your configuration file.',
+			width: 12,
+		},
+		{
+			label: 'Help',
+			id: 'help',
+			type: 'static-text',
+			value: 'Find more help on using the module, as well as useful links, by clicking the ? icon.',
 			width: 12,
 		},
 		{
@@ -21,8 +28,7 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			default: '127.0.0.1:4001',
 			width: 9,
 			required: true,
-			tooltip:
-				'Ontime server address. eg. http://127.0.0.1:4001 or from cloud https://cloud.getontime.no/<private-key>',
+			tooltip: 'Ontime server address. eg. http://127.0.0.1:4001 or from cloud https://cloud.getontime.no/<stage-hash>',
 		},
 	]
 }
