@@ -42,7 +42,8 @@ export function eventPicker(
 		},
 		{
 			type: 'static-text',
-			value: 'NB! this will target the first event with a matching CUE name',
+			value:
+				'NB! Ontime will match the next cue. Counting from the currently loaded event or from the beginning if nothing is loaded',
 			id: 'cuenote',
 			label: '',
 			isVisible: (options) => options['method'] === 'cue',
