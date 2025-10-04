@@ -11,8 +11,7 @@ import { combineRgb } from '@companion-module/base'
 import { MAX_TIME_SECONDS } from '../enums.js'
 import type { CustomFields } from '@getontime/resolver'
 
-const throttledEndpointText =
-	'This property will cause a recalculation of the rundwon\nand id therfor throttled by ontime'
+const throttledEndpointText = 'This property will cause a recalculation of the rundown\nand is throttled by ontime'
 
 export function changePicker(
 	customFields: CustomFields,

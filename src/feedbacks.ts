@@ -13,12 +13,12 @@ import type { OntimeModule } from './index.js'
  */
 export function generateFeedbacks(module: OntimeModule): CompanionFeedbackDefinitions {
 	return {
-		...createPlaybackFeedbacks(module.ontime.state),
-		...createMessageFeedbacks(module.ontime.state),
-		...createTimerPhaseFeedback(module.ontime.state),
-		...createProgressFeedbacks(module.ontime.state),
-		...createOffsetFeedbacks(module.ontime.state),
-		...createAuxTimerFeedbacks(module.ontime.state),
-		...createCustomFieldsFeedbacks(module.ontime.state),
+		...createPlaybackFeedbacks(module.connection.state),
+		...createMessageFeedbacks(module.connection.state),
+		...createTimerPhaseFeedback(module.connection.state),
+		...createProgressFeedbacks(module.connection.state),
+		...createOffsetFeedbacks(module.connection.state),
+		...createAuxTimerFeedbacks(module.connection.state),
+		...createCustomFieldsFeedbacks(module.connection.state),
 	}
 }

@@ -17,11 +17,11 @@ export function createChangeActions(module: OntimeModule): { [id: string]: Compa
 				break
 			}
 			case 'loaded': {
-				id = module.ontime.state.eventNow?.id ?? null
+				id = module.connection.state.eventNow?.id ?? null
 				break
 			}
 			case 'next': {
-				id = module.ontime.state.eventNext?.id ?? null
+				id = module.connection.state.eventNext?.id ?? null
 				break
 			}
 			case 'id': {
@@ -64,7 +64,7 @@ export function createChangeActions(module: OntimeModule): { [id: string]: Compa
 
 				Object.assign(patch, { [property]: value })
 			}
-			module.ontime.sendSocket('change', {
+			module.connection.sendSocket('change', {
 				[id]: patch,
 			})
 		}
@@ -74,8 +74,8 @@ export function createChangeActions(module: OntimeModule): { [id: string]: Compa
 		[ActionId.Change]: {
 			name: 'Change event property',
 			options: [
-				...eventPicker(module.ontime.state.events, ['list', 'loaded', 'next', 'id']),
-				...changePicker(module.ontime.state.customFields),
+				...eventPicker(module.connection.state.events, ['list', 'loaded', 'next', 'id']),
+				...changePicker(module.connection.state.customFields),
 			],
 			callback: changeEvent,
 		},

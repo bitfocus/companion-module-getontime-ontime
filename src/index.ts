@@ -4,22 +4,22 @@ import { runEntrypoint, InstanceBase, InstanceStatus } from '@companion-module/b
 import type { OntimeConfig } from './config.js'
 import { GetConfigFields } from './config.js'
 import { UpgradeScripts } from './upgrades.js'
-import { OntimeV4 } from './ontime.js'
+import { OntimeConnection } from './connection.js'
 
 export class OntimeModule extends InstanceBase<OntimeConfig> {
 	public config!: OntimeConfig
-	public ontime = new OntimeV4(this)
+	public connection = new OntimeConnection(this)
 
 	async init(config: OntimeConfig): Promise<void> {
 		this.log('debug', 'init')
 		this.config = config
 		this.updateStatus(InstanceStatus.Connecting)
-		this.ontime.initConnection()
+		this.connection.initConnection()
 	}
 
 	async destroy(): Promise<void> {
 		this.log('debug', 'destroy')
-		await this.ontime.destroy()
+		await this.connection.destroy()
 	}
 
 	async configUpdated(config: OntimeConfig): Promise<void> {

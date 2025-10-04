@@ -1,6 +1,6 @@
 import type { CompanionActionDefinition, CompanionActionEvent } from '@companion-module/base'
 import { ActionId } from '../enums.js'
-import type { OntimeV4 } from '../ontime.js'
+import type { OntimeConnection } from '../connection.js'
 
 enum ToggleOnOff {
 	Off = 0,
@@ -8,32 +8,32 @@ enum ToggleOnOff {
 	Toggle = 2,
 }
 
-export function createMessageActions(ontime: OntimeV4): { [id: string]: CompanionActionDefinition } {
+export function createMessageActions(connection: OntimeConnection): { [id: string]: CompanionActionDefinition } {
 	function messageVisibility(action: CompanionActionEvent): void {
 		const value = action.options.value as ToggleOnOff
-		const visible = value === ToggleOnOff.Toggle ? !ontime.state.message.timer.visible : value
-		ontime.sendSocket('message', { timer: { visible } })
+		const visible = value === ToggleOnOff.Toggle ? !connection.state.message.timer.visible : value
+		connection.sendSocket('message', { timer: { visible } })
 	}
 
 	function messageVisibilityAndText(action: CompanionActionEvent): void {
 		const value = action.options.value as ToggleOnOff
 		const text = action.options.text as string
-		const textIsDifferent = text !== ontime.state.message.timer.text
-		const thisTextIsVisible = ontime.state.message.timer.visible && !textIsDifferent
+		const textIsDifferent = text !== connection.state.message.timer.text
+		const thisTextIsVisible = connection.state.message.timer.visible && !textIsDifferent
 		switch (value) {
 			case ToggleOnOff.Off:
 				if (thisTextIsVisible) {
-					ontime.sendSocket('message', { timer: { visible: false } })
+					connection.sendSocket('message', { timer: { visible: false } })
 				}
 				break
 			case ToggleOnOff.On:
-				ontime.sendSocket('message', { timer: { visible: true, text } })
+				connection.sendSocket('message', { timer: { visible: true, text } })
 				break
 			case ToggleOnOff.Toggle:
 				if (thisTextIsVisible) {
-					ontime.sendSocket('message', { timer: { visible: false, text } })
+					connection.sendSocket('message', { timer: { visible: false, text } })
 				} else {
-					ontime.sendSocket('message', { timer: { visible: true, text } })
+					connection.sendSocket('message', { timer: { visible: true, text } })
 				}
 				break
 		}
@@ -41,23 +41,23 @@ export function createMessageActions(ontime: OntimeV4): { [id: string]: Companio
 
 	function timerBlackout(action: CompanionActionEvent): void {
 		const value = action.options.value as ToggleOnOff
-		const blackout = value === ToggleOnOff.Toggle ? !ontime.state.message.timer.blackout : value
-		ontime.sendSocket('message', { timer: { blackout } })
+		const blackout = value === ToggleOnOff.Toggle ? !connection.state.message.timer.blackout : value
+		connection.sendSocket('message', { timer: { blackout } })
 	}
 
 	function timerBlink(action: CompanionActionEvent): void {
 		const value = action.options.value as ToggleOnOff
-		const blink = value === ToggleOnOff.Toggle ? !ontime.state.message.timer.blink : value
-		ontime.sendSocket('message', { timer: { blink } })
+		const blink = value === ToggleOnOff.Toggle ? !connection.state.message.timer.blink : value
+		connection.sendSocket('message', { timer: { blink } })
 	}
 
 	function setSecondarySource(action: CompanionActionEvent): void {
 		const value = action.options.value as ToggleOnOff
 		const source = action.options.source
-		const isActive = ontime.state.message.timer.secondarySource === source
+		const isActive = connection.state.message.timer.secondarySource === source
 		const shouldShow = value === ToggleOnOff.Toggle ? !isActive : value
 		const secondarySource = shouldShow ? source : 'off'
-		ontime.sendSocket('message', { timer: { secondarySource } })
+		connection.sendSocket('message', { timer: { secondarySource } })
 	}
 
 	return {
@@ -89,7 +89,7 @@ export function createMessageActions(ontime: OntimeV4): { [id: string]: Companio
 				},
 			],
 			callback: ({ options }) =>
-				ontime.sendSocket('message', {
+				connection.sendSocket('message', {
 					timer: { text: options.value },
 				}),
 		},

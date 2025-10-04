@@ -8,7 +8,7 @@ import { generateFeedbacks } from './feedbacks.js'
 import { generatePresets } from './presets.js'
 import { fetchAllEvents, fetchCustomFields } from './http.js'
 
-export class OntimeV4 {
+export class OntimeConnection {
 	private socket?: WS
 	public state: OntimeState
 
