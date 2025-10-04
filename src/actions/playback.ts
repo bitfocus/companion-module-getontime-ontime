@@ -85,7 +85,8 @@ export function createPlaybackActions(module: OntimeModule): { [id: string]: Com
 
 	function addTime(action: CompanionActionEvent): void {
 		const { hours, minutes, seconds, addremove } = action.options
-		const val = ((Number(hours) * 60 + Number(minutes)) * 60 + Number(seconds)) * (addremove == 'remove' ? -1 : 1)
+		const val =
+			((Number(hours) * 60 + Number(minutes)) * 60 + Number(seconds)) * 1000 * (addremove == 'remove' ? -1 : 1)
 		module.ontime.sendSocket('addtime', val)
 	}
 
