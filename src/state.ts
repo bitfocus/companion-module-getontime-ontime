@@ -4,6 +4,7 @@ import type {
 	MessageState,
 	Offset,
 	OntimeEvent,
+	OntimeGroup,
 	RundownState,
 	RuntimeStore,
 	SimpleTimerState,
@@ -70,6 +71,22 @@ export default class OntimeState {
 			[variableGen('event', infix, 'note')]: val?.note,
 			[variableGen('event', infix, 'cue')]: val?.cue,
 			[variableGen('event', infix, 'id')]: val?.id,
+		})
+
+		this.module.checkFeedbacks(feedbackId.CustomFieldsValue)
+	}
+
+	private updateGroup(val: OntimeGroup | null, infix: 'now') {
+		const companionVariableValues: CompanionVariableValues = {}
+		Object.keys(this.customFields).forEach((customKey) => {
+			companionVariableValues[variableGen('group', infix, 'custom', customKey)] =
+				!val || !val.custom ? undefined : val.custom[customKey]
+		})
+		this.appendVariableUpdate({
+			...companionVariableValues,
+			[variableGen('group', infix, 'title')]: val?.title,
+			[variableGen('group', infix, 'note')]: val?.note,
+			[variableGen('group', infix, 'id')]: val?.id,
 		})
 
 		this.module.checkFeedbacks(feedbackId.CustomFieldsValue)
@@ -199,6 +216,16 @@ export default class OntimeState {
 		if (val === undefined) return
 		this.state.eventFlag = val
 		this.updateEvent(val, 'flag')
+	}
+
+	/** Group Now */
+	get groupNow(): OntimeGroup | null {
+		return this.state.groupNow
+	}
+	set groupNow(val: OntimeGroup | null | undefined) {
+		if (val === undefined) return
+		this.state.groupNow = val
+		this.updateGroup(val, 'now')
 	}
 
 	/** Auxtimer 1 */
