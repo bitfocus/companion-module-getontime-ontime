@@ -15,6 +15,7 @@ import { feedbackId, variableId } from './enums.js'
 import type { CompanionVariableValues } from '@companion-module/base'
 import { generateVariables, variableGen } from './variables.js'
 import { generateActions } from './actions.js'
+import { findPreviousPlayableEvent } from './utilities.js'
 
 /**
  * state handles all changes to ontime state and any side effects arising form that
@@ -24,6 +25,7 @@ export default class OntimeState {
 	private state = structuredClone(runtimeStorePlaceholder) as RuntimeStore
 	private _customFields: CustomFields = {}
 	private _events: OntimeEvent[] = []
+	private _previousEvent: OntimeEvent | null = null
 
 	private pendingVariables: CompanionVariableValues = {}
 
@@ -59,7 +61,7 @@ export default class OntimeState {
 		}
 	}
 
-	private updateEvent(val: OntimeEvent | null, infix: 'now' | 'next' | 'flag') {
+	private updateEvent(val: OntimeEvent | null, infix: 'now' | 'next' | 'flag' | 'prev') {
 		const companionVariableValues: CompanionVariableValues = {}
 		Object.keys(this.customFields).forEach((customKey) => {
 			companionVariableValues[variableGen('event', infix, 'custom', customKey)] =
@@ -196,6 +198,13 @@ export default class OntimeState {
 		if (val === undefined) return
 		this.state.eventNow = val
 		this.updateEvent(val, 'now')
+		this._previousEvent = findPreviousPlayableEvent(this)
+		this.updateEvent(this._previousEvent, 'prev')
+	}
+
+	/** Event Previous */
+	get eventPrevious(): OntimeEvent | null {
+		return this._previousEvent
 	}
 
 	/** Event Next */
@@ -275,5 +284,7 @@ export default class OntimeState {
 	set events(val: OntimeEvent[]) {
 		this._events = val
 		this.hasPendingActionDefinition = true
+		this._previousEvent = findPreviousPlayableEvent(this)
+		this.updateEvent(this._previousEvent, 'prev')
 	}
 }
