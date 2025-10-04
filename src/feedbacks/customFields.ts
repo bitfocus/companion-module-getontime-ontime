@@ -28,7 +28,7 @@ export function createCustomFieldsFeedbacks(state: OntimeState): { [id: string]:
 					type: 'dropdown',
 					id: 'field',
 					label: 'Custom Field',
-					choices: Object.entries(state).map(([key, field]) => {
+					choices: Object.entries(state.customFields).map(([key, field]) => {
 						return { id: key, label: field.label }
 					}),
 					default: '',
