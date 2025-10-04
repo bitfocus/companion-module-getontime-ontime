@@ -2,7 +2,7 @@ import { InstanceStatus } from '@companion-module/base'
 import { WS } from './socket.js'
 import type { OntimeModule } from './index.js'
 import OntimeState from './state.js'
-import type { ApiResponse, RuntimeStore, SocketSender } from '@getontime/resolver'
+import type { ApiResponse, CustomFields, OntimeEvent, RuntimeStore, SocketSender } from '@getontime/resolver'
 import { isWsPacketToClient, MessageTag, RefetchKey } from '@getontime/resolver'
 import { generateFeedbacks } from './feedbacks.js'
 import { generatePresets } from './presets.js'
@@ -40,20 +40,27 @@ export class OntimeV4 {
 				}
 				case MessageTag.Refetch: {
 					const { target } = payload
+					const fetches: FetchPromiseArray = [Promise.resolve(false), Promise.resolve(false)]
 					switch (target) {
 						case RefetchKey.Rundown: {
-							void fetchAllEvents(this.module).then((maybeEvents) => {
-								if (maybeEvents) this.state.events = maybeEvents
-							})
+							fetches[0] = fetchAllEvents(this.module)
 							break
 						}
 						case RefetchKey.CustomFields: {
-							void fetchCustomFields(this.module).then((maybeCustom) => {
-								if (maybeCustom) this.state.customFields = maybeCustom
-							})
+							fetches[1] = fetchCustomFields(this.module)
 							break
 						}
 					}
+					Promise.all(fetches)
+						.then(([maybeEvents, maybeCustom]) => {
+							if (maybeEvents) this.state.events = maybeEvents
+							if (maybeCustom) this.state.customFields = maybeCustom
+						})
+						.catch(console.error)
+					setTimeout(() => {
+						this.state.applyPendingActionDefinition()
+						this.state.applyPendingVariableDefinition()
+					}, 100)
 					break
 				}
 				default: {
@@ -73,16 +80,21 @@ export class OntimeV4 {
 	private onWsOpen(): void {
 		this.module.updateStatus(InstanceStatus.Ok)
 		this.module.setPresetDefinitions(generatePresets())
-		void fetchCustomFields(this.module).then((maybeCustom) => {
-			if (maybeCustom) this.state.customFields = maybeCustom
-		})
-		void fetchAllEvents(this.module).then((maybeEvents) => {
-			if (maybeEvents) this.state.events = maybeEvents
-		})
-		this.state.applyPendingActionDefinition(true)
-		this.state.applyPendingVariableDefinition(true)
-		this.module.setFeedbackDefinitions(generateFeedbacks(this.module))
-		this.sendSocket('poll', undefined)
+
+		const pendingFetch: FetchPromiseArray = [fetchAllEvents(this.module), fetchCustomFields(this.module)]
+
+		Promise.all(pendingFetch)
+			.then(([maybeEvents, maybeCustom]) => {
+				if (maybeEvents) this.state.events = maybeEvents
+				if (maybeCustom) this.state.customFields = maybeCustom
+			})
+			.catch(console.error)
+			.finally(() => {
+				this.state.applyPendingActionDefinition(true)
+				this.state.applyPendingVariableDefinition(true)
+				this.module.setFeedbackDefinitions(generateFeedbacks(this.module))
+				this.sendSocket('poll', undefined)
+			})
 	}
 
 	public initConnection(): void {
@@ -128,3 +140,5 @@ export class OntimeV4 {
 		this.state.applyPendingVariables()
 	}
 }
+
+type FetchPromiseArray = [Promise<false | OntimeEvent[]>, Promise<false | CustomFields>]

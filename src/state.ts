@@ -265,7 +265,7 @@ export default class OntimeState {
 	set customFields(val: CustomFields) {
 		this._customFields = val
 		this.hasPendingActionDefinition = true
-		this.module.setActionDefinitions(generateActions(this.module))
+		this.hasPendingVariableDefinition = true
 	}
 
 	/** Events */
@@ -275,6 +275,5 @@ export default class OntimeState {
 	set events(val: OntimeEvent[]) {
 		this._events = val
 		this.hasPendingActionDefinition = true
-		this.module.setActionDefinitions(generateActions(this.module))
 	}
 }
