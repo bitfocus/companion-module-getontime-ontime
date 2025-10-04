@@ -2,7 +2,7 @@ import { InstanceStatus } from '@companion-module/base'
 import { WS } from './socket.js'
 import type { OntimeModule } from './index.js'
 import OntimeState from './state.js'
-import type { ApiResponse, CustomFields, OntimeEvent, RuntimeStore, SocketSender } from '@getontime/resolver'
+import type { ApiResponse, RuntimeStore, SocketSender } from '@getontime/resolver'
 import { isWsPacketToClient, MessageTag, RefetchKey } from '@getontime/resolver'
 import { generateFeedbacks } from './feedbacks.js'
 import { generatePresets } from './presets.js'
@@ -30,7 +30,7 @@ export class OntimeConnection {
 		this.module.log('error', msg)
 	}
 
-	private onWsMessage(data: object): void {
+	private async onWsMessage(data: object): Promise<void> {
 		if (isWsPacketToClient(data)) {
 			const { tag, payload } = data
 			switch (tag) {
@@ -42,25 +42,18 @@ export class OntimeConnection {
 					const { target } = payload
 					switch (target) {
 						case RefetchKey.Rundown: {
-							fetchAllEvents(this.module)
-								.then((maybeEvents) => {
-									if (maybeEvents) this.state.events = maybeEvents
-									this.state.applyPendingActionDefinition()
-								})
-								.catch((err) => this.module.log('error', err))
+							const maybeEvents = await fetchAllEvents(this.module)
+							if (maybeEvents) this.state.events = maybeEvents
 							break
 						}
 						case RefetchKey.CustomFields: {
-							fetchCustomFields(this.module)
-								.then((maybeCustom) => {
-									if (maybeCustom) this.state.customFields = maybeCustom
-									this.state.applyPendingVariableDefinition()
-									this.state.applyPendingActionDefinition()
-								})
-								.catch((err) => this.module.log('error', err))
+							const maybeCustom = await fetchCustomFields(this.module)
+							if (maybeCustom) this.state.customFields = maybeCustom
 							break
 						}
 					}
+					this.state.applyPendingVariableDefinition()
+					this.state.applyPendingActionDefinition()
 					break
 				}
 				default: {
@@ -77,24 +70,19 @@ export class OntimeConnection {
 			console.log('onmessage', data)
 		}
 	}
-	private onWsOpen(): void {
+	private async onWsOpen(): Promise<void> {
 		this.module.updateStatus(InstanceStatus.Ok)
 		this.module.setPresetDefinitions(generatePresets())
 
-		const pendingFetch: FetchPromiseArray = [fetchAllEvents(this.module), fetchCustomFields(this.module)]
+		const maybeEvents = await fetchAllEvents(this.module)
+		const maybeCustom = await fetchCustomFields(this.module)
+		if (maybeEvents) this.state.events = maybeEvents
+		if (maybeCustom) this.state.customFields = maybeCustom
 
-		Promise.all(pendingFetch)
-			.then(([maybeEvents, maybeCustom]) => {
-				if (maybeEvents) this.state.events = maybeEvents
-				if (maybeCustom) this.state.customFields = maybeCustom
-			})
-			.catch((err) => this.module.log('error', err))
-			.finally(() => {
-				this.state.applyPendingActionDefinition(true)
-				this.state.applyPendingVariableDefinition(true)
-				this.module.setFeedbackDefinitions(generateFeedbacks(this.module))
-				this.sendSocket('poll', undefined)
-			})
+		this.state.applyPendingActionDefinition(true)
+		this.state.applyPendingVariableDefinition(true)
+		this.module.setFeedbackDefinitions(generateFeedbacks(this.module))
+		this.sendSocket('poll', undefined)
 	}
 
 	public initConnection(): void {
@@ -140,5 +128,3 @@ export class OntimeConnection {
 		this.state.applyPendingVariables()
 	}
 }
-
-type FetchPromiseArray = [Promise<false | OntimeEvent[]>, Promise<false | CustomFields>]

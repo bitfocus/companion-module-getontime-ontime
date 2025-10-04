@@ -7,11 +7,11 @@ import { makeURL } from './utilities.js'
  */
 
 interface onOpen {
-	(): void
+	(): Promise<void>
 }
 
 interface onMessage {
-	(data: object): void
+	(data: object): Promise<void>
 }
 
 interface onError {
@@ -139,12 +139,12 @@ export class WS {
 						this.connected = true
 						console.log('connected with version', maybeVersion.version)
 						if (this.version_timer) clearTimeout(this.version_timer)
-						this.callbacks.onopen()
+						void this.callbacks.onopen()
 					}
 				}
 				return
 			}
-			this.callbacks.onmessage(msgValue)
+			void this.callbacks.onmessage(msgValue)
 		} catch (_e) {
 			// swallow JSON errors
 		}
