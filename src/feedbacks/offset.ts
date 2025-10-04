@@ -40,8 +40,8 @@ export function createOffsetFeedbacks(state: OntimeState): { [id: string]: Compa
 					id: 'state',
 					choices: [
 						{ id: OffsetState.On, label: 'On time' },
-						{ id: OffsetState.Behind, label: 'Behind schedule' },
-						{ id: OffsetState.Ahead, label: 'Ahead of schedule' },
+						{ id: OffsetState.Behind, label: 'Behind schedule' }, // TODO: this is incorrect, -offset is under time
+						{ id: OffsetState.Ahead, label: 'Ahead of schedule' }, // TODO: this is incorrect, +offset is over time
 						{ id: OffsetState.Both, label: 'Behind or Ahead of schedule' },
 					],
 					default: 'behind',
