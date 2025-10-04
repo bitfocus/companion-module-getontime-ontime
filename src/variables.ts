@@ -24,6 +24,10 @@ const timerVariables: CompanionVariableDefinition[] = [
 		name: 'Playback state (Running, Paused, Stopped, Roll)',
 		variableId: variableId.PlayState,
 	},
+	{
+		name: 'Expected finish of the current event (milliseconds)',
+		variableId: variableId.TimerExpectedFinish,
+	},
 ]
 
 const messageVariables: CompanionVariableDefinition[] = [
