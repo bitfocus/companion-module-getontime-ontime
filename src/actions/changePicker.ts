@@ -45,13 +45,6 @@ export function changePicker(
 		},
 		{
 			type: 'checkbox',
-			label: 'Is Public',
-			id: 'isPublic',
-			default: false,
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('isPublic'),
-		},
-		{
-			type: 'checkbox',
 			label: 'Skip',
 			tooltip: throttledEndpointText,
 			id: 'skip',
