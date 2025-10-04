@@ -1,5 +1,6 @@
-import type { CompanionVariableValues, DropdownChoice } from '@companion-module/base'
-import type { CustomFields, EntryCustomFields, OntimeEvent } from '@getontime/resolver'
+import type { DropdownChoice } from '@companion-module/base'
+import type { OntimeEvent } from '@getontime/resolver'
+import type OntimeState from './state.js'
 
 export const joinTime = (...args: string[]): string => args.join(':')
 
@@ -98,44 +99,25 @@ export function eventsToChoices(events: OntimeEvent[]): DropdownChoice[] {
 	})
 }
 
-// export function findPreviousPlayableEvent(ontime: OntimeV3): OntimeEvent | null {
-// 	if (ontime.state.eventNow === null) {
-// 		return null
-// 	}
-
-// 	const nowId = ontime.state.eventNow.id
-// 	let now = false
-
-// 	for (let i = ontime.events.length - 1; i >= 0; i--) {
-// 		if (!now && ontime.events[i].id === nowId) {
-// 			now = true
-// 			continue
-// 		}
-// 		if (now && !ontime.events[i].skip) {
-// 			return ontime.events[i]
-// 		}
-// 	}
-
-// 	return null
-// }
-
-export function variablesFromCustomFields(
-	customFields: CustomFields,
-	postFix: string,
-	val: EntryCustomFields | undefined,
-): CompanionVariableValues {
-	const companionVariableValues: CompanionVariableValues = {}
-	if (typeof val === 'undefined') {
-		Object.keys(customFields).forEach((key) => {
-			companionVariableValues[`_custom_${key}_${postFix}`] = undefined
-		})
-		return companionVariableValues
+export function findPreviousPlayableEvent(state: OntimeState): OntimeEvent | null {
+	if (state.eventNow === null) {
+		return null
 	}
 
-	Object.keys(customFields).forEach((key) => {
-		companionVariableValues[`_custom_${key}_${postFix}`] = val[key]
-	})
-	return companionVariableValues
+	const nowId = state.eventNow.id
+	let now = false
+
+	for (let i = state.events.length - 1; i >= 0; i--) {
+		if (!now && state.events[i].id === nowId) {
+			now = true
+			continue
+		}
+		if (now && !state.events[i].skip) {
+			return state.events[i]
+		}
+	}
+
+	return null
 }
 
 export function strictTimerStringToSeconds(str: string): string | number {

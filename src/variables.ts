@@ -184,7 +184,7 @@ export function generateVariables(customFields: CustomFields): CompanionVariable
 		...offsetVariables,
 		...eventVariables('current', 'now', customFields),
 		...eventVariables('next', 'next', customFields),
-		...eventVariables('previous', 'prev', customFields), //TODO: logic fot this
+		...eventVariables('previous', 'prev', customFields),
 		...eventVariables('flag', 'flag', customFields),
 		...groupVariables('current', 'now', customFields),
 		...auxTimerVariables('1'),
