@@ -154,10 +154,11 @@ export function generateVariables(customFields: CustomFields): CompanionVariable
 		...eventVariables('current', 'now', customFields),
 		...eventVariables('next', 'next', customFields),
 		...eventVariables('previous', 'prev', customFields), //TODO: logic fot this
+		...eventVariables('flag', 'flag', customFields),
+		...groupVariables('current', 'now', customFields),
 		...auxTimerVariables('1'),
 		...auxTimerVariables('2'),
 		...auxTimerVariables('3'),
-		//TODO: add flag
 		//TODO: replace current block with group
 	]
 }
