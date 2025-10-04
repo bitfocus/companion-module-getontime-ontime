@@ -118,7 +118,7 @@ export enum variableId {
 
 export enum OffsetState {
 	On = 'on',
-	Behind = 'behind',
-	Ahead = 'ahead',
-	Both = 'both',
+	Behind = 'behind', // I think we should rename this to "Under"
+	Ahead = 'ahead', // I think we should rename this "Over"
+	Both = 'both', // how can we be both?
 }
