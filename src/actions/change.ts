@@ -64,10 +64,13 @@ export function createChangeActions(module: OntimeModule): { [id: string]: Compa
 				// converts companion time variable (hh:mm:ss) to ontime seconds
 				if (property.endsWith('_hhmmss')) {
 					const timeString = await context.parseVariablesInString(value as string)
-					const ms = strictTimerStringToMs(timeString)
+					const maybeNumber = Number(timeString)
+					const ms = isNaN(maybeNumber) ? strictTimerStringToMs(timeString) : maybeNumber
+					if (ms === null) {
+						module.log('error', `Invalid value in change action: ${property}`)
+						continue
+					}
 					const propertyName = property.split('_hhmmss')[0]
-					console.log({ property, ms })
-
 					Object.assign(patch, { [propertyName]: ms })
 					continue
 				}
@@ -84,7 +87,7 @@ export function createChangeActions(module: OntimeModule): { [id: string]: Compa
 		[ActionId.Change]: {
 			name: 'Change event property',
 			options: [
-				...eventPicker(module.connection.state.events, ['list', 'loaded', 'next', 'id']),
+				...eventPicker(module.connection.state.events, ['list', 'loaded', 'next', 'id', 'index']),
 				...changePicker(module.connection.state.customFields),
 			],
 			callback: changeEvent,

@@ -69,7 +69,7 @@ export class OntimeConnection {
 						this.applyDataPatch(payload)
 						break
 					}
-					console.log('WS tag:', data.tag)
+					console.log('WS tag:', tag)
 					break
 				}
 			}

@@ -120,11 +120,11 @@ export function findPreviousPlayableEvent(state: OntimeState): OntimeEvent | nul
 	return null
 }
 
-export function strictTimerStringToMs(str: string): string | number {
+export function strictTimerStringToMs(str: string): number | null {
 	const [hh, mm, ss] = str.split(':')
 
 	if (hh === undefined || mm === undefined || ss === undefined) {
-		return 'undefined'
+		return null
 	}
 
 	const isNegative = hh.startsWith('-') ? -1 : 1
