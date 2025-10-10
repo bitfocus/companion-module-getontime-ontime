@@ -1,4 +1,9 @@
-import type { CompanionActionDefinition, CompanionActionEvent, CompanionActionContext } from '@companion-module/base'
+import type {
+	CompanionActionDefinition,
+	CompanionActionEvent,
+	CompanionActionContext,
+	CompanionMigrationAction,
+} from '@companion-module/base'
 import { splitHex } from '@companion-module/base'
 import { ActionId } from '../enums.js'
 import { changePicker } from './changePicker.js'
@@ -80,4 +85,23 @@ export function createChangeActions(module: OntimeModule): { [id: string]: Compa
 			callback: changeEvent,
 		},
 	}
+}
+
+export function tryRemoveIsPublic(action: CompanionMigrationAction): boolean {
+	if (action.actionId !== `${ActionId.Change}`) {
+		return false
+	}
+	if (typeof action.options.properties === 'string') {
+		if (action.options.properties === 'isPublic') {
+			action.options.properties = []
+			return true
+		}
+		return false
+	}
+
+	if (!(action.options.properties as string[]).includes('isPublic')) {
+		return false
+	}
+	action.options.properties = (action.options.properties as string[]).filter((p) => p !== 'isPublic')
+	return true
 }

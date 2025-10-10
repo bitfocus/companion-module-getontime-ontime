@@ -12,6 +12,7 @@ import type { OntimeConfig } from './config.js'
 import { feedbackId, ActionId, deprecatedActionId, deprecatedFeedbackId } from './enums.js'
 import { TimerPhase } from '@getontime/resolver'
 import { tryOffsetIsInvertedFeedback } from './feedbacks/offset.js'
+import { tryRemoveIsPublic } from './actions/change.js'
 
 //TODO: look at using this pattern for future upgrade scripts https://github.com/bitfocus/companion-module-allenheath-sq/blob/main/src/upgrades.ts
 
@@ -331,17 +332,17 @@ function update5(
 	return result
 }
 
-// function ActionUpdater(
-// 	tryUpdate: (action: CompanionMigrationAction) => boolean,
-// ): CompanionStaticUpgradeScript<OntimeConfig> {
-// 	return (_context: CompanionUpgradeContext<OntimeConfig>, props: CompanionStaticUpgradeProps<OntimeConfig>) => {
-// 		return {
-// 			updatedActions: props.actions.filter(tryUpdate),
-// 			updatedConfig: null,
-// 			updatedFeedbacks: [],
-// 		}
-// 	}
-// }
+function ActionUpdater(
+	tryUpdate: (action: CompanionMigrationAction) => boolean,
+): CompanionStaticUpgradeScript<OntimeConfig> {
+	return (_context: CompanionUpgradeContext<OntimeConfig>, props: CompanionStaticUpgradeProps<OntimeConfig>) => {
+		return {
+			updatedActions: props.actions.filter(tryUpdate),
+			updatedConfig: null,
+			updatedFeedbacks: [],
+		}
+	}
+}
 
 function FeedbackUpdater(
 	tryUpdate: (feedback: CompanionMigrationFeedback) => boolean,
@@ -374,4 +375,5 @@ export const UpgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [
 	update46x,
 	update5,
 	FeedbackUpdater(tryOffsetIsInvertedFeedback),
+	ActionUpdater(tryRemoveIsPublic),
 ]
