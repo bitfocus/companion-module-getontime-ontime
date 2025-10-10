@@ -115,10 +115,3 @@ export enum variableId {
 	AuxTimerCurrent = 'aux_current',
 	AuxTimerDirection = 'aux_direction',
 }
-
-export enum OffsetState {
-	On = 'on',
-	Behind = 'behind', // I think we should rename this to "Under"
-	Ahead = 'ahead', // I think we should rename this "Over"
-	Both = 'both', // how can we be both?
-}
