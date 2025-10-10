@@ -1,7 +1,18 @@
-import type { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition } from '@companion-module/base'
-import { feedbackId, OffsetState } from '../enums.js'
+import type {
+	CompanionFeedbackBooleanEvent,
+	CompanionFeedbackDefinition,
+	CompanionMigrationFeedback,
+} from '@companion-module/base'
+import { feedbackId } from '../enums.js'
 import { DangerRed, White } from '../assets/colours.js'
 import type OntimeState from '../state.js'
+
+enum OffsetState {
+	On = 'on',
+	Under = 'under',
+	Over = 'Over',
+	Both = 'both',
+}
 
 export function createOffsetFeedbacks(state: OntimeState): { [id: string]: CompanionFeedbackDefinition } {
 	function offset(feedback: CompanionFeedbackBooleanEvent): boolean {
@@ -15,10 +26,10 @@ export function createOffsetFeedbacks(state: OntimeState): { [id: string]: Compa
 				return offset > -margin && offset < margin
 			case OffsetState.Both:
 				return offset < -margin || offset > margin
-			case OffsetState.Behind:
-				return offset < -margin
-			case OffsetState.Ahead:
+			case OffsetState.Over:
 				return offset > margin
+			case OffsetState.Under:
+				return offset < -margin
 		}
 
 		return false
@@ -40,9 +51,9 @@ export function createOffsetFeedbacks(state: OntimeState): { [id: string]: Compa
 					id: 'state',
 					choices: [
 						{ id: OffsetState.On, label: 'On time' },
-						{ id: OffsetState.Behind, label: 'Behind schedule' }, // TODO: this is incorrect, -offset is under time
-						{ id: OffsetState.Ahead, label: 'Ahead of schedule' }, // TODO: this is incorrect, +offset is over time
-						{ id: OffsetState.Both, label: 'Behind or Ahead of schedule' },
+						{ id: OffsetState.Over, label: 'Over time' },
+						{ id: OffsetState.Under, label: 'Under time' },
+						{ id: OffsetState.Both, label: 'Over or Under timer' },
 					],
 					default: 'behind',
 				},
@@ -59,4 +70,21 @@ export function createOffsetFeedbacks(state: OntimeState): { [id: string]: Compa
 			callback: offset,
 		},
 	}
+}
+
+export function tryOffsetIsInvertedFeedback(feedback: CompanionMigrationFeedback): boolean {
+	if (feedback.feedbackId !== `${feedbackId.RundownOffset}`) {
+		return false
+	}
+
+	const currentChoice = feedback.options.state ?? 'on'
+
+	feedback.options.state = {
+		on: OffsetState.On,
+		behind: OffsetState.Over,
+		ahead: OffsetState.Under,
+		Both: OffsetState.Both,
+	}[currentChoice as string]
+
+	return true
 }

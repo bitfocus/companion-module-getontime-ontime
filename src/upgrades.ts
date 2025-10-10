@@ -6,81 +6,14 @@ import {
 	type CompanionStaticUpgradeScript,
 	type CompanionMigrationAction,
 	type CompanionMigrationFeedback,
+	EmptyUpgradeScript,
 } from '@companion-module/base'
 import type { OntimeConfig } from './config.js'
 import { feedbackId, ActionId, deprecatedActionId, deprecatedFeedbackId } from './enums.js'
 import { TimerPhase } from '@getontime/resolver'
+import { tryOffsetIsInvertedFeedback } from './feedbacks/offset.js'
 
 //TODO: look at using this pattern for future upgrade scripts https://github.com/bitfocus/companion-module-allenheath-sq/blob/main/src/upgrades.ts
-
-type old_v2_config = {
-	host: string
-	port: string | null
-	ssl: boolean
-	version: string
-	refetchEvents: boolean
-	customToVariable: boolean
-	reconnect: boolean
-	reconnectInterval: number
-}
-
-function update2x4x0(
-	_context: CompanionUpgradeContext<OntimeConfig | old_v2_config>,
-	props: CompanionStaticUpgradeProps<OntimeConfig | old_v2_config>,
-): CompanionStaticUpgradeResult<OntimeConfig> {
-	const result = {
-		updatedConfig: null,
-		updatedActions: new Array<CompanionMigrationAction>(),
-		updatedFeedbacks: new Array<CompanionMigrationFeedback>(),
-	}
-	if ('version' in _context.currentConfig) {
-		if (_context.currentConfig.version === 'v1') {
-			for (const action of props.actions) {
-				if (action.actionId === 'setSpeakerMessageVisibility') {
-					action.actionId = deprecatedActionId.SetTimerMessageVisibility
-					result.updatedActions.push(action)
-				} else if (action.actionId === 'setSpeakerMessage') {
-					action.actionId = deprecatedActionId.SetTimerMessage
-					result.updatedActions.push(action)
-				} else if (action.actionId === 'delay') {
-					action.actionId = ActionId.Add
-					result.updatedActions.push(action)
-				}
-			}
-			for (const feedback of props.feedbacks) {
-				if (feedback.feedbackId === 'speakerMessageVisible') {
-					feedback.feedbackId = deprecatedFeedbackId.TimerMessageVisible
-					result.updatedFeedbacks.push(feedback)
-				}
-			}
-		} else if (_context.currentConfig.version === 'v2') {
-			for (const action of props.actions) {
-				if (action.actionId === 'setSpeakerMessageVisibility') {
-					action.actionId = deprecatedActionId.SetTimerMessageVisibility
-					result.updatedActions.push(action)
-				} else if (action.actionId === 'setSpeakerMessage') {
-					action.actionId = deprecatedActionId.SetTimerMessage
-					result.updatedActions.push(action)
-				} else if (action.actionId === 'delay') {
-					action.actionId = ActionId.Add
-					action.options.addremove = (action.options.value as number) >= 0 ? 'add' : 'remove'
-					action.options.minutes = Math.abs(action.options.value as number)
-					action.options.hours = 0
-					action.options.seconds = 0
-					result.updatedActions.push(action)
-				}
-			}
-			for (const feedback of props.feedbacks) {
-				if (feedback.feedbackId === 'speakerMessageVisible') {
-					feedback.feedbackId = deprecatedFeedbackId.TimerMessageVisible
-					result.updatedFeedbacks.push(feedback)
-				}
-			}
-		}
-	}
-
-	return result
-}
 
 type old_v3_config = {
 	host: string
@@ -398,10 +331,47 @@ function update5(
 	return result
 }
 
+// function ActionUpdater(
+// 	tryUpdate: (action: CompanionMigrationAction) => boolean,
+// ): CompanionStaticUpgradeScript<OntimeConfig> {
+// 	return (_context: CompanionUpgradeContext<OntimeConfig>, props: CompanionStaticUpgradeProps<OntimeConfig>) => {
+// 		return {
+// 			updatedActions: props.actions.filter(tryUpdate),
+// 			updatedConfig: null,
+// 			updatedFeedbacks: [],
+// 		}
+// 	}
+// }
+
+function FeedbackUpdater(
+	tryUpdate: (feedback: CompanionMigrationFeedback) => boolean,
+): CompanionStaticUpgradeScript<OntimeConfig> {
+	return (_context: CompanionUpgradeContext<OntimeConfig>, props: CompanionStaticUpgradeProps<OntimeConfig>) => {
+		return {
+			updatedActions: [],
+			updatedConfig: null,
+			updatedFeedbacks: props.feedbacks.filter(tryUpdate),
+		}
+	}
+}
+
+// function ConfigUpdater(
+// 	tryUpdate: (config: OntimeConfig | null) => boolean,
+// ): CompanionStaticUpgradeScript<OntimeConfig> {
+// 	return (_context: CompanionUpgradeContext<OntimeConfig>, props: CompanionStaticUpgradeProps<OntimeConfig>) => {
+// 		return {
+// 			updatedActions: [],
+// 			updatedConfig: tryUpdate(props.config) ? props.config : null,
+// 			updatedFeedbacks: [],
+// 		}
+// 	}
+// }
+
 export const UpgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [
-	update2x4x0,
+	EmptyUpgradeScript,
 	update3x4x0,
 	update4xx,
 	update46x,
 	update5,
+	FeedbackUpdater(tryOffsetIsInvertedFeedback),
 ]
