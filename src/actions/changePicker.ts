@@ -80,6 +80,14 @@ export function changePicker(
 			useVariables: true,
 		},
 		{
+			type: 'checkbox',
+			label: 'Link start time',
+			tooltip: throttledEndpointText,
+			id: 'linkStart',
+			default: false,
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('linkStart'),
+		},
+		{
 			type: 'number',
 			label: 'Start Time',
 			tooltip: 'In milliseconds\n' + throttledEndpointText,
@@ -98,6 +106,17 @@ export function changePicker(
 			default: '00:00:00',
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeStart_hhmmss'),
 			useVariables: true,
+		},
+		{
+			type: 'dropdown',
+			label: 'Time strategy (End/Duration)',
+			id: 'timeStrategy',
+			choices: [
+				{ id: 'lock-end', label: 'Lock end timer' }, //TODO: expose with resolver
+				{ id: 'lock-duration', label: 'Lock duration' },
+			],
+			default: 'lock-duration',
+			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeStrategy'),
 		},
 		{
 			type: 'number',
