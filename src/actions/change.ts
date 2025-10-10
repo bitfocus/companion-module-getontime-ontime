@@ -99,17 +99,35 @@ export function tryRemoveIsPublic(action: CompanionMigrationAction): boolean {
 	if (action.actionId !== `${ActionId.Change}`) {
 		return false
 	}
-	if (typeof action.options.properties === 'string') {
-		if (action.options.properties === 'isPublic') {
-			action.options.properties = []
-			return true
-		}
-		return false
+	let madeUpgrade = false
+	if ((action.options.properties as string[]).includes('isPublic')) {
+		action.options.properties = (action.options.properties as string[]).filter((p) => p !== 'isPublic')
+		madeUpgrade = true
 	}
 
-	if (!(action.options.properties as string[]).includes('isPublic')) {
+	if ('isPublic' in action.options) {
+		delete action.options.isPublic
+		madeUpgrade = true
+	}
+	return madeUpgrade
+}
+
+export function tryChangeTimeWithExpression(action: CompanionMigrationAction): boolean {
+	if (action.actionId !== `${ActionId.Change}`) {
 		return false
 	}
-	action.options.properties = (action.options.properties as string[]).filter((p) => p !== 'isPublic')
-	return true
+	let madeUpgrade = false
+
+	const affectedProperties = ['duration', 'timeStart', 'timeEnd', 'timeWarning', 'timeDanger']
+	affectedProperties.forEach((oldProperty) => {
+		if ((action.options.properties as string[]).includes(oldProperty)) {
+			action.options.properties = (action.options.properties as string[]).filter((p) => p !== oldProperty)
+			const newProperty = `${oldProperty}_hhmmss`
+			action.options.properties.push(newProperty)
+			action.options[newProperty] = action.options[oldProperty] ?? '0'
+			madeUpgrade = true
+		}
+	})
+
+	return madeUpgrade
 }

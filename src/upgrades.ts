@@ -12,7 +12,7 @@ import type { OntimeConfig } from './config.js'
 import { feedbackId, ActionId, deprecatedActionId, deprecatedFeedbackId } from './enums.js'
 import { TimerPhase } from '@getontime/resolver'
 import { tryOffsetIsInvertedFeedback } from './feedbacks/offset.js'
-import { tryRemoveIsPublic } from './actions/change.js'
+import { tryChangeTimeWithExpression, tryRemoveIsPublic } from './actions/change.js'
 
 //TODO: look at using this pattern for future upgrade scripts https://github.com/bitfocus/companion-module-allenheath-sq/blob/main/src/upgrades.ts
 
@@ -376,4 +376,5 @@ export const UpgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [
 	update5,
 	FeedbackUpdater(tryOffsetIsInvertedFeedback),
 	ActionUpdater(tryRemoveIsPublic),
+	ActionUpdater(tryChangeTimeWithExpression),
 ]
