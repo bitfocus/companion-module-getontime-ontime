@@ -59,6 +59,7 @@ export function eventPicker(
 			type: 'textinput',
 			id: 'eventId',
 			label: 'Event Id',
+			useVariables: true,
 			default: '',
 			isVisible: (options) => options['method'] === 'id',
 		},

@@ -30,12 +30,12 @@ export function createChangeActions(module: OntimeModule): { [id: string]: Compa
 				break
 			}
 			case 'id': {
-				id = eventId ? String(eventId) : null
+				id = await context.parseVariablesInString(eventId as string)
 				break
 			}
 		}
 		//if no ID skip
-		if (id === null) {
+		if (!id) {
 			return
 		}
 		const patch: Partial<OntimeEvent> = {}
@@ -46,11 +46,14 @@ export function createChangeActions(module: OntimeModule): { [id: string]: Compa
 			}
 
 			for (const property of properties) {
-				const value = action.options[property]
-				//return early if propval is empty
-				if (!value || typeof property !== 'string') {
+				if (typeof property !== 'string') {
 					continue
 				}
+				const value = action.options[property]
+				if (typeof value === 'undefined') {
+					continue
+				}
+				console.log({ property, value })
 				// converts companion color value to hex
 				if (property === 'colour') {
 					const colour = splitHex(value as string)
@@ -61,9 +64,11 @@ export function createChangeActions(module: OntimeModule): { [id: string]: Compa
 				// converts companion time variable (hh:mm:ss) to ontime seconds
 				if (property.endsWith('_hhmmss')) {
 					const timeString = await context.parseVariablesInString(value as string)
-					const seconds = strictTimerStringToMs(timeString)
+					const ms = strictTimerStringToMs(timeString)
 					const propertyName = property.split('_hhmmss')[0]
-					Object.assign(patch, { [propertyName]: seconds })
+					console.log({ property, ms })
+
+					Object.assign(patch, { [propertyName]: ms })
 					continue
 				}
 
