@@ -186,10 +186,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@getontime/resolver@npm:^4.0.0-beta.5":
-  version: 4.0.0-beta.5
-  resolution: "@getontime/resolver@npm:4.0.0-beta.5"
-  checksum: 10c0/d7bf12108d0ee2ad06dcfc4aee6055006dc14b7d1bbbff8564051ea92263681ca0486b46243cbb4be01e931d332fe8f9f908eff8c1772734558a1a627a173a6e
+"@getontime/resolver@npm:4.0.0":
+  version: 4.0.0
+  resolution: "@getontime/resolver@npm:4.0.0"
+  checksum: 10c0/fed6262b0227be8c0eed2001ff6e745a4d7d0581453020db35442ec3804477977d8a93dfc39dc5ef3cc263aa8a1d48ee7b7a910135f53de8521a6ae5af45ecbb
   languageName: node
   linkType: hard
 
@@ -1609,7 +1609,7 @@ __metadata:
   dependencies:
     "@companion-module/base": "npm:1.12.0"
     "@companion-module/tools": "npm:2.3.0"
-    "@getontime/resolver": "npm:^4.0.0-beta.5"
+    "@getontime/resolver": "npm:4.0.0"
     "@types/node": "npm:22.15.19"
     "@types/semver": "npm:^7.7.1"
     "@types/ws": "npm:8.18.1"
