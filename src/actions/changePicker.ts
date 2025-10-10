@@ -72,8 +72,8 @@ export function changePicker(
 		},
 		{
 			type: 'textinput',
-			label: 'Duration (hh:mm:ss)',
-			tooltip: throttledEndpointText,
+			label: 'Duration',
+			tooltip: 'In milliseconds or hh:mm:ss\n' + throttledEndpointText,
 			id: 'duration_hhmmss',
 			default: '00:00:00',
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('duration_hhmmss'),
@@ -100,8 +100,8 @@ export function changePicker(
 		},
 		{
 			type: 'textinput',
-			label: 'Start Time (hh:mm:ss)',
-			tooltip: 'The variable should result in (hh:mm:ss)\n' + throttledEndpointText,
+			label: 'Start Time',
+			tooltip: 'In milliseconds or hh:mm:ss\n' + throttledEndpointText,
 			id: 'timeStart_hhmmss',
 			default: '00:00:00',
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeStart_hhmmss'),
@@ -131,8 +131,8 @@ export function changePicker(
 		},
 		{
 			type: 'textinput',
-			label: 'End Time (hh:mm:ss)',
-			tooltip: throttledEndpointText,
+			label: 'End Time',
+			tooltip: 'In milliseconds or hh:mm:ss\n' + throttledEndpointText,
 			id: 'timeEnd_hhmmss',
 			default: '00:00:00',
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeEnd_hhmmss'),
@@ -150,7 +150,8 @@ export function changePicker(
 		},
 		{
 			type: 'textinput',
-			label: 'Warning Time (hh:mm:ss)',
+			label: 'Warning Time',
+			tooltip: 'In milliseconds or hh:mm:ss\n' + throttledEndpointText,
 			id: 'timeWarning_hhmmss',
 			default: '00:00:00',
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeWarning_hhmmss'),
@@ -168,7 +169,8 @@ export function changePicker(
 		},
 		{
 			type: 'textinput',
-			label: 'Danger Time (hh:mm:ss)',
+			label: 'Danger Time',
+			tooltip: 'In milliseconds or hh:mm:ss\n' + throttledEndpointText,
 			id: 'timeDanger_hhmmss',
 			default: '00:00:00',
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeDanger_hhmmss'),
