@@ -10,7 +10,7 @@ import { changePicker } from './changePicker.js'
 import { eventPicker } from './eventPicker.js'
 import { strictTimerStringToMs } from '../utilities.js'
 import type { OntimeModule } from '../index.js'
-import type { OntimeEvent } from '@getontime/resolver'
+import { TimeStrategy, type OntimeEvent } from '@getontime/resolver'
 
 export function createChangeActions(module: OntimeModule): { [id: string]: CompanionActionDefinition } {
 	async function changeEvent(action: CompanionActionEvent, context: CompanionActionContext): Promise<void> {
@@ -53,7 +53,6 @@ export function createChangeActions(module: OntimeModule): { [id: string]: Compa
 				if (typeof value === 'undefined') {
 					continue
 				}
-				console.log({ property, value })
 				// converts companion color value to hex
 				if (property === 'colour') {
 					const colour = splitHex(value as string)
@@ -76,6 +75,16 @@ export function createChangeActions(module: OntimeModule): { [id: string]: Compa
 				}
 
 				Object.assign(patch, { [property]: value })
+			}
+			if (properties.includes('timeStart_hhmmss')) {
+				const linkStart = (action.options.linkStart as boolean) ?? false
+				Object.assign(patch, { linkStart })
+			}
+			if (properties.includes('timeEnd_hhmmss')) {
+				Object.assign(patch, { timeStrategy: TimeStrategy.LockEnd })
+			}
+			if (properties.includes('duration_hhmmss')) {
+				Object.assign(patch, { timeStrategy: TimeStrategy.LockDuration })
 			}
 			module.connection.sendSocket('change', {
 				[id]: patch,

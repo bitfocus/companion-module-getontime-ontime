@@ -8,7 +8,7 @@ import type {
 	CompanionInputFieldTextInput,
 } from '@companion-module/base'
 import { combineRgb } from '@companion-module/base'
-import type { CustomFields } from '@getontime/resolver'
+import { type CustomFields } from '@getontime/resolver'
 
 const throttledEndpointText = 'This property will cause a recalculation of the rundown\nand is throttled by ontime'
 
@@ -64,16 +64,16 @@ export function changePicker(
 			tooltip: 'In milliseconds or hh:mm:ss\n' + throttledEndpointText,
 			id: 'duration_hhmmss',
 			default: '00:00:00',
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('duration_hhmmss'),
 			useVariables: true,
+			isVisibleExpression: `arrayIncludes($(options:properties), 'duration_hhmmss')`,
 		},
 		{
 			type: 'checkbox',
 			label: 'Link start time',
-			tooltip: throttledEndpointText,
+			tooltip: 'Link the events start time to the end time of the previous event',
 			id: 'linkStart',
 			default: false,
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('linkStart'),
+			isVisibleExpression: `arrayIncludes($(options:properties), 'timeStart_hhmmss')`,
 		},
 		{
 			type: 'textinput',
@@ -81,19 +81,8 @@ export function changePicker(
 			tooltip: 'In milliseconds or hh:mm:ss\n' + throttledEndpointText,
 			id: 'timeStart_hhmmss',
 			default: '00:00:00',
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeStart_hhmmss'),
 			useVariables: true,
-		},
-		{
-			type: 'dropdown',
-			label: 'Time strategy (End/Duration)',
-			id: 'timeStrategy',
-			choices: [
-				{ id: 'lock-end', label: 'Lock end timer' }, //TODO: expose with resolver
-				{ id: 'lock-duration', label: 'Lock duration' },
-			],
-			default: 'lock-duration',
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeStrategy'),
+			isVisibleExpression: `arrayIncludes($(options:properties), 'timeStart_hhmmss') && !$(options:linkStart)`,
 		},
 		{
 			type: 'textinput',
@@ -101,8 +90,8 @@ export function changePicker(
 			tooltip: 'In milliseconds or hh:mm:ss\n' + throttledEndpointText,
 			id: 'timeEnd_hhmmss',
 			default: '00:00:00',
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeEnd_hhmmss'),
 			useVariables: true,
+			isVisibleExpression: `arrayIncludes($(options:properties), 'timeEnd_hhmmss')`,
 		},
 		{
 			type: 'textinput',
@@ -159,7 +148,7 @@ export function changePicker(
 			label: 'Properties',
 			minSelection: 1,
 			default: [],
-			choices: allProps.map((p) => ({ id: p.id, label: p.label })),
+			choices: allProps.map((p) => ({ id: p.id, label: p.label })).filter((p) => p.id !== 'linkStart'),
 		},
 		...allProps,
 	]
