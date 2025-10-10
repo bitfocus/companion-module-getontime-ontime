@@ -8,7 +8,6 @@ import type {
 	CompanionInputFieldTextInput,
 } from '@companion-module/base'
 import { combineRgb } from '@companion-module/base'
-import { MAX_TIME_MS } from '../enums.js'
 import type { CustomFields } from '@getontime/resolver'
 
 const throttledEndpointText = 'This property will cause a recalculation of the rundown\nand is throttled by ontime'
@@ -60,17 +59,6 @@ export function changePicker(
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('colour'),
 		},
 		{
-			type: 'number',
-			label: 'Duration',
-			tooltip: 'In milliseconds\n' + throttledEndpointText,
-			id: 'duration',
-			default: 0,
-			min: 0,
-			max: MAX_TIME_MS,
-			step: 1,
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('duration'),
-		},
-		{
 			type: 'textinput',
 			label: 'Duration',
 			tooltip: 'In milliseconds or hh:mm:ss\n' + throttledEndpointText,
@@ -86,17 +74,6 @@ export function changePicker(
 			id: 'linkStart',
 			default: false,
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('linkStart'),
-		},
-		{
-			type: 'number',
-			label: 'Start Time',
-			tooltip: 'In milliseconds\n' + throttledEndpointText,
-			id: 'timeStart',
-			default: 0,
-			min: 0,
-			max: MAX_TIME_MS,
-			step: 1,
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeStart'),
 		},
 		{
 			type: 'textinput',
@@ -119,17 +96,6 @@ export function changePicker(
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeStrategy'),
 		},
 		{
-			type: 'number',
-			label: 'End Time',
-			tooltip: 'In milliseconds\n' + throttledEndpointText,
-			id: 'timeEnd',
-			default: 0,
-			min: 0,
-			max: MAX_TIME_MS,
-			step: 1,
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeEnd'),
-		},
-		{
 			type: 'textinput',
 			label: 'End Time',
 			tooltip: 'In milliseconds or hh:mm:ss\n' + throttledEndpointText,
@@ -137,16 +103,6 @@ export function changePicker(
 			default: '00:00:00',
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeEnd_hhmmss'),
 			useVariables: true,
-		},
-		{
-			type: 'number',
-			label: 'Warning Time',
-			id: 'timeWarning',
-			default: 0,
-			min: 0,
-			max: MAX_TIME_MS,
-			step: 1,
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeWarning'),
 		},
 		{
 			type: 'textinput',
@@ -157,16 +113,7 @@ export function changePicker(
 			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeWarning_hhmmss'),
 			useVariables: true,
 		},
-		{
-			type: 'number',
-			label: 'Danger Time',
-			id: 'timeDanger',
-			default: 0,
-			min: 0,
-			max: MAX_TIME_MS,
-			step: 1,
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeDanger'),
-		},
+
 		{
 			type: 'textinput',
 			label: 'Danger Time',
