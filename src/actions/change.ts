@@ -8,7 +8,7 @@ import { splitHex } from '@companion-module/base'
 import { ActionId } from '../enums.js'
 import { changePicker } from './changePicker.js'
 import { eventPicker } from './eventPicker.js'
-import { strictTimerStringToSeconds } from '../utilities.js'
+import { strictTimerStringToMs } from '../utilities.js'
 import type { OntimeModule } from '../index.js'
 import type { OntimeEvent } from '@getontime/resolver'
 
@@ -61,7 +61,7 @@ export function createChangeActions(module: OntimeModule): { [id: string]: Compa
 				// converts companion time variable (hh:mm:ss) to ontime seconds
 				if (property.endsWith('_hhmmss')) {
 					const timeString = await context.parseVariablesInString(value as string)
-					const seconds = strictTimerStringToSeconds(timeString)
+					const seconds = strictTimerStringToMs(timeString)
 					const propertyName = property.split('_hhmmss')[0]
 					Object.assign(patch, { [propertyName]: seconds })
 					continue
