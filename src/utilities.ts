@@ -130,6 +130,7 @@ export function strictTimerStringToMs(str: string): number | null {
 	const isNegative = hh.startsWith('-') ? -1 : 1
 	hh.replace('-', '')
 
+	//TODO: check for NaN
 	const seconds = Number(ss) * 1000
 	const minutes = Number(mm) * 60 * 1000
 	const hours = Number(hh) * 60 * 60 * 1000

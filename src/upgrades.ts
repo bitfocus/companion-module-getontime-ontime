@@ -13,6 +13,7 @@ import { feedbackId, ActionId, deprecatedActionId, deprecatedFeedbackId } from '
 import { TimerPhase } from '@getontime/resolver'
 import { tryOffsetIsInvertedFeedback } from './feedbacks/offset.js'
 import { tryChangeTimeWithExpression, tryRemoveIsPublic } from './actions/change.js'
+import { tryAuxTimerDurationTakesExpressions } from './actions/auxTimer.js'
 
 //TODO: look at using this pattern for future upgrade scripts https://github.com/bitfocus/companion-module-allenheath-sq/blob/main/src/upgrades.ts
 
@@ -377,4 +378,5 @@ export const UpgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [
 	FeedbackUpdater(tryOffsetIsInvertedFeedback),
 	ActionUpdater(tryRemoveIsPublic),
 	ActionUpdater(tryChangeTimeWithExpression),
+	ActionUpdater(tryAuxTimerDurationTakesExpressions),
 ]

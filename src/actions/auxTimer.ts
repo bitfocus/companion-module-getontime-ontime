@@ -1,7 +1,13 @@
-import type { CompanionActionDefinition, CompanionActionEvent } from '@companion-module/base'
+import type {
+	CompanionActionContext,
+	CompanionActionDefinition,
+	CompanionActionEvent,
+	CompanionMigrationAction,
+} from '@companion-module/base'
 import { ActionId } from '../enums.js'
 import { SimplePlayback, SimpleDirection } from '@getontime/resolver'
 import type { OntimeModule } from '../index.js'
+import { strictTimerStringToMs } from '../utilities.js'
 
 export function createAuxTimerActions(module: OntimeModule): { [id: string]: CompanionActionDefinition } {
 	function togglePlayState(action: CompanionActionEvent): void {
@@ -24,15 +30,16 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 		module.connection.sendSocket('auxtimer', { [id]: action.options.value as SimplePlayback })
 	}
 
-	function duration(action: CompanionActionEvent): void {
+	async function duration(action: CompanionActionEvent, context: CompanionActionContext): Promise<void> {
 		const id = action.options.destination as '1' | '2' | '3'
-		const { hours, minutes, seconds } = action.options as {
-			hours: number
-			minutes: number
-			seconds: number
+		const durationString = await context.parseVariablesInString(action.options.duration as string)
+		const maybeNumber = Number(durationString)
+		const duration = isNaN(maybeNumber) ? strictTimerStringToMs(durationString) : maybeNumber
+		if (duration === null) {
+			module.log('error', `Invalid value in aux timer duration: ${durationString}`)
+			return
 		}
-		const val = ((hours * 60 + minutes) * 60 + seconds) * 1000
-		module.connection.sendSocket('auxtimer', { [id]: { duration: val } })
+		module.connection.sendSocket('auxtimer', { [id]: { duration } })
 	}
 
 	function addTime(action: CompanionActionEvent): void {
@@ -93,33 +100,11 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 					label: 'Select Aux Timer',
 				},
 				{
-					type: 'number',
-					id: 'hours',
-					label: 'Hours',
-					default: 0,
-					step: 1,
-					min: 0,
-					max: 24,
-					required: true,
-				},
-				{
-					type: 'number',
-					id: 'minutes',
-					label: 'Minutes',
-					default: 1,
-					step: 1,
-					min: 0,
-					max: 1440,
-					required: true,
-				},
-				{
-					type: 'number',
-					id: 'seconds',
-					label: 'Seconds',
-					default: 0,
-					min: 0,
-					max: 86400,
-					step: 1,
+					type: 'textinput',
+					id: 'duration',
+					label: 'Duration',
+					default: '00:00:00',
+					useVariables: true,
 					required: true,
 				},
 			],
@@ -213,4 +198,19 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 			callback: addTime,
 		},
 	}
+}
+
+export function tryAuxTimerDurationTakesExpressions(action: CompanionMigrationAction): boolean {
+	if (action.actionId !== `${ActionId.AuxTimerDuration}`) {
+		return false
+	}
+	const { hours, minutes, seconds } = action.options
+	action.options.duration =
+		hours?.toString().padStart(2, '0') +
+		':' +
+		minutes?.toString().padStart(2, '0') +
+		':' +
+		seconds?.toString().padStart(2, '0')
+
+	return true
 }
