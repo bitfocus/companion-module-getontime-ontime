@@ -109,7 +109,7 @@ export class OntimeConnection {
 				onmessage: this.onWsMessage.bind(this),
 				onopen: this.onWsOpen.bind(this),
 			},
-			'4.0.x',
+			'4.x.x',
 		)
 
 		try {
