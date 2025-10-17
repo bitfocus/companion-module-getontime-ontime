@@ -21,6 +21,7 @@ export enum ActionId {
 	MessageVisibilityAndText = 'setMessageVisibilityAndText',
 	MessageSecondarySource = 'setMessageSecondarySource',
 	MessageText = 'setMessage',
+	MessageAction = 'messageAction',
 
 	AuxTimerDuration = 'auxTimerDuration',
 	AuxTimerPlayState = 'auxTimerPlayState',
