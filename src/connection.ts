@@ -70,6 +70,7 @@ export class OntimeConnection {
 						break
 					}
 					console.log('WS tag:', tag)
+					console.log('WS payload:', payload)
 					break
 				}
 			}
