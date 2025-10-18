@@ -91,6 +91,13 @@ export enum variableId {
 	Clock = 'clock',
 
 	TimerCurrent = 'timer_current',
+
+	TimerCurrentHMS = 'timer_current_hms',
+	TimerCurrentN = 'timer_current_n',
+	TimerCurrentH = 'timer_current_h',
+	TimerCurrentM = 'timer_current_m',
+	TimerCurrentS = 'timer_current_s',
+
 	TimerDuration = 'timer_duration',
 	TimerElapsed = 'timer_elapsed',
 	TimerAdded = 'timer_added',
