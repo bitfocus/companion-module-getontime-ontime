@@ -20,7 +20,7 @@ import {
 } from './assets/colours.js'
 
 export function generatePresets(): CompanionPresetDefinitions {
-	return { ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...messagePresets }
+	return { ...wallClockPresets, ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...messagePresets }
 }
 
 const defaultStyle: CompanionButtonStyleProps = {
@@ -72,6 +72,61 @@ const canPlayFeedback = [
 		},
 	},
 ]
+
+const wallClockPresets: { [id: string]: CompanionButtonPresetDefinition } = {
+	wall_clock: {
+		type: 'button',
+		category: 'Clock',
+		name: 'Wall Clock',
+		style: {
+			...defaultStyle,
+			size: '14',
+			textExpression: true,
+			text: '`Clock:\n${msToTimestamp($(ontime:clock), "HH:mm:ss")}`',
+		},
+		steps: [],
+		feedbacks: [],
+	},
+	hh_wall_clock: {
+		type: 'button',
+		category: 'Clock',
+		name: 'HH Wall Clock',
+		style: {
+			...defaultStyle,
+			size: 'auto',
+			textExpression: true,
+			text: 'msToTimestamp($(ontime:clock), "HH")',
+		},
+		steps: [],
+		feedbacks: [],
+	},
+	mm_wall_clock: {
+		type: 'button',
+		category: 'Clock',
+		name: 'mm Wall Clock',
+		style: {
+			...defaultStyle,
+			size: 'auto',
+			textExpression: true,
+			text: 'msToTimestamp($(ontime:clock), "mm")',
+		},
+		steps: [],
+		feedbacks: [],
+	},
+	ss_wall_clock: {
+		type: 'button',
+		category: 'Clock',
+		name: 'Wall Clock',
+		style: {
+			...defaultStyle,
+			size: 'auto',
+			textExpression: true,
+			text: 'msToTimestamp($(ontime:clock), "ss")',
+		},
+		steps: [],
+		feedbacks: [],
+	},
+}
 
 const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 	select_previous_event: {
