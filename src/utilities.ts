@@ -137,3 +137,17 @@ export function strictTimerStringToMs(str: string): number | null {
 
 	return isNegative * (seconds + minutes + hours)
 }
+
+export function formatTime(value: number) {
+	const sign = value < 0 ? '-' : ''
+	const absolute = Math.abs(value)
+	const ss = (Math.round(absolute / 1000) % 60).toString().padStart(2, '0')
+	const mm = (Math.floor(absolute / 60000) % 60).toString().padStart(2, '0')
+	const HH = Math.floor(absolute / 3600000)
+		.toString()
+		.padStart(2, '0')
+
+	const hms = `${sign}${HH}:${mm}:${ss}`
+
+	return { sign, HH, mm, ss, hms }
+}
