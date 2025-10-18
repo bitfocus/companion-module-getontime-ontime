@@ -8,6 +8,26 @@ const timerVariables: CompanionVariableDefinition[] = [
 		variableId: variableId.TimerCurrent,
 	},
 	{
+		name: 'Current timer (HH:mm:ss)',
+		variableId: variableId.TimerCurrentHMS,
+	},
+	{
+		name: 'Current timer (Negative sign)',
+		variableId: variableId.TimerCurrentN,
+	},
+	{
+		name: 'Current timer (HH)',
+		variableId: variableId.TimerCurrentH,
+	},
+	{
+		name: 'Current timer (mm)',
+		variableId: variableId.TimerCurrentM,
+	},
+	{
+		name: 'Current timer (ss)',
+		variableId: variableId.TimerCurrentS,
+	},
+	{
 		name: 'Timer duration (milliseconds)',
 		variableId: variableId.TimerDuration,
 	},
@@ -175,7 +195,7 @@ const auxTimerVariables: (infix: string) => CompanionVariableDefinition[] = (inf
 export function generateVariables(customFields: CustomFields): CompanionVariableDefinition[] {
 	return [
 		{
-			name: 'Wall Clock',
+			name: 'Wall Clock (milliseconds)',
 			variableId: variableId.Clock,
 		},
 		...timerVariables,
