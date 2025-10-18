@@ -175,7 +175,7 @@ const auxTimerVariables: (infix: string) => CompanionVariableDefinition[] = (inf
 export function generateVariables(customFields: CustomFields): CompanionVariableDefinition[] {
 	return [
 		{
-			name: 'Wall Clock',
+			name: 'Wall Clock (milliseconds)',
 			variableId: variableId.Clock,
 		},
 		...timerVariables,
