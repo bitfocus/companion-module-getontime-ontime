@@ -25,7 +25,7 @@
 		"node": "22.2"
 	},
 	"dependencies": {
-		"@companion-module/base": "1.12.0",
+		"@companion-module/base": "1.13.4",
 		"@getontime/resolver": "4.0.0",
 		"companion-module-utils": "0.5.0",
 		"semver": "^7.7.2",
