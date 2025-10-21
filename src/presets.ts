@@ -10,6 +10,7 @@ import {
 	ActiveBlue,
 	Black,
 	DangerRed,
+	Gray,
 	NormalGray,
 	PauseOrange,
 	PlaybackGreen,
@@ -42,37 +43,6 @@ const defaultWithIconStyle: CompanionButtonStyleProps = {
 	alignment: 'center:bottom',
 	// show_topbar: false,
 }
-
-const canPlayFeedback = [
-	{
-		feedbackId: feedbackId.ColorPlayback,
-		options: {
-			state: ['play'],
-		},
-		style: {
-			color: White,
-			bgcolor: PlaybackGreen,
-		},
-	},
-	{
-		feedbackId: feedbackId.ColorPlayback,
-		options: {
-			state: ['armed'],
-		},
-		style: {
-			color: PlaybackGreen,
-		},
-	},
-	{
-		feedbackId: feedbackId.ColorPlayback,
-		options: {
-			state: ['pause'],
-		},
-		style: {
-			color: PlaybackGreen,
-		},
-	},
-]
 
 const wallClockPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 	wall_clock: {
@@ -130,70 +100,22 @@ const wallClockPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 }
 
 const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
-	select_previous_event: {
+	start_selected_or_next_event: {
 		type: 'button',
 		category: 'Playback',
-		name: 'Selects previous event',
+		name: 'Start selected/next event',
 		style: {
 			...defaultWithIconStyle,
-			png64: icons.PlaybackPrevious,
+			png64: icons.PlaybackStart,
+			color: PlaybackGreen,
+			text: 'GO (start)',
 		},
 		steps: [
 			{
 				down: [
 					{
-						actionId: ActionId.Load,
-						options: { method: 'previous' },
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [],
-	},
-	select_next_event: {
-		type: 'button',
-		category: 'Playback',
-		name: 'Selects next event',
-		style: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackNext,
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: ActionId.Load,
-						options: { method: 'next' },
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [],
-	},
-	stop_selected_event: {
-		type: 'button',
-		category: 'Playback',
-		name: 'Stops running event',
-		style: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackStop,
-			text: 'STOP',
-			color: PlaybackRed,
-		},
-		previewStyle: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackStop,
-			text: 'STOP',
-			bgcolor: PlaybackRed,
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: ActionId.Stop,
-						options: {},
+						actionId: ActionId.Start,
+						options: { method: 'go' },
 					},
 				],
 				up: [],
@@ -203,11 +125,66 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.ColorPlayback,
 				options: {
-					state: ['stop'],
+					state: ['play', 'pause'],
 				},
 				style: {
-					bgcolor: PlaybackRed,
 					color: White,
+					bgcolor: PlaybackGreen,
+					text: 'GO (next)',
+				},
+			},
+			{
+				feedbackId: feedbackId.ColorPlayback,
+				options: {
+					state: ['armed'],
+				},
+				style: {
+					text: 'GO (load)',
+				},
+			},
+		],
+	},
+	start_event: {
+		type: 'button',
+		category: 'Playback',
+		name: 'Starts selected event',
+		style: {
+			...defaultWithIconStyle,
+			png64: icons.PlaybackStart,
+			text: 'START',
+			color: Gray,
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: ActionId.Start,
+						options: {
+							method: 'loaded',
+						},
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.ColorPlayback,
+				options: {
+					state: ['play'],
+				},
+				style: {
+					color: White,
+					bgcolor: PlaybackGreen,
+				},
+			},
+			{
+				feedbackId: feedbackId.ColorPlayback,
+				options: {
+					state: ['armed', 'pause'],
+				},
+				style: {
+					color: PlaybackGreen,
 				},
 			},
 		],
@@ -220,12 +197,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			...defaultWithIconStyle,
 			png64: icons.PlaybackPause,
 			text: 'PAUSE',
-		},
-		previewStyle: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackPause,
-			text: 'PAUSE',
-			bgcolor: PauseOrange,
+			color: Gray,
 		},
 		steps: [
 			{
@@ -260,107 +232,43 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			},
 		],
 	},
-	start_selected_event: {
+	select_previous_event: {
 		type: 'button',
 		category: 'Playback',
-		name: 'Starts selected event',
+		name: 'Selects previous event',
 		style: {
 			...defaultWithIconStyle,
-			png64: icons.PlaybackStart,
-			text: 'START',
-		},
-		previewStyle: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackStart,
-			text: 'START',
-			bgcolor: PlaybackGreen,
+			pngalignment: 'center:center',
+			png64: icons.PlaybackPrevious,
 		},
 		steps: [
 			{
 				down: [
 					{
-						actionId: ActionId.Start,
-						options: {
-							method: 'loaded',
-						},
+						actionId: ActionId.Load,
+						options: { method: 'previous' },
 					},
 				],
 				up: [],
 			},
 		],
-		feedbacks: canPlayFeedback,
+		feedbacks: [],
 	},
-	start_next_event: {
+	select_next_event: {
 		type: 'button',
 		category: 'Playback',
-		name: 'Start next event',
+		name: 'Selects next event',
 		style: {
 			...defaultWithIconStyle,
-			png64: icons.PlaybackStart,
-			text: 'NEXT',
-		},
-		previewStyle: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackStart,
-			text: 'NEXT',
-			bgcolor: PlaybackGreen,
+			pngalignment: 'center:center',
+			png64: icons.PlaybackNext,
 		},
 		steps: [
 			{
 				down: [
 					{
-						actionId: ActionId.Start,
+						actionId: ActionId.Load,
 						options: { method: 'next' },
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: canPlayFeedback,
-	},
-	start_selected_or_next_event: {
-		type: 'button',
-		category: 'Playback',
-		name: 'Start selected/next event',
-		style: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackStart,
-			text: 'GO',
-		},
-		previewStyle: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackStart,
-			text: 'GO',
-			bgcolor: PlaybackGreen,
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: ActionId.Start,
-						options: { method: 'go' },
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: canPlayFeedback,
-	},
-	reload_selected_event: {
-		type: 'button',
-		category: 'Playback',
-		name: 'Reload selected event',
-		style: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackReload,
-			text: 'RELOAD',
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: ActionId.Reload,
-						options: {},
 					},
 				],
 				up: [],
@@ -377,12 +285,6 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			png64: icons.PlaybackRoll,
 			text: 'ROLL',
 			color: RollBlue,
-		},
-		previewStyle: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackRoll,
-			text: 'ROLL',
-			bgcolor: RollBlue,
 		},
 		steps: [
 			{
@@ -402,6 +304,75 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				style: {
 					color: White,
 					bgcolor: RollBlue,
+				},
+			},
+		],
+	},
+	reload_selected_event: {
+		type: 'button',
+		category: 'Playback',
+		name: 'Reload selected event',
+		style: {
+			...defaultWithIconStyle,
+			png64: icons.PlaybackReload,
+			text: 'RELOAD',
+			color: Gray,
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: ActionId.Reload,
+						options: {},
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.ColorPlayback,
+				options: {
+					state: ['stop'],
+				},
+				isInverted: true,
+				style: {
+					color: White,
+				},
+			},
+		],
+	},
+	stop_selected_event: {
+		type: 'button',
+		category: 'Playback',
+		name: 'Stops running event',
+		style: {
+			...defaultWithIconStyle,
+			png64: icons.PlaybackStop,
+			text: 'STOP',
+			color: Gray,
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: ActionId.Stop,
+						options: {},
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.ColorPlayback,
+				options: {
+					state: ['stop'],
+				},
+				isInverted: true,
+				style: {
+					bgcolor: PlaybackRed,
+					color: White,
 				},
 			},
 		],
