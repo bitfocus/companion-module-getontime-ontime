@@ -18,6 +18,7 @@ import {
 	WarningOrange,
 	White,
 } from './assets/colours.js'
+import { SimplePlayback } from '@getontime/resolver'
 
 export function generatePresets(): CompanionPresetDefinitions {
 	return { ...wallClockPresets, ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...messagePresets }
@@ -708,35 +709,17 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 	},
 }
 
-const auxTimerNegative = [
-	{
-		feedbackId: feedbackId.AuxTimerNegative,
-		options: {
-			destination: 'auxtimer1',
-		},
-		style: {
-			color: DangerRed,
-		},
-	},
-]
-
-const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
-	current_auxtime_hms: {
+function generateAuxTime(index: '1' | '2' | '3'): CompanionButtonPresetDefinition {
+	return {
 		type: 'button',
 		category: 'Aux Timer',
-		name: 'Current aux time',
+		name: 'Aux ' + index,
 		style: {
 			...defaultStyle,
-			text: 'msToTimestamp($(ontime:aux_1_current),"HH:mm:ss")',
+			text: '`AUX ' + index + '\n${msToTimestamp($(ontime:aux_' + index + '_current),"HH:mm:ss")}`',
 			size: '14',
 			alignment: 'center:center',
 			textExpression: true,
-		},
-		previewStyle: {
-			...defaultStyle,
-			text: 'HH:MM:SS',
-			size: '14',
-			alignment: 'center:center',
 		},
 		steps: [
 			{
@@ -744,22 +727,29 @@ const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				up: [],
 			},
 		],
-		feedbacks: auxTimerNegative,
-	},
-	start_stop_auxtimer: {
+		feedbacks: [
+			{
+				feedbackId: feedbackId.AuxTimerNegative,
+				options: {
+					destination: 'auxtimer' + index,
+				},
+				style: {
+					color: DangerRed,
+				},
+			},
+		],
+	}
+}
+
+function generateAuxStartPause(index: '1' | '2' | '3'): CompanionButtonPresetDefinition {
+	return {
 		type: 'button',
 		category: 'Aux Timer',
-		name: 'Start/Stop Aux Timer',
+		name: 'Start/Pause Aux Timer ' + index,
 		style: {
 			...defaultWithIconStyle,
+			text: `AUX ${index}`,
 			png64: icons.PlaybackStart,
-			text: 'START',
-			color: PlaybackGreen,
-		},
-		previewStyle: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackStart,
-			text: 'START/STOP',
 			bgcolor: PlaybackGreen,
 		},
 		steps: [
@@ -767,7 +757,7 @@ const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				down: [
 					{
 						actionId: ActionId.AuxTimerPlayState,
-						options: { value: 'toggleSS', destination: '1' },
+						options: { value: 'toggleSP', destination: index },
 					},
 				],
 				up: [],
@@ -778,38 +768,34 @@ const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				feedbackId: feedbackId.AuxTimerPlayback,
 				options: {
 					state: 'start',
-					destination: 'auxtimer1',
+					destination: 'auxtimer' + index,
 				},
 				style: {
-					color: PlaybackRed,
-					png64: icons.PlaybackStop,
-					text: 'STOP',
+					bgcolor: PauseOrange,
+					png64: icons.PlaybackPause,
+					text: `AUX ${index}`,
 				},
 			},
 		],
-	},
-	pause_auxtimer: {
+	}
+}
+
+function generateAuxStop(index: '1' | '2' | '3'): CompanionButtonPresetDefinition {
+	return {
 		type: 'button',
 		category: 'Aux Timer',
-		name: 'Pause Aux Timer',
+		name: 'Stop Aux Timer ' + index,
 		style: {
 			...defaultWithIconStyle,
-			png64: icons.PlaybackPause,
-			text: 'PAUSE',
-			color: PauseOrange,
-		},
-		previewStyle: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackPause,
-			text: 'PAUSE',
-			bgcolor: PauseOrange,
+			text: `AUX ${index}`,
+			png64: icons.PlaybackStop,
 		},
 		steps: [
 			{
 				down: [
 					{
 						actionId: ActionId.AuxTimerPlayState,
-						options: { value: 'pause', destination: '1' },
+						options: { value: SimplePlayback.Stop, destination: index },
 					},
 				],
 				up: [],
@@ -819,64 +805,84 @@ const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.AuxTimerPlayback,
 				options: {
-					state: 'pause',
-					destination: 'auxtimer1',
+					state: 'stop',
+					destination: 'auxtimer' + index,
 				},
+				isInverted: true,
 				style: {
-					bgcolor: PauseOrange,
-					color: White,
+					bgcolor: PlaybackRed,
+					png64: icons.PlaybackStop,
+					text: `AUX ${index}`,
 				},
 			},
 		],
-	},
-	add_auxtimer: {
+	}
+}
+
+function generateAuxAddTime(index: '1' | '2' | '3'): CompanionButtonPresetDefinition {
+	return {
 		type: 'button',
 		category: 'Aux Timer',
-		name: 'Add timer to Aux Timer',
+		name: 'Add timer to Aux Timer ' + index,
 		style: {
 			...defaultStyle,
-			text: '+5m',
-		},
-		previewStyle: {
-			...defaultStyle,
-			text: '+5m',
+			size: '18',
+			text: `AUX ${index}\\n+5m`,
 		},
 		steps: [
 			{
 				down: [
 					{
 						actionId: ActionId.AuxTimerAdd,
-						options: { hours: 0, minutes: 5, seconds: 0, addremove: 'add', destination: '1' },
+						options: { hours: 0, minutes: 5, seconds: 0, addremove: 'add', destination: index },
 					},
 				],
 				up: [],
 			},
 		],
 		feedbacks: [],
-	},
-	remove_auxtimer: {
+	}
+}
+
+function generateAuxSetTime(index: '1' | '2' | '3'): CompanionButtonPresetDefinition {
+	return {
 		type: 'button',
 		category: 'Aux Timer',
-		name: 'Remove timer to Aux Timer',
+		name: 'Set Aux Duration ' + index,
 		style: {
 			...defaultStyle,
-			text: '-5m',
-		},
-		previewStyle: {
-			...defaultStyle,
-			text: '-5m',
+			size: '18',
+			text: `AUX ${index}\\n5m`,
 		},
 		steps: [
 			{
 				down: [
 					{
-						actionId: ActionId.AuxTimerAdd,
-						options: { hours: 0, minutes: 5, seconds: 0, addremove: 'remove', destination: '1' },
+						actionId: ActionId.AuxTimerDuration,
+						options: { hours: 0, minutes: 5, seconds: 0, addremove: 'add', destination: index },
 					},
 				],
 				up: [],
 			},
 		],
 		feedbacks: [],
-	},
+	}
+}
+
+const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
+	current_auxtime1_hms: generateAuxTime('1'),
+	current_auxtime2_hms: generateAuxTime('2'),
+	current_auxtime3_hms: generateAuxTime('3'),
+	start_pause_auxtimer1: generateAuxStartPause('1'),
+	start_pause_auxtimer2: generateAuxStartPause('2'),
+	start_pause_auxtimer3: generateAuxStartPause('3'),
+	stop_auxtimer1: generateAuxStop('1'),
+	stop_auxtimer2: generateAuxStop('2'),
+	stop_auxtimer3: generateAuxStop('3'),
+	add_auxtimer1: generateAuxAddTime('1'),
+	add_auxtimer2: generateAuxAddTime('2'),
+	add_auxtimer3: generateAuxAddTime('3'),
+	set_auxtimer1: generateAuxSetTime('1'),
+	set_auxtimer2: generateAuxSetTime('2'),
+	set_auxtimer3: generateAuxSetTime('3'),
 }
