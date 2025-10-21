@@ -4,7 +4,7 @@ import type {
 	CompanionPresetDefinitions,
 } from '@companion-module/base'
 import * as icons from './assets/icons.js'
-import { ActionId, feedbackId } from './enums.js'
+import { ActionId, feedbackId, ToggleOnOff } from './enums.js'
 import { graphics } from 'companion-module-utils'
 import {
 	ActiveBlue,
@@ -409,82 +409,40 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 }
 
 const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
-	showMessage: {
+	toggle_message: {
 		type: 'button',
 		category: 'Message',
-		name: 'Show Message',
+		name: 'Toggle Message',
 		style: {
 			...defaultStyle,
-			size: '18',
-			text: "Time's up",
-		},
-		previewStyle: {
-			...defaultStyle,
-			size: '18',
-			text: "Time's up",
+			size: '14',
+			text: 'SHOW\n"$(ontime:message_text)"',
 		},
 		steps: [
 			{
-				down: [
-					{ actionId: ActionId.MessageText, options: { value: 'Your time is up' } },
-					{ actionId: ActionId.MessageVisibility, options: { value: 2 } },
-				],
+				down: [{ actionId: ActionId.MessageVisibility, options: { value: ToggleOnOff.Toggle } }],
 				up: [],
 			},
 		],
 		feedbacks: [
 			{
 				feedbackId: feedbackId.MessageVisible,
-				options: { reqText: true, text: 'Your time is up' },
+				options: { reqText: false, text: '' },
 				style: {
 					bgcolor: ActiveBlue,
+					text: 'HIDE\n"$(ontime:message_text)"',
 				},
 			},
 		],
 	},
-	showSelectedMessage: {
+	set_message1: {
 		type: 'button',
 		category: 'Message',
-		name: 'Show Selected Message',
+		name: 'Set Message',
 		style: {
 			...defaultStyle,
-			size: 'auto',
-			text: 'Show\n$(ontime:message_text)',
-		},
-		previewStyle: {
-			...defaultStyle,
-			size: 'auto',
-			text: 'Show\nSelected Message',
-		},
-		steps: [
-			{
-				down: [{ actionId: ActionId.MessageVisibility, options: { value: 2 } }],
-				up: [],
-			},
-		],
-		feedbacks: [
-			{
-				feedbackId: feedbackId.MessageVisible,
-				options: {},
-				style: {
-					bgcolor: ActiveBlue,
-				},
-			},
-		],
-	},
-	selectMessage1: {
-		type: 'button',
-		category: 'Message',
-		name: 'Selected Message 1',
-		style: {
-			...defaultStyle,
-			size: 'auto',
-			text: 'Select Msg 1',
-		},
-		previewStyle: {
-			...defaultStyle,
-			size: 'auto',
-			text: 'Select Msg 1',
+			size: '14',
+			text: 'Select\n"Message 1"',
 		},
 		steps: [
 			{
@@ -502,19 +460,14 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			},
 		],
 	},
-	selectMessage2: {
+	set_message2: {
 		type: 'button',
 		category: 'Message',
-		name: 'Selected Message 2',
+		name: 'Set Message',
 		style: {
 			...defaultStyle,
-			size: 'auto',
-			text: 'Select Msg 2',
-		},
-		previewStyle: {
-			...defaultStyle,
-			size: 'auto',
-			text: 'Select Msg 2',
+			size: '14',
+			text: 'Select\n"Message 2"',
 		},
 		steps: [
 			{
@@ -535,6 +488,57 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 }
 
 const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
+	current_timer: {
+		type: 'button',
+		category: 'Timer Management',
+		name: 'Current Timer',
+		style: {
+			...defaultStyle,
+			size: '14',
+			text: 'Current:\n$(ontime:timer_current_hms)',
+		},
+		steps: [],
+		feedbacks: [],
+	},
+	hh_current_timer: {
+		type: 'button',
+		category: 'Clock',
+		name: 'Wall Clock',
+		style: {
+			...defaultStyle,
+			size: 'auto',
+			textExpression: true,
+			text: 'msToTimestamp($(ontime:clock), "HH")',
+		},
+		steps: [],
+		feedbacks: [],
+	},
+	mm_wall_clock: {
+		type: 'button',
+		category: 'Clock',
+		name: 'mm Wall Clock',
+		style: {
+			...defaultStyle,
+			size: 'auto',
+			textExpression: true,
+			text: 'msToTimestamp($(ontime:clock), "mm")',
+		},
+		steps: [],
+		feedbacks: [],
+	},
+	ss_wall_clock: {
+		type: 'button',
+		category: 'Clock',
+		name: 'Wall Clock',
+		style: {
+			...defaultStyle,
+			size: 'auto',
+			textExpression: true,
+			text: 'msToTimestamp($(ontime:clock), "ss")',
+		},
+		steps: [],
+		feedbacks: [],
+	},
 	add_1_min: {
 		type: 'button',
 		category: 'Timer Management',

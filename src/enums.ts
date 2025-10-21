@@ -122,3 +122,9 @@ export enum variableId {
 	AuxTimerCurrent = 'aux_current',
 	AuxTimerDirection = 'aux_direction',
 }
+
+export enum ToggleOnOff {
+	Off = 0,
+	On = 1,
+	Toggle = 2,
+}
