@@ -12,9 +12,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@companion-module/base@npm:1.12.0":
-  version: 1.12.0
-  resolution: "@companion-module/base@npm:1.12.0"
+"@companion-module/base@npm:1.13.4":
+  version: 1.13.4
+  resolution: "@companion-module/base@npm:1.13.4"
   dependencies:
     ajv: "npm:^8.17.1"
     colord: "npm:^2.9.3"
@@ -25,7 +25,7 @@ __metadata:
     p-queue: "npm:^6.6.2"
     p-timeout: "npm:^4.1.0"
     tslib: "npm:^2.8.1"
-  checksum: 10c0/84aaaecf254b91453c1b7c485988cd7689d5a421d0a48b0383aa53f30788962b7a581b4d1dc1e4923e9b977af3952d305a059b6d085bebad52fe5ce06f49f2f6
+  checksum: 10c0/1d57fc67d10cef7cda1d627daac8c79b03be1059a18ff5476f0427a35909fa8d53cd29c1bb0c8d37a65c59e15b0ee561b8faeb318f2511efae6974e4c3d9a9e5
   languageName: node
   linkType: hard
 
@@ -1607,7 +1607,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "getontime-ontime@workspace:."
   dependencies:
-    "@companion-module/base": "npm:1.12.0"
+    "@companion-module/base": "npm:1.13.4"
     "@companion-module/tools": "npm:2.3.0"
     "@getontime/resolver": "npm:4.0.0"
     "@types/node": "npm:22.15.19"

@@ -15,7 +15,7 @@ import { feedbackId, variableId } from './enums.js'
 import type { CompanionVariableValues } from '@companion-module/base'
 import { generateVariables, variableGen } from './variables.js'
 import { generateActions } from './actions.js'
-import { findPreviousPlayableEvent } from './utilities.js'
+import { findPreviousPlayableEvent, formatTime } from './utilities.js'
 
 /**
  * state handles all changes to ontime state and any side effects arising form that
@@ -121,8 +121,15 @@ export default class OntimeState {
 	set timer(val: TimerState | undefined) {
 		if (val === undefined) return
 		this.state.timer = val
+		const t =
+			val.current === null ? { HH: '--', mm: '--', ss: '--', sign: '', hms: '--:--:--' } : formatTime(val.current)
 		this.appendVariableUpdate({
 			[variableId.TimerCurrent]: val.current ?? undefined,
+			[variableId.TimerCurrentHMS]: t.hms,
+			[variableId.TimerCurrentN]: t.sign,
+			[variableId.TimerCurrentH]: t.HH,
+			[variableId.TimerCurrentM]: t.mm,
+			[variableId.TimerCurrentS]: t.ss,
 			[variableId.TimerDuration]: val.duration ?? undefined,
 			[variableId.TimerAdded]: val.addedTime,
 			[variableId.TimerPhase]: val.phase,

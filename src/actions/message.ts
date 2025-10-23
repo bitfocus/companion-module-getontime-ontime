@@ -1,12 +1,6 @@
 import type { CompanionActionDefinition, CompanionActionEvent } from '@companion-module/base'
-import { ActionId } from '../enums.js'
+import { ActionId, ToggleOnOff } from '../enums.js'
 import type { OntimeConnection } from '../connection.js'
-
-enum ToggleOnOff {
-	Off = 0,
-	On = 1,
-	Toggle = 2,
-}
 
 export function createMessageActions(connection: OntimeConnection): { [id: string]: CompanionActionDefinition } {
 	function messageVisibility(action: CompanionActionEvent): void {

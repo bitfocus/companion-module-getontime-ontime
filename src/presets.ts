@@ -4,12 +4,13 @@ import type {
 	CompanionPresetDefinitions,
 } from '@companion-module/base'
 import * as icons from './assets/icons.js'
-import { ActionId, feedbackId } from './enums.js'
+import { ActionId, feedbackId, ToggleOnOff } from './enums.js'
 import { graphics } from 'companion-module-utils'
 import {
 	ActiveBlue,
 	Black,
 	DangerRed,
+	Gray,
 	NormalGray,
 	PauseOrange,
 	PlaybackGreen,
@@ -18,9 +19,10 @@ import {
 	WarningOrange,
 	White,
 } from './assets/colours.js'
+import { SimplePlayback } from '@getontime/resolver'
 
 export function generatePresets(): CompanionPresetDefinitions {
-	return { ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...messagePresets }
+	return { ...wallClockPresets, ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...messagePresets }
 }
 
 const defaultStyle: CompanionButtonStyleProps = {
@@ -42,102 +44,78 @@ const defaultWithIconStyle: CompanionButtonStyleProps = {
 	// show_topbar: false,
 }
 
-const canPlayFeedback = [
-	{
-		feedbackId: feedbackId.ColorPlayback,
-		options: {
-			state: ['play'],
-		},
+const wallClockPresets: { [id: string]: CompanionButtonPresetDefinition } = {
+	wall_clock: {
+		type: 'button',
+		category: 'Clock',
+		name: 'Wall Clock',
 		style: {
-			color: White,
-			bgcolor: PlaybackGreen,
+			...defaultStyle,
+			size: '14',
+			textExpression: true,
+			text: '`Clock:\n${msToTimestamp($(ontime:clock), "HH:mm:ss")}`',
 		},
+		steps: [],
+		feedbacks: [],
 	},
-	{
-		feedbackId: feedbackId.ColorPlayback,
-		options: {
-			state: ['armed'],
-		},
+	hh_wall_clock: {
+		type: 'button',
+		category: 'Clock',
+		name: 'HH Wall Clock',
 		style: {
-			color: PlaybackGreen,
+			...defaultStyle,
+			size: 'auto',
+			textExpression: true,
+			text: 'msToTimestamp($(ontime:clock), "HH")',
 		},
+		steps: [],
+		feedbacks: [],
 	},
-	{
-		feedbackId: feedbackId.ColorPlayback,
-		options: {
-			state: ['pause'],
-		},
+	mm_wall_clock: {
+		type: 'button',
+		category: 'Clock',
+		name: 'mm Wall Clock',
 		style: {
-			color: PlaybackGreen,
+			...defaultStyle,
+			size: 'auto',
+			textExpression: true,
+			text: 'msToTimestamp($(ontime:clock), "mm")',
 		},
+		steps: [],
+		feedbacks: [],
 	},
-]
+	ss_wall_clock: {
+		type: 'button',
+		category: 'Clock',
+		name: 'Wall Clock',
+		style: {
+			...defaultStyle,
+			size: 'auto',
+			textExpression: true,
+			text: 'msToTimestamp($(ontime:clock), "ss")',
+		},
+		steps: [],
+		feedbacks: [],
+	},
+}
 
 const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
-	select_previous_event: {
+	start_selected_or_next_event: {
 		type: 'button',
 		category: 'Playback',
-		name: 'Selects previous event',
+		name: 'Start selected/next event',
 		style: {
 			...defaultWithIconStyle,
-			png64: icons.PlaybackPrevious,
+			png64: icons.PlaybackStart,
+			color: PlaybackGreen,
+			text: 'GO (start)',
 		},
 		steps: [
 			{
 				down: [
 					{
-						actionId: ActionId.Load,
-						options: { method: 'previous' },
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [],
-	},
-	select_next_event: {
-		type: 'button',
-		category: 'Playback',
-		name: 'Selects next event',
-		style: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackNext,
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: ActionId.Load,
-						options: { method: 'next' },
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [],
-	},
-	stop_selected_event: {
-		type: 'button',
-		category: 'Playback',
-		name: 'Stops running event',
-		style: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackStop,
-			text: 'STOP',
-			color: PlaybackRed,
-		},
-		previewStyle: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackStop,
-			text: 'STOP',
-			bgcolor: PlaybackRed,
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: ActionId.Stop,
-						options: {},
+						actionId: ActionId.Start,
+						options: { method: 'go' },
 					},
 				],
 				up: [],
@@ -147,11 +125,66 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.ColorPlayback,
 				options: {
-					state: ['stop'],
+					state: ['play', 'pause'],
 				},
 				style: {
-					bgcolor: PlaybackRed,
 					color: White,
+					bgcolor: PlaybackGreen,
+					text: 'GO (next)',
+				},
+			},
+			{
+				feedbackId: feedbackId.ColorPlayback,
+				options: {
+					state: ['armed'],
+				},
+				style: {
+					text: 'GO (load)',
+				},
+			},
+		],
+	},
+	start_event: {
+		type: 'button',
+		category: 'Playback',
+		name: 'Starts selected event',
+		style: {
+			...defaultWithIconStyle,
+			png64: icons.PlaybackStart,
+			text: 'START',
+			color: Gray,
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: ActionId.Start,
+						options: {
+							method: 'loaded',
+						},
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.ColorPlayback,
+				options: {
+					state: ['play'],
+				},
+				style: {
+					color: White,
+					bgcolor: PlaybackGreen,
+				},
+			},
+			{
+				feedbackId: feedbackId.ColorPlayback,
+				options: {
+					state: ['armed', 'pause'],
+				},
+				style: {
+					color: PlaybackGreen,
 				},
 			},
 		],
@@ -164,12 +197,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			...defaultWithIconStyle,
 			png64: icons.PlaybackPause,
 			text: 'PAUSE',
-		},
-		previewStyle: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackPause,
-			text: 'PAUSE',
-			bgcolor: PauseOrange,
+			color: Gray,
 		},
 		steps: [
 			{
@@ -204,107 +232,43 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			},
 		],
 	},
-	start_selected_event: {
+	select_previous_event: {
 		type: 'button',
 		category: 'Playback',
-		name: 'Starts selected event',
+		name: 'Selects previous event',
 		style: {
 			...defaultWithIconStyle,
-			png64: icons.PlaybackStart,
-			text: 'START',
-		},
-		previewStyle: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackStart,
-			text: 'START',
-			bgcolor: PlaybackGreen,
+			pngalignment: 'center:center',
+			png64: icons.PlaybackPrevious,
 		},
 		steps: [
 			{
 				down: [
 					{
-						actionId: ActionId.Start,
-						options: {
-							method: 'loaded',
-						},
+						actionId: ActionId.Load,
+						options: { method: 'previous' },
 					},
 				],
 				up: [],
 			},
 		],
-		feedbacks: canPlayFeedback,
+		feedbacks: [],
 	},
-	start_next_event: {
+	select_next_event: {
 		type: 'button',
 		category: 'Playback',
-		name: 'Start next event',
+		name: 'Selects next event',
 		style: {
 			...defaultWithIconStyle,
-			png64: icons.PlaybackStart,
-			text: 'NEXT',
-		},
-		previewStyle: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackStart,
-			text: 'NEXT',
-			bgcolor: PlaybackGreen,
+			pngalignment: 'center:center',
+			png64: icons.PlaybackNext,
 		},
 		steps: [
 			{
 				down: [
 					{
-						actionId: ActionId.Start,
+						actionId: ActionId.Load,
 						options: { method: 'next' },
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: canPlayFeedback,
-	},
-	start_selected_or_next_event: {
-		type: 'button',
-		category: 'Playback',
-		name: 'Start selected/next event',
-		style: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackStart,
-			text: 'GO',
-		},
-		previewStyle: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackStart,
-			text: 'GO',
-			bgcolor: PlaybackGreen,
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: ActionId.Start,
-						options: { method: 'go' },
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: canPlayFeedback,
-	},
-	reload_selected_event: {
-		type: 'button',
-		category: 'Playback',
-		name: 'Reload selected event',
-		style: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackReload,
-			text: 'RELOAD',
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: ActionId.Reload,
-						options: {},
 					},
 				],
 				up: [],
@@ -321,12 +285,6 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			png64: icons.PlaybackRoll,
 			text: 'ROLL',
 			color: RollBlue,
-		},
-		previewStyle: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackRoll,
-			text: 'ROLL',
-			bgcolor: RollBlue,
 		},
 		steps: [
 			{
@@ -350,85 +308,112 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			},
 		],
 	},
-}
-
-const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
-	showMessage: {
+	reload_selected_event: {
 		type: 'button',
-		category: 'Message',
-		name: 'Show Message',
+		category: 'Playback',
+		name: 'Reload selected event',
 		style: {
-			...defaultStyle,
-			size: '18',
-			text: "Time's up",
-		},
-		previewStyle: {
-			...defaultStyle,
-			size: '18',
-			text: "Time's up",
+			...defaultWithIconStyle,
+			png64: icons.PlaybackReload,
+			text: 'RELOAD',
+			color: Gray,
 		},
 		steps: [
 			{
 				down: [
-					{ actionId: ActionId.MessageText, options: { value: 'Your time is up' } },
-					{ actionId: ActionId.MessageVisibility, options: { value: 2 } },
+					{
+						actionId: ActionId.Reload,
+						options: {},
+					},
 				],
 				up: [],
 			},
 		],
 		feedbacks: [
 			{
-				feedbackId: feedbackId.MessageVisible,
-				options: { reqText: true, text: 'Your time is up' },
+				feedbackId: feedbackId.ColorPlayback,
+				options: {
+					state: ['stop'],
+				},
+				isInverted: true,
 				style: {
-					bgcolor: ActiveBlue,
+					color: White,
 				},
 			},
 		],
 	},
-	showSelectedMessage: {
+	stop_selected_event: {
 		type: 'button',
-		category: 'Message',
-		name: 'Show Selected Message',
+		category: 'Playback',
+		name: 'Stops running event',
 		style: {
-			...defaultStyle,
-			size: 'auto',
-			text: 'Show\n$(ontime:message_text)',
-		},
-		previewStyle: {
-			...defaultStyle,
-			size: 'auto',
-			text: 'Show\nSelected Message',
+			...defaultWithIconStyle,
+			png64: icons.PlaybackStop,
+			text: 'STOP',
+			color: Gray,
 		},
 		steps: [
 			{
-				down: [{ actionId: ActionId.MessageVisibility, options: { value: 2 } }],
+				down: [
+					{
+						actionId: ActionId.Stop,
+						options: {},
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.ColorPlayback,
+				options: {
+					state: ['stop'],
+				},
+				isInverted: true,
+				style: {
+					bgcolor: PlaybackRed,
+					color: White,
+				},
+			},
+		],
+	},
+}
+
+const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
+	toggle_message: {
+		type: 'button',
+		category: 'Message',
+		name: 'Toggle Message',
+		style: {
+			...defaultStyle,
+			size: '14',
+			text: 'SHOW\n"$(ontime:message_text)"',
+		},
+		steps: [
+			{
+				down: [{ actionId: ActionId.MessageVisibility, options: { value: ToggleOnOff.Toggle } }],
 				up: [],
 			},
 		],
 		feedbacks: [
 			{
 				feedbackId: feedbackId.MessageVisible,
-				options: {},
+				options: { reqText: false, text: '' },
 				style: {
 					bgcolor: ActiveBlue,
+					text: 'HIDE\n"$(ontime:message_text)"',
 				},
 			},
 		],
 	},
-	selectMessage1: {
+	set_message1: {
 		type: 'button',
 		category: 'Message',
-		name: 'Selected Message 1',
+		name: 'Set Message',
 		style: {
 			...defaultStyle,
-			size: 'auto',
-			text: 'Select Msg 1',
-		},
-		previewStyle: {
-			...defaultStyle,
-			size: 'auto',
-			text: 'Select Msg 1',
+			size: '14',
+			text: 'Select\n"Message 1"',
 		},
 		steps: [
 			{
@@ -446,19 +431,14 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			},
 		],
 	},
-	selectMessage2: {
+	set_message2: {
 		type: 'button',
 		category: 'Message',
-		name: 'Selected Message 2',
+		name: 'Set Message',
 		style: {
 			...defaultStyle,
-			size: 'auto',
-			text: 'Select Msg 2',
-		},
-		previewStyle: {
-			...defaultStyle,
-			size: 'auto',
-			text: 'Select Msg 2',
+			size: '14',
+			text: 'Select\n"Message 2"',
 		},
 		steps: [
 			{
@@ -479,6 +459,57 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 }
 
 const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
+	current_timer: {
+		type: 'button',
+		category: 'Timer Management',
+		name: 'Current Timer',
+		style: {
+			...defaultStyle,
+			size: '14',
+			text: 'Current:\n$(ontime:timer_current_hms)',
+		},
+		steps: [],
+		feedbacks: [],
+	},
+	hh_current_timer: {
+		type: 'button',
+		category: 'Clock',
+		name: 'Wall Clock',
+		style: {
+			...defaultStyle,
+			size: 'auto',
+			textExpression: true,
+			text: 'msToTimestamp($(ontime:clock), "HH")',
+		},
+		steps: [],
+		feedbacks: [],
+	},
+	mm_wall_clock: {
+		type: 'button',
+		category: 'Clock',
+		name: 'mm Wall Clock',
+		style: {
+			...defaultStyle,
+			size: 'auto',
+			textExpression: true,
+			text: 'msToTimestamp($(ontime:clock), "mm")',
+		},
+		steps: [],
+		feedbacks: [],
+	},
+	ss_wall_clock: {
+		type: 'button',
+		category: 'Clock',
+		name: 'Wall Clock',
+		style: {
+			...defaultStyle,
+			size: 'auto',
+			textExpression: true,
+			text: 'msToTimestamp($(ontime:clock), "ss")',
+		},
+		steps: [],
+		feedbacks: [],
+	},
 	add_1_min: {
 		type: 'button',
 		category: 'Timer Management',
@@ -653,35 +684,17 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 	},
 }
 
-const auxTimerNegative = [
-	{
-		feedbackId: feedbackId.AuxTimerNegative,
-		options: {
-			destination: 'auxtimer1',
-		},
-		style: {
-			color: DangerRed,
-		},
-	},
-]
-
-const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
-	current_auxtime_hms: {
+function generateAuxTime(index: '1' | '2' | '3'): CompanionButtonPresetDefinition {
+	return {
 		type: 'button',
 		category: 'Aux Timer',
-		name: 'Current aux time',
+		name: 'Aux ' + index,
 		style: {
 			...defaultStyle,
-			text: 'msToTimestamp($(ontime:aux_1_current),"HH:mm:ss")',
+			text: '`AUX ' + index + '\n${msToTimestamp($(ontime:aux_' + index + '_current),"HH:mm:ss")}`',
 			size: '14',
 			alignment: 'center:center',
 			textExpression: true,
-		},
-		previewStyle: {
-			...defaultStyle,
-			text: 'HH:MM:SS',
-			size: '14',
-			alignment: 'center:center',
 		},
 		steps: [
 			{
@@ -689,22 +702,29 @@ const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				up: [],
 			},
 		],
-		feedbacks: auxTimerNegative,
-	},
-	start_stop_auxtimer: {
+		feedbacks: [
+			{
+				feedbackId: feedbackId.AuxTimerNegative,
+				options: {
+					destination: 'auxtimer' + index,
+				},
+				style: {
+					color: DangerRed,
+				},
+			},
+		],
+	}
+}
+
+function generateAuxStartPause(index: '1' | '2' | '3'): CompanionButtonPresetDefinition {
+	return {
 		type: 'button',
 		category: 'Aux Timer',
-		name: 'Start/Stop Aux Timer',
+		name: 'Start/Pause Aux Timer ' + index,
 		style: {
 			...defaultWithIconStyle,
+			text: `AUX ${index}`,
 			png64: icons.PlaybackStart,
-			text: 'START',
-			color: PlaybackGreen,
-		},
-		previewStyle: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackStart,
-			text: 'START/STOP',
 			bgcolor: PlaybackGreen,
 		},
 		steps: [
@@ -712,7 +732,7 @@ const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				down: [
 					{
 						actionId: ActionId.AuxTimerPlayState,
-						options: { value: 'toggleSS', destination: '1' },
+						options: { value: 'toggleSP', destination: index },
 					},
 				],
 				up: [],
@@ -723,38 +743,34 @@ const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				feedbackId: feedbackId.AuxTimerPlayback,
 				options: {
 					state: 'start',
-					destination: 'auxtimer1',
+					destination: 'auxtimer' + index,
 				},
 				style: {
-					color: PlaybackRed,
-					png64: icons.PlaybackStop,
-					text: 'STOP',
+					bgcolor: PauseOrange,
+					png64: icons.PlaybackPause,
+					text: `AUX ${index}`,
 				},
 			},
 		],
-	},
-	pause_auxtimer: {
+	}
+}
+
+function generateAuxStop(index: '1' | '2' | '3'): CompanionButtonPresetDefinition {
+	return {
 		type: 'button',
 		category: 'Aux Timer',
-		name: 'Pause Aux Timer',
+		name: 'Stop Aux Timer ' + index,
 		style: {
 			...defaultWithIconStyle,
-			png64: icons.PlaybackPause,
-			text: 'PAUSE',
-			color: PauseOrange,
-		},
-		previewStyle: {
-			...defaultWithIconStyle,
-			png64: icons.PlaybackPause,
-			text: 'PAUSE',
-			bgcolor: PauseOrange,
+			text: `AUX ${index}`,
+			png64: icons.PlaybackStop,
 		},
 		steps: [
 			{
 				down: [
 					{
 						actionId: ActionId.AuxTimerPlayState,
-						options: { value: 'pause', destination: '1' },
+						options: { value: SimplePlayback.Stop, destination: index },
 					},
 				],
 				up: [],
@@ -764,64 +780,84 @@ const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.AuxTimerPlayback,
 				options: {
-					state: 'pause',
-					destination: 'auxtimer1',
+					state: 'stop',
+					destination: 'auxtimer' + index,
 				},
+				isInverted: true,
 				style: {
-					bgcolor: PauseOrange,
-					color: White,
+					bgcolor: PlaybackRed,
+					png64: icons.PlaybackStop,
+					text: `AUX ${index}`,
 				},
 			},
 		],
-	},
-	add_auxtimer: {
+	}
+}
+
+function generateAuxAddTime(index: '1' | '2' | '3'): CompanionButtonPresetDefinition {
+	return {
 		type: 'button',
 		category: 'Aux Timer',
-		name: 'Add timer to Aux Timer',
+		name: 'Add timer to Aux Timer ' + index,
 		style: {
 			...defaultStyle,
-			text: '+5m',
-		},
-		previewStyle: {
-			...defaultStyle,
-			text: '+5m',
+			size: '18',
+			text: `AUX ${index}\\n+5m`,
 		},
 		steps: [
 			{
 				down: [
 					{
 						actionId: ActionId.AuxTimerAdd,
-						options: { hours: 0, minutes: 5, seconds: 0, addremove: 'add', destination: '1' },
+						options: { hours: 0, minutes: 5, seconds: 0, addremove: 'add', destination: index },
 					},
 				],
 				up: [],
 			},
 		],
 		feedbacks: [],
-	},
-	remove_auxtimer: {
+	}
+}
+
+function generateAuxSetTime(index: '1' | '2' | '3'): CompanionButtonPresetDefinition {
+	return {
 		type: 'button',
 		category: 'Aux Timer',
-		name: 'Remove timer to Aux Timer',
+		name: 'Set Aux Duration ' + index,
 		style: {
 			...defaultStyle,
-			text: '-5m',
-		},
-		previewStyle: {
-			...defaultStyle,
-			text: '-5m',
+			size: '18',
+			text: `AUX ${index}\\n5m`,
 		},
 		steps: [
 			{
 				down: [
 					{
-						actionId: ActionId.AuxTimerAdd,
-						options: { hours: 0, minutes: 5, seconds: 0, addremove: 'remove', destination: '1' },
+						actionId: ActionId.AuxTimerDuration,
+						options: { hours: 0, minutes: 5, seconds: 0, addremove: 'add', destination: index },
 					},
 				],
 				up: [],
 			},
 		],
 		feedbacks: [],
-	},
+	}
+}
+
+const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
+	current_auxtime1_hms: generateAuxTime('1'),
+	current_auxtime2_hms: generateAuxTime('2'),
+	current_auxtime3_hms: generateAuxTime('3'),
+	start_pause_auxtimer1: generateAuxStartPause('1'),
+	start_pause_auxtimer2: generateAuxStartPause('2'),
+	start_pause_auxtimer3: generateAuxStartPause('3'),
+	stop_auxtimer1: generateAuxStop('1'),
+	stop_auxtimer2: generateAuxStop('2'),
+	stop_auxtimer3: generateAuxStop('3'),
+	add_auxtimer1: generateAuxAddTime('1'),
+	add_auxtimer2: generateAuxAddTime('2'),
+	add_auxtimer3: generateAuxAddTime('3'),
+	set_auxtimer1: generateAuxSetTime('1'),
+	set_auxtimer2: generateAuxSetTime('2'),
+	set_auxtimer3: generateAuxSetTime('3'),
 }

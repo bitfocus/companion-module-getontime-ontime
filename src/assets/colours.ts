@@ -1,6 +1,7 @@
 import { combineRgb } from '@companion-module/base'
 
 export const White = combineRgb(255, 255, 255)
+export const Gray = combineRgb(100, 100, 100)
 export const Black = combineRgb(0, 0, 0)
 
 export const PlaybackGreen = combineRgb(51, 158, 78)
