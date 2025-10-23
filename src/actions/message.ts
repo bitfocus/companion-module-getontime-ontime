@@ -1,16 +1,11 @@
 import type {
 	CompanionActionDefinition,
 	CompanionActionEvent,
+	CompanionMigrationAction,
 	SomeCompanionActionInputField,
 } from '@companion-module/base'
-import { ActionId } from '../enums.js'
+import { ActionId, ToggleOnOff } from '../enums.js'
 import type { OntimeConnection } from '../connection.js'
-
-enum ToggleOnOff {
-	Off = 0,
-	On = 1,
-	Toggle = 2,
-}
 
 type MessageOptions = {
 	properties: string[]
@@ -122,58 +117,7 @@ const messageActionOptions: MessageActionInputFields[] = [
 ]
 
 export function createMessageActions(connection: OntimeConnection): { [id: string]: CompanionActionDefinition } {
-	function messageVisibility(action: CompanionActionEvent): void {
-		const value = action.options.value as ToggleOnOff
-		const visible = value === ToggleOnOff.Toggle ? !connection.state.message.timer.visible : value
-		connection.sendSocket('message', { timer: { visible } })
-	}
-
-	function messageVisibilityAndText(action: CompanionActionEvent): void {
-		const value = action.options.value as ToggleOnOff
-		const text = action.options.text as string
-		const textIsDifferent = text !== connection.state.message.timer.text
-		const thisTextIsVisible = connection.state.message.timer.visible && !textIsDifferent
-		switch (value) {
-			case ToggleOnOff.Off:
-				if (thisTextIsVisible) {
-					connection.sendSocket('message', { timer: { visible: false } })
-				}
-				break
-			case ToggleOnOff.On:
-				connection.sendSocket('message', { timer: { visible: true, text } })
-				break
-			case ToggleOnOff.Toggle:
-				if (thisTextIsVisible) {
-					connection.sendSocket('message', { timer: { visible: false, text } })
-				} else {
-					connection.sendSocket('message', { timer: { visible: true, text } })
-				}
-				break
-		}
-	}
-
-	function timerBlackout(action: CompanionActionEvent): void {
-		const value = action.options.value as ToggleOnOff
-		const blackout = value === ToggleOnOff.Toggle ? !connection.state.message.timer.blackout : value
-		connection.sendSocket('message', { timer: { blackout } })
-	}
-
-	function timerBlink(action: CompanionActionEvent): void {
-		const value = action.options.value as ToggleOnOff
-		const blink = value === ToggleOnOff.Toggle ? !connection.state.message.timer.blink : value
-		connection.sendSocket('message', { timer: { blink } })
-	}
-
-	function setSecondarySource(action: CompanionActionEvent): void {
-		const value = action.options.value as ToggleOnOff
-		const source = action.options.source
-		const isActive = connection.state.message.timer.secondarySource === source
-		const shouldShow = value === ToggleOnOff.Toggle ? !isActive : value
-		const secondarySource = shouldShow ? source : 'off'
-		connection.sendSocket('message', { timer: { secondarySource } })
-	}
-
-	async function messageActionCallback(action: CompanionActionEvent) {
+	function messageActionCallback(action: CompanionActionEvent) {
 		const { options } = action as MessageActionEvent
 		if (!options.properties || !Array.isArray(options.properties) || !options.properties.length) return
 		const properties = options.properties as (keyof MessageOptions)[]
@@ -236,123 +180,65 @@ export function createMessageActions(connection: OntimeConnection): { [id: strin
 			options: messageActionOptions,
 			callback: messageActionCallback,
 		},
-		[ActionId.MessageVisibility]: {
-			name: 'Toggle/On/Off visibility of message',
-			options: [
-				{
-					type: 'dropdown',
-					choices: [
-						{ id: ToggleOnOff.Toggle, label: 'Toggle' },
-						{ id: ToggleOnOff.On, label: 'On' },
-						{ id: ToggleOnOff.Off, label: 'Off' },
-					],
-					default: 2,
-					id: 'value',
-					label: 'Action',
-				},
-			],
-			callback: messageVisibility,
-		},
-		[ActionId.MessageText]: {
-			name: 'Set text for message',
-			options: [
-				{
-					type: 'textinput',
-					label: 'Timer message',
-					id: 'value',
-					required: true,
-				},
-			],
-			callback: ({ options }) =>
-				connection.sendSocket('message', {
-					timer: { text: options.value },
-				}),
-		},
-		[ActionId.MessageVisibilityAndText]: {
-			name: 'Toggle/On/Off visibility and text for message',
-			description:
-				'Combined action for setting the text and visibility. "Toggle" will replace the current message. "Off" will disable the message visibility',
-			options: [
-				{
-					type: 'textinput',
-					label: 'Timer message',
-					id: 'text',
-					required: true,
-				},
-				{
-					type: 'dropdown',
-					choices: [
-						{ id: ToggleOnOff.Toggle, label: 'Toggle' },
-						{ id: ToggleOnOff.On, label: 'On' },
-						{ id: ToggleOnOff.Off, label: 'Off' },
-					],
-					default: 2,
-					id: 'value',
-					label: 'Action',
-				},
-			],
-			callback: messageVisibilityAndText,
-		},
-		[ActionId.TimerBlackout]: {
-			name: 'Toggle/On/Off blackout timer',
-			options: [
-				{
-					type: 'dropdown',
-					choices: [
-						{ id: ToggleOnOff.Toggle, label: 'Toggle' },
-						{ id: ToggleOnOff.On, label: 'On' },
-						{ id: ToggleOnOff.Off, label: 'Off' },
-					],
-					default: 2,
-					id: 'value',
-					label: 'Blackout of timer',
-				},
-			],
-			callback: timerBlackout,
-		},
-		[ActionId.TimerBlink]: {
-			name: 'Toggle/On/Off blinking of timer',
-			options: [
-				{
-					type: 'dropdown',
-					choices: [
-						{ id: ToggleOnOff.Toggle, label: 'Toggle' },
-						{ id: ToggleOnOff.On, label: 'On' },
-						{ id: ToggleOnOff.Off, label: 'Off' },
-					],
-					default: 2,
-					id: 'value',
-					label: 'Blink timer',
-				},
-			],
-			callback: timerBlink,
-		},
-		[ActionId.MessageSecondarySource]: {
-			name: 'Toggle/On/Off visibility of secondary source',
-			options: [
-				{
-					type: 'dropdown',
-					choices: [
-						{ id: 'external', label: 'External' },
-						{ id: 'aux', label: 'Aux timer' },
-					],
-					default: 'external',
-					id: 'source',
-					label: 'Source',
-				},
-				{
-					type: 'dropdown',
-					choices: [
-						{ id: ToggleOnOff.Toggle, label: 'Toggle' },
-						{ id: ToggleOnOff.On, label: 'On' },
-						{ id: ToggleOnOff.Off, label: 'Off' },
-					],
-					default: 2,
-					id: 'value',
-					label: 'Action',
-				},
-			],
-			callback: setSecondarySource,
-		},
 	}
+}
+
+export function tryCollectMessageActions(action: CompanionMigrationAction): boolean {
+	if (action.actionId === 'setMessageSecondarySource') {
+		action.actionId = ActionId.MessageAction
+		const { source, value } = action.options as { source: 'aux' | 'external'; value: 'Toggle' | 'On' | 'Off' }
+		action.options.properties = ['secondarySource']
+		action.options.secondaryToggle = value
+		action.options.secondarySource = source === 'aux' ? 'aux1' : 'secondary'
+		delete action.options.source
+		delete action.options.value
+		return true
+	}
+
+	if (action.actionId === 'TimerBlink') {
+		action.actionId = ActionId.MessageAction
+		const { value } = action.options as { value: 'Toggle' | 'On' | 'Off' }
+		action.options.properties = ['blink']
+		action.options.blink = value
+		delete action.options.value
+		return true
+	}
+
+	if (action.actionId === 'TimerBlackout') {
+		action.actionId = ActionId.MessageAction
+		const { value } = action.options as { value: 'Toggle' | 'On' | 'Off' }
+		action.options.properties = ['blackout']
+		action.options.blackout = value
+		delete action.options.value
+		return true
+	}
+
+	if (action.actionId === 'setMessageVisibilityAndText') {
+		action.actionId = ActionId.MessageAction
+		const { value } = action.options as { text: string; value: 'Toggle' | 'On' | 'Off' }
+		action.options.properties = ['text', 'visible']
+		action.options.visible = value
+		delete action.options.value
+		return true
+	}
+
+	if (action.actionId === 'setMessage') {
+		action.actionId = ActionId.MessageAction
+		const { value } = action.options as { value: string }
+		action.options.properties = ['text']
+		action.options.text = value
+		delete action.options.value
+		return true
+	}
+
+	if (action.actionId === 'setMessageVisibility') {
+		action.actionId = ActionId.MessageAction
+		const { value } = action.options as { value: 'Toggle' | 'On' | 'Off' }
+		action.options.properties = ['visible']
+		action.options.visible = value
+		delete action.options.value
+		return true
+	}
+
+	return false
 }

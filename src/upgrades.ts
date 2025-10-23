@@ -9,204 +9,12 @@ import {
 	EmptyUpgradeScript,
 } from '@companion-module/base'
 import type { OntimeConfig } from './config.js'
-import { feedbackId, ActionId, deprecatedActionId, deprecatedFeedbackId } from './enums.js'
+import { feedbackId, deprecatedFeedbackId } from './enums.js'
 import { TimerPhase } from '@getontime/resolver'
 import { tryOffsetIsInvertedFeedback } from './feedbacks/offset.js'
 import { tryChangeTimeWithExpression, tryRemoveIsPublic } from './actions/change.js'
 import { tryAuxTimerDurationTakesExpressions } from './actions/auxTimer.js'
-
-//TODO: look at using this pattern for future upgrade scripts https://github.com/bitfocus/companion-module-allenheath-sq/blob/main/src/upgrades.ts
-
-type old_v3_config = {
-	host: string
-	port: string | null
-	ssl: boolean
-	version: string
-	refetchEvents: boolean
-	customToVariable: boolean
-	reconnect: boolean
-	reconnectInterval: number
-}
-
-function update3x4x0(
-	_context: CompanionUpgradeContext<OntimeConfig | old_v3_config>,
-	props: CompanionStaticUpgradeProps<OntimeConfig | old_v3_config>,
-): CompanionStaticUpgradeResult<OntimeConfig> {
-	const result = {
-		updatedConfig: null,
-		updatedActions: new Array<CompanionMigrationAction>(),
-		updatedFeedbacks: new Array<CompanionMigrationFeedback>(),
-	}
-	if ('version' in _context.currentConfig && _context.currentConfig.version === 'v2') {
-		for (const action of props.actions) {
-			if (action.actionId === ActionId.Change) {
-				if ('val' in action.options) {
-					action.options.properties = [String(action.options.property)]
-					action.options[String(action.options.property)] = action.options.val
-					if (action.options.eventId === 'selected') {
-						action.options.method = 'loaded'
-					} else if (action.options.eventId === 'next') {
-						action.options.method = 'next'
-					} else {
-						action.options.method = 'list'
-						action.options.eventList = action.options.eventId
-					}
-					delete action.options.eventId
-					delete action.options.property
-					delete action.options.val
-					result.updatedActions.push(action)
-				}
-			} else if (action.actionId === deprecatedActionId.LoadIndex) {
-				action.actionId = ActionId.Load
-				action.options.method = 'index'
-				action.options.eventIndex = action.options.value
-				delete action.options.value
-				result.updatedActions.push(action)
-			} else if (action.actionId === deprecatedActionId.Previous) {
-				action.actionId = ActionId.Load
-				action.options.method = 'previous'
-				result.updatedActions.push(action)
-			} else if (action.actionId === deprecatedActionId.Next) {
-				action.actionId = ActionId.Load
-				action.options.method = 'next'
-				result.updatedActions.push(action)
-			} else if (action.actionId === deprecatedActionId.LoadSelect) {
-				action.actionId = ActionId.Load
-				action.options.method = 'list'
-				action.options.eventList = action.options.value
-				delete action.options.value
-				result.updatedActions.push(action)
-			} else if (action.actionId === deprecatedActionId.LoadCue) {
-				action.actionId = ActionId.Load
-				action.options.method = 'cue'
-				action.options.eventCue = action.options.value
-				delete action.options.value
-				result.updatedActions.push(action)
-			} else if (action.actionId === deprecatedActionId.LoadId) {
-				action.actionId = ActionId.Load
-				action.options.method = 'id'
-				action.options.eventId = action.options.value
-				delete action.options.value
-				result.updatedActions.push(action)
-			} else if (action.actionId === deprecatedActionId.StartIndex) {
-				action.actionId = ActionId.Start
-				action.options.method = 'index'
-				action.options.eventIndex = action.options.value
-				delete action.options.value
-				result.updatedActions.push(action)
-			} else if (action.actionId === deprecatedActionId.StartSelect) {
-				action.actionId = ActionId.Start
-				action.options.method = 'list'
-				action.options.eventList = action.options.value
-				delete action.options.value
-				result.updatedActions.push(action)
-			} else if (action.actionId === deprecatedActionId.StartCue) {
-				action.actionId = ActionId.Start
-				action.options.method = 'cue'
-				action.options.eventCue = action.options.value
-				delete action.options.value
-				result.updatedActions.push(action)
-			} else if (action.actionId === deprecatedActionId.StartId) {
-				action.actionId = ActionId.Start
-				action.options.method = 'id'
-				action.options.eventId = action.options.value
-				delete action.options.value
-				result.updatedActions.push(action)
-			} else if (action.actionId === deprecatedActionId.StartNext) {
-				action.actionId = ActionId.Start
-				action.options.method = 'next'
-				result.updatedActions.push(action)
-			} else if (action.actionId === ActionId.Start) {
-				if (!('method' in action.options)) {
-					action.options.method = 'loaded'
-					result.updatedActions.push(action)
-				}
-			} else if (action.actionId === deprecatedActionId.SetTimerMessageVisibility) {
-				action.actionId = ActionId.MessageVisibility
-				action.options.destination = 'timer'
-				result.updatedActions.push(action)
-			} else if (action.actionId === deprecatedActionId.SetPublicMessageVisibility) {
-				action.actionId = ActionId.MessageVisibility
-				action.options.destination = 'public'
-				result.updatedActions.push(action)
-			} else if (action.actionId === deprecatedActionId.SetLowerMessageVisibility) {
-				action.actionId = ActionId.MessageVisibility
-				action.options.destination = 'lower'
-				result.updatedActions.push(action)
-			} else if (action.actionId === deprecatedActionId.SetTimerMessage) {
-				action.actionId = ActionId.MessageText
-				action.options.destination = 'timer'
-				result.updatedActions.push(action)
-			} else if (action.actionId === deprecatedActionId.SetPublicMessage) {
-				action.actionId = ActionId.MessageText
-				action.options.destination = 'public'
-				result.updatedActions.push(action)
-			} else if (action.actionId === deprecatedActionId.SetLowerMessage) {
-				action.actionId = ActionId.MessageText
-				action.options.destination = 'lower'
-				result.updatedActions.push(action)
-			} else if (action.actionId === deprecatedActionId.SetTimerBlackout) {
-				action.actionId = ActionId.TimerBlackout
-				result.updatedActions.push(action)
-			} else if (action.actionId === deprecatedActionId.SetTimerBlink) {
-				action.actionId = ActionId.TimerBlink
-				result.updatedActions.push(action)
-			}
-		}
-		for (const feedback of props.feedbacks) {
-			if (feedback.feedbackId === deprecatedFeedbackId.ColorRunning) {
-				feedback.feedbackId = feedbackId.ColorPlayback
-				feedback.options.state = 'play'
-				result.updatedFeedbacks.push(feedback)
-			} else if (feedback.feedbackId === deprecatedFeedbackId.ColorPaused) {
-				feedback.feedbackId = feedbackId.ColorPlayback
-				feedback.options.state = 'pause'
-				result.updatedFeedbacks.push(feedback)
-			} else if (feedback.feedbackId === deprecatedFeedbackId.ColorStopped) {
-				feedback.feedbackId = feedbackId.ColorPlayback
-				feedback.options.state = 'stop'
-				result.updatedFeedbacks.push(feedback)
-			} else if (feedback.feedbackId === deprecatedFeedbackId.ColorRoll) {
-				feedback.feedbackId = feedbackId.ColorPlayback
-				feedback.options.state = 'roll'
-				result.updatedFeedbacks.push(feedback)
-			} else if (feedback.feedbackId === feedbackId.ColorAddRemove) {
-				if (!('direction' in feedback.options)) {
-					feedback.options.direction = 'both'
-					result.updatedFeedbacks.push(feedback)
-				}
-			} else if (feedback.feedbackId === deprecatedFeedbackId.LowerMessageVisible) {
-				feedback.feedbackId = feedbackId.MessageVisible
-				feedback.options.source = 'lower'
-				feedback.options.reqText = false
-				result.updatedFeedbacks.push(feedback)
-			} else if (feedback.feedbackId === deprecatedFeedbackId.PublicMessageVisible) {
-				feedback.feedbackId = feedbackId.MessageVisible
-				feedback.options.source = 'public'
-				feedback.options.reqText = false
-				result.updatedFeedbacks.push(feedback)
-			} else if (feedback.feedbackId === deprecatedFeedbackId.ThisTimerMessageVisible) {
-				feedback.feedbackId = feedbackId.MessageVisible
-				feedback.options.source = 'timer'
-				feedback.options.reqText = true
-				feedback.options.text = feedback.options.msg
-				delete feedback.options.msg
-				result.updatedFeedbacks.push(feedback)
-			} else if (feedback.feedbackId === deprecatedFeedbackId.TimerMessageVisible) {
-				feedback.feedbackId = feedbackId.MessageVisible
-				feedback.options.source = 'timer'
-				feedback.options.reqText = false
-				result.updatedFeedbacks.push(feedback)
-			} else if (feedback.feedbackId === deprecatedFeedbackId.ColorNegative) {
-				feedback.feedbackId = feedbackId.TimerPhase
-				feedback.options.state = [TimerPhase.Overtime]
-				result.updatedFeedbacks.push(feedback)
-			}
-		}
-	}
-
-	return result
-}
+import { tryCollectMessageActions } from './actions/message.js'
 
 function update4xx(
 	_context: CompanionUpgradeContext<OntimeConfig>,
@@ -371,7 +179,7 @@ function FeedbackUpdater(
 
 export const UpgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [
 	EmptyUpgradeScript,
-	update3x4x0,
+	EmptyUpgradeScript,
 	update4xx,
 	update46x,
 	update5,
@@ -379,4 +187,5 @@ export const UpgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [
 	ActionUpdater(tryRemoveIsPublic),
 	ActionUpdater(tryChangeTimeWithExpression),
 	ActionUpdater(tryAuxTimerDurationTakesExpressions),
+	ActionUpdater(tryCollectMessageActions),
 ]
