@@ -391,7 +391,7 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		},
 		steps: [
 			{
-				down: [{ actionId: ActionId.MessageVisibility, options: { value: ToggleOnOff.Toggle } }],
+				down: [{ actionId: ActionId.MessageAction, options: { properties: ['visible'], visible: ToggleOnOff.Toggle } }],
 				up: [],
 			},
 		],
@@ -417,7 +417,7 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		},
 		steps: [
 			{
-				down: [{ actionId: ActionId.MessageText, options: { value: 'Message 1' } }],
+				down: [{ actionId: ActionId.MessageAction, options: { properties: ['text'], text: 'Message 1' } }],
 				up: [],
 			},
 		],
@@ -442,7 +442,7 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		},
 		steps: [
 			{
-				down: [{ actionId: ActionId.MessageText, options: { value: 'Message 2' } }],
+				down: [{ actionId: ActionId.MessageAction, options: { properties: ['text'], text: 'Message 2' } }],
 				up: [],
 			},
 		],

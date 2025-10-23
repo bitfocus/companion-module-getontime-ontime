@@ -15,40 +15,12 @@ export enum ActionId {
 
 	Change = 'change',
 
-	TimerBlackout = 'TimerBlackout',
-	TimerBlink = 'TimerBlink',
-	MessageVisibility = 'setMessageVisibility',
-	MessageVisibilityAndText = 'setMessageVisibilityAndText',
-	MessageSecondarySource = 'setMessageSecondarySource',
-	MessageText = 'setMessage',
+	MessageAction = 'messageAction',
 
 	AuxTimerDuration = 'auxTimerDuration',
 	AuxTimerPlayState = 'auxTimerPlayState',
 	AuxTimerDirection = 'auxTimerDirection',
 	AuxTimerAdd = 'auxTimerAdd',
-}
-
-export enum deprecatedActionId {
-	Next = 'next',
-	Previous = 'previous',
-	SetOnAir = 'setOnAir',
-	SetTimerMessageVisibility = 'setTimerMessageVisibility',
-	SetTimerMessage = 'setTimerMessage',
-	SetPublicMessageVisibility = 'setPublicMessageVisibility',
-	SetPublicMessage = 'setPublicMessage',
-	SetLowerMessageVisibility = 'setLowerMessageVisibility',
-	SetLowerMessage = 'setLowerMessage',
-	StartId = 'startId',
-	StartSelect = 'startSelect',
-	StartIndex = 'startIndex',
-	StartNext = 'startNext',
-	StartCue = 'startCue',
-	LoadId = 'loadId',
-	LoadSelect = 'loadSelect',
-	LoadIndex = 'loadIndex',
-	LoadCue = 'loadCue',
-	SetTimerBlackout = 'setTimerBlackout',
-	SetTimerBlink = 'setTimerBlink',
 }
 
 export enum feedbackId {
