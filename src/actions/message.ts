@@ -138,10 +138,10 @@ export function createMessageActions(connection: OntimeConnection): { [id: strin
 		for (const property of properties) {
 			switch (property) {
 				case 'text':
-					patch.timer.text = options.text as string
+					patch.timer.text = options.text
 					break
 				case 'secondary':
-					patch.secondary = options.secondary as string
+					patch.secondary = options.secondary
 					break
 				case 'blackout':
 				case 'blink':

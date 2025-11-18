@@ -28,10 +28,8 @@ export enum feedbackId {
 	ColorAddRemove = 'state_color_add_remove',
 	OnAir = 'onAir',
 
-	MessageVisible = 'messageVisible',
-	MessageSecondarySourceVisible = 'messageSecondarySourceVisible',
-	TimerBlink = 'timerBlink',
-	TimerBlackout = 'timerBlackout',
+	MessageFeedback = 'messageFeedback',
+
 	TimerPhase = 'timerPhase',
 
 	TimerProgressBar = 'timerProgressBar',
