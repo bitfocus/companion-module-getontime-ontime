@@ -135,8 +135,8 @@ export function createMessageActions(connection: OntimeConnection): { [id: strin
 			secondary: undefined,
 		}
 
-		for (const prop of properties) {
-			switch (prop) {
+		for (const property of properties) {
+			switch (property) {
 				case 'text':
 					patch.timer.text = options.text as string
 					break
@@ -146,8 +146,10 @@ export function createMessageActions(connection: OntimeConnection): { [id: strin
 				case 'blackout':
 				case 'blink':
 				case 'visible':
-					patch.timer[prop] =
-						options[prop] === ToggleOnOff.Toggle ? !connection.state.message.timer[prop] : (options[prop] as 0 | 1)
+					patch.timer[property] =
+						options[property] === ToggleOnOff.Toggle
+							? !connection.state.message.timer[property]
+							: (options[property] as 0 | 1)
 					break
 				case 'secondarySource': {
 					switch (options.secondaryToggle) {
@@ -168,6 +170,8 @@ export function createMessageActions(connection: OntimeConnection): { [id: strin
 					}
 					break
 				}
+				default:
+					property satisfies never | 'properties' | 'secondaryToggle'
 			}
 		}
 
