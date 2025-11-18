@@ -142,3 +142,43 @@ export function createMessageFeedbacks(state: OntimeState): { [id: string]: Comp
 		},
 	}
 }
+
+export function tryCollectMessageFeedback(feedback: CompanionMigrationFeedback): boolean {
+	if (feedback.feedbackId === 'timerBlackout') {
+		feedback.feedbackId = feedbackId.MessageFeedback
+		feedback.options.properties = ['blackout']
+		feedback.options.blackout = 1
+		return true
+	}
+	if (feedback.feedbackId === 'timerBlink') {
+		feedback.feedbackId = feedbackId.MessageFeedback
+		feedback.options.properties = ['blink']
+		feedback.options.blink = 1
+		return true
+	}
+	if (feedback.feedbackId === 'messageSecondarySourceVisible') {
+		feedback.feedbackId = feedbackId.MessageFeedback
+		feedback.options.properties = ['secondarySource']
+		if (feedback.options.source === 'any') {
+			feedback.options.secondarySource = ['aux1', 'aux2', 'aux3', 'secondary']
+		} else if (feedback.options.source === 'external') {
+			feedback.options.secondarySource = ['secondary']
+		} else {
+			feedback.options.secondarySource = ['aux1']
+		}
+		delete feedback.options.source
+		return true
+	}
+	if (feedback.feedbackId === 'messageVisible') {
+		feedback.feedbackId = feedbackId.MessageFeedback
+		feedback.options.visible = 1
+		if (feedback.options.reqText) {
+			feedback.options.properties = ['visible', 'text']
+		} else {
+			feedback.options.properties = ['visible']
+		}
+		delete feedback.options.reqText
+		return true
+	}
+	return false
+}

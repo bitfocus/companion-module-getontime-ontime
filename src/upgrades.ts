@@ -15,6 +15,7 @@ import { tryOffsetIsInvertedFeedback } from './feedbacks/offset.js'
 import { tryChangeTimeWithExpression, tryRemoveIsPublic } from './actions/change.js'
 import { tryAuxTimerDurationTakesExpressions } from './actions/auxTimer.js'
 import { tryCollectMessageActions } from './actions/message.js'
+import { tryCollectMessageFeedback } from './feedbacks/message.js'
 
 function update4xx(
 	_context: CompanionUpgradeContext<OntimeConfig>,
@@ -188,4 +189,5 @@ export const UpgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [
 	ActionUpdater(tryChangeTimeWithExpression),
 	ActionUpdater(tryAuxTimerDurationTakesExpressions),
 	ActionUpdater(tryCollectMessageActions),
+	FeedbackUpdater(tryCollectMessageFeedback),
 ]
