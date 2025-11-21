@@ -397,8 +397,8 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		],
 		feedbacks: [
 			{
-				feedbackId: feedbackId.MessageVisible,
-				options: { reqText: false, text: '' },
+				feedbackId: feedbackId.MessageFeedback,
+				options: { properties: ['visible'], visible: ToggleOnOff.On },
 				style: {
 					bgcolor: ActiveBlue,
 					text: 'HIDE\n"$(ontime:message_text)"',
@@ -423,8 +423,8 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		],
 		feedbacks: [
 			{
-				feedbackId: feedbackId.MessageVisible,
-				options: { reqText: true, text: 'Message 1' },
+				feedbackId: feedbackId.MessageFeedback,
+				options: { properties: ['visible'], visible: ToggleOnOff.On, text: 'Message 1' },
 				style: {
 					bgcolor: ActiveBlue,
 				},
@@ -448,8 +448,8 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		],
 		feedbacks: [
 			{
-				feedbackId: feedbackId.MessageVisible,
-				options: { reqText: true, text: 'Message 2' },
+				feedbackId: feedbackId.MessageFeedback,
+				options: { properties: ['visible'], visible: ToggleOnOff.On, text: 'Message 2' },
 				style: {
 					bgcolor: ActiveBlue,
 				},
