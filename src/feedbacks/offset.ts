@@ -72,7 +72,10 @@ export function createOffsetFeedbacks(state: OntimeState): { [id: string]: Compa
 	}
 }
 
-export function tryOffsetIsInvertedFeedback(feedback: CompanionMigrationFeedback): boolean {
+/**
+ * v5.0.0 the offset value has been inverted
+ */
+export function upgrade_offsetIsInvertedFeedback(feedback: CompanionMigrationFeedback): boolean {
 	if (feedback.feedbackId !== `${feedbackId.RundownOffset}`) {
 		return false
 	}

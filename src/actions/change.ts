@@ -104,7 +104,10 @@ export function createChangeActions(module: OntimeModule): { [id: string]: Compa
 	}
 }
 
-export function tryRemoveIsPublic(action: CompanionMigrationAction): boolean {
+/**
+ * v5.0.0 remove public field
+ */
+export function upgrade_removeIsPublic(action: CompanionMigrationAction): boolean {
 	if (action.actionId !== `${ActionId.Change}`) {
 		return false
 	}
@@ -121,7 +124,10 @@ export function tryRemoveIsPublic(action: CompanionMigrationAction): boolean {
 	return madeUpgrade
 }
 
-export function tryChangeTimeWithExpression(action: CompanionMigrationAction): boolean {
+/**
+ * v5.0.0 allow user expression in change action
+ */
+export function upgrade_changeTimeWithExpression(action: CompanionMigrationAction): boolean {
 	if (action.actionId !== `${ActionId.Change}`) {
 		return false
 	}

@@ -138,7 +138,7 @@ export function strictTimerStringToMs(str: string): number | null {
 	return isNegative * (seconds + minutes + hours)
 }
 
-export function formatTime(value: number) {
+export function formatTime(value: number): { sign: '-' | ''; HH: string; mm: string; ss: string; hms: string } {
 	const sign = value < 0 ? '-' : ''
 	const absolute = Math.abs(value)
 	const ss = (Math.round(absolute / 1000) % 60).toString().padStart(2, '0')
@@ -150,4 +150,10 @@ export function formatTime(value: number) {
 	const hms = `${sign}${HH}:${mm}:${ss}`
 
 	return { sign, HH, mm, ss, hms }
+}
+
+export function isOptionsWithPropertiesArray<T>(
+	options: object,
+): options is T & { properties: (keyof Omit<T, 'properties'>)[] } {
+	return 'properties' in options && Array.isArray(options.properties) && options.properties.length > 0
 }

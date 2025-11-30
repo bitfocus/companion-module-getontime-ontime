@@ -200,7 +200,10 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 	}
 }
 
-export function tryAuxTimerDurationTakesExpressions(action: CompanionMigrationAction): boolean {
+/**
+ * v5.0.0 allow user expressions in auxtimer actions
+ */
+export function upgrade_auxTimerDurationTakesExpressions(action: CompanionMigrationAction): boolean {
 	if (action.actionId !== `${ActionId.AuxTimerDuration}`) {
 		return false
 	}

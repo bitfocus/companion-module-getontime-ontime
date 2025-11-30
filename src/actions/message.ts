@@ -6,8 +6,9 @@ import type {
 } from '@companion-module/base'
 import { ActionId, ToggleOnOff } from '../enums.js'
 import type { OntimeConnection } from '../connection.js'
+import { isOptionsWithPropertiesArray } from '../utilities.js'
 
-type MessageOptions = {
+type MessageActionOptions = {
 	properties: string[]
 	text: string
 	visible: ToggleOnOff
@@ -18,13 +19,7 @@ type MessageOptions = {
 	secondaryToggle: ToggleOnOff
 }
 
-type MessageActionEvent = CompanionActionEvent & {
-	readonly options: MessageOptions
-}
-
-type MessageActionInputFields = SomeCompanionActionInputField & { id: keyof MessageOptions }
-
-const messageActionOptions: MessageActionInputFields[] = [
+const messageActionOptions: (SomeCompanionActionInputField & { id: keyof MessageActionOptions })[] = [
 	{
 		id: 'properties',
 		label: 'Properties',
@@ -118,9 +113,9 @@ const messageActionOptions: MessageActionInputFields[] = [
 
 export function createMessageActions(connection: OntimeConnection): { [id: string]: CompanionActionDefinition } {
 	function messageActionCallback(action: CompanionActionEvent) {
-		const { options } = action as MessageActionEvent
-		if (!options.properties || !Array.isArray(options.properties) || !options.properties.length) return
-		const properties = options.properties as (keyof MessageOptions)[]
+		if (!isOptionsWithPropertiesArray<MessageActionOptions>(action.options)) return
+		const { options } = action
+
 		const patch: {
 			timer: Partial<{
 				blink: 0 | 1 | boolean
@@ -135,19 +130,21 @@ export function createMessageActions(connection: OntimeConnection): { [id: strin
 			secondary: undefined,
 		}
 
-		for (const prop of properties) {
-			switch (prop) {
+		for (const property of options.properties) {
+			switch (property) {
 				case 'text':
-					patch.timer.text = options.text as string
+					patch.timer.text = options.text
 					break
 				case 'secondary':
-					patch.secondary = options.secondary as string
+					patch.secondary = options.secondary
 					break
 				case 'blackout':
 				case 'blink':
 				case 'visible':
-					patch.timer[prop] =
-						options[prop] === ToggleOnOff.Toggle ? !connection.state.message.timer[prop] : (options[prop] as 0 | 1)
+					patch.timer[property] =
+						options[property] === ToggleOnOff.Toggle
+							? !connection.state.message.timer[property]
+							: (options[property] as 0 | 1)
 					break
 				case 'secondarySource': {
 					switch (options.secondaryToggle) {
@@ -168,6 +165,8 @@ export function createMessageActions(connection: OntimeConnection): { [id: strin
 					}
 					break
 				}
+				default:
+					property satisfies never | 'properties' | 'secondaryToggle'
 			}
 		}
 
@@ -183,7 +182,10 @@ export function createMessageActions(connection: OntimeConnection): { [id: strin
 	}
 }
 
-export function tryCollectMessageActions(action: CompanionMigrationAction): boolean {
+/**
+ * For v5.1.0 collet all message actions into on selectable with a dropdown
+ */
+export function upgrade_collectMessageActions(action: CompanionMigrationAction): boolean {
 	if (action.actionId === 'setMessageSecondarySource') {
 		action.actionId = ActionId.MessageAction
 		const { source, value } = action.options as { source: 'aux' | 'external'; value: 'Toggle' | 'On' | 'Off' }
