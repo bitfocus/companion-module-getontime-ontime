@@ -182,7 +182,10 @@ export function createMessageActions(connection: OntimeConnection): { [id: strin
 	}
 }
 
-export function tryCollectMessageActions(action: CompanionMigrationAction): boolean {
+/**
+ * For v5.1.0 collet all message actions into on selectable with a dropdown
+ */
+export function upgrade_collectMessageActions(action: CompanionMigrationAction): boolean {
 	if (action.actionId === 'setMessageSecondarySource') {
 		action.actionId = ActionId.MessageAction
 		const { source, value } = action.options as { source: 'aux' | 'external'; value: 'Toggle' | 'On' | 'Off' }

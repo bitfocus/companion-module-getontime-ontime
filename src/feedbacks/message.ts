@@ -135,8 +135,10 @@ export function createMessageFeedbacks(state: OntimeState): { [id: string]: Comp
 		},
 	}
 }
-
-export function tryCollectMessageFeedback(feedback: CompanionMigrationFeedback): boolean {
+/**
+ * v5.2.0 collect all message feedback into one
+ */
+export function upgrade_collectMessageFeedback(feedback: CompanionMigrationFeedback): boolean {
 	if (feedback.feedbackId === 'timerBlackout') {
 		feedback.feedbackId = feedbackId.MessageFeedback
 		feedback.options.properties = ['blackout']
