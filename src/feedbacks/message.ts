@@ -7,8 +7,9 @@ import type {
 import { feedbackId, ToggleOnOff } from '../enums.js'
 import { ActiveBlue, White } from '../assets/colours.js'
 import type OntimeState from '../state.js'
+import { isOptionsWithPropertiesArray } from '../utilities.js'
 
-type MessageOptions = {
+type MessageFeedbackOptions = {
 	properties: string[]
 	text: string
 	visible: ToggleOnOff
@@ -18,13 +19,7 @@ type MessageOptions = {
 	secondary: string
 }
 
-type MessageFeedbackEvent = CompanionFeedbackInfo & {
-	readonly options: MessageOptions
-}
-
-type MessageFeedbackInputFields = SomeCompanionFeedbackInputField & { id: keyof MessageOptions }
-
-const messageFeedbackOptions: MessageFeedbackInputFields[] = [
+const messageFeedbackOptions: (SomeCompanionFeedbackInputField & { id: keyof MessageFeedbackOptions })[] = [
 	{
 		id: 'properties',
 		label: 'Properties',
@@ -103,11 +98,9 @@ const messageFeedbackOptions: MessageFeedbackInputFields[] = [
 
 export function createMessageFeedbacks(state: OntimeState): { [id: string]: CompanionFeedbackDefinition } {
 	function messageFeedbackCallback(feedback: CompanionFeedbackInfo) {
-		const { options } = feedback as MessageFeedbackEvent
-		if (!options.properties || !Array.isArray(options.properties) || !options.properties.length) return false
-		const properties = options.properties as (keyof MessageOptions)[]
-
-		for (const property of properties) {
+		if (!isOptionsWithPropertiesArray<MessageFeedbackOptions>(feedback.options)) return false
+		const { options } = feedback
+		for (const property of options.properties) {
 			switch (property) {
 				case 'text':
 				case 'blackout':
@@ -123,7 +116,7 @@ export function createMessageFeedbacks(state: OntimeState): { [id: string]: Comp
 					if (options.secondarySource.findIndex((e) => e === state.message.timer.secondarySource) === -1) return false
 					break
 				default:
-					property satisfies never | 'properties'
+					property satisfies never
 			}
 		}
 		return true

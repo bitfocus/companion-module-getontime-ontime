@@ -151,3 +151,9 @@ export function formatTime(value: number): { sign: '-' | ''; HH: string; mm: str
 
 	return { sign, HH, mm, ss, hms }
 }
+
+export function isOptionsWithPropertiesArray<T>(
+	options: object,
+): options is T & { properties: (keyof Omit<T, 'properties'>)[] } {
+	return 'properties' in options && Array.isArray(options.properties) && options.properties.length > 0
+}

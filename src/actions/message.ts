@@ -6,8 +6,9 @@ import type {
 } from '@companion-module/base'
 import { ActionId, ToggleOnOff } from '../enums.js'
 import type { OntimeConnection } from '../connection.js'
+import { isOptionsWithPropertiesArray } from '../utilities.js'
 
-type MessageOptions = {
+type MessageActionOptions = {
 	properties: string[]
 	text: string
 	visible: ToggleOnOff
@@ -18,13 +19,7 @@ type MessageOptions = {
 	secondaryToggle: ToggleOnOff
 }
 
-type MessageActionEvent = CompanionActionEvent & {
-	readonly options: MessageOptions
-}
-
-type MessageActionInputFields = SomeCompanionActionInputField & { id: keyof MessageOptions }
-
-const messageActionOptions: MessageActionInputFields[] = [
+const messageActionOptions: (SomeCompanionActionInputField & { id: keyof MessageActionOptions })[] = [
 	{
 		id: 'properties',
 		label: 'Properties',
@@ -118,9 +113,9 @@ const messageActionOptions: MessageActionInputFields[] = [
 
 export function createMessageActions(connection: OntimeConnection): { [id: string]: CompanionActionDefinition } {
 	function messageActionCallback(action: CompanionActionEvent) {
-		const { options } = action as MessageActionEvent
-		if (!options.properties || !Array.isArray(options.properties) || !options.properties.length) return
-		const properties = options.properties as (keyof MessageOptions)[]
+		if (!isOptionsWithPropertiesArray<MessageActionOptions>(action.options)) return
+		const { options } = action
+
 		const patch: {
 			timer: Partial<{
 				blink: 0 | 1 | boolean
@@ -135,7 +130,7 @@ export function createMessageActions(connection: OntimeConnection): { [id: strin
 			secondary: undefined,
 		}
 
-		for (const property of properties) {
+		for (const property of options.properties) {
 			switch (property) {
 				case 'text':
 					patch.timer.text = options.text
