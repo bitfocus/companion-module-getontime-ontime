@@ -130,6 +130,7 @@ export function createMessageFeedbacks(state: OntimeState): { [id: string]: Comp
 				color: White,
 				bgcolor: ActiveBlue,
 			},
+			description: 'Checks that ALL the selected properties match',
 			options: messageFeedbackOptions,
 			callback: messageFeedbackCallback,
 		},
