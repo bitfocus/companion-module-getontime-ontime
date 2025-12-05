@@ -158,16 +158,12 @@ export default class OntimeState {
 			[variableId.MessageVisible]: val.timer.visible,
 			[variableId.MessageBlink]: val.timer.blink,
 			[variableId.MessageBlackout]: val.timer.blackout,
-			[variableId.MessageSecondarySource]: val.timer.secondarySource as string,
+			[variableId.MessageSecondarySource]:
+				val.timer.secondarySource === null ? undefined : (val.timer.secondarySource as string),
 			[variableId.MessageSecondary]: val.secondary,
 		})
 
-		this.module.checkFeedbacks(
-			feedbackId.MessageVisible,
-			feedbackId.TimerBlackout,
-			feedbackId.TimerBlink,
-			feedbackId.MessageSecondarySourceVisible,
-		)
+		this.module.checkFeedbacks(feedbackId.MessageFeedback)
 	}
 
 	/** Rundown */

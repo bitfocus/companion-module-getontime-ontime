@@ -11,10 +11,11 @@ import {
 import type { OntimeConfig } from './config.js'
 import { feedbackId, deprecatedFeedbackId } from './enums.js'
 import { TimerPhase } from '@getontime/resolver'
-import { tryOffsetIsInvertedFeedback } from './feedbacks/offset.js'
-import { tryChangeTimeWithExpression, tryRemoveIsPublic } from './actions/change.js'
-import { tryAuxTimerDurationTakesExpressions } from './actions/auxTimer.js'
-import { tryCollectMessageActions } from './actions/message.js'
+import { upgrade_offsetIsInvertedFeedback } from './feedbacks/offset.js'
+import { upgrade_changeTimeWithExpression, upgrade_removeIsPublic } from './actions/change.js'
+import { upgrade_auxTimerDurationTakesExpressions } from './actions/auxTimer.js'
+import { upgrade_collectMessageActions } from './actions/message.js'
+import { upgrade_collectMessageFeedback } from './feedbacks/message.js'
 
 function update4xx(
 	_context: CompanionUpgradeContext<OntimeConfig>,
@@ -183,9 +184,10 @@ export const UpgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [
 	update4xx,
 	update46x,
 	update5,
-	FeedbackUpdater(tryOffsetIsInvertedFeedback),
-	ActionUpdater(tryRemoveIsPublic),
-	ActionUpdater(tryChangeTimeWithExpression),
-	ActionUpdater(tryAuxTimerDurationTakesExpressions),
-	ActionUpdater(tryCollectMessageActions),
+	FeedbackUpdater(upgrade_offsetIsInvertedFeedback),
+	ActionUpdater(upgrade_removeIsPublic),
+	ActionUpdater(upgrade_changeTimeWithExpression),
+	ActionUpdater(upgrade_auxTimerDurationTakesExpressions),
+	ActionUpdater(upgrade_collectMessageActions),
+	FeedbackUpdater(upgrade_collectMessageFeedback),
 ]
