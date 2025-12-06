@@ -19,7 +19,7 @@ import {
 	WarningOrange,
 	White,
 } from './assets/colours.js'
-import { SimplePlayback } from '@getontime/resolver'
+import { Playback, SimplePlayback } from '@getontime/resolver'
 
 export function generatePresets(): CompanionPresetDefinitions {
 	return { ...wallClockPresets, ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...messagePresets }
@@ -373,6 +373,55 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				style: {
 					bgcolor: PlaybackRed,
 					color: White,
+				},
+			},
+		],
+	},
+	pause_unpause: {
+		type: 'button',
+		category: 'Playback',
+		name: 'Pause/Unpause',
+		style: {
+			...defaultWithIconStyle,
+			png64: icons.PlaybackPause,
+			text: 'PAUSE',
+			color: Gray,
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: ActionId.PlaybackToggle,
+						options: {
+							main: Playback.Pause,
+							secondary: Playback.Play,
+						},
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.ColorPlayback,
+				options: {
+					state: ['play'],
+					isInverted: true,
+				},
+				style: {
+					text: 'PAUSE',
+					color: PauseOrange,
+				},
+			},
+			{
+				feedbackId: feedbackId.ColorPlayback,
+				options: {
+					state: ['armed', 'pause'],
+				},
+				style: {
+					color: White,
+					text: 'UNPAUSE',
+					bgcolor: PauseOrange,
 				},
 			},
 		],
