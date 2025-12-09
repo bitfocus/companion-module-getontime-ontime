@@ -28,12 +28,14 @@ export function changePicker(
 			type: 'textinput',
 			label: 'Title',
 			id: 'title',
+			useVariables: true,
 			isVisibleExpression: 'arrayIncludes($(options:properties),"title")',
 		},
 		{
 			type: 'textinput',
 			label: 'Note',
 			id: 'note',
+			useVariables: true,
 			isVisibleExpression: 'arrayIncludes($(options:properties),"note")',
 		},
 		{
@@ -164,6 +166,7 @@ function generateCustomFieldsOptions(customFields: CustomFields): Array<Companio
 			id,
 			label: `Custom: ${customFields[field].label}`,
 			isVisibleExpression: `arrayIncludes($(options:properties), '${id}')`,
+			useVariables: true,
 		})
 	}
 
