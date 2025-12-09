@@ -28,19 +28,19 @@ export function changePicker(
 			type: 'textinput',
 			label: 'Title',
 			id: 'title',
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('title'),
+			isVisibleExpression: 'arrayIncludes($(options:properties),"title")',
 		},
 		{
 			type: 'textinput',
 			label: 'Note',
 			id: 'note',
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('note'),
+			isVisibleExpression: 'arrayIncludes($(options:properties),"note")',
 		},
 		{
 			type: 'textinput',
 			label: 'Cue',
 			id: 'cue',
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('cue'),
+			isVisibleExpression: 'arrayIncludes($(options:properties),"cue")',
 		},
 		{
 			type: 'checkbox',
@@ -48,7 +48,7 @@ export function changePicker(
 			tooltip: throttledEndpointText,
 			id: 'skip',
 			default: false,
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('skip'),
+			isVisibleExpression: 'arrayIncludes($(options:properties),"skip")',
 		},
 		{
 			type: 'colorpicker',
@@ -56,7 +56,7 @@ export function changePicker(
 			id: 'colour',
 			default: combineRgb(255, 255, 255),
 			returnType: 'string',
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('colour'),
+			isVisibleExpression: 'arrayIncludes($(options:properties),"colour")',
 		},
 		{
 			type: 'textinput',
@@ -99,7 +99,7 @@ export function changePicker(
 			tooltip: 'In milliseconds or hh:mm:ss\n' + throttledEndpointText,
 			id: 'timeWarning_hhmmss',
 			default: '00:00:00',
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeWarning_hhmmss'),
+			isVisibleExpression: 'arrayIncludes($(options:properties),"timeWarning_hhmmss")',
 			useVariables: true,
 		},
 
@@ -109,7 +109,7 @@ export function changePicker(
 			tooltip: 'In milliseconds or hh:mm:ss\n' + throttledEndpointText,
 			id: 'timeDanger_hhmmss',
 			default: '00:00:00',
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timeDanger_hhmmss'),
+			isVisibleExpression: 'arrayIncludes($(options:properties),"timeDanger_hhmmss")',
 			useVariables: true,
 		},
 		{
@@ -123,7 +123,7 @@ export function changePicker(
 				{ id: 'play-next', label: 'Play Next' },
 			],
 			default: 'none',
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('endAction'),
+			isVisibleExpression: 'arrayIncludes($(options:properties),"endAction")',
 		},
 		{
 			type: 'dropdown',
@@ -136,7 +136,7 @@ export function changePicker(
 				{ id: 'clock', label: 'Clock' },
 			],
 			default: 'count-down',
-			isVisible: (opts) => Array.isArray(opts.properties) && opts.properties.includes('timerType'),
+			isVisibleExpression: 'arrayIncludes($(options:properties),"timerType")',
 		},
 		...generateCustomFieldsOptions(customFields),
 	]
