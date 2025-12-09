@@ -43,7 +43,7 @@ export function createCustomFieldsFeedbacks(state: OntimeState): { [id: string]:
 					type: 'textinput',
 					id: 'match',
 					label: 'Value to match',
-					isVisible: (opts) => opts.requireValue === true,
+					isVisibleExpression: '$(options:requireValue)',
 				},
 			],
 			learn: (action) => {

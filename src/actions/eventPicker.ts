@@ -38,7 +38,7 @@ export function eventPicker(
 			id: 'eventList',
 			label: 'Event',
 			default: events[0]?.id ?? '',
-			isVisible: (options) => options['method'] === 'list',
+			isVisibleExpression: '$(options:method) === "list"',
 		},
 		{
 			type: 'static-text',
@@ -46,14 +46,14 @@ export function eventPicker(
 				'NB! Ontime will match the next cue. Counting from the currently loaded event or from the beginning if nothing is loaded',
 			id: 'cuenote',
 			label: '',
-			isVisible: (options) => options['method'] === 'cue',
+			isVisibleExpression: '$(options:method) === "cue"',
 		},
 		{
 			type: 'textinput',
 			id: 'eventCue',
 			label: 'Event Cue',
 			default: '',
-			isVisible: (options) => options['method'] === 'cue',
+			isVisibleExpression: '$(options:method) === "cue"',
 		},
 		{
 			type: 'textinput',
@@ -61,7 +61,7 @@ export function eventPicker(
 			label: 'Event Id',
 			useVariables: true,
 			default: '',
-			isVisible: (options) => options['method'] === 'id',
+			isVisibleExpression: '$(options:method) === "id"',
 		},
 		{
 			type: 'number',
@@ -70,7 +70,7 @@ export function eventPicker(
 			default: 1,
 			min: 1,
 			max: events.length,
-			isVisible: (options) => options['method'] === 'index',
+			isVisibleExpression: '$(options:method) === "index"',
 		},
 	]
 }
