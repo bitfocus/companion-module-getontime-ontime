@@ -183,7 +183,7 @@ export function createMessageActions(connection: OntimeConnection): { [id: strin
 }
 
 /**
- * For v5.1.0 collet all message actions into on selectable with a dropdown
+ * For v5.2.0 collet all message actions into on selectable with a dropdown
  */
 export function upgrade_collectMessageActions(action: CompanionMigrationAction): boolean {
 	if (action.actionId === 'setMessageSecondarySource') {
