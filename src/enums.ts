@@ -86,6 +86,9 @@ export enum variableId {
 	SelectedIndex = 'selected_index',
 
 	Offset = 'offset',
+	ExpectedGroupEnd = 'expected_group_end',
+	ExpectedRundownEnd = 'expected_rundown_end',
+	ExpectedFlagStart = 'expected_flag_start',
 
 	AuxTimerDuration = 'aux_duration',
 	AuxTimerPlayback = 'aux_playback',

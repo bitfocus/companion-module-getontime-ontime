@@ -93,6 +93,18 @@ const offsetVariables: CompanionVariableDefinition[] = [
 		name: 'Offset aka Over/Under (milliseconds)',
 		variableId: variableId.Offset,
 	},
+	{
+		name: 'Expected end time of current group (milliseconds)',
+		variableId: variableId.ExpectedGroupEnd,
+	},
+	{
+		name: 'Expected end time of rundown (milliseconds)',
+		variableId: variableId.ExpectedRundownEnd,
+	},
+	{
+		name: 'Expected start time of next flagged event (milliseconds)',
+		variableId: variableId.ExpectedFlagStart,
+	},
 ]
 
 const eventVariables: (name: string, infix: string, customFields: CustomFields) => CompanionVariableDefinition[] = (

@@ -189,6 +189,9 @@ export default class OntimeState {
 		this.helper.offset = val.mode === OffsetMode.Absolute ? val.absolute : val.relative
 		this.appendVariableUpdate({
 			[variableId.Offset]: this.helper.offset,
+			[variableId.ExpectedGroupEnd]: val.expectedGroupEnd ?? undefined,
+			[variableId.ExpectedRundownEnd]: val.expectedRundownEnd ?? undefined,
+			[variableId.ExpectedFlagStart]: val.expectedFlagStart ?? undefined,
 		})
 		this.module.checkFeedbacks(feedbackId.RundownOffset)
 	}
