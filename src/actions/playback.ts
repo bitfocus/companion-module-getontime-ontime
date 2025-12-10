@@ -1,11 +1,70 @@
-import type { CompanionActionDefinition, CompanionActionEvent } from '@companion-module/base'
+import type {
+	CompanionActionDefinition,
+	CompanionActionEvent,
+	SomeCompanionFeedbackInputField,
+} from '@companion-module/base'
 import { ActionId } from '../enums.js'
 import { eventPicker } from './eventPicker.js'
 import { Playback } from '@getontime/resolver'
 import type { OntimeModule } from '../index.js'
 
+type PlaybackToggleOptions = {
+	main: Playback
+	secondary: Playback
+	nb: string
+}
+
+const playbackToggleOptions: (SomeCompanionFeedbackInputField & { id: keyof PlaybackToggleOptions })[] = [
+	{
+		id: 'main',
+		label: 'Main',
+		description: 'if the playback is in any other state than this, it will go here',
+		type: 'dropdown',
+		choices: [
+			{ id: Playback.Armed, label: 'Load' },
+			{ id: Playback.Play, label: 'Play' },
+			{ id: Playback.Pause, label: 'Pause' },
+			{ id: Playback.Roll, label: 'Roll' },
+		],
+		default: Playback.Play,
+	},
+	{
+		id: 'secondary',
+		label: 'Secondary',
+		description: 'if the playback is in the main state, it will go here',
+		type: 'dropdown',
+		choices: [
+			{ id: Playback.Armed, label: 'Load' },
+			{ id: Playback.Play, label: 'Play' },
+			{ id: Playback.Pause, label: 'Pause' },
+			{ id: Playback.Roll, label: 'Roll' },
+		],
+		default: Playback.Pause,
+	},
+]
+
 export function createPlaybackActions(module: OntimeModule): { [id: string]: CompanionActionDefinition } {
-	const timerState = module.connection.state.timer
+	function toggle(action: CompanionActionEvent): void {
+		const { main, secondary } = action.options as PlaybackToggleOptions
+		const goToState = module.connection.state.timer.playback === main ? secondary : main
+		switch (goToState) {
+			case Playback.Armed:
+				module.connection.sendSocket('reload', undefined)
+				return
+			case Playback.Play:
+				module.connection.sendSocket('start', undefined)
+				return
+			case Playback.Pause:
+				module.connection.sendSocket('pause', undefined)
+				return
+			case Playback.Roll:
+				module.connection.sendSocket('pause', undefined)
+				return
+			default:
+				goToState satisfies never | Playback.Stop // going to a stop state would leave the user unable to toggle back
+				return
+		}
+	}
 
 	function start(action: CompanionActionEvent): void {
 		const { method, eventList, eventCue, eventId, eventIndex } = action.options
@@ -19,7 +78,10 @@ export function createPlaybackActions(module: OntimeModule): { [id: string]: Com
 				break
 			}
 			case 'go': {
-				if (timerState.playback === Playback.Armed || timerState.playback === Playback.Pause) {
+				if (
+					module.connection.state.timer.playback === Playback.Armed ||
+					module.connection.state.timer.playback === Playback.Pause
+				) {
 					module.connection.sendSocket('start', undefined)
 				} else {
 					module.connection.sendSocket('start', 'next')
@@ -91,6 +153,11 @@ export function createPlaybackActions(module: OntimeModule): { [id: string]: Com
 	}
 
 	return {
+		[ActionId.PlaybackToggle]: {
+			name: 'Toggle playback state',
+			options: playbackToggleOptions,
+			callback: toggle,
+		},
 		[ActionId.Start]: {
 			name: 'Start an event',
 			options: [

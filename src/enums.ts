@@ -10,6 +10,7 @@ export enum ActionId {
 	Stop = 'stop',
 	Reload = 'reload',
 	Roll = 'roll',
+	PlaybackToggle = 'playback-toggle',
 
 	Add = 'add',
 
