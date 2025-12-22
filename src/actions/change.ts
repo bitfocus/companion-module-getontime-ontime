@@ -1,7 +1,6 @@
 import type {
 	CompanionActionDefinition,
 	CompanionActionEvent,
-	CompanionActionContext,
 	CompanionMigrationAction,
 } from '@companion-module/base'
 import { splitHex } from '@companion-module/base'
@@ -13,7 +12,7 @@ import type { OntimeModule } from '../index.js'
 import { TimeStrategy, type OntimeEvent } from '@getontime/resolver'
 
 export function createChangeActions(module: OntimeModule): { [id: string]: CompanionActionDefinition } {
-	async function changeEvent(action: CompanionActionEvent, context: CompanionActionContext): Promise<void> {
+	async function changeEvent(action: CompanionActionEvent): Promise<void> {
 		const { properties, method, eventList, eventId } = action.options
 		let id: string | null = null
 		switch (method) {
@@ -30,7 +29,7 @@ export function createChangeActions(module: OntimeModule): { [id: string]: Compa
 				break
 			}
 			case 'id': {
-				id = await context.parseVariablesInString(eventId as string)
+				id = eventId as string
 				break
 			}
 		}
@@ -62,7 +61,7 @@ export function createChangeActions(module: OntimeModule): { [id: string]: Compa
 
 				// converts companion time variable (hh:mm:ss) to ontime seconds
 				if (property.endsWith('_hhmmss')) {
-					const timeString = await context.parseVariablesInString(value as string)
+					const timeString = value as string
 					const maybeNumber = Number(timeString)
 					const ms = isNaN(maybeNumber) ? strictTimerStringToMs(timeString) : maybeNumber
 					if (ms === null) {

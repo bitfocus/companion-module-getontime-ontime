@@ -1,5 +1,4 @@
 import type {
-	CompanionActionContext,
 	CompanionActionDefinition,
 	CompanionActionEvent,
 	CompanionMigrationAction,
@@ -30,13 +29,13 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 		module.connection.sendSocket('auxtimer', { [id]: action.options.value as SimplePlayback })
 	}
 
-	async function duration(action: CompanionActionEvent, context: CompanionActionContext): Promise<void> {
+	async function duration(action: CompanionActionEvent): Promise<void> {
 		const id = action.options.destination as '1' | '2' | '3'
-		const durationString = await context.parseVariablesInString(action.options.duration as string)
-		const maybeNumber = Number(durationString)
-		const duration = isNaN(maybeNumber) ? strictTimerStringToMs(durationString) : maybeNumber
+		const stringValue = action.options.duration as string
+		const maybeNumber = Number(stringValue)
+		const duration = isNaN(maybeNumber) ? strictTimerStringToMs(stringValue) : maybeNumber
 		if (duration === null) {
-			module.log('error', `Invalid value in aux timer duration: ${durationString}`)
+			module.log('warn', `Invalid value in aux timer duration: ${stringValue}`)
 			return
 		}
 		module.connection.sendSocket('auxtimer', { [id]: { duration } })
