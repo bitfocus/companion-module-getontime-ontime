@@ -2,9 +2,14 @@ import type { CompanionActionDefinition, CompanionActionEvent, CompanionMigratio
 import { ActionId } from '../enums.js'
 import { SimplePlayback, SimpleDirection } from '@getontime/resolver'
 import type { OntimeModule } from '../index.js'
-import { strictTimerStringToMs } from '../utilities.js'
+import { hmsValuesToMs, stringNumberOrFormatted } from '../utilities.js'
 
 type AuxIds = '1' | '2' | '3'
+
+type AuxDurationOption = {
+	duration: string
+	destination: AuxIds
+}
 
 type AuxAddOption = {
 	hours: number
@@ -17,7 +22,7 @@ type AuxAddOption = {
 
 export function createAuxTimerActions(module: OntimeModule): { [id: string]: CompanionActionDefinition } {
 	function togglePlayState(action: CompanionActionEvent): void {
-		const id = action.options.destination as '1' | '2' | '3'
+		const id = action.options.destination as AuxIds
 		const timer = module.connection.state[`auxtimer${id}`]
 		if (action.options.value === 'toggleSS') {
 			module.connection.sendSocket('auxtimer', {
@@ -36,36 +41,29 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 		module.connection.sendSocket('auxtimer', { [id]: action.options.value as SimplePlayback })
 	}
 
-	async function duration(action: CompanionActionEvent): Promise<void> {
-		const id = action.options.destination as '1' | '2' | '3'
-		const stringValue = action.options.duration as string
-		const maybeNumber = Number(stringValue)
-		const duration = isNaN(maybeNumber) ? strictTimerStringToMs(stringValue) : maybeNumber
-		if (duration === null) {
-			module.log('warn', `Invalid value in aux timer duration: ${stringValue}`)
-			return
+	function duration(action: CompanionActionEvent): void {
+		const { duration, destination } = action.options as AuxDurationOption
+		const maybeNumber = stringNumberOrFormatted(duration)
+		if (maybeNumber !== null) {
+			module.connection.sendSocket('auxtimer', { [destination]: { duration: maybeNumber } })
+		} else {
+			module.log('warn', `failed to format value in aux duration action: ${duration}`)
 		}
-		module.connection.sendSocket('auxtimer', { [id]: { duration } })
 	}
 
 	function addTime(action: CompanionActionEvent): void {
 		const { hours, minutes, seconds, addremove, stringValue, destination } = action.options as AuxAddOption
 		if (addremove === 'string') {
-			const maybeNumber = Number(stringValue)
-			if (!isNaN(maybeNumber)) {
+			const maybeNumber = stringNumberOrFormatted(stringValue)
+			if (maybeNumber !== null) {
 				module.connection.sendSocket('auxtimer', { [destination]: { addtime: maybeNumber } })
-				return
+			} else {
+				module.log('warn', `failed to format value in aux addTime action: ${stringValue}`)
 			}
-			const formattedValue = strictTimerStringToMs(stringValue)
-			if (formattedValue !== null) {
-				module.connection.sendSocket('auxtimer', { [destination]: { addtime: formattedValue } })
-				return
-			}
-			module.log('warn', `failed to format value in aux addTime action: ${stringValue}`)
-			return
+		} else {
+			const val = hmsValuesToMs(hours, minutes, seconds) * (addremove == 'remove' ? -1 : 1)
+			module.connection.sendSocket('auxtimer', { [destination]: { addtime: val } })
 		}
-		const val = ((hours * 60 + minutes) * 60 + seconds) * 1000 * (addremove == 'remove' ? -1 : 1)
-		module.connection.sendSocket('auxtimer', { [destination]: { addtime: val } })
 	}
 
 	return {
@@ -118,6 +116,7 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 					id: 'duration',
 					label: 'Duration',
 					default: '00:00:00',
+					tooltip: 'Either as a straight number in ms or formatted "hh:mm:ss"',
 					useVariables: true,
 					required: true,
 				},

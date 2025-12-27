@@ -7,7 +7,7 @@ import { ActionId } from '../enums.js'
 import { eventPicker } from './eventPicker.js'
 import { Playback } from '@getontime/resolver'
 import type { OntimeModule } from '../index.js'
-import { strictTimerStringToMs } from '../utilities.js'
+import { hmsValuesToMs, stringNumberOrFormatted } from '../utilities.js'
 
 type PlaybackToggleOptions = {
 	main: Playback
@@ -157,22 +157,16 @@ export function createPlaybackActions(module: OntimeModule): { [id: string]: Com
 	function addTime(action: CompanionActionEvent): void {
 		const { hours, minutes, seconds, addremove, stringValue } = action.options as PlaybackAddTimerOption
 		if (addremove === 'string') {
-			const maybeNumber = Number(stringValue)
-			if (!isNaN(maybeNumber)) {
+			const maybeNumber = stringNumberOrFormatted(stringValue)
+			if (maybeNumber !== null) {
 				module.connection.sendSocket('addtime', maybeNumber)
-				return
+			} else {
+				module.log('warn', `failed to format value in playback addTime action: ${stringValue}`)
 			}
-			const formattedValue = strictTimerStringToMs(stringValue)
-			if (formattedValue !== null) {
-				module.connection.sendSocket('addtime', formattedValue)
-				return
-			}
-			module.log('warn', `failed to format value in playback addTime action: ${stringValue}`)
-			return
+		} else {
+			const val = hmsValuesToMs(hours, minutes, seconds) * (addremove == 'remove' ? -1 : 1)
+			module.connection.sendSocket('addtime', val)
 		}
-		const val =
-			((Number(hours) * 60 + Number(minutes)) * 60 + Number(seconds)) * 1000 * (addremove == 'remove' ? -1 : 1)
-		module.connection.sendSocket('addtime', val)
 	}
 
 	return {
