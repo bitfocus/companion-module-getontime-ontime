@@ -1,12 +1,19 @@
-import type {
-	CompanionActionDefinition,
-	CompanionActionEvent,
-	CompanionMigrationAction,
-} from '@companion-module/base'
+import type { CompanionActionDefinition, CompanionActionEvent, CompanionMigrationAction } from '@companion-module/base'
 import { ActionId } from '../enums.js'
 import { SimplePlayback, SimpleDirection } from '@getontime/resolver'
 import type { OntimeModule } from '../index.js'
 import { strictTimerStringToMs } from '../utilities.js'
+
+type AuxIds = '1' | '2' | '3'
+
+type AuxAddOption = {
+	hours: number
+	minutes: number
+	seconds: number
+	addremove: 'add' | 'remove' | 'string'
+	stringValue: string
+	destination: AuxIds
+}
 
 export function createAuxTimerActions(module: OntimeModule): { [id: string]: CompanionActionDefinition } {
 	function togglePlayState(action: CompanionActionEvent): void {
@@ -42,15 +49,23 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 	}
 
 	function addTime(action: CompanionActionEvent): void {
-		const id = action.options.destination as '1' | '2' | '3'
-		const { hours, minutes, seconds, addremove } = action.options as {
-			hours: number
-			minutes: number
-			seconds: number
-			addremove: 'add' | 'remove'
+		const { hours, minutes, seconds, addremove, stringValue, destination } = action.options as AuxAddOption
+		if (addremove === 'string') {
+			const maybeNumber = Number(stringValue)
+			if (!isNaN(maybeNumber)) {
+				module.connection.sendSocket('auxtimer', { [destination]: { addtime: maybeNumber } })
+				return
+			}
+			const formattedValue = strictTimerStringToMs(stringValue)
+			if (formattedValue !== null) {
+				module.connection.sendSocket('auxtimer', { [destination]: { addtime: formattedValue } })
+				return
+			}
+			module.log('warn', `failed to format value in aux addTime action: ${stringValue}`)
+			return
 		}
 		const val = ((hours * 60 + minutes) * 60 + seconds) * 1000 * (addremove == 'remove' ? -1 : 1)
-		module.connection.sendSocket('auxtimer', { [id]: { addtime: val } })
+		module.connection.sendSocket('auxtimer', { [destination]: { addtime: val } })
 	}
 
 	return {
@@ -159,9 +174,19 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 					choices: [
 						{ id: 'add', label: 'Add Time' },
 						{ id: 'remove', label: 'Remove Time' },
+						{ id: 'string', label: 'Expression/Text' },
 					],
 					label: 'Add or Remove',
 					default: 'add',
+				},
+				{
+					type: 'textinput',
+					id: 'stringValue',
+					label: 'Value',
+					useVariables: true,
+					required: true,
+					tooltip: 'Either as a straight number in ms or formatted "hh:mm:ss"',
+					isVisibleExpression: '$(options:addremove) === "string"',
 				},
 				{
 					type: 'number',
@@ -172,6 +197,7 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 					min: 0,
 					max: 24,
 					required: true,
+					isVisibleExpression: '$(options:addremove) !== "string"',
 				},
 				{
 					type: 'number',
@@ -182,6 +208,7 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 					min: 0,
 					max: 1440,
 					required: true,
+					isVisibleExpression: '$(options:addremove) !== "string"',
 				},
 				{
 					type: 'number',
@@ -192,6 +219,7 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 					max: 86400,
 					step: 1,
 					required: true,
+					isVisibleExpression: '$(options:addremove) !== "string"',
 				},
 			],
 			callback: addTime,
