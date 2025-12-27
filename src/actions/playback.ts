@@ -7,11 +7,20 @@ import { ActionId } from '../enums.js'
 import { eventPicker } from './eventPicker.js'
 import { Playback } from '@getontime/resolver'
 import type { OntimeModule } from '../index.js'
+import { strictTimerStringToMs } from '../utilities.js'
 
 type PlaybackToggleOptions = {
 	main: Playback
 	secondary: Playback
 	nb: string
+}
+
+type PlaybackAddTimerOption = {
+	hours: number
+	minutes: number
+	seconds: number
+	addremove: 'add' | 'remove' | 'string'
+	stringValue: string
 }
 
 const playbackToggleOptions: (SomeCompanionFeedbackInputField & { id: keyof PlaybackToggleOptions })[] = [
@@ -146,7 +155,21 @@ export function createPlaybackActions(module: OntimeModule): { [id: string]: Com
 	}
 
 	function addTime(action: CompanionActionEvent): void {
-		const { hours, minutes, seconds, addremove } = action.options
+		const { hours, minutes, seconds, addremove, stringValue } = action.options as PlaybackAddTimerOption
+		if (addremove === 'string') {
+			const maybeNumber = Number(stringValue)
+			if (!isNaN(maybeNumber)) {
+				module.connection.sendSocket('addtime', maybeNumber)
+				return
+			}
+			const formattedValue = strictTimerStringToMs(stringValue)
+			if (formattedValue !== null) {
+				module.connection.sendSocket('addtime', formattedValue)
+				return
+			}
+			module.log('warn', `failed to format value in playback addTime action: ${stringValue}`)
+			return
+		}
 		const val =
 			((Number(hours) * 60 + Number(minutes)) * 60 + Number(seconds)) * 1000 * (addremove == 'remove' ? -1 : 1)
 		module.connection.sendSocket('addtime', val)
@@ -210,9 +233,19 @@ export function createPlaybackActions(module: OntimeModule): { [id: string]: Com
 					choices: [
 						{ id: 'add', label: 'Add Time' },
 						{ id: 'remove', label: 'Remove Time' },
+						{ id: 'string', label: 'Expression/Text' },
 					],
 					label: 'Add or Remove',
 					default: 'add',
+				},
+				{
+					type: 'textinput',
+					id: 'stringValue',
+					label: 'Value',
+					useVariables: true,
+					required: true,
+					tooltip: 'Either as a straight number in ms or formatted "hh:mm:ss"',
+					isVisibleExpression: '$(options:addremove) === "string"',
 				},
 				{
 					type: 'number',
@@ -223,6 +256,7 @@ export function createPlaybackActions(module: OntimeModule): { [id: string]: Com
 					min: 0,
 					max: 24,
 					required: true,
+					isVisibleExpression: '$(options:addremove) !== "string"',
 				},
 				{
 					type: 'number',
@@ -233,6 +267,7 @@ export function createPlaybackActions(module: OntimeModule): { [id: string]: Com
 					min: 0,
 					max: 1440,
 					required: true,
+					isVisibleExpression: '$(options:addremove) !== "string"',
 				},
 				{
 					type: 'number',
@@ -243,6 +278,7 @@ export function createPlaybackActions(module: OntimeModule): { [id: string]: Com
 					max: 86400,
 					step: 1,
 					required: true,
+					isVisibleExpression: '$(options:addremove) !== "string"',
 				},
 			],
 			callback: addTime,
