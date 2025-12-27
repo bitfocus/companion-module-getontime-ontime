@@ -1,8 +1,4 @@
-import type {
-	CompanionActionDefinition,
-	CompanionActionEvent,
-	CompanionMigrationAction,
-} from '@companion-module/base'
+import type { CompanionActionDefinition, CompanionActionEvent, CompanionMigrationAction } from '@companion-module/base'
 import { splitHex } from '@companion-module/base'
 import { ActionId } from '../enums.js'
 import { changePicker } from './changePicker.js'

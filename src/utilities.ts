@@ -1,6 +1,7 @@
 import type { DropdownChoice } from '@companion-module/base'
 import type { OntimeEvent } from '@getontime/resolver'
 import type OntimeState from './state.js'
+import { HoursMs, MinutesMs, SecondsMs } from './enums.js'
 
 export const joinTime = (...args: string[]): string => args.join(':')
 
@@ -60,9 +61,9 @@ export function msToSplitTime(time: number | null): SplitTime {
 	} else {
 		negative = false
 	}
-	const s = Math.floor((time / 1000) % 60)
-	const m = Math.floor((time / (1000 * 60)) % 60)
-	const h = Math.floor((time / (1000 * 60 * 60)) % 24)
+	const s = Math.floor((time / SecondsMs) % 60)
+	const m = Math.floor((time / MinutesMs) % 60)
+	const h = Math.floor((time / HoursMs) % 24)
 
 	const seconds = padTo2Digits(s)
 	const minutes = padTo2Digits(m)
@@ -120,6 +121,19 @@ export function findPreviousPlayableEvent(state: OntimeState): OntimeEvent | nul
 	return null
 }
 
+/**
+ * attempts to convert a sting to ms first by testing if it is a straight number and then by spiting on `:`
+ * @returns {number | null} if successful returns a number otherwise null
+ */
+export function stringNumberOrFormatted(str: string): number | null {
+	const maybeNumber = Number(str)
+	return isNaN(maybeNumber) ? strictTimerStringToMs(str) : maybeNumber
+}
+
+/**
+ * attempts to convert a sting to ms  by spiting on `:`
+ * @returns {number | null} if successful returns a number otherwise null
+ */
 export function strictTimerStringToMs(str: string): number | null {
 	const [hh, mm, ss] = str.split(':')
 
@@ -136,19 +150,19 @@ export function strictTimerStringToMs(str: string): number | null {
 	const maybeHH = Number(hh)
 	if (isNaN(maybeSS) || isNaN(maybeMM) || isNaN(maybeHH)) return null
 
-	const seconds = maybeSS * 1000
-	const minutes = maybeMM * 60 * 1000
-	const hours = maybeHH * 60 * 60 * 1000
+	return isNegative * hmsValuesToMs(maybeHH, maybeMM, maybeSS)
+}
 
-	return isNegative * (seconds + minutes + hours)
+export function hmsValuesToMs(h: number, m: number, s: number): number {
+	return s * SecondsMs + m * MinutesMs + h * HoursMs
 }
 
 export function formatTime(value: number): { sign: '-' | ''; HH: string; mm: string; ss: string; hms: string } {
 	const sign = value < 0 ? '-' : ''
 	const absolute = Math.abs(value)
-	const ss = (Math.round(absolute / 1000) % 60).toString().padStart(2, '0')
-	const mm = (Math.floor(absolute / 60000) % 60).toString().padStart(2, '0')
-	const HH = Math.floor(absolute / 3600000)
+	const ss = (Math.round(absolute / SecondsMs) % 60).toString().padStart(2, '0')
+	const mm = (Math.floor(absolute / MinutesMs) % 60).toString().padStart(2, '0')
+	const HH = Math.floor(absolute / HoursMs)
 		.toString()
 		.padStart(2, '0')
 
