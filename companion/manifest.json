@@ -4,7 +4,7 @@
 	"name": "getontime-ontime",
 	"shortname": "ontime",
 	"description": "Companion module for ontime",
-	"version": "5.2.0",
+	"version": "5.3.0",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-getontime-ontime.git",
 	"bugs": "https://github.com/bitfocus/companion-module-getontime-ontime/issues",
