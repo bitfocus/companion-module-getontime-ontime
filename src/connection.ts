@@ -80,7 +80,7 @@ export class OntimeConnection {
 	}
 	private onWsOpen(): void {
 		this.module.updateStatus(InstanceStatus.Ok)
-		this.module.setPresetDefinitions(generatePresets())
+		this.module.setPresetDefinitions(...generatePresets())
 
 		const pendingFetch: FetchPromiseArray = [fetchAllEvents(this.module), fetchCustomFields(this.module)]
 

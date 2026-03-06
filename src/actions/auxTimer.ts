@@ -1,4 +1,4 @@
-import type { CompanionActionDefinition, CompanionActionEvent, CompanionMigrationAction } from '@companion-module/base'
+import type { CompanionActionDefinitions, CompanionActionEvent, CompanionMigrationAction } from '@companion-module/base'
 import { ActionId } from '../enums.js'
 import { SimplePlayback, SimpleDirection } from '@getontime/resolver'
 import type { OntimeModule } from '../index.js'
@@ -6,12 +6,21 @@ import { hmsValuesToMs, stringNumberOrFormatted } from '../utilities.js'
 
 type AuxIds = '1' | '2' | '3'
 
-type AuxDurationOption = {
+type AuxPlayStateValues = {
+	destination: AuxIds
+	value: 'toggleSS' | 'toggleSP' | SimplePlayback.Start | SimplePlayback.Stop | SimplePlayback.Pause
+}
+type AuxDurationValues = {
 	duration: string
 	destination: AuxIds
 }
 
-type AuxAddOption = {
+type AuxDirectionValues = {
+	direction: SimpleDirection.CountDown | SimpleDirection.CountUp
+	destination: AuxIds
+}
+
+type AuxAddValues = {
 	hours: number
 	minutes: number
 	seconds: number
@@ -20,9 +29,16 @@ type AuxAddOption = {
 	destination: AuxIds
 }
 
-export function createAuxTimerActions(module: OntimeModule): { [id: string]: CompanionActionDefinition } {
-	function togglePlayState(action: CompanionActionEvent): void {
-		const id = action.options.destination as AuxIds
+export type AuxTimerActionsSchema = {
+	[ActionId.AuxTimerPlayState]: { options: AuxPlayStateValues }
+	[ActionId.AuxTimerDuration]: { options: AuxDurationValues }
+	[ActionId.AuxTimerDirection]: { options: AuxDirectionValues }
+	[ActionId.AuxTimerAdd]: { options: AuxAddValues }
+}
+
+export function createAuxTimerActions(module: OntimeModule): CompanionActionDefinitions<AuxTimerActionsSchema> {
+	function togglePlayState(action: CompanionActionEvent<AuxPlayStateValues>): void {
+		const id = action.options.destination
 		const timer = module.connection.state[`auxtimer${id}`]
 		if (action.options.value === 'toggleSS') {
 			module.connection.sendSocket('auxtimer', {
@@ -41,8 +57,8 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 		module.connection.sendSocket('auxtimer', { [id]: action.options.value as SimplePlayback })
 	}
 
-	function duration(action: CompanionActionEvent): void {
-		const { duration, destination } = action.options as AuxDurationOption
+	function duration(action: CompanionActionEvent<AuxDurationValues>): void {
+		const { duration, destination } = action.options
 		const maybeNumber = stringNumberOrFormatted(duration)
 		if (maybeNumber !== null) {
 			module.connection.sendSocket('auxtimer', { [destination]: { duration: maybeNumber } })
@@ -51,8 +67,8 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 		}
 	}
 
-	function addTime(action: CompanionActionEvent): void {
-		const { hours, minutes, seconds, addremove, stringValue, destination } = action.options as AuxAddOption
+	function addTime(action: CompanionActionEvent<AuxAddValues>): void {
+		const { hours, minutes, seconds, addremove, stringValue, destination } = action.options
 		if (addremove === 'string') {
 			const maybeNumber = stringNumberOrFormatted(stringValue)
 			if (maybeNumber !== null) {
@@ -118,7 +134,7 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 					default: '00:00:00',
 					tooltip: 'Either as a straight number in ms or formatted "hh:mm:ss"',
 					useVariables: true,
-					required: true,
+					minLength: 1,
 				},
 			],
 			callback: duration,
@@ -150,7 +166,7 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 			],
 			callback: ({ options }) =>
 				module.connection.sendSocket('auxtimer', {
-					[options.destination as '1']: { direction: options.direction as SimpleDirection },
+					[options.destination]: { direction: options.direction },
 				}),
 		},
 		[ActionId.AuxTimerAdd]: {
@@ -177,13 +193,15 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 					],
 					label: 'Add or Remove',
 					default: 'add',
+					disableAutoExpression: true,
 				},
 				{
 					type: 'textinput',
 					id: 'stringValue',
 					label: 'Value',
 					useVariables: true,
-					required: true,
+					default: '00:00:00',
+					minLength: 1,
 					tooltip: 'Either as a straight number in ms or formatted "hh:mm:ss"',
 					isVisibleExpression: '$(options:addremove) === "string"',
 				},
@@ -195,7 +213,6 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 					step: 1,
 					min: 0,
 					max: 24,
-					required: true,
 					isVisibleExpression: '$(options:addremove) !== "string"',
 				},
 				{
@@ -206,7 +223,6 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 					step: 1,
 					min: 0,
 					max: 1440,
-					required: true,
 					isVisibleExpression: '$(options:addremove) !== "string"',
 				},
 				{
@@ -217,7 +233,6 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 					min: 0,
 					max: 86400,
 					step: 1,
-					required: true,
 					isVisibleExpression: '$(options:addremove) !== "string"',
 				},
 			],
@@ -227,19 +242,31 @@ export function createAuxTimerActions(module: OntimeModule): { [id: string]: Com
 }
 
 /**
+ * v5.4.1 ensure value in add time string
+ */
+export function upgrade_auxTimerAddTimeString(action: CompanionMigrationAction): boolean {
+	if (action.actionId !== `${ActionId.AuxTimerAdd}`) return false
+	if (action.options.stringValue?.value) return false
+	action.options.stringValue = { isExpression: false, value: '00:00:00' }
+	return true
+}
+
+/**
  * v5.0.0 allow user expressions in auxtimer actions
  */
 export function upgrade_auxTimerDurationTakesExpressions(action: CompanionMigrationAction): boolean {
-	if (action.actionId !== `${ActionId.AuxTimerDuration}`) {
-		return false
-	}
-	const { hours, minutes, seconds } = action.options
-	action.options.duration =
-		hours?.toString().padStart(2, '0') +
-		':' +
-		minutes?.toString().padStart(2, '0') +
-		':' +
-		seconds?.toString().padStart(2, '0')
+	if (action.actionId !== `${ActionId.AuxTimerDuration}`) return false
+	if (!action.options.hours || !action.options.minutes || !action.options.seconds) return false
 
+	const hours = action.options.hours.value as string
+	const minutes = action.options.minutes.value as string
+	const seconds = action.options.seconds.value as string
+	action.options.duration = {
+		isExpression: false,
+		value: `${hours?.toString().padStart(2, '0')}:${minutes?.toString().padStart(2, '0')}:${seconds?.toString().padStart(2, '0')}`,
+	}
+	delete action.options.hours
+	delete action.options.minutes
+	delete action.options.seconds
 	return true
 }

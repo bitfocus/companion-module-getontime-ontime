@@ -1,11 +1,11 @@
 import type {
-	CompanionButtonPresetDefinition,
 	CompanionButtonStyleProps,
+	CompanionPresetDefinition,
 	CompanionPresetDefinitions,
+	CompanionPresetSection,
 } from '@companion-module/base'
 import * as icons from './assets/icons.js'
 import { ActionId, feedbackId, ToggleOnOff } from './enums.js'
-import { graphics } from 'companion-module-utils'
 import {
 	ActiveBlue,
 	Black,
@@ -20,9 +20,46 @@ import {
 	White,
 } from './assets/colours.js'
 import { Playback, SimplePlayback } from '@getontime/resolver'
+import type { OntimeTypes } from './index.js'
+import { patchMessageAction } from './actions/message.js'
+import { patchMessageFeedback } from './feedbacks/message.js'
+import { patchAddTimeAction } from './actions/playback.js'
 
-export function generatePresets(): CompanionPresetDefinitions {
-	return { ...wallClockPresets, ...playbackPresets, ...timerPresets, ...auxTimerPresets, ...messagePresets }
+export function generatePresets(): [
+	structure: CompanionPresetSection[],
+	presets: CompanionPresetDefinitions<OntimeTypes>,
+] {
+	const presets = { ...wallClockPresets, ...messagePresets, ...timerPresets, ...auxTimerPresets, ...playbackPresets }
+
+	const structure: CompanionPresetSection<OntimeTypes>[] = [
+		{
+			id: 'clock',
+			name: 'Clock',
+			definitions: Object.keys(wallClockPresets),
+		},
+		{
+			id: 'message',
+			name: 'Message',
+			definitions: Object.keys(messagePresets),
+		},
+		{
+			id: 'timer',
+			name: 'Timer Management',
+			definitions: Object.keys(timerPresets),
+		},
+		{
+			id: 'playback',
+			name: 'Playback',
+			definitions: Object.keys(playbackPresets),
+		},
+		{
+			id: 'auxtimer',
+			name: 'Aux Timer',
+			definitions: Object.keys(auxTimerPresets),
+		},
+	]
+
+	return [structure, presets]
 }
 
 const defaultStyle: CompanionButtonStyleProps = {
@@ -44,65 +81,42 @@ const defaultWithIconStyle: CompanionButtonStyleProps = {
 	// show_topbar: false,
 }
 
-const wallClockPresets: { [id: string]: CompanionButtonPresetDefinition } = {
+function generateWallClockPreset(name: string, format: string): CompanionPresetDefinition<OntimeTypes> {
+	return {
+		type: 'simple',
+		name,
+		style: {
+			...defaultStyle,
+			size: 'auto',
+			textExpression: true,
+			text: `msToTimestamp($(ontime:clock), "${format}")`,
+		},
+		steps: [],
+		feedbacks: [],
+	}
+}
+
+const wallClockPresets: CompanionPresetDefinitions<OntimeTypes> = {
 	wall_clock: {
-		type: 'button',
-		category: 'Clock',
+		type: 'simple',
 		name: 'Wall Clock',
 		style: {
 			...defaultStyle,
 			size: '14',
 			textExpression: true,
-			text: '`Clock:\n${msToTimestamp($(ontime:clock), "HH:mm:ss")}`',
+			text: `\`Clock:\n\${msToTimestamp($(ontime:clock), "${'HH:mm:ss'}")}\``,
 		},
 		steps: [],
 		feedbacks: [],
 	},
-	hh_wall_clock: {
-		type: 'button',
-		category: 'Clock',
-		name: 'HH Wall Clock',
-		style: {
-			...defaultStyle,
-			size: 'auto',
-			textExpression: true,
-			text: 'msToTimestamp($(ontime:clock), "HH")',
-		},
-		steps: [],
-		feedbacks: [],
-	},
-	mm_wall_clock: {
-		type: 'button',
-		category: 'Clock',
-		name: 'mm Wall Clock',
-		style: {
-			...defaultStyle,
-			size: 'auto',
-			textExpression: true,
-			text: 'msToTimestamp($(ontime:clock), "mm")',
-		},
-		steps: [],
-		feedbacks: [],
-	},
-	ss_wall_clock: {
-		type: 'button',
-		category: 'Clock',
-		name: 'Wall Clock',
-		style: {
-			...defaultStyle,
-			size: 'auto',
-			textExpression: true,
-			text: 'msToTimestamp($(ontime:clock), "ss")',
-		},
-		steps: [],
-		feedbacks: [],
-	},
+	hh_wall_clock: generateWallClockPreset('HH Wall Clock', 'HH'),
+	mm_wall_clock: generateWallClockPreset('MM Wall Clock', 'mm'),
+	ss_wall_clock: generateWallClockPreset('SS Wall Clock', 'ss'),
 }
 
-const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
+const playbackPresets: CompanionPresetDefinitions<OntimeTypes> = {
 	start_selected_or_next_event: {
-		type: 'button',
-		category: 'Playback',
+		type: 'simple',
 		name: 'Start selected/next event',
 		style: {
 			...defaultWithIconStyle,
@@ -115,7 +129,14 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				down: [
 					{
 						actionId: ActionId.Start,
-						options: { method: 'go' },
+						options: {
+							method: 'go',
+							eventList: '',
+							cuenote: '',
+							eventCue: '',
+							eventId: '',
+							eventIndex: 0,
+						},
 					},
 				],
 				up: [],
@@ -125,7 +146,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.ColorPlayback,
 				options: {
-					state: ['play', 'pause'],
+					state: [Playback.Play, Playback.Pause],
 				},
 				style: {
 					color: White,
@@ -136,7 +157,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.ColorPlayback,
 				options: {
-					state: ['armed'],
+					state: [Playback.Armed],
 				},
 				style: {
 					text: 'GO (load)',
@@ -145,8 +166,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		],
 	},
 	start_event: {
-		type: 'button',
-		category: 'Playback',
+		type: 'simple',
 		name: 'Starts selected event',
 		style: {
 			...defaultWithIconStyle,
@@ -159,8 +179,14 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				down: [
 					{
 						actionId: ActionId.Start,
+
 						options: {
 							method: 'loaded',
+							eventList: '',
+							cuenote: '',
+							eventCue: '',
+							eventId: '',
+							eventIndex: 0,
 						},
 					},
 				],
@@ -171,7 +197,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.ColorPlayback,
 				options: {
-					state: ['play'],
+					state: [Playback.Play],
 				},
 				style: {
 					color: White,
@@ -181,7 +207,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.ColorPlayback,
 				options: {
-					state: ['armed', 'pause'],
+					state: [Playback.Armed, Playback.Pause],
 				},
 				style: {
 					color: PlaybackGreen,
@@ -190,8 +216,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		],
 	},
 	pause_selected_event: {
-		type: 'button',
-		category: 'Playback',
+		type: 'simple',
 		name: 'Pauses running event',
 		style: {
 			...defaultWithIconStyle,
@@ -214,7 +239,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.ColorPlayback,
 				options: {
-					state: ['pause'],
+					state: [Playback.Pause],
 				},
 				style: {
 					color: White,
@@ -224,7 +249,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.ColorPlayback,
 				options: {
-					state: ['play'],
+					state: [Playback.Play],
 				},
 				style: {
 					color: PauseOrange,
@@ -233,8 +258,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		],
 	},
 	select_previous_event: {
-		type: 'button',
-		category: 'Playback',
+		type: 'simple',
 		name: 'Selects previous event',
 		style: {
 			...defaultWithIconStyle,
@@ -246,7 +270,14 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				down: [
 					{
 						actionId: ActionId.Load,
-						options: { method: 'previous' },
+						options: {
+							method: 'previous',
+							eventList: '',
+							cuenote: '',
+							eventCue: '',
+							eventId: '',
+							eventIndex: 0,
+						},
 					},
 				],
 				up: [],
@@ -255,8 +286,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		feedbacks: [],
 	},
 	select_next_event: {
-		type: 'button',
-		category: 'Playback',
+		type: 'simple',
 		name: 'Selects next event',
 		style: {
 			...defaultWithIconStyle,
@@ -268,7 +298,14 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				down: [
 					{
 						actionId: ActionId.Load,
-						options: { method: 'next' },
+						options: {
+							method: 'next',
+							eventList: '',
+							cuenote: '',
+							eventCue: '',
+							eventId: '',
+							eventIndex: 0,
+						},
 					},
 				],
 				up: [],
@@ -277,8 +314,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		feedbacks: [],
 	},
 	start_roll_mode: {
-		type: 'button',
-		category: 'Playback',
+		type: 'simple',
 		name: 'Starts Roll Mode',
 		style: {
 			...defaultWithIconStyle,
@@ -300,7 +336,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		feedbacks: [
 			{
 				feedbackId: feedbackId.ColorPlayback,
-				options: { state: ['roll'] },
+				options: { state: [Playback.Roll] },
 				style: {
 					color: White,
 					bgcolor: RollBlue,
@@ -309,8 +345,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		],
 	},
 	reload_selected_event: {
-		type: 'button',
-		category: 'Playback',
+		type: 'simple',
 		name: 'Reload selected event',
 		style: {
 			...defaultWithIconStyle,
@@ -333,7 +368,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.ColorPlayback,
 				options: {
-					state: ['stop'],
+					state: [Playback.Stop],
 				},
 				isInverted: true,
 				style: {
@@ -343,8 +378,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		],
 	},
 	stop_selected_event: {
-		type: 'button',
-		category: 'Playback',
+		type: 'simple',
 		name: 'Stops running event',
 		style: {
 			...defaultWithIconStyle,
@@ -367,7 +401,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.ColorPlayback,
 				options: {
-					state: ['stop'],
+					state: [Playback.Stop],
 				},
 				isInverted: true,
 				style: {
@@ -378,8 +412,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		],
 	},
 	pause_unpause: {
-		type: 'button',
-		category: 'Playback',
+		type: 'simple',
 		name: 'Pause/Unpause',
 		style: {
 			...defaultWithIconStyle,
@@ -405,9 +438,9 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.ColorPlayback,
 				options: {
-					state: ['play'],
-					isInverted: true,
+					state: [Playback.Play],
 				},
+				isInverted: true,
 				style: {
 					text: 'PAUSE',
 					color: PauseOrange,
@@ -416,7 +449,7 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{
 				feedbackId: feedbackId.ColorPlayback,
 				options: {
-					state: ['armed', 'pause'],
+					state: [Playback.Armed, Playback.Pause],
 				},
 				style: {
 					color: White,
@@ -428,10 +461,9 @@ const playbackPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 	},
 }
 
-const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
+const messagePresets: CompanionPresetDefinitions<OntimeTypes> = {
 	toggle_message: {
-		type: 'button',
-		category: 'Message',
+		type: 'simple',
 		name: 'Toggle Message',
 		style: {
 			...defaultStyle,
@@ -440,14 +472,25 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		},
 		steps: [
 			{
-				down: [{ actionId: ActionId.MessageAction, options: { properties: ['visible'], visible: ToggleOnOff.Toggle } }],
+				down: [
+					{
+						actionId: ActionId.MessageAction,
+						options: patchMessageAction({
+							properties: ['visible'],
+							visible: ToggleOnOff.Toggle,
+						}),
+					},
+				],
 				up: [],
 			},
 		],
 		feedbacks: [
 			{
 				feedbackId: feedbackId.MessageFeedback,
-				options: { properties: ['visible'], visible: ToggleOnOff.On },
+				options: patchMessageFeedback({
+					properties: ['visible'],
+					visible: ToggleOnOff.On,
+				}),
 				style: {
 					bgcolor: ActiveBlue,
 					text: 'HIDE\n"$(ontime:message_text)"',
@@ -456,8 +499,7 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		],
 	},
 	set_message1: {
-		type: 'button',
-		category: 'Message',
+		type: 'simple',
 		name: 'Set Message',
 		style: {
 			...defaultStyle,
@@ -466,14 +508,26 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		},
 		steps: [
 			{
-				down: [{ actionId: ActionId.MessageAction, options: { properties: ['text'], text: 'Message 1' } }],
+				down: [
+					{
+						actionId: ActionId.MessageAction,
+						options: patchMessageAction({
+							properties: ['text'],
+							text: 'Message 1',
+						}),
+					},
+				],
 				up: [],
 			},
 		],
 		feedbacks: [
 			{
 				feedbackId: feedbackId.MessageFeedback,
-				options: { properties: ['visible'], visible: ToggleOnOff.On, text: 'Message 1' },
+				options: patchMessageFeedback({
+					properties: ['visible', 'text'],
+					visible: ToggleOnOff.On,
+					text: 'Message 1',
+				}),
 				style: {
 					bgcolor: ActiveBlue,
 				},
@@ -481,8 +535,7 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		],
 	},
 	set_message2: {
-		type: 'button',
-		category: 'Message',
+		type: 'simple',
 		name: 'Set Message',
 		style: {
 			...defaultStyle,
@@ -491,14 +544,26 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		},
 		steps: [
 			{
-				down: [{ actionId: ActionId.MessageAction, options: { properties: ['text'], text: 'Message 2' } }],
+				down: [
+					{
+						actionId: ActionId.MessageAction,
+						options: patchMessageAction({
+							properties: ['text'],
+							text: 'Message 2',
+						}),
+					},
+				],
 				up: [],
 			},
 		],
 		feedbacks: [
 			{
 				feedbackId: feedbackId.MessageFeedback,
-				options: { properties: ['visible'], visible: ToggleOnOff.On, text: 'Message 2' },
+				options: patchMessageFeedback({
+					properties: ['visible', 'text'],
+					visible: ToggleOnOff.On,
+					text: 'Message 2',
+				}),
 				style: {
 					bgcolor: ActiveBlue,
 				},
@@ -507,10 +572,9 @@ const messagePresets: { [id: string]: CompanionButtonPresetDefinition } = {
 	},
 }
 
-const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
+const timerPresets: CompanionPresetDefinitions<OntimeTypes> = {
 	current_timer: {
-		type: 'button',
-		category: 'Timer Management',
+		type: 'simple',
 		name: 'Current Timer',
 		style: {
 			...defaultStyle,
@@ -521,47 +585,44 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		feedbacks: [],
 	},
 	hh_current_timer: {
-		type: 'button',
-		category: 'Clock',
-		name: 'Wall Clock',
+		type: 'simple',
+		name: 'Current Timer HH',
 		style: {
 			...defaultStyle,
 			size: 'auto',
 			textExpression: true,
-			text: 'msToTimestamp($(ontime:clock), "HH")',
+			text: 'msToTimestamp($(ontime:timer_current), "HH")',
 		},
 		steps: [],
 		feedbacks: [],
 	},
-	mm_wall_clock: {
-		type: 'button',
-		category: 'Clock',
-		name: 'mm Wall Clock',
+	mm_current_timer: {
+		type: 'simple',
+		name: 'Current Timer MM',
 		style: {
 			...defaultStyle,
 			size: 'auto',
 			textExpression: true,
-			text: 'msToTimestamp($(ontime:clock), "mm")',
+			text: 'msToTimestamp($(ontime:timer_current), "mm")',
 		},
 		steps: [],
 		feedbacks: [],
 	},
-	ss_wall_clock: {
-		type: 'button',
-		category: 'Clock',
-		name: 'Wall Clock',
+	ss_current_timer: {
+		type: 'simple',
+		name: 'Current Timer SS',
 		style: {
 			...defaultStyle,
 			size: 'auto',
 			textExpression: true,
-			text: 'msToTimestamp($(ontime:clock), "ss")',
+			text: 'msToTimestamp($(ontime:timer_current), "ss")',
 		},
 		steps: [],
 		feedbacks: [],
 	},
+
 	add_1_min: {
-		type: 'button',
-		category: 'Timer Management',
+		type: 'simple',
 		name: 'Add 1 minute to running timer',
 		style: {
 			...defaultStyle,
@@ -574,7 +635,12 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				down: [
 					{
 						actionId: ActionId.Add,
-						options: { addremove: 'add', minutes: 1, hours: 0, seconds: 0 },
+						options: patchAddTimeAction({
+							addremove: 'add',
+							minutes: 1,
+							hours: 0,
+							seconds: 0,
+						}),
 					},
 				],
 				up: [],
@@ -583,8 +649,7 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		feedbacks: [],
 	},
 	remove_1_min: {
-		type: 'button',
-		category: 'Timer Management',
+		type: 'simple',
 		name: 'Remove 1 minute to running timer',
 		style: { ...defaultStyle, text: '-1', color: PauseOrange, alignment: 'center:center' },
 		steps: [
@@ -592,7 +657,7 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				down: [
 					{
 						actionId: ActionId.Add,
-						options: { addremove: 'remove', minutes: 1, hours: 0, seconds: 0 },
+						options: patchAddTimeAction({ addremove: 'remove', minutes: 1, hours: 0, seconds: 0 }),
 					},
 				],
 				up: [],
@@ -601,8 +666,7 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		feedbacks: [],
 	},
 	add_5_min: {
-		type: 'button',
-		category: 'Timer Management',
+		type: 'simple',
 		name: 'Add 5 minute to running timer',
 		style: {
 			...defaultStyle,
@@ -615,7 +679,7 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				down: [
 					{
 						actionId: ActionId.Add,
-						options: { addremove: 'add', minutes: 5, hours: 0, seconds: 0 },
+						options: patchAddTimeAction({ addremove: 'add', minutes: 5, hours: 0, seconds: 0 }),
 					},
 				],
 				up: [],
@@ -624,8 +688,7 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		feedbacks: [],
 	},
 	remove_5_min: {
-		type: 'button',
-		category: 'Timer Management',
+		type: 'simple',
 		name: 'Remove 5 minute to running timer',
 		style: {
 			...defaultStyle,
@@ -638,7 +701,7 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 				down: [
 					{
 						actionId: ActionId.Add,
-						options: { addremove: 'remove', minutes: 5, hours: 0, seconds: 0 },
+						options: patchAddTimeAction({ addremove: 'remove', minutes: 5, hours: 0, seconds: 0 }),
 					},
 				],
 				up: [],
@@ -647,12 +710,11 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 		feedbacks: [],
 	},
 	current_added: {
-		type: 'button',
-		category: 'Timer Management',
+		type: 'simple',
 		name: 'Amount of time added/removed from running timer',
 		style: {
 			...defaultStyle,
-			text: '`Total added\n${msToTimestamp($(ontime:timer_added), "hh:mm:ss")}`',
+			text: '`Total added\n${msToTimestamp($(ontime:timer_added), "HH:mm:ss")}`',
 			size: 'auto',
 			alignment: 'center:center',
 			textExpression: true,
@@ -674,45 +736,15 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 			{ feedbackId: feedbackId.ColorAddRemove, options: { direction: 'both' }, style: { bgcolor: PauseOrange } },
 		],
 	},
-	current_time_hms: {
-		type: 'button',
-		category: 'Timer Management',
+	current_time_progress: {
+		type: 'simple',
 		name: 'Current time',
 		style: {
 			...defaultStyle,
 			size: 14,
-			text: 'msToTimestamp($(ontime:timer_current),"hh:mm:ss")',
+			text: 'msToTimestamp($(ontime:timer_current),"HH:mm:ss")',
 			alignment: 'center:center',
 			textExpression: true,
-		},
-		previewStyle: {
-			...defaultStyle,
-			size: 14,
-			text: 'HH:MM:SS',
-			alignment: 'center:center',
-			png64: graphics.toPNG64({
-				image: graphics.bar({
-					width: 72,
-					height: 72,
-					colors: [
-						{
-							size: 100,
-							color: NormalGray,
-							background: NormalGray,
-							backgroundOpacity: 150,
-						},
-					],
-					barLength: 72,
-					barWidth: 10,
-					value: 50,
-					type: 'horizontal',
-					offsetX: 0,
-					offsetY: 72 - 10,
-					opacity: 255,
-				}),
-				width: 72,
-				height: 72,
-			}),
 		},
 		steps: [
 			{
@@ -727,17 +759,17 @@ const timerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 					normal: NormalGray,
 					warning: WarningOrange,
 					danger: DangerRed,
+					big: false,
 				},
 			},
 		],
 	},
 }
 
-function generateAuxTime(index: '1' | '2' | '3'): CompanionButtonPresetDefinition {
+function generateAuxTime(index: '1' | '2' | '3'): CompanionPresetDefinition<OntimeTypes> {
 	return {
-		type: 'button',
-		category: 'Aux Timer',
-		name: 'Aux ' + index,
+		type: 'simple',
+		name: `Aux ${index}`,
 		style: {
 			...defaultStyle,
 			text: '`AUX ' + index + '\n${msToTimestamp($(ontime:aux_' + index + '_current),"HH:mm:ss")}`',
@@ -755,7 +787,7 @@ function generateAuxTime(index: '1' | '2' | '3'): CompanionButtonPresetDefinitio
 			{
 				feedbackId: feedbackId.AuxTimerNegative,
 				options: {
-					destination: 'auxtimer' + index,
+					destination: indexToAuxTimerName(index),
 				},
 				style: {
 					color: DangerRed,
@@ -765,10 +797,9 @@ function generateAuxTime(index: '1' | '2' | '3'): CompanionButtonPresetDefinitio
 	}
 }
 
-function generateAuxStartPause(index: '1' | '2' | '3'): CompanionButtonPresetDefinition {
+function generateAuxStartPause(index: '1' | '2' | '3'): CompanionPresetDefinition<OntimeTypes> {
 	return {
-		type: 'button',
-		category: 'Aux Timer',
+		type: 'simple',
 		name: 'Start/Pause Aux Timer ' + index,
 		style: {
 			...defaultWithIconStyle,
@@ -791,8 +822,8 @@ function generateAuxStartPause(index: '1' | '2' | '3'): CompanionButtonPresetDef
 			{
 				feedbackId: feedbackId.AuxTimerPlayback,
 				options: {
-					state: 'start',
-					destination: 'auxtimer' + index,
+					state: SimplePlayback.Start,
+					destination: indexToAuxTimerName(index),
 				},
 				style: {
 					bgcolor: PauseOrange,
@@ -804,10 +835,9 @@ function generateAuxStartPause(index: '1' | '2' | '3'): CompanionButtonPresetDef
 	}
 }
 
-function generateAuxStop(index: '1' | '2' | '3'): CompanionButtonPresetDefinition {
+function generateAuxStop(index: '1' | '2' | '3'): CompanionPresetDefinition<OntimeTypes> {
 	return {
-		type: 'button',
-		category: 'Aux Timer',
+		type: 'simple',
 		name: 'Stop Aux Timer ' + index,
 		style: {
 			...defaultWithIconStyle,
@@ -829,8 +859,8 @@ function generateAuxStop(index: '1' | '2' | '3'): CompanionButtonPresetDefinitio
 			{
 				feedbackId: feedbackId.AuxTimerPlayback,
 				options: {
-					state: 'stop',
-					destination: 'auxtimer' + index,
+					state: SimplePlayback.Stop,
+					destination: indexToAuxTimerName(index),
 				},
 				isInverted: true,
 				style: {
@@ -843,10 +873,9 @@ function generateAuxStop(index: '1' | '2' | '3'): CompanionButtonPresetDefinitio
 	}
 }
 
-function generateAuxAddTime(index: '1' | '2' | '3'): CompanionButtonPresetDefinition {
+function generateAuxAddTime(index: '1' | '2' | '3'): CompanionPresetDefinition<OntimeTypes> {
 	return {
-		type: 'button',
-		category: 'Aux Timer',
+		type: 'simple',
 		name: 'Add timer to Aux Timer ' + index,
 		style: {
 			...defaultStyle,
@@ -858,7 +887,7 @@ function generateAuxAddTime(index: '1' | '2' | '3'): CompanionButtonPresetDefini
 				down: [
 					{
 						actionId: ActionId.AuxTimerAdd,
-						options: { hours: 0, minutes: 5, seconds: 0, addremove: 'add', destination: index },
+						options: { hours: 0, minutes: 5, seconds: 0, addremove: 'add', destination: index, stringValue: '' },
 					},
 				],
 				up: [],
@@ -868,10 +897,9 @@ function generateAuxAddTime(index: '1' | '2' | '3'): CompanionButtonPresetDefini
 	}
 }
 
-function generateAuxSetTime(index: '1' | '2' | '3'): CompanionButtonPresetDefinition {
+function generateAuxSetTime(index: '1' | '2' | '3'): CompanionPresetDefinition<OntimeTypes> {
 	return {
-		type: 'button',
-		category: 'Aux Timer',
+		type: 'simple',
 		name: 'Set Aux Duration ' + index,
 		style: {
 			...defaultStyle,
@@ -883,7 +911,7 @@ function generateAuxSetTime(index: '1' | '2' | '3'): CompanionButtonPresetDefini
 				down: [
 					{
 						actionId: ActionId.AuxTimerDuration,
-						options: { hours: 0, minutes: 5, seconds: 0, addremove: 'add', destination: index },
+						options: { destination: index, duration: '00:05:00' },
 					},
 				],
 				up: [],
@@ -893,7 +921,7 @@ function generateAuxSetTime(index: '1' | '2' | '3'): CompanionButtonPresetDefini
 	}
 }
 
-const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
+const auxTimerPresets: CompanionPresetDefinitions<OntimeTypes> = {
 	current_auxtime1_hms: generateAuxTime('1'),
 	current_auxtime2_hms: generateAuxTime('2'),
 	current_auxtime3_hms: generateAuxTime('3'),
@@ -909,4 +937,8 @@ const auxTimerPresets: { [id: string]: CompanionButtonPresetDefinition } = {
 	set_auxtimer1: generateAuxSetTime('1'),
 	set_auxtimer2: generateAuxSetTime('2'),
 	set_auxtimer3: generateAuxSetTime('3'),
+}
+
+function indexToAuxTimerName(index: '1' | '2' | '3'): 'auxtimer1' | 'auxtimer2' | 'auxtimer3' {
+	return `auxtimer${index}`
 }

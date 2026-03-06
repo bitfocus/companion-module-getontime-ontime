@@ -1,29 +1,32 @@
-import type {
-	CompanionInputFieldCheckbox,
-	CompanionInputFieldColor,
-	CompanionInputFieldDropdown,
-	CompanionInputFieldMultiDropdown,
-	CompanionInputFieldNumber,
-	CompanionInputFieldStaticText,
-	CompanionInputFieldTextInput,
-} from '@companion-module/base'
+import type { CompanionActionDefinition, SomeCompanionActionInputField, StringKeys } from '@companion-module/base'
 import { combineRgb } from '@companion-module/base'
-import { type CustomFields } from '@getontime/resolver'
+import type { CustomFields } from '@getontime/resolver'
+import type { PICK_ONE } from '../enums.js'
 
 const throttledEndpointText = 'This property will cause a recalculation of the rundown\nand is throttled by ontime'
 
-export function changePicker(
-	customFields: CustomFields,
-): Array<
-	| CompanionInputFieldNumber
-	| CompanionInputFieldCheckbox
-	| CompanionInputFieldDropdown
-	| CompanionInputFieldMultiDropdown
-	| CompanionInputFieldColor
-	| CompanionInputFieldTextInput
-	| CompanionInputFieldStaticText
-> {
-	const allProps: ReturnType<typeof changePicker> = [
+type ChangePickerProperties = {
+	title: string
+	note: string
+	cue: string
+	skip: boolean
+	colour: string
+	linkStart: boolean
+	duration_hhmmss: string
+	timeStart_hhmmss: string
+	timeEnd_hhmmss: string
+	timeWarning_hhmmss: string
+	timeDanger_hhmmss: string
+	endAction: 'load-next' | 'none' | 'stop' | 'play-next'
+	timerType: 'count-down' | 'count-up' | 'time-to-end' | 'clock'
+} & CustomFieldValues
+
+export type ChangePickerOptions = ChangePickerProperties & {
+	properties: (keyof ChangePickerProperties | typeof PICK_ONE)[]
+}
+
+export function changePicker(customFields: CustomFields): CompanionActionDefinition<ChangePickerOptions>['options'] {
+	const allProps: CompanionActionDefinition<ChangePickerOptions>['options'] = [
 		{
 			type: 'textinput',
 			label: 'Title',
@@ -156,11 +159,15 @@ export function changePicker(
 	]
 }
 
-function generateCustomFieldsOptions(customFields: CustomFields): Array<CompanionInputFieldTextInput> {
+type CustomFieldValues = Record<`custom:${string}`, string>
+
+function generateCustomFieldsOptions(
+	customFields: CustomFields,
+): SomeCompanionActionInputField<StringKeys<CustomFieldValues>>[] {
 	const customProps: ReturnType<typeof generateCustomFieldsOptions> = []
 
 	for (const field in customFields) {
-		const id = `custom:${field}`
+		const id = fieldToCustomFieldId(field)
 		customProps.push({
 			type: 'textinput',
 			id,
@@ -171,4 +178,8 @@ function generateCustomFieldsOptions(customFields: CustomFields): Array<Companio
 	}
 
 	return customProps
+}
+
+function fieldToCustomFieldId(field: string): `custom:${string}` {
+	return `custom:${field}`
 }

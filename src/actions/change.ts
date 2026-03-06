@@ -1,92 +1,16 @@
-import type { CompanionActionDefinition, CompanionActionEvent, CompanionMigrationAction } from '@companion-module/base'
+import type { CompanionActionDefinitions, CompanionActionEvent, CompanionMigrationAction } from '@companion-module/base'
 import { splitHex } from '@companion-module/base'
-import { ActionId } from '../enums.js'
-import { changePicker } from './changePicker.js'
-import { eventPicker } from './eventPicker.js'
+import { ActionId, PICK_ONE } from '../enums.js'
+import { changePicker, type ChangePickerOptions } from './changePicker.js'
+import { eventPicker, type EventPickerOptions } from './eventPicker.js'
 import { strictTimerStringToMs } from '../utilities.js'
 import type { OntimeModule } from '../index.js'
 import { TimeStrategy, type OntimeEvent } from '@getontime/resolver'
 
-export function createChangeActions(module: OntimeModule): { [id: string]: CompanionActionDefinition } {
-	async function changeEvent(action: CompanionActionEvent): Promise<void> {
-		const { properties, method, eventList, eventId } = action.options
-		let id: string | null = null
-		switch (method) {
-			case 'list': {
-				id = eventList ? String(eventList) : null
-				break
-			}
-			case 'loaded': {
-				id = module.connection.state.eventNow?.id ?? null
-				break
-			}
-			case 'next': {
-				id = module.connection.state.eventNext?.id ?? null
-				break
-			}
-			case 'id': {
-				id = eventId as string
-				break
-			}
-		}
-		//if no ID skip
-		if (!id) {
-			return
-		}
-		const patch: Partial<OntimeEvent> = {}
-		if (properties && Array.isArray(properties)) {
-			//remove unwanted placeholder value if present
-			if (properties.includes('pickOne')) {
-				properties.splice(properties.indexOf('pickOne'), 1)
-			}
+type ChangeOptions = EventPickerOptions & ChangePickerOptions
+export type ChangeActionsSchema = { [ActionId.Change]: { options: ChangeOptions } }
 
-			for (const property of properties) {
-				if (typeof property !== 'string') {
-					continue
-				}
-				const value = action.options[property]
-				if (typeof value === 'undefined') {
-					continue
-				}
-				// converts companion color value to hex
-				if (property === 'colour') {
-					const colour = splitHex(value as string)
-					Object.assign(patch, { colour })
-					continue
-				}
-
-				// converts companion time variable (hh:mm:ss) to ontime seconds
-				if (property.endsWith('_hhmmss')) {
-					const timeString = value as string
-					const maybeNumber = Number(timeString)
-					const ms = isNaN(maybeNumber) ? strictTimerStringToMs(timeString) : maybeNumber
-					if (ms === null) {
-						module.log('error', `Invalid value in change action: ${property}`)
-						continue
-					}
-					const propertyName = property.split('_hhmmss')[0]
-					Object.assign(patch, { [propertyName]: ms })
-					continue
-				}
-
-				Object.assign(patch, { [property]: value })
-			}
-			if (properties.includes('timeStart_hhmmss')) {
-				const linkStart = (action.options.linkStart as boolean) ?? false
-				Object.assign(patch, { linkStart })
-			}
-			if (properties.includes('timeEnd_hhmmss')) {
-				Object.assign(patch, { timeStrategy: TimeStrategy.LockEnd })
-			}
-			if (properties.includes('duration_hhmmss')) {
-				Object.assign(patch, { timeStrategy: TimeStrategy.LockDuration })
-			}
-			module.connection.sendSocket('change', {
-				[id]: patch,
-			})
-		}
-	}
-
+export function createChangeActions(module: OntimeModule): CompanionActionDefinitions<ChangeActionsSchema> {
 	return {
 		[ActionId.Change]: {
 			name: 'Change event property',
@@ -94,7 +18,80 @@ export function createChangeActions(module: OntimeModule): { [id: string]: Compa
 				...eventPicker(module.connection.state.events, ['list', 'loaded', 'next', 'id', 'index']),
 				...changePicker(module.connection.state.customFields),
 			],
-			callback: changeEvent,
+			callback: (action: CompanionActionEvent<ChangeOptions>) => {
+				const { properties, method, eventList, eventId } = action.options
+				let id: string | null = null
+				switch (method) {
+					case 'list': {
+						id = eventList ? String(eventList) : null
+						break
+					}
+					case 'loaded': {
+						id = module.connection.state.eventNow?.id ?? null
+						break
+					}
+					case 'next': {
+						id = module.connection.state.eventNext?.id ?? null
+						break
+					}
+					case 'id': {
+						id = eventId
+						break
+					}
+				}
+				//if no ID skip
+				if (!id) return
+				if (!properties.length) return
+
+				const patch: Partial<OntimeEvent> = {}
+				//remove unwanted placeholder value if present
+				const filteredProperties = properties.filter((val) => val !== PICK_ONE)
+
+				for (const property of filteredProperties) {
+					if (typeof property !== 'string') {
+						continue
+					}
+					const value = action.options[property]
+					if (typeof value === 'undefined') {
+						continue
+					}
+					// converts companion color value to hex
+					if (property === 'colour') {
+						const colour = splitHex(value as string)
+						Object.assign(patch, { colour })
+						continue
+					}
+
+					// converts companion time variable (hh:mm:ss) to ontime seconds
+					if (property.endsWith('_hhmmss')) {
+						const timeString = value as string
+						const maybeNumber = Number(timeString)
+						const ms = isNaN(maybeNumber) ? strictTimerStringToMs(timeString) : maybeNumber
+						if (ms === null) {
+							module.log('error', `Invalid value in change action: ${property}`)
+							continue
+						}
+						const propertyName = property.split('_hhmmss')[0]
+						Object.assign(patch, { [propertyName]: ms })
+						continue
+					}
+
+					Object.assign(patch, { [property]: value })
+				}
+				if (properties.includes('timeStart_hhmmss')) {
+					const linkStart = action.options.linkStart ?? false
+					Object.assign(patch, { linkStart })
+				}
+				if (properties.includes('timeEnd_hhmmss')) {
+					Object.assign(patch, { timeStrategy: TimeStrategy.LockEnd })
+				}
+				if (properties.includes('duration_hhmmss')) {
+					Object.assign(patch, { timeStrategy: TimeStrategy.LockDuration })
+				}
+				module.connection.sendSocket('change', {
+					[id]: patch,
+				})
+			},
 		},
 	}
 }
@@ -107,8 +104,10 @@ export function upgrade_removeIsPublic(action: CompanionMigrationAction): boolea
 		return false
 	}
 	let madeUpgrade = false
-	if ((action.options.properties as string[]).includes('isPublic')) {
-		action.options.properties = (action.options.properties as string[]).filter((p) => p !== 'isPublic')
+	if (!action.options.properties) return false
+	const properties = action.options.properties.value as string[]
+	if (properties.includes('isPublic')) {
+		action.options.properties = { isExpression: false, value: properties.filter((p) => p !== 'isPublic') }
 		madeUpgrade = true
 	}
 
@@ -129,15 +128,22 @@ export function upgrade_changeTimeWithExpression(action: CompanionMigrationActio
 	let madeUpgrade = false
 
 	const affectedProperties = ['duration', 'timeStart', 'timeEnd', 'timeWarning', 'timeDanger']
+	if (!action.options.properties) return false
+	const properties = action.options.properties.value as string[]
+	const upgradedProperties = [...properties]
 	affectedProperties.forEach((oldProperty) => {
-		if ((action.options.properties as string[]).includes(oldProperty)) {
-			action.options.properties = (action.options.properties as string[]).filter((p) => p !== oldProperty)
+		if (upgradedProperties.includes(oldProperty)) {
 			const newProperty = `${oldProperty}_hhmmss`
-			action.options.properties.push(newProperty)
-			action.options[newProperty] = action.options[oldProperty] ?? '0'
+			const i = upgradedProperties.indexOf(oldProperty)
+			upgradedProperties.splice(i, 1, newProperty)
+			action.options[newProperty] = action.options[oldProperty] ?? { isExpression: false, value: '0' }
+			delete action.options[oldProperty]
 			madeUpgrade = true
 		}
 	})
+	if (madeUpgrade) {
+		action.options.properties = { isExpression: false, value: upgradedProperties }
+	}
 
 	return madeUpgrade
 }

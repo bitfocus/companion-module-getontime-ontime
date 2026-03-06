@@ -2,9 +2,10 @@
 	"$schema": "../node_modules/@companion-module/base/assets/manifest.schema.json",
 	"id": "getontime-ontime",
 	"name": "getontime-ontime",
+	"type": "connection",
 	"shortname": "ontime",
 	"description": "Companion module for ontime",
-	"version": "5.3.1",
+	"version": "0.0.0",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-getontime-ontime.git",
 	"bugs": "https://github.com/bitfocus/companion-module-getontime-ontime/issues",
@@ -29,11 +30,6 @@
 		"entrypoint": "../dist/index.js"
 	},
 	"manufacturer": "GetOntime",
-	"products": [
-		"Ontime"
-	],
-	"keywords": [
-		"ontime",
-		"companion"
-	]
+	"products": ["Ontime"],
+	"keywords": ["ontime", "companion"]
 }

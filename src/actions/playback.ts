@@ -1,21 +1,22 @@
 import type {
-	CompanionActionDefinition,
+	CompanionActionDefinitions,
 	CompanionActionEvent,
+	CompanionMigrationAction,
 	SomeCompanionFeedbackInputField,
 } from '@companion-module/base'
-import { ActionId } from '../enums.js'
-import { eventPicker } from './eventPicker.js'
+import { ActionId, PICK_ONE } from '../enums.js'
+import { eventPicker, type EventPickerOptions } from './eventPicker.js'
 import { Playback } from '@getontime/resolver'
 import type { OntimeModule } from '../index.js'
-import { hmsValuesToMs, stringNumberOrFormatted } from '../utilities.js'
+import { hmsValuesToMs, stringNumberOrFormatted, type EmptyOptions } from '../utilities.js'
+import { ensureDefaultMultiple } from '../upgrades.js'
 
-type PlaybackToggleOptions = {
+type PlaybackToggleValues = {
 	main: Playback
 	secondary: Playback
-	nb: string
 }
 
-type PlaybackAddTimerOption = {
+type PlaybackAddTimerValues = {
 	hours: number
 	minutes: number
 	seconds: number
@@ -23,7 +24,18 @@ type PlaybackAddTimerOption = {
 	stringValue: string
 }
 
-const playbackToggleOptions: (SomeCompanionFeedbackInputField & { id: keyof PlaybackToggleOptions })[] = [
+export function patchAddTimeAction(patch: Partial<PlaybackAddTimerValues>): PlaybackAddTimerValues {
+	return {
+		hours: 0,
+		minutes: 0,
+		seconds: 0,
+		addremove: 'add',
+		stringValue: '',
+		...patch,
+	}
+}
+
+const playbackToggleOptions: (SomeCompanionFeedbackInputField & { id: keyof PlaybackToggleValues })[] = [
 	{
 		id: 'main',
 		label: 'Main',
@@ -52,9 +64,20 @@ const playbackToggleOptions: (SomeCompanionFeedbackInputField & { id: keyof Play
 	},
 ]
 
-export function createPlaybackActions(module: OntimeModule): { [id: string]: CompanionActionDefinition } {
-	function toggle(action: CompanionActionEvent): void {
-		const { main, secondary } = action.options as PlaybackToggleOptions
+export type PlaybackActionsSchema = {
+	[ActionId.PlaybackToggle]: { options: PlaybackToggleValues }
+	[ActionId.Start]: { options: EventPickerOptions }
+	[ActionId.Load]: { options: EventPickerOptions }
+	[ActionId.Pause]: EmptyOptions
+	[ActionId.Stop]: EmptyOptions
+	[ActionId.Reload]: EmptyOptions
+	[ActionId.Roll]: EmptyOptions
+	[ActionId.Add]: { options: PlaybackAddTimerValues }
+}
+
+export function createPlaybackActions(module: OntimeModule): CompanionActionDefinitions<PlaybackActionsSchema> {
+	function toggle(action: CompanionActionEvent<PlaybackToggleValues>): void {
+		const { main, secondary } = action.options
 		const goToState = module.connection.state.timer.playback === main ? secondary : main
 		switch (goToState) {
 			case Playback.Armed:
@@ -75,7 +98,7 @@ export function createPlaybackActions(module: OntimeModule): { [id: string]: Com
 		}
 	}
 
-	function start(action: CompanionActionEvent): void {
+	function start(action: CompanionActionEvent<EventPickerOptions>): void {
 		const { method, eventList, eventCue, eventId, eventIndex } = action.options
 		switch (method) {
 			case 'loaded': {
@@ -102,25 +125,30 @@ export function createPlaybackActions(module: OntimeModule): { [id: string]: Com
 				break
 			}
 			case 'list': {
-				module.connection.sendSocket('start', { id: eventList as string })
+				if (eventList === PICK_ONE) return
+				module.connection.sendSocket('start', { id: eventList })
 				break
 			}
 			case 'cue': {
-				module.connection.sendSocket('start', { cue: eventCue as string })
+				module.connection.sendSocket('start', { cue: eventCue })
 				break
 			}
 			case 'id': {
-				module.connection.sendSocket('start', { id: eventId as string })
+				module.connection.sendSocket('start', { id: eventId })
 				break
 			}
 			case 'index': {
-				module.connection.sendSocket('start', { index: eventIndex as number })
+				module.connection.sendSocket('start', { index: eventIndex })
+				break
+			}
+			default: {
+				method satisfies never
 				break
 			}
 		}
 	}
 
-	function load(action: CompanionActionEvent): void {
+	function load(action: CompanionActionEvent<EventPickerOptions>): void {
 		const { method, eventList, eventCue, eventId, eventIndex } = action.options
 		switch (method) {
 			case 'loaded': {
@@ -136,27 +164,33 @@ export function createPlaybackActions(module: OntimeModule): { [id: string]: Com
 				break
 			}
 			case 'list': {
-				module.connection.sendSocket('load', { id: eventList as string })
+				if (eventList === PICK_ONE) return
+				module.connection.sendSocket('load', { id: eventList })
 				break
 			}
 			case 'cue': {
-				module.connection.sendSocket('load', { cue: eventCue as string })
+				module.connection.sendSocket('load', { cue: eventCue })
 				break
 			}
 			case 'id': {
-				module.connection.sendSocket('load', { id: eventId as string })
+				module.connection.sendSocket('load', { id: eventId })
 				break
 			}
 			case 'index': {
-				module.connection.sendSocket('load', { index: eventIndex as number })
+				module.connection.sendSocket('load', { index: eventIndex })
+				break
+			}
+			default: {
+				method satisfies never | 'go' // load action can not use the 'go' method
 				break
 			}
 		}
 	}
 
-	function addTime(action: CompanionActionEvent): void {
-		const { hours, minutes, seconds, addremove, stringValue } = action.options as PlaybackAddTimerOption
+	function addTime(action: CompanionActionEvent<PlaybackAddTimerValues>): void {
+		const { addremove } = action.options
 		if (addremove === 'string') {
+			const { stringValue } = action.options
 			const maybeNumber = stringNumberOrFormatted(stringValue)
 			if (maybeNumber !== null) {
 				module.connection.sendSocket('addtime', maybeNumber)
@@ -164,6 +198,7 @@ export function createPlaybackActions(module: OntimeModule): { [id: string]: Com
 				module.log('warn', `failed to format value in playback addTime action: ${stringValue}`)
 			}
 		} else {
+			const { hours, minutes, seconds, addremove } = action.options
 			const val = hmsValuesToMs(hours, minutes, seconds) * (addremove == 'remove' ? -1 : 1)
 			module.connection.sendSocket('addtime', val)
 		}
@@ -230,6 +265,7 @@ export function createPlaybackActions(module: OntimeModule): { [id: string]: Com
 						{ id: 'string', label: 'Expression/Text' },
 					],
 					label: 'Add or Remove',
+					disableAutoExpression: true,
 					default: 'add',
 				},
 				{
@@ -237,7 +273,7 @@ export function createPlaybackActions(module: OntimeModule): { [id: string]: Com
 					id: 'stringValue',
 					label: 'Value',
 					useVariables: true,
-					required: true,
+					minLength: 1,
 					tooltip: 'Either as a straight number in ms or formatted "hh:mm:ss"',
 					isVisibleExpression: '$(options:addremove) === "string"',
 				},
@@ -249,7 +285,6 @@ export function createPlaybackActions(module: OntimeModule): { [id: string]: Com
 					step: 1,
 					min: 0,
 					max: 24,
-					required: true,
 					isVisibleExpression: '$(options:addremove) !== "string"',
 				},
 				{
@@ -260,7 +295,6 @@ export function createPlaybackActions(module: OntimeModule): { [id: string]: Com
 					step: 1,
 					min: 0,
 					max: 1440,
-					required: true,
 					isVisibleExpression: '$(options:addremove) !== "string"',
 				},
 				{
@@ -271,11 +305,26 @@ export function createPlaybackActions(module: OntimeModule): { [id: string]: Com
 					min: 0,
 					max: 86400,
 					step: 1,
-					required: true,
 					isVisibleExpression: '$(options:addremove) !== "string"',
 				},
 			],
 			callback: addTime,
 		},
 	}
+}
+
+/**
+ * v5.4.1 ensure value in playback action
+ */
+export function upgrade_ensurePlaybackActionDefaultValues(action: CompanionMigrationAction): boolean {
+	if (action.actionId !== `${ActionId.Start}` && action.actionId !== `${ActionId.Load}`) return false
+	const { options } = action
+	const upgrade = ensureDefaultMultiple(options, {
+		method: 'loaded',
+		eventCue: '',
+		eventId: '',
+		eventIndex: 1,
+		eventList: PICK_ONE,
+	})
+	return upgrade
 }

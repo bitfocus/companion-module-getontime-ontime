@@ -6,6 +6,8 @@ export const SecondsMs = 1000
 export const MinutesMs = 1000 * 60
 export const HoursMs = 1000 * 60 * 60
 
+export const PICK_ONE = 'pickOne' as const
+
 export enum ActionId {
 	Start = 'start',
 	Load = 'load',
@@ -45,20 +47,6 @@ export enum feedbackId {
 
 	AuxTimerPlayback = 'auxTimerPlayback',
 	AuxTimerNegative = 'auxTimerNegativePlayback',
-}
-
-export enum deprecatedFeedbackId {
-	ThisMessageVisible = 'thisMessageVisible',
-	TimerMessageVisible = 'timerMessageVisible',
-	ThisTimerMessageVisible = 'thisTimerMessageVisible',
-	PublicMessageVisible = 'publicMessageVisible',
-	LowerMessageVisible = 'lowerMessageVisible',
-	ColorRunning = 'state_color_running',
-	ColorPaused = 'state_color_paused',
-	ColorStopped = 'state_color_stopped',
-	ColorRoll = 'state_color_roll',
-	ColorNegative = 'timer_negative',
-	TimerZone = 'timerZone',
 }
 
 export enum variableId {

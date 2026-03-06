@@ -1,10 +1,26 @@
-import type { CompanionFeedbackDefinition } from '@companion-module/base'
+import type { CompanionFeedbackDefinitions } from '@companion-module/base'
 import { feedbackId } from '../enums.js'
 import { SimplePlayback } from '@getontime/resolver'
 import { DangerRed, PlaybackGreen, White } from '../assets/colours.js'
 import type OntimeState from '../state.js'
 
-export function createAuxTimerFeedbacks(state: OntimeState): { [id: string]: CompanionFeedbackDefinition } {
+export type AuxTimerFeedbacksSchema = {
+	[feedbackId.AuxTimerPlayback]: {
+		type: 'boolean'
+		options: {
+			destination: 'auxtimer1' | 'auxtimer2' | 'auxtimer3'
+			state: SimplePlayback.Start | SimplePlayback.Stop | SimplePlayback.Pause
+		}
+	}
+	[feedbackId.AuxTimerNegative]: {
+		type: 'boolean'
+		options: {
+			destination: 'auxtimer1' | 'auxtimer2' | 'auxtimer3'
+		}
+	}
+}
+
+export function createAuxTimerFeedbacks(state: OntimeState): CompanionFeedbackDefinitions<AuxTimerFeedbacksSchema> {
 	return {
 		[feedbackId.AuxTimerPlayback]: {
 			type: 'boolean',
@@ -38,9 +54,7 @@ export function createAuxTimerFeedbacks(state: OntimeState): { [id: string]: Com
 					default: SimplePlayback.Start,
 				},
 			],
-			callback: (feedback) =>
-				state[feedback.options.destination as 'auxtimer1' | 'auxtimer2' | 'auxtimer3'].playback ===
-				feedback.options.state,
+			callback: (feedback) => state[feedback.options.destination].playback === feedback.options.state,
 		},
 		[feedbackId.AuxTimerNegative]: {
 			type: 'boolean',
@@ -63,8 +77,7 @@ export function createAuxTimerFeedbacks(state: OntimeState): { [id: string]: Com
 					label: 'Select Aux Timer',
 				},
 			],
-			callback: (feedback) =>
-				state[feedback.options.destination as 'auxtimer1' | 'auxtimer2' | 'auxtimer3'].current < 0,
+			callback: (feedback) => state[feedback.options.destination].current < 0,
 		},
 	}
 }
