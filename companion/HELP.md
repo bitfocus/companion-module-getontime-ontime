@@ -3,6 +3,7 @@
 This module gives control over Ontime leveraging its [WebSockets API](https://docs.getontime.no/api/protocols/websockets/)
 
 ## Requirements
+
 - Ontime v4.0.0 or greater
 
 ## Connecting to Ontime
@@ -11,6 +12,7 @@ To connect companion to Ontime you will need to provide the module with an addre
 This can be a IP address in your local network, localhost (if you are running everything in the same machine) or a URL for Ontime Cloud.
 
 Ontime provides an interface to generate these links:
+
 1. Navigate to `Editor` -> `Settings` -> `Sharing and reporting` -> `Share link`
 2. Select `Companion` as `Ontime view`
 3. If your stage is behind a password, activate the `Authenticate` toggle
@@ -26,11 +28,19 @@ Read the docs at [http://docs.getontime.no](https://docs.getontime.no/) \
 Follow Ontime's development on [GitHub](https://github.com/cpvalente/ontime) \
 Join the [discord community](https://discord.com/invite/eje3CSUEXm)
 
+### New for module version 5.3.1
+
+- Targets **Companion 4.3+** and Module API **2.0** (Node 22 runtime)
+- Stored actions and feedbacks are **migrated automatically** when you upgrade; recheck buttons
+- Fixed some action/feedback issues
+
 ### New for module version 5.3.0
+
 - Variables as input to add time action
 - Variables as input to aux timer values
 
 ### New for module version 5.2.0
+
 - Better message feedback
 - Variables for flag, group and rundown offsets
 - Variables as input to change action on custom fields and title

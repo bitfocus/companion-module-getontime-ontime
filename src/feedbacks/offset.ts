@@ -1,6 +1,6 @@
 import type {
-	CompanionFeedbackBooleanEvent,
-	CompanionFeedbackDefinition,
+	CompanionFeedbackDefinitions,
+	CompanionFeedbackInfo,
 	CompanionMigrationFeedback,
 } from '@companion-module/base'
 import { feedbackId } from '../enums.js'
@@ -14,27 +14,19 @@ enum OffsetState {
 	Both = 'both',
 }
 
-export function createOffsetFeedbacks(state: OntimeState): { [id: string]: CompanionFeedbackDefinition } {
-	function offset(feedback: CompanionFeedbackBooleanEvent): boolean {
-		const offsetState = feedback.options.state as OffsetState | undefined
-		if (!offsetState) return false
-		if (state.helper.offset === null || state.helper.offset === undefined) return false
-		const margin = Number(feedback.options.margin)
-		const offset = state.helper.offset / 1000
-		switch (offsetState) {
-			case OffsetState.On:
-				return offset > -margin && offset < margin
-			case OffsetState.Both:
-				return offset < -margin || offset > margin
-			case OffsetState.Over:
-				return offset > margin
-			case OffsetState.Under:
-				return offset < -margin
-		}
+type OffsetOptions = {
+	state: OffsetState.On | OffsetState.Over | OffsetState.Under | OffsetState.Both
+	margin: number
+}
 
-		return false
+export type OffsetFeedbackSchema = {
+	[feedbackId.RundownOffset]: {
+		type: 'boolean'
+		options: OffsetOptions
 	}
+}
 
+export function createOffsetFeedbacks(state: OntimeState): CompanionFeedbackDefinitions<OffsetFeedbackSchema> {
 	return {
 		[feedbackId.RundownOffset]: {
 			type: 'boolean',
@@ -55,7 +47,7 @@ export function createOffsetFeedbacks(state: OntimeState): { [id: string]: Compa
 						{ id: OffsetState.Under, label: 'Under time' },
 						{ id: OffsetState.Both, label: 'Over or Under timer' },
 					],
-					default: 'behind',
+					default: OffsetState.Over,
 				},
 				{
 					type: 'number',
@@ -67,7 +59,24 @@ export function createOffsetFeedbacks(state: OntimeState): { [id: string]: Compa
 					tooltip: 'How many seconds in offset time to allow before triggering',
 				},
 			],
-			callback: offset,
+			callback: (feedback: CompanionFeedbackInfo<OffsetOptions>) => {
+				const offsetState = feedback.options.state as OffsetState | undefined
+				if (!offsetState) return false
+				if (state.helper.offset === null || state.helper.offset === undefined) return false
+				const margin = Number(feedback.options.margin)
+				const offset = state.helper.offset / 1000
+				switch (offsetState) {
+					case OffsetState.On:
+						return offset > -margin && offset < margin
+					case OffsetState.Both:
+						return offset < -margin || offset > margin
+					case OffsetState.Over:
+						return offset > margin
+					case OffsetState.Under:
+						return offset < -margin
+				}
+				return false
+			},
 		},
 	}
 }
@@ -76,18 +85,22 @@ export function createOffsetFeedbacks(state: OntimeState): { [id: string]: Compa
  * v5.0.0 the offset value has been inverted
  */
 export function upgrade_offsetIsInvertedFeedback(feedback: CompanionMigrationFeedback): boolean {
-	if (feedback.feedbackId !== `${feedbackId.RundownOffset}`) {
-		return false
-	}
+	if (feedback.feedbackId !== `${feedbackId.RundownOffset}`) return false
+	if (!feedback.options.state) return false
 
-	const currentChoice = feedback.options.state ?? 'on'
+	const currentChoice = (feedback.options.state?.value as string) ?? 'on'
 
-	feedback.options.state = {
+	const nextChoice = {
 		on: OffsetState.On,
 		behind: OffsetState.Over,
 		ahead: OffsetState.Under,
 		Both: OffsetState.Both,
-	}[currentChoice as string]
+	}[currentChoice]
+
+	feedback.options.state = {
+		isExpression: false,
+		value: nextChoice,
+	}
 
 	return true
 }

@@ -1,6 +1,6 @@
-import type { SomeCompanionConfigField } from '@companion-module/base'
+import type { JsonObject, SomeCompanionConfigField } from '@companion-module/base'
 
-export interface OntimeConfig {
+export interface OntimeConfig extends JsonObject {
 	host: string
 }
 
@@ -27,7 +27,7 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			type: 'textinput',
 			default: '127.0.0.1:4001',
 			width: 9,
-			required: true,
+			minLength: 4,
 			tooltip: 'Ontime server address. eg. http://127.0.0.1:4001 or from cloud https://cloud.getontime.no/<stage-hash>',
 		},
 	]

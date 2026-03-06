@@ -1,17 +1,24 @@
-import type { CompanionFeedbackDefinition } from '@companion-module/base'
+import type { CompanionFeedbackDefinitions } from '@companion-module/base'
 import { TimerPhase } from '@getontime/resolver'
 import { feedbackId } from '../enums.js'
 import { DangerRed, White } from '../assets/colours.js'
 import type OntimeState from '../state.js'
 
-export function createTimerPhaseFeedback(state: OntimeState): {
-	[id: string]: CompanionFeedbackDefinition
-} {
+export type TimerPhaseFeedbackSchema = {
+	[feedbackId.TimerPhase]: {
+		type: 'boolean'
+		options: {
+			phase: TimerPhase[]
+		}
+	}
+}
+
+export function createTimerPhaseFeedback(state: OntimeState): CompanionFeedbackDefinitions<TimerPhaseFeedbackSchema> {
 	return {
 		[feedbackId.TimerPhase]: {
 			type: 'boolean',
 			name: 'Timer phase',
-			description: 'Timer phase use Ontimes warn and danger times to change colour depending on timer progress',
+			description: "Timer phase use Ontime's warn and danger times to change colour depending on timer progress",
 			defaultStyle: {
 				color: White,
 				bgcolor: DangerRed,
@@ -32,7 +39,7 @@ export function createTimerPhaseFeedback(state: OntimeState): {
 					default: [TimerPhase.Danger],
 				},
 			],
-			callback: (feedback) => (feedback.options.phase as TimerPhase[]).some((value) => value === state.timer.phase),
+			callback: (feedback) => feedback.options.phase.some((value) => value === state.timer.phase),
 		},
 	}
 }

@@ -17,3 +17,4 @@ DEBUG-*
 .DS_STORE
 
 *.tgz
+**.companionconfig

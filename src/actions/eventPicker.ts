@@ -1,6 +1,6 @@
-import type { SomeCompanionActionInputField, DropdownChoice } from '@companion-module/base'
-import { eventsToChoices } from '../utilities.js'
+import type { DropdownChoice, CompanionActionDefinition } from '@companion-module/base'
 import type { OntimeEvent } from '@getontime/resolver'
+import { PICK_ONE } from '../enums.js'
 
 type SelectOptions = 'list' | 'loaded' | 'previous' | 'next' | 'cue' | 'id' | 'index' | 'go'
 const selectOptions: DropdownChoice[] = [
@@ -14,10 +14,19 @@ const selectOptions: DropdownChoice[] = [
 	{ id: 'index', label: 'Index' },
 ]
 
+export type EventPickerOptions = {
+	method: SelectOptions
+	eventList: string
+	cuenote: string
+	eventCue: string
+	eventId: string
+	eventIndex: number
+}
+
 export function eventPicker(
 	events: OntimeEvent[],
 	options: SelectOptions[] = ['list', 'next', 'previous', 'loaded', 'cue', 'id', 'index'],
-): SomeCompanionActionInputField[] {
+): CompanionActionDefinition<EventPickerOptions>['options'] {
 	const selectChoices = new Array<DropdownChoice>()
 	selectOptions.forEach((choice) => {
 		if (options.includes(choice.id as SelectOptions)) {
@@ -26,18 +35,24 @@ export function eventPicker(
 	})
 	return [
 		{
-			type: 'dropdown',
 			id: 'method',
+			type: 'dropdown',
 			label: 'Event Selection',
 			choices: selectChoices,
 			default: 'loaded',
+			disableAutoExpression: true,
 		},
 		{
-			type: 'dropdown',
-			choices: eventsToChoices(events),
 			id: 'eventList',
+			type: 'dropdown',
+			choices: [
+				{ id: PICK_ONE, label: 'Pick One' },
+				...events.map(({ id, cue, title }) => {
+					return { id, label: `${cue} | ${title}` }
+				}),
+			],
 			label: 'Event',
-			default: events[0]?.id ?? '',
+			default: PICK_ONE,
 			isVisibleExpression: '$(options:method) === "list"',
 		},
 		{
@@ -49,8 +64,8 @@ export function eventPicker(
 			isVisibleExpression: '$(options:method) === "cue"',
 		},
 		{
-			type: 'textinput',
 			id: 'eventCue',
+			type: 'textinput',
 			label: 'Event Cue',
 			default: '',
 			isVisibleExpression: '$(options:method) === "cue"',

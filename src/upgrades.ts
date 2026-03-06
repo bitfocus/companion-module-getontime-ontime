@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
 import {
 	type CompanionStaticUpgradeProps,
 	type CompanionStaticUpgradeResult,
@@ -6,59 +5,18 @@ import {
 	type CompanionStaticUpgradeScript,
 	type CompanionMigrationAction,
 	type CompanionMigrationFeedback,
+	type JsonValue,
+	type CompanionMigrationOptionValues,
 	EmptyUpgradeScript,
 } from '@companion-module/base'
 import type { OntimeConfig } from './config.js'
-import { feedbackId, deprecatedFeedbackId } from './enums.js'
-import { TimerPhase } from '@getontime/resolver'
+import { feedbackId } from './enums.js'
 import { upgrade_offsetIsInvertedFeedback } from './feedbacks/offset.js'
 import { upgrade_changeTimeWithExpression, upgrade_removeIsPublic } from './actions/change.js'
-import { upgrade_auxTimerDurationTakesExpressions } from './actions/auxTimer.js'
-import { upgrade_collectMessageActions } from './actions/message.js'
-import { upgrade_collectMessageFeedback } from './feedbacks/message.js'
-
-function update4xx(
-	_context: CompanionUpgradeContext<OntimeConfig>,
-	props: CompanionStaticUpgradeProps<OntimeConfig>,
-): CompanionStaticUpgradeResult<OntimeConfig> {
-	const result = {
-		updatedConfig: null,
-		updatedActions: new Array<CompanionMigrationAction>(),
-		updatedFeedbacks: new Array<CompanionMigrationFeedback>(),
-	}
-
-	for (const feedback of props.feedbacks) {
-		if (feedback.feedbackId === deprecatedFeedbackId.TimerZone) {
-			feedback.feedbackId = feedbackId.TimerPhase
-
-			switch (feedback.options.zone) {
-				case '': {
-					feedback.options.phase = [TimerPhase.None]
-					break
-				}
-				case 'normal': {
-					feedback.options.phase = [TimerPhase.Default]
-					break
-				}
-				case 'warning': {
-					feedback.options.phase = [TimerPhase.Warning]
-					break
-				}
-				case 'danger': {
-					feedback.options.phase = [TimerPhase.Danger]
-					break
-				}
-				case 'overtime': {
-					feedback.options.phase = [TimerPhase.Overtime]
-					break
-				}
-			}
-			delete feedback.options.zone
-			result.updatedFeedbacks.push(feedback)
-		}
-	}
-	return result
-}
+import { upgrade_auxTimerAddTimeString, upgrade_auxTimerDurationTakesExpressions } from './actions/auxTimer.js'
+import { upgrade_collectMessageActions, upgrade_ensureMessageActionDefaultValues } from './actions/message.js'
+import { upgrade_collectMessageFeedback, upgrade_ensureMessageFeedbackDefaultValues } from './feedbacks/message.js'
+import { upgrade_ensurePlaybackActionDefaultValues } from './actions/playback.js'
 
 type old_v4_config = {
 	host: string
@@ -71,63 +29,40 @@ type old_v4_config = {
 	reconnectInterval: number
 }
 
-function update46x(
-	_context: CompanionUpgradeContext<OntimeConfig>,
-	props: CompanionStaticUpgradeProps<old_v4_config | OntimeConfig>,
-): CompanionStaticUpgradeResult<OntimeConfig> {
-	const result: CompanionStaticUpgradeResult<OntimeConfig> = {
-		updatedConfig: null,
-		updatedActions: new Array<CompanionMigrationAction>(),
-		updatedFeedbacks: new Array<CompanionMigrationFeedback>(),
-	}
-
-	if (props.config === null) {
-		return result
-	}
-
-	if ('port' in props.config) {
-		const { host, port } = props.config
-
-		const newAddress = `${host}:${port}`
-		result.updatedConfig = { ...props.config, host: newAddress }
-		return result
-	}
-	return result
-}
-
 function update5(
 	_context: CompanionUpgradeContext<OntimeConfig | old_v4_config>,
-	props: CompanionStaticUpgradeProps<OntimeConfig | old_v4_config>,
-): CompanionStaticUpgradeResult<OntimeConfig> {
-	const result: CompanionStaticUpgradeResult<OntimeConfig> = {
+	props: CompanionStaticUpgradeProps<OntimeConfig | old_v4_config, undefined>,
+): CompanionStaticUpgradeResult<OntimeConfig, undefined> {
+	const result: CompanionStaticUpgradeResult<OntimeConfig, undefined> = {
 		updatedConfig: null,
 		updatedActions: new Array<CompanionMigrationAction>(),
 		updatedFeedbacks: new Array<CompanionMigrationFeedback>(),
 	}
 
 	for (const feedback of props.feedbacks) {
-		if (feedback.feedbackId === feedbackId.ColorPlayback) {
-			if (typeof feedback.options.state === 'string') {
-				feedback.options.state = [feedback.options.state]
+		const id = feedback.feedbackId as feedbackId
+		if (id === feedbackId.ColorPlayback) {
+			if (feedback.options.state && typeof feedback.options.state.value === 'string') {
+				feedback.options.state.value = [feedback.options.state.value]
 				result.updatedFeedbacks.push(feedback)
 			}
 		}
-		if (feedback.feedbackId === feedbackId.TimerPhase) {
-			if (typeof feedback.options.phase === 'string') {
-				feedback.options.phase = [feedback.options.phase]
+		if (id === feedbackId.TimerPhase) {
+			if (feedback.options.phase && typeof feedback.options.phase.value === 'string') {
+				feedback.options.phase.value = [feedback.options.phase.value]
 				result.updatedFeedbacks.push(feedback)
 			}
 		}
-		if (feedback.feedbackId === feedbackId.AuxTimerNegative) {
+		if (id === feedbackId.AuxTimerNegative) {
 			if (!feedback.options.destination) {
-				feedback.options.destination = 'auxtimer1'
+				feedback.options.destination = { isExpression: false, value: 'auxtimer1' }
 				result.updatedFeedbacks.push(feedback)
 			}
 		}
 
-		if (feedback.feedbackId === feedbackId.AuxTimerPlayback) {
+		if (id === feedbackId.AuxTimerPlayback) {
 			if (!feedback.options.destination) {
-				feedback.options.destination = 'auxtimer1'
+				feedback.options.destination = { isExpression: false, value: 'auxtimer1' }
 				result.updatedFeedbacks.push(feedback)
 			}
 		}
@@ -145,7 +80,10 @@ function update5(
 function ActionUpdater(
 	tryUpdate: (action: CompanionMigrationAction) => boolean,
 ): CompanionStaticUpgradeScript<OntimeConfig> {
-	return (_context: CompanionUpgradeContext<OntimeConfig>, props: CompanionStaticUpgradeProps<OntimeConfig>) => {
+	return (
+		_context: CompanionUpgradeContext<OntimeConfig>,
+		props: CompanionStaticUpgradeProps<OntimeConfig, undefined>,
+	) => {
 		return {
 			updatedActions: props.actions.filter(tryUpdate),
 			updatedConfig: null,
@@ -157,13 +95,56 @@ function ActionUpdater(
 function FeedbackUpdater(
 	tryUpdate: (feedback: CompanionMigrationFeedback) => boolean,
 ): CompanionStaticUpgradeScript<OntimeConfig> {
-	return (_context: CompanionUpgradeContext<OntimeConfig>, props: CompanionStaticUpgradeProps<OntimeConfig>) => {
+	return (
+		_context: CompanionUpgradeContext<OntimeConfig>,
+		props: CompanionStaticUpgradeProps<OntimeConfig, undefined>,
+	) => {
 		return {
 			updatedActions: [],
 			updatedConfig: null,
 			updatedFeedbacks: props.feedbacks.filter(tryUpdate),
 		}
 	}
+}
+
+/**
+ * Ensures a single migration option key uses the Companion 4.3+ wrapped shape
+ * `{ value, isExpression }`. If the key is missing or the wrapped `value` is
+ * undefined, sets it to `defaultValue` with `isExpression: false`.
+ *
+ * @param options - Action or feedback `options` object from an upgrade script
+ * @param key - Option id to fill in
+ * @param defaultValue - JSON-serializable default when unset
+ * @returns `true` if `options` was modified, otherwise `false`
+ */
+export function ensureDefault(options: CompanionMigrationOptionValues, key: string, defaultValue: JsonValue): boolean {
+	if (options[key] === undefined) {
+		options[key] = { value: defaultValue, isExpression: false }
+		return true
+	}
+	if (options[key].value === undefined) {
+		options[key] = { value: defaultValue, isExpression: false }
+		return true
+	}
+	return false
+}
+
+type EnsureObject = Record<string, JsonValue>
+
+/**
+ * Runs {@link ensureDefault} for each entry in `ensureObject`. Useful when an
+ * upgrade step must backfill several option defaults at once.
+ *
+ * @param options - Action or feedback `options` object from an upgrade script
+ * @param ensureObject - Map of option id → default value
+ * @returns `true` if any key was updated, otherwise `false`
+ */
+export function ensureDefaultMultiple(options: CompanionMigrationOptionValues, ensureObject: EnsureObject): boolean {
+	let upgrade = false
+	Object.entries(ensureObject).forEach(([key, defaultValue]) => {
+		upgrade = ensureDefault(options, key, defaultValue) || upgrade
+	})
+	return upgrade
 }
 
 // function ConfigUpdater(
@@ -178,11 +159,11 @@ function FeedbackUpdater(
 // 	}
 // }
 
-export const UpgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [
+export const upgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [
 	EmptyUpgradeScript,
 	EmptyUpgradeScript,
-	update4xx,
-	update46x,
+	EmptyUpgradeScript,
+	EmptyUpgradeScript,
 	update5,
 	FeedbackUpdater(upgrade_offsetIsInvertedFeedback),
 	ActionUpdater(upgrade_removeIsPublic),
@@ -190,4 +171,8 @@ export const UpgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [
 	ActionUpdater(upgrade_auxTimerDurationTakesExpressions),
 	ActionUpdater(upgrade_collectMessageActions),
 	FeedbackUpdater(upgrade_collectMessageFeedback),
+	ActionUpdater(upgrade_auxTimerAddTimeString),
+	ActionUpdater(upgrade_ensureMessageActionDefaultValues),
+	FeedbackUpdater(upgrade_ensureMessageFeedbackDefaultValues),
+	ActionUpdater(upgrade_ensurePlaybackActionDefaultValues),
 ]

@@ -1,28 +1,25 @@
-import type { CompanionFeedbackBooleanEvent, CompanionFeedbackDefinition } from '@companion-module/base'
+import type { CompanionFeedbackDefinitions } from '@companion-module/base'
 import { Playback } from '@getontime/resolver'
 import { PauseOrange, PlaybackGreen, White } from '../assets/colours.js'
 import { feedbackId } from '../enums.js'
 import type OntimeState from '../state.js'
 
-export function createPlaybackFeedbacks(state: OntimeState): { [id: string]: CompanionFeedbackDefinition } {
-	function addTime(feedback: CompanionFeedbackBooleanEvent): boolean {
-		const { direction } = feedback.options
-
-		if (direction === 'add') {
-			return state.timer.addedTime > 0
+export type PlaybackFeedbackSchema = {
+	[feedbackId.ColorPlayback]: {
+		type: 'boolean'
+		options: {
+			state: Playback[]
 		}
-		if (direction === 'remove') {
-			return state.timer.addedTime < 0
-		}
-		if (direction === 'both') {
-			return state.timer.addedTime != 0
-		}
-		if (direction === 'none') {
-			return state.timer.addedTime == 0
-		}
-		return false
 	}
+	[feedbackId.ColorAddRemove]: {
+		type: 'boolean'
+		options: {
+			direction: 'add' | 'remove' | 'none' | 'both'
+		}
+	}
+}
 
+export function createPlaybackFeedbacks(state: OntimeState): CompanionFeedbackDefinitions<PlaybackFeedbackSchema> {
 	return {
 		[feedbackId.ColorPlayback]: {
 			type: 'boolean',
@@ -47,7 +44,7 @@ export function createPlaybackFeedbacks(state: OntimeState): { [id: string]: Com
 					default: [Playback.Play],
 				},
 			],
-			callback: (feedback) => (feedback.options.state as Playback[]).some((val) => state.timer.playback === val),
+			callback: (feedback) => feedback.options.state.some((val) => state.timer.playback === val),
 		},
 		[feedbackId.ColorAddRemove]: {
 			type: 'boolean',
@@ -66,11 +63,33 @@ export function createPlaybackFeedbacks(state: OntimeState): { [id: string]: Com
 						{ id: 'add', label: 'Only Added' },
 						{ id: 'remove', label: 'Only Removed' },
 						{ id: 'none', label: 'No change' },
+						{ id: 'both', label: 'Any change' },
 					],
 					default: 'both',
 				},
 			],
-			callback: addTime,
+			callback: (feedback) => {
+				const { direction } = feedback.options
+				const { addedTime } = state.timer
+				switch (direction) {
+					case 'add': {
+						return addedTime > 0
+					}
+					case 'remove': {
+						return addedTime < 0
+					}
+					case 'both': {
+						return addedTime != 0
+					}
+					case 'none': {
+						return addedTime == 0
+					}
+					default: {
+						direction satisfies never
+					}
+				}
+				return false
+			},
 		},
 	}
 }

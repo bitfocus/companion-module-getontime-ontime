@@ -1,9 +1,26 @@
-import type { CompanionFeedbackDefinition } from '@companion-module/base'
+import type { CompanionFeedbackDefinitions, CompanionFeedbackInfo } from '@companion-module/base'
 import { feedbackId } from '../enums.js'
 import { ActiveBlue, White } from '../assets/colours.js'
 import type OntimeState from '../state.js'
+import type { CustomFields } from '@getontime/resolver'
 
-export function createCustomFieldsFeedbacks(state: OntimeState): { [id: string]: CompanionFeedbackDefinition } {
+type CustomFieldsOption = {
+	target: 'now' | 'next'
+	field: keyof CustomFields
+	requireValue: boolean
+	match: string
+}
+
+export type CustomFieldsFeedbacksSchema = {
+	[feedbackId.CustomFieldsValue]: {
+		type: 'boolean'
+		options: CustomFieldsOption
+	}
+}
+
+export function createCustomFieldsFeedbacks(
+	state: OntimeState,
+): CompanionFeedbackDefinitions<CustomFieldsFeedbacksSchema> {
 	return {
 		[feedbackId.CustomFieldsValue]: {
 			type: 'boolean',
@@ -48,15 +65,15 @@ export function createCustomFieldsFeedbacks(state: OntimeState): { [id: string]:
 			],
 			learn: (action) => {
 				const target = action.options.target as string
-				const field = action.options.field as string
+				const field = action.options.field
 				const fieldValue = target === 'now' ? state.eventNow?.custom[field] : state.eventNext?.custom[field]
-				return { ...action.options, requireValue: true, match: fieldValue ?? '' }
+				return { requireValue: true, match: fieldValue ?? '' }
 			},
-			callback: (feedback) => {
-				const target = feedback.options.target as string
-				const field = feedback.options.field as string
-				const requireValue = feedback.options.requireValue as string
-				const match = feedback.options.match as string
+			callback: (feedback: CompanionFeedbackInfo<CustomFieldsOption>) => {
+				const target = feedback.options.target
+				const field = feedback.options.field
+				const requireValue = feedback.options.requireValue
+				const match = feedback.options.match
 				const fieldValue = target === 'now' ? state.eventNow?.custom[field] : state.eventNext?.custom[field]
 
 				if (fieldValue === undefined || fieldValue === '') {

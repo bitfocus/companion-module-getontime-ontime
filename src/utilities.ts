@@ -1,28 +1,9 @@
-import type { DropdownChoice } from '@companion-module/base'
 import type { OntimeEvent } from '@getontime/resolver'
 import type OntimeState from './state.js'
 import { HoursMs, MinutesMs, SecondsMs } from './enums.js'
 
-export const joinTime = (...args: string[]): string => args.join(':')
-
-function padTo2Digits(number: number) {
-	return number.toString().padStart(2, '0')
-}
-
-const defaultTimerObject = {
-	hours: '--',
-	minutes: '--',
-	seconds: '--',
-	hoursMinutes: '--:--',
-	hoursMinutesSeconds: '--:--:--',
-	delayString: '0',
-	negative: '',
-}
-
 function ensureTrailingSlash(url: URL): URL {
-	if (!url.pathname.endsWith('/')) {
-		url.pathname += '/'
-	}
+	if (!url.pathname.endsWith('/')) url.pathname += '/'
 	return url
 }
 
@@ -41,69 +22,13 @@ export function makeURL(host: string, path = '', ws = false): URL | undefined {
 	url = ensureTrailingSlash(url)
 	url.pathname += path
 
-	if (ws) {
-		url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:'
-	}
+	if (ws) url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:'
 
 	return url
 }
 
-type SplitTime = typeof defaultTimerObject
-
-export function msToSplitTime(time: number | null): SplitTime {
-	if (time === null) {
-		return defaultTimerObject
-	}
-	let negative = false
-	if (time < 0) {
-		time = time * -1
-		negative = true
-	} else {
-		negative = false
-	}
-	const s = Math.floor((time / SecondsMs) % 60)
-	const m = Math.floor((time / MinutesMs) % 60)
-	const h = Math.floor((time / HoursMs) % 24)
-
-	const seconds = padTo2Digits(s)
-	const minutes = padTo2Digits(m)
-	const hours = padTo2Digits(h)
-	const negativeSign = negative ? '-' : ''
-
-	const hoursMinutes = `${hours}:${minutes}`
-	const hoursMinutesSeconds = `${negativeSign}${hoursMinutes}:${seconds}`
-
-	let delayString = '00'
-
-	if (h && !m && !s) {
-		delayString = `${negativeSign}${h}h`
-	} else if (!h && m && !s) {
-		delayString = `${negativeSign}${m}m`
-	} else if (!h && !m && s) {
-		delayString = `${negativeSign}${s}s`
-	}
-
-	return {
-		hours,
-		minutes,
-		seconds,
-		hoursMinutes,
-		hoursMinutesSeconds,
-		delayString,
-		negative: negativeSign,
-	}
-}
-
-export function eventsToChoices(events: OntimeEvent[]): DropdownChoice[] {
-	return events.map(({ id, cue, title }) => {
-		return { id, label: `${cue} | ${title}` }
-	})
-}
-
 export function findPreviousPlayableEvent(state: OntimeState): OntimeEvent | null {
-	if (state.eventNow === null) {
-		return null
-	}
+	if (state.eventNow === null) return null
 
 	const nowId = state.eventNow.id
 	let now = false
@@ -137,9 +62,7 @@ export function stringNumberOrFormatted(str: string): number | null {
 export function strictTimerStringToMs(str: string): number | null {
 	const [hh, mm, ss] = str.split(':')
 
-	if (hh === undefined || mm === undefined || ss === undefined) {
-		return null
-	}
+	if (hh === undefined || mm === undefined || ss === undefined) return null
 
 	const isNegative = hh.startsWith('-') ? -1 : 1
 	hh.replace('-', '')
@@ -171,8 +94,4 @@ export function formatTime(value: number): { sign: '-' | ''; HH: string; mm: str
 	return { sign, HH, mm, ss, hms }
 }
 
-export function isOptionsWithPropertiesArray<T>(
-	options: object,
-): options is T & { properties: (keyof Omit<T, 'properties'>)[] } {
-	return 'properties' in options && Array.isArray(options.properties) && options.properties.length > 0
-}
+export type EmptyOptions = { options: Record<string, never> }

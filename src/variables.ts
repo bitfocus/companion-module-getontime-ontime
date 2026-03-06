@@ -1,228 +1,120 @@
-import type { CompanionVariableDefinition } from '@companion-module/base'
+import type { CompanionVariableDefinitions } from '@companion-module/base'
 import { variableId } from './enums.js'
 import type { CustomFields } from '@getontime/resolver'
 
-const timerVariables: CompanionVariableDefinition[] = [
-	{
-		name: 'Current timer (milliseconds)',
-		variableId: variableId.TimerCurrent,
-	},
-	{
-		name: 'Current timer (HH:mm:ss)',
-		variableId: variableId.TimerCurrentHMS,
-	},
-	{
-		name: 'Current timer (Negative sign)',
-		variableId: variableId.TimerCurrentN,
-	},
-	{
-		name: 'Current timer (HH)',
-		variableId: variableId.TimerCurrentH,
-	},
-	{
-		name: 'Current timer (mm)',
-		variableId: variableId.TimerCurrentM,
-	},
-	{
-		name: 'Current timer (ss)',
-		variableId: variableId.TimerCurrentS,
-	},
-	{
-		name: 'Timer duration (milliseconds)',
-		variableId: variableId.TimerDuration,
-	},
-	{
-		name: 'User added time to current timer (milliseconds)',
-		variableId: variableId.TimerAdded,
-	},
-	{
-		name: 'Current timer phase (None/Default/Warning/Danger/Overtime/Pending)',
-		variableId: variableId.TimerPhase,
-	},
-
-	{
-		name: 'Playback state (Running, Paused, Stopped, Roll)',
-		variableId: variableId.PlayState,
-	},
-	{
-		name: 'Expected finish of the current timer (milliseconds)',
-		variableId: variableId.TimerExpectedFinish,
-	},
-]
-
-const messageVariables: CompanionVariableDefinition[] = [
-	{
-		name: 'Message text',
-		variableId: variableId.MessageText,
-	},
-	{
-		name: 'Message Visible',
-		variableId: variableId.MessageVisible,
-	},
-	{
-		name: 'Message Blinking',
-		variableId: variableId.MessageBlink,
-	},
-	{
-		name: 'Message Blackout',
-		variableId: variableId.MessageBlackout,
-	},
-	{
-		name: 'Secondary Message source',
-		variableId: variableId.MessageSecondarySource,
-	},
-	{
-		name: 'Secondary Message',
-		variableId: variableId.MessageSecondary,
-	},
-]
-
-const rundownVariables: CompanionVariableDefinition[] = [
-	{
-		name: 'Total number of events',
-		variableId: variableId.TotalEvents,
-	},
-	{
-		name: 'Selected event index',
-		variableId: variableId.SelectedIndex,
-	},
-]
-
-const offsetVariables: CompanionVariableDefinition[] = [
-	{
-		name: 'Offset aka Over/Under (milliseconds)',
-		variableId: variableId.Offset,
-	},
-	{
-		name: 'Expected end time of current group (milliseconds)',
-		variableId: variableId.ExpectedGroupEnd,
-	},
-	{
-		name: 'Expected end time of rundown (milliseconds)',
-		variableId: variableId.ExpectedRundownEnd,
-	},
-	{
-		name: 'Expected start time of next flagged event (milliseconds)',
-		variableId: variableId.ExpectedFlagStart,
-	},
-]
-
-const eventVariables: (name: string, infix: string, customFields: CustomFields) => CompanionVariableDefinition[] = (
-	name: string,
-	infix: string,
-	customFields?: CustomFields,
-) => {
-	const customVariables: CompanionVariableDefinition[] = customFields
-		? Object.entries(customFields).map(([customId, custom]) => {
-				return {
-					name: `Custom value "${custom.label}" value of ${name} event`,
-					variableId: variableGen('event', infix, 'custom', customId),
-				}
-			})
-		: []
-
-	return [
-		{
-			name: `ID of ${name} event`,
-			variableId: variableGen('event', infix, 'id'),
-		},
-		{
-			name: `Title of ${name} event`,
-			variableId: variableGen('event', infix, 'title'),
-		},
-		{
-			name: `Note of ${name} event`,
-			variableId: variableGen('event', infix, 'note'),
-		},
-		{
-			name: `Cue of ${name} event`,
-			variableId: variableGen('event', infix, 'cue'),
-		},
-		...customVariables,
-	]
+const timerVariables: CompanionVariableDefinitions = {
+	[variableId.TimerCurrent]: { name: 'Current timer (milliseconds)' },
+	[variableId.TimerCurrentHMS]: { name: 'Current timer (HH:mm:ss)' },
+	[variableId.TimerCurrentN]: { name: 'Current timer (Negative sign)' },
+	[variableId.TimerCurrentH]: { name: 'Current timer (HH)' },
+	[variableId.TimerCurrentM]: { name: 'Current timer (mm)' },
+	[variableId.TimerCurrentS]: { name: 'Current timer (ss)' },
+	[variableId.TimerDuration]: { name: 'Timer duration (milliseconds)' },
+	[variableId.TimerAdded]: { name: 'User added time to current timer (milliseconds)' },
+	[variableId.TimerPhase]: { name: 'Current timer phase (None/Default/Warning/Danger/Overtime/Pending)' },
+	[variableId.PlayState]: { name: 'Playback state (Running, Paused, Stopped, Roll)' },
+	[variableId.TimerExpectedFinish]: { name: 'Expected finish of the current timer (milliseconds)' },
 }
 
-const groupVariables: (name: string, infix: string, customFields: CustomFields) => CompanionVariableDefinition[] = (
-	name: string,
-	infix: string,
-	customFields?: CustomFields,
-) => {
-	const customVariables: CompanionVariableDefinition[] = customFields
-		? Object.entries(customFields).map(([customId, custom]) => {
-				return {
-					name: `Custom value "${custom.label}" value of ${name} group`,
-					variableId: variableGen('group', infix, 'custom', customId),
-				}
-			})
-		: []
+const messageVariables: CompanionVariableDefinitions = {
+	[variableId.MessageText]: { name: 'Message text' },
+	[variableId.MessageVisible]: { name: 'Message Visible' },
+	[variableId.MessageBlink]: { name: 'Message Blinking' },
+	[variableId.MessageBlackout]: { name: 'Message Blackout' },
+	[variableId.MessageSecondarySource]: { name: 'Secondary Message source' },
+	[variableId.MessageSecondary]: { name: 'Secondary Message' },
+}
 
-	return [
-		{
-			name: `ID of ${name} group`,
-			variableId: variableGen('group', infix, 'id'),
-		},
-		{
-			name: `Title of ${name} group`,
-			variableId: variableGen('group', infix, 'title'),
-		},
-		{
-			name: `Note of ${name} group`,
-			variableId: variableGen('group', infix, 'note'),
-		},
-		...customVariables,
-	]
+const rundownVariables: CompanionVariableDefinitions = {
+	[variableId.TotalEvents]: { name: 'Total number of events' },
+	[variableId.SelectedIndex]: { name: 'Selected event index' },
+}
+
+const offsetVariables: CompanionVariableDefinitions = {
+	[variableId.Offset]: { name: 'Offset aka Over/Under (milliseconds)' },
+	[variableId.ExpectedGroupEnd]: { name: 'Expected end time of current group (milliseconds)' },
+	[variableId.ExpectedRundownEnd]: { name: 'Expected end time of rundown (milliseconds)' },
+	[variableId.ExpectedFlagStart]: { name: 'Expected start time of next flagged event (milliseconds)' },
 }
 
 /**
- * aut timer variables as split into `aux_[index]_[data]`
- * @param infix
- * @returns variable definitions
+ * CustomField variables for an event `event_[infix]_custom_[data]`
  */
-const auxTimerVariables: (infix: string) => CompanionVariableDefinition[] = (infix: string) => {
-	return [
-		{
-			name: `Aux timer ${infix} duration (milliseconds)`,
-			variableId: variableGen('aux', infix, 'duration'),
-		},
-		{
-			name: `Aux timer ${infix} current (milliseconds)`,
-			variableId: variableGen('aux', infix, 'current'),
-		},
-		{
-			name: `Aux timer ${infix} playback`,
-			variableId: variableGen('aux', infix, 'playback'),
-		},
-		{
-			name: `Aux timer ${infix} direction (count-up/count-down)`,
-			variableId: variableGen('aux', infix, 'direction'),
-		},
-	]
+function generateCustomFieldVariables(
+	name: string,
+	infix: string,
+	customFields: CustomFields,
+): CompanionVariableDefinitions {
+	const customVariables: CompanionVariableDefinitions = {}
+	if (customFields) {
+		for (const customId in customFields) {
+			const { label } = customFields[customId]
+			customVariables[variableGen('event', infix, 'custom', customId)] = {
+				name: `Custom value "${label}" value of ${name} event`,
+			}
+		}
+	}
+	return customVariables
+}
+
+/**
+ * event variables as split into `event_[infix]_[data]`
+ */
+function generateEventVariables(name: string, infix: string, customFields: CustomFields): CompanionVariableDefinitions {
+	return {
+		[variableGen('event', infix, 'id')]: { name: `ID of ${name} event` },
+		[variableGen('event', infix, 'title')]: { name: `Title of ${name} event` },
+		[variableGen('event', infix, 'note')]: { name: `Note of ${name} event` },
+		[variableGen('event', infix, 'cue')]: { name: `Cue of ${name} event` },
+		...generateCustomFieldVariables(name, infix, customFields),
+	}
+}
+
+/**
+ * group variables as split into `group_[infix]_[data]`
+ */
+function generateGroupVariables(name: string, infix: string, customFields: CustomFields): CompanionVariableDefinitions {
+	return {
+		[variableGen('group', infix, 'id')]: { name: `ID of ${name} group` },
+		[variableGen('group', infix, 'title')]: { name: `Title of ${name} group` },
+		[variableGen('group', infix, 'note')]: { name: `Note of ${name} group` },
+		...generateCustomFieldVariables(name, infix, customFields),
+	}
+}
+
+/**
+ * aux timer variables as split into `aux_[index]_[data]`
+ */
+function generateAuxTimerVariables(infix: string): CompanionVariableDefinitions {
+	return {
+		[variableGen('aux', infix, 'duration')]: { name: `Aux timer ${infix} duration (milliseconds)` },
+		[variableGen('aux', infix, 'current')]: { name: `Aux timer ${infix} current (milliseconds)` },
+		[variableGen('aux', infix, 'playback')]: { name: `Aux timer ${infix} playback` },
+		[variableGen('aux', infix, 'direction')]: { name: `Aux timer ${infix} direction (count-up/count-down)` },
+	}
 }
 
 /**
  * Generates variables
- * @param customFields include if they should be included
- * @returns
  */
-export function generateVariables(customFields: CustomFields): CompanionVariableDefinition[] {
-	return [
-		{
+export function generateVariables(customFields: CustomFields): CompanionVariableDefinitions {
+	return {
+		[variableId.Clock]: {
 			name: 'Wall Clock (milliseconds)',
-			variableId: variableId.Clock,
 		},
 		...timerVariables,
 		...messageVariables,
 		...rundownVariables,
 		...offsetVariables,
-		...eventVariables('current', 'now', customFields),
-		...eventVariables('next', 'next', customFields),
-		...eventVariables('previous', 'prev', customFields),
-		...eventVariables('flag', 'flag', customFields),
-		...groupVariables('current', 'now', customFields),
-		...auxTimerVariables('1'),
-		...auxTimerVariables('2'),
-		...auxTimerVariables('3'),
-	]
+		...generateEventVariables('current', 'now', customFields),
+		...generateEventVariables('next', 'next', customFields),
+		...generateEventVariables('previous', 'prev', customFields),
+		...generateEventVariables('flag', 'flag', customFields),
+		...generateGroupVariables('current', 'now', customFields),
+		...generateAuxTimerVariables('1'),
+		...generateAuxTimerVariables('2'),
+		...generateAuxTimerVariables('3'),
+	}
 }
 
 type item = 'event' | 'aux' | 'group'
@@ -235,11 +127,6 @@ type prop = {
 
 /**
  * A helper function that ensures spelling and correct combinations for generated variables
- * @param item
- * @param infix
- * @param prop
- * @param extra
- * @returns
  */
 export function variableGen<T extends item>(item: T, infix: string, prop: prop[T], extra?: string): string {
 	if (extra) return `${item}_${infix}_${prop}_${extra}`

@@ -1,16 +1,26 @@
-import type { SomeCompanionConfigField } from '@companion-module/base'
-import { runEntrypoint, InstanceBase, InstanceStatus } from '@companion-module/base'
+import type { CompanionVariableValues, JsonObject, SomeCompanionConfigField } from '@companion-module/base'
+import { InstanceBase, InstanceStatus } from '@companion-module/base'
 
 import type { OntimeConfig } from './config.js'
 import { GetConfigFields } from './config.js'
-import { UpgradeScripts } from './upgrades.js'
+import { upgradeScripts } from './upgrades.js'
 import { OntimeConnection } from './connection.js'
+import type { ActionsSchema } from './actions.js'
+import type { FeedbackSchema } from './feedbacks.js'
 
-export class OntimeModule extends InstanceBase<OntimeConfig> {
+export interface OntimeTypes {
+	config: OntimeConfig
+	secrets: JsonObject | undefined
+	actions: ActionsSchema
+	feedbacks: FeedbackSchema
+	variables: CompanionVariableValues
+}
+
+export class OntimeModule extends InstanceBase<OntimeTypes> {
 	public config!: OntimeConfig
 	public connection = new OntimeConnection(this)
 
-	async init(config: OntimeConfig): Promise<void> {
+	async init(config: OntimeConfig, _isFirstInit: boolean, _secrets: JsonObject | undefined): Promise<void> {
 		this.log('debug', 'init')
 		this.config = config
 		this.updateStatus(InstanceStatus.Connecting)
@@ -32,4 +42,5 @@ export class OntimeModule extends InstanceBase<OntimeConfig> {
 	}
 }
 
-runEntrypoint(OntimeModule, UpgradeScripts)
+export const UpgradeScripts = upgradeScripts
+export default OntimeModule
