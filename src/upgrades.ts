@@ -16,7 +16,10 @@ import { upgrade_changeTimeWithExpression, upgrade_removeIsPublic } from './acti
 import { upgrade_auxTimerAddTimeString, upgrade_auxTimerDurationTakesExpressions } from './actions/auxTimer.js'
 import { upgrade_collectMessageActions, upgrade_ensureMessageActionDefaultValues } from './actions/message.js'
 import { upgrade_collectMessageFeedback, upgrade_ensureMessageFeedbackDefaultValues } from './feedbacks/message.js'
-import { upgrade_ensurePlaybackActionDefaultValues } from './actions/playback.js'
+import {
+	upgrade_ensureAddRemoveTimeDefaultValue,
+	upgrade_ensurePlaybackActionDefaultValues,
+} from './actions/playback.js'
 
 type old_v4_config = {
 	host: string
@@ -175,4 +178,5 @@ export const upgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [
 	ActionUpdater(upgrade_ensureMessageActionDefaultValues),
 	FeedbackUpdater(upgrade_ensureMessageFeedbackDefaultValues),
 	ActionUpdater(upgrade_ensurePlaybackActionDefaultValues),
+	ActionUpdater(upgrade_ensureAddRemoveTimeDefaultValue),
 ]

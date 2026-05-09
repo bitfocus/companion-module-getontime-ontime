@@ -3,6 +3,7 @@ import { ActionId } from '../enums.js'
 import { SimplePlayback, SimpleDirection } from '@getontime/resolver'
 import type { OntimeModule } from '../index.js'
 import { hmsValuesToMs, stringNumberOrFormatted } from '../utilities.js'
+import { ensureDefault } from '../upgrades.js'
 
 type AuxIds = '1' | '2' | '3'
 
@@ -246,9 +247,8 @@ export function createAuxTimerActions(module: OntimeModule): CompanionActionDefi
  */
 export function upgrade_auxTimerAddTimeString(action: CompanionMigrationAction): boolean {
 	if (action.actionId !== `${ActionId.AuxTimerAdd}`) return false
-	if (action.options.stringValue?.value) return false
-	action.options.stringValue = { isExpression: false, value: '00:00:00' }
-	return true
+	const upgrade = ensureDefault(action.options, 'stringValue', '00:00:00')
+	return upgrade
 }
 
 /**
