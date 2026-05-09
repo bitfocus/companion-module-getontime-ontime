@@ -314,7 +314,7 @@ export function createPlaybackActions(module: OntimeModule): CompanionActionDefi
 }
 
 /**
- * v5.4.1 ensure value in playback action
+ * v5.4.0 ensure value in playback action
  */
 export function upgrade_ensurePlaybackActionDefaultValues(action: CompanionMigrationAction): boolean {
 	if (action.actionId !== `${ActionId.Start}` && action.actionId !== `${ActionId.Load}`) return false

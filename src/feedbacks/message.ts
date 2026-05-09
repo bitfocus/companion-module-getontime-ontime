@@ -158,7 +158,7 @@ export function createMessageFeedbacks(state: OntimeState): CompanionFeedbackDef
 }
 
 /**
- * v5.4.1 ensure value in message feedback
+ * v5.4.0 ensure value in message feedback
  */
 export function upgrade_ensureMessageFeedbackDefaultValues(feedback: CompanionMigrationFeedback): boolean {
 	if (feedback.feedbackId !== `${feedbackId.MessageFeedback}`) return false

@@ -195,7 +195,7 @@ export function createMessageActions(connection: OntimeConnection): CompanionAct
 }
 
 /**
- * v5.4.1 ensure value in message action
+ * v5.4.0 ensure value in message action
  */
 export function upgrade_ensureMessageActionDefaultValues(action: CompanionMigrationAction): boolean {
 	if (action.actionId !== `${ActionId.MessageAction}`) return false

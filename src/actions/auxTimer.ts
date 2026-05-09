@@ -242,7 +242,7 @@ export function createAuxTimerActions(module: OntimeModule): CompanionActionDefi
 }
 
 /**
- * v5.4.1 ensure value in add time string
+ * v5.4.0 ensure value in add time string
  */
 export function upgrade_auxTimerAddTimeString(action: CompanionMigrationAction): boolean {
 	if (action.actionId !== `${ActionId.AuxTimerAdd}`) return false
