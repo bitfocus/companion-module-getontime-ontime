@@ -21,13 +21,25 @@ type AuxDirectionValues = {
 	destination: AuxIds
 }
 
-type AuxAddValues = {
+export type AuxAddValues = {
 	hours: number
 	minutes: number
 	seconds: number
 	addremove: 'add' | 'remove' | 'string'
 	stringValue: string
 	destination: AuxIds
+}
+
+export function patchAuxAddTimeAction(patch: Partial<AuxAddValues>): AuxAddValues {
+	return {
+		hours: 0,
+		minutes: 0,
+		seconds: 0,
+		addremove: 'add',
+		stringValue: '00:00:00',
+		destination: '1',
+		...patch,
+	}
 }
 
 export type AuxTimerActionsSchema = {

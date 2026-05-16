@@ -30,7 +30,7 @@ export function patchAddTimeAction(patch: Partial<PlaybackAddTimerValues>): Play
 		minutes: 0,
 		seconds: 0,
 		addremove: 'add',
-		stringValue: '',
+		stringValue: '00:01:00',
 		...patch,
 	}
 }
