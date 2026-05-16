@@ -23,6 +23,18 @@ export type EventPickerOptions = {
 	eventIndex: number
 }
 
+export function patchEventPickerOptions(patch: Partial<EventPickerOptions>): EventPickerOptions {
+	return {
+		method: 'loaded',
+		eventList: PICK_ONE,
+		cuenote: '',
+		eventCue: '',
+		eventId: '',
+		eventIndex: 1,
+		...patch,
+	}
+}
+
 export function eventPicker(
 	events: OntimeEvent[],
 	options: SelectOptions[] = ['list', 'next', 'previous', 'loaded', 'cue', 'id', 'index'],

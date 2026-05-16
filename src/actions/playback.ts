@@ -9,7 +9,7 @@ import { eventPicker, type EventPickerOptions } from './eventPicker.js'
 import { Playback } from '@getontime/resolver'
 import type { OntimeModule } from '../index.js'
 import { hmsValuesToMs, stringNumberOrFormatted, type EmptyOptions } from '../utilities.js'
-import { ensureDefaultMultiple } from '../upgrades.js'
+import { ensureDefault, ensureDefaultMultiple } from '../upgrades.js'
 
 type PlaybackToggleValues = {
 	main: Playback
@@ -30,7 +30,7 @@ export function patchAddTimeAction(patch: Partial<PlaybackAddTimerValues>): Play
 		minutes: 0,
 		seconds: 0,
 		addremove: 'add',
-		stringValue: '',
+		stringValue: '00:01:00',
 		...patch,
 	}
 }
@@ -274,6 +274,7 @@ export function createPlaybackActions(module: OntimeModule): CompanionActionDefi
 					label: 'Value',
 					useVariables: true,
 					minLength: 1,
+					default: '00:01:00',
 					tooltip: 'Either as a straight number in ms or formatted "hh:mm:ss"',
 					isVisibleExpression: '$(options:addremove) === "string"',
 				},
@@ -314,7 +315,7 @@ export function createPlaybackActions(module: OntimeModule): CompanionActionDefi
 }
 
 /**
- * v5.4.1 ensure value in playback action
+ * v5.4.0 ensure value in playback action
  */
 export function upgrade_ensurePlaybackActionDefaultValues(action: CompanionMigrationAction): boolean {
 	if (action.actionId !== `${ActionId.Start}` && action.actionId !== `${ActionId.Load}`) return false
@@ -326,5 +327,15 @@ export function upgrade_ensurePlaybackActionDefaultValues(action: CompanionMigra
 		eventIndex: 1,
 		eventList: PICK_ONE,
 	})
+	return upgrade
+}
+
+/**
+ * v5.4.0 ensure value in add remove time action
+ */
+export function upgrade_ensureAddRemoveTimeDefaultValue(action: CompanionMigrationAction): boolean {
+	if (action.actionId !== `${ActionId.Add}`) return false
+	const { options } = action
+	const upgrade = ensureDefault(options, 'stringValue', '00:01:00')
 	return upgrade
 }

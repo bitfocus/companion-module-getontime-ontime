@@ -3,6 +3,7 @@ import { ActionId } from '../enums.js'
 import { SimplePlayback, SimpleDirection } from '@getontime/resolver'
 import type { OntimeModule } from '../index.js'
 import { hmsValuesToMs, stringNumberOrFormatted } from '../utilities.js'
+import { ensureDefault } from '../upgrades.js'
 
 type AuxIds = '1' | '2' | '3'
 
@@ -20,13 +21,25 @@ type AuxDirectionValues = {
 	destination: AuxIds
 }
 
-type AuxAddValues = {
+export type AuxAddValues = {
 	hours: number
 	minutes: number
 	seconds: number
 	addremove: 'add' | 'remove' | 'string'
 	stringValue: string
 	destination: AuxIds
+}
+
+export function patchAuxAddTimeAction(patch: Partial<AuxAddValues>): AuxAddValues {
+	return {
+		hours: 0,
+		minutes: 0,
+		seconds: 0,
+		addremove: 'add',
+		stringValue: '00:00:00',
+		destination: '1',
+		...patch,
+	}
 }
 
 export type AuxTimerActionsSchema = {
@@ -242,13 +255,12 @@ export function createAuxTimerActions(module: OntimeModule): CompanionActionDefi
 }
 
 /**
- * v5.4.1 ensure value in add time string
+ * v5.4.0 ensure value in add time string
  */
 export function upgrade_auxTimerAddTimeString(action: CompanionMigrationAction): boolean {
 	if (action.actionId !== `${ActionId.AuxTimerAdd}`) return false
-	if (action.options.stringValue?.value) return false
-	action.options.stringValue = { isExpression: false, value: '00:00:00' }
-	return true
+	const upgrade = ensureDefault(action.options, 'stringValue', '00:00:00')
+	return upgrade
 }
 
 /**
