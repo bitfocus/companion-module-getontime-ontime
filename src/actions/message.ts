@@ -2,6 +2,7 @@ import type { CompanionActionDefinitions, CompanionActionEvent, CompanionMigrati
 import { ActionId, ToggleOnOff } from '../enums.js'
 import type { OntimeConnection } from '../connection.js'
 import { ensureDefaultMultiple } from '../upgrades.js'
+import type { ApiAction } from '@getontime/resolver'
 
 type MessageActionProperties = {
 	text: string
@@ -11,17 +12,6 @@ type MessageActionProperties = {
 	secondarySource: 'aux1' | 'aux2' | 'aux3' | 'secondary'
 	secondary: string
 	secondaryToggle: ToggleOnOff
-}
-
-type MessagePatch = {
-	timer: Partial<{
-		blink: 0 | 1 | boolean
-		blackout: 0 | 1 | boolean
-		text: string
-		visible: 0 | 1 | boolean
-		secondarySource: string | null
-	}>
-	secondary: undefined | string
 }
 
 type MessageActionOptions = MessageActionProperties & { properties: (keyof MessageActionProperties)[] }
@@ -144,14 +134,14 @@ export function createMessageActions(connection: OntimeConnection): CompanionAct
 				const { options } = action
 				if (!options.properties.length) return
 
-				const patch: MessagePatch = {
+				const patch: Extract<ApiAction, { tag: 'message' }>['payload'] = {
 					timer: {},
 					secondary: undefined,
 				}
 				for (const property of options.properties) {
 					switch (property) {
 						case 'text':
-							patch.timer.text = options.text
+							patch.timer!.text = options.text
 							break
 						case 'secondary':
 							patch.secondary = options.secondary
@@ -159,15 +149,15 @@ export function createMessageActions(connection: OntimeConnection): CompanionAct
 						case 'blackout':
 						case 'blink':
 						case 'visible':
-							patch.timer[property] =
+							patch.timer![property] =
 								options[property] === ToggleOnOff.Toggle
 									? !connection.state.message.timer[property]
-									: (options[property] as 0 | 1)
+									: !!options[property]
 							break
 						case 'secondarySource': {
 							switch (options.secondaryToggle) {
 								case ToggleOnOff.Toggle:
-									patch.timer.secondarySource =
+									patch.timer!.secondarySource =
 										connection.state.message.timer.secondarySource === null
 											? options.secondarySource
 											: connection.state.message.timer.secondarySource === options.secondarySource
@@ -175,10 +165,10 @@ export function createMessageActions(connection: OntimeConnection): CompanionAct
 												: options.secondarySource
 									break
 								case ToggleOnOff.Off:
-									patch.timer.secondarySource = null
+									patch.timer!.secondarySource = null
 									break
 								case ToggleOnOff.On:
-									patch.timer.secondarySource = options.secondarySource
+									patch.timer!.secondarySource = options.secondarySource
 									break
 							}
 							break
