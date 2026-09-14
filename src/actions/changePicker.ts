@@ -1,4 +1,4 @@
-import type { CompanionActionDefinition, SomeCompanionActionInputField, StringKeys } from '@companion-module/base'
+import type { SomeCompanionActionInputField, StringKeys } from '@companion-module/base'
 import { combineRgb } from '@companion-module/base'
 import type { CustomFields } from '@getontime/resolver'
 import type { PICK_ONE } from '../enums.js'
@@ -25,8 +25,8 @@ export type ChangePickerOptions = ChangePickerProperties & {
 	properties: (keyof ChangePickerProperties | typeof PICK_ONE)[]
 }
 
-export function changePicker(customFields: CustomFields): CompanionActionDefinition<ChangePickerOptions>['options'] {
-	const allProps: CompanionActionDefinition<ChangePickerOptions>['options'] = [
+export function changePicker(customFields: CustomFields): SomeCompanionActionInputField<StringKeys<ChangePickerOptions>>[] {
+	const allProps: SomeCompanionActionInputField<StringKeys<ChangePickerOptions>>[] = [
 		{
 			type: 'textinput',
 			label: 'Title',
@@ -154,7 +154,7 @@ export function changePicker(customFields: CustomFields): CompanionActionDefinit
 			minSelection: 1,
 			default: [],
 			choices: allProps.map((p) => ({ id: p.id, label: p.label })).filter((p) => p.id !== 'linkStart'),
-		},
+		} as SomeCompanionActionInputField<StringKeys<ChangePickerOptions>>,
 		...allProps,
 	]
 }

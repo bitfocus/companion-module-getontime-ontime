@@ -83,6 +83,7 @@ export function createProgressFeedbacks(state: OntimeState): CompanionFeedbackDe
 			type: 'advanced',
 			name: 'Progressbar',
 			description: 'Progressbar indicating the main timer progression',
+			affectedProperties: undefined,
 			options: [
 				{ type: 'checkbox', id: 'big', label: 'Big graphic', default: false, disableAutoExpression: true },
 				{ type: 'colorpicker', id: 'normal', label: 'Normal', default: NormalGray, disableAutoExpression: true },
@@ -99,6 +100,7 @@ export function createProgressFeedbacks(state: OntimeState): CompanionFeedbackDe
 			type: 'advanced',
 			name: 'Multi Progressbar',
 			description: 'Progressbar across multiple buttons indicating the main timer progression',
+			affectedProperties: undefined,
 			options: [
 				{ type: 'checkbox', id: 'big', label: 'Big graphic', default: true, disableAutoExpression: true },
 				{ type: 'colorpicker', id: 'normal', label: 'Normal', default: NormalGray, disableAutoExpression: true },
