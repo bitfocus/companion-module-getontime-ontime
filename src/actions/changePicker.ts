@@ -25,7 +25,9 @@ export type ChangePickerOptions = ChangePickerProperties & {
 	properties: (keyof ChangePickerProperties | typeof PICK_ONE)[]
 }
 
-export function changePicker(customFields: CustomFields): SomeCompanionActionInputField<StringKeys<ChangePickerOptions>>[] {
+export function changePicker(
+	customFields: CustomFields,
+): SomeCompanionActionInputField<StringKeys<ChangePickerOptions>>[] {
 	const allProps: SomeCompanionActionInputField<StringKeys<ChangePickerOptions>>[] = [
 		{
 			type: 'textinput',
