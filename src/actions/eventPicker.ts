@@ -1,4 +1,4 @@
-import type { DropdownChoice, CompanionActionDefinition } from '@companion-module/base'
+import type { DropdownChoice, SomeCompanionActionInputField, StringKeys } from '@companion-module/base'
 import type { OntimeEvent } from '@getontime/resolver'
 import { PICK_ONE } from '../enums.js'
 
@@ -38,7 +38,7 @@ export function patchEventPickerOptions(patch: Partial<EventPickerOptions>): Eve
 export function eventPicker(
 	events: OntimeEvent[],
 	options: SelectOptions[] = ['list', 'next', 'previous', 'loaded', 'cue', 'id', 'index'],
-): CompanionActionDefinition<EventPickerOptions>['options'] {
+): SomeCompanionActionInputField<StringKeys<EventPickerOptions>>[] {
 	const selectChoices = new Array<DropdownChoice>()
 	selectOptions.forEach((choice) => {
 		if (options.includes(choice.id as SelectOptions)) {

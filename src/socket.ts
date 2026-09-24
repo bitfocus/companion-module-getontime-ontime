@@ -103,13 +103,11 @@ export class WS {
 	}
 
 	websocketError(event: WebSocket.Event): void {
-		let msgValue = null
 		try {
-			msgValue = JSON.stringify(event)
+			this.callbacks.onerror(JSON.stringify(event))
 		} catch (_e) {
-			msgValue = 'websocket error'
+			this.callbacks.onerror('websocket error')
 		}
-		this.callbacks.onerror(msgValue)
 	}
 
 	public disconnect(msg: string): void {
@@ -128,10 +126,9 @@ export class WS {
 	}
 
 	messageReceivedFromWebSocket(event: WebSocket.MessageEvent): void {
-		let msgValue = null
 		try {
 			// eslint-disable-next-line @typescript-eslint/no-base-to-string
-			msgValue = JSON.parse(event.data.toString())
+			const msgValue = JSON.parse(event.data.toString())
 			if (!this.connected) {
 				if (msgValue?.tag === 'version') {
 					const maybeVersion = coerce(msgValue.payload)
