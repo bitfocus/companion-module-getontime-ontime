@@ -91,6 +91,7 @@ function generateAuxTimerVariables(infix: string): CompanionVariableDefinitions 
 		[variableGen('aux', infix, 'current')]: { name: `Aux timer ${infix} current (milliseconds)` },
 		[variableGen('aux', infix, 'playback')]: { name: `Aux timer ${infix} playback` },
 		[variableGen('aux', infix, 'direction')]: { name: `Aux timer ${infix} direction (count-up/count-down)` },
+		[variableGen('aux', infix, 'name')]: { name: `Aux timer ${infix} name` },
 	}
 }
 
@@ -120,7 +121,7 @@ export function generateVariables(customFields: CustomFields): CompanionVariable
 type item = 'event' | 'aux' | 'group'
 
 type prop = {
-	aux: 'duration' | 'current' | 'playback' | 'direction'
+	aux: 'duration' | 'current' | 'playback' | 'direction' | 'name'
 	event: 'id' | 'title' | 'note' | 'cue' | 'custom'
 	group: 'id' | 'title' | 'note' | 'custom'
 }

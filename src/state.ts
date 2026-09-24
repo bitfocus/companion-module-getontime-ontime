@@ -100,6 +100,7 @@ export default class OntimeState {
 			[variableGen('aux', infix, 'current')]: val.current,
 			[variableGen('aux', infix, 'playback')]: val.playback,
 			[variableGen('aux', infix, 'direction')]: val.direction,
+			[variableGen('aux', infix, 'name')]: val.name,
 		})
 		this.module.checkFeedbacks(feedbackId.AuxTimerNegative, feedbackId.AuxTimerPlayback)
 	}
