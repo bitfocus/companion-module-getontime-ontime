@@ -73,6 +73,8 @@ export default class OntimeState {
 			[variableGen('event', infix, 'note')]: val?.note,
 			[variableGen('event', infix, 'cue')]: val?.cue,
 			[variableGen('event', infix, 'id')]: val?.id,
+			[variableGen('event', infix, 'duration')]: val?.duration,
+			[variableGen('event', infix, 'colour')]: val?.colour,
 		})
 
 		this.module.checkFeedbacks(feedbackId.CustomFieldsValue)
@@ -89,6 +91,9 @@ export default class OntimeState {
 			[variableGen('group', infix, 'title')]: val?.title,
 			[variableGen('group', infix, 'note')]: val?.note,
 			[variableGen('group', infix, 'id')]: val?.id,
+			[variableGen('group', infix, 'colour')]: val?.colour,
+			[variableGen('group', infix, 'duration')]: val?.duration,
+			[variableGen('group', infix, 'targetDuration')]: val?.targetDuration,
 		})
 
 		this.module.checkFeedbacks(feedbackId.CustomFieldsValue)
@@ -100,6 +105,7 @@ export default class OntimeState {
 			[variableGen('aux', infix, 'current')]: val.current,
 			[variableGen('aux', infix, 'playback')]: val.playback,
 			[variableGen('aux', infix, 'direction')]: val.direction,
+			[variableGen('aux', infix, 'name')]: val.name,
 		})
 		this.module.checkFeedbacks(feedbackId.AuxTimerNegative, feedbackId.AuxTimerPlayback)
 	}
