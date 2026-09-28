@@ -41,6 +41,21 @@ export class OntimeConnection {
 				case MessageTag.Refetch: {
 					const { target } = payload
 					switch (target) {
+						case RefetchKey.All: {
+							fetchCustomFields(this.module)
+								.then((maybeCustom) => {
+									if (maybeCustom) this.state.customFields = maybeCustom
+									fetchAllEvents(this.module)
+										.then((maybeEvents) => {
+											if (maybeEvents) this.state.events = maybeEvents
+											this.state.applyPendingActionDefinition()
+											this.state.applyPendingVariableDefinition()
+										})
+										.catch((err) => this.module.log('error', err))
+								})
+								.catch((err) => this.module.log('error', err))
+							break
+						}
 						case RefetchKey.Rundown: {
 							fetchAllEvents(this.module)
 								.then((maybeEvents) => {
@@ -60,7 +75,23 @@ export class OntimeConnection {
 								.catch((err) => this.module.log('error', err))
 							break
 						}
+						case RefetchKey.CssOverride: //ignore
+						case RefetchKey.ProjectData: //ignore
+						case RefetchKey.ProjectRundowns: //ignore
+						case RefetchKey.Report: //ignore
+						case RefetchKey.Settings: //ignore
+						case RefetchKey.Translation: //ignore
+						case RefetchKey.UrlPresets: //ignore
+						case RefetchKey.ViewSettings: //ignore
+							break
+						default: {
+							target satisfies never
+							break
+						}
 					}
+					break
+				}
+				case MessageTag.TeleprompterCommand: {
 					break
 				}
 				default: {
@@ -75,7 +106,7 @@ export class OntimeConnection {
 				}
 			}
 		} else {
-			console.log('onmessage', data)
+			console.log('onmessage', 'unused message', data)
 		}
 	}
 	private onWsOpen(): void {

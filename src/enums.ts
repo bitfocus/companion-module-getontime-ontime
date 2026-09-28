@@ -27,6 +27,10 @@ export enum ActionId {
 	AuxTimerPlayState = 'auxTimerPlayState',
 	AuxTimerDirection = 'auxTimerDirection',
 	AuxTimerAdd = 'auxTimerAdd',
+
+	TeleprompterTogglePlay = 'teleprompterTogglePlay',
+	TeleprompterSpeed = 'teleprompterSpeed',
+	TeleprompterNudge = 'teleprompterNudge',
 }
 
 export enum feedbackId {
