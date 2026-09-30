@@ -28,6 +28,16 @@ Read the docs at [http://docs.getontime.no](https://docs.getontime.no/) \
 Follow Ontime's development on [GitHub](https://github.com/cpvalente/ontime) \
 Join the [discord community](https://discord.com/invite/eje3CSUEXm)
 
+### New for module version 5.4.1
+
+- Colour and duration variables from event and group
+- Target duration variable for groups
+- Aux timer name variable
+
+### New for module version 5.4.0
+
+- Upgraded to Module API **2.0** (Node 22 runtime)
+
 ### New for module version 5.3.1
 
 - Targets **Companion 4.3+** and Module API **2.0** (Node 22 runtime)
