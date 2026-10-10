@@ -117,6 +117,9 @@ export class OntimeConnection {
 			this.socket.init()
 		} catch (e) {
 			console.error(e)
+			// init() only throws for an address that can not be parsed, no reconnect is scheduled in that case,
+			// so show it as a config problem instead of leaving the status on Connecting
+			this.module.updateStatus(InstanceStatus.BadConfig, `Invalid server address: ${this.module.config.host}`)
 		}
 	}
 
