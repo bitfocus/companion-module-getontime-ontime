@@ -15,6 +15,7 @@ import { feedbackId, variableId } from './enums.js'
 import type { CompanionVariableValues } from '@companion-module/base'
 import { generateVariables, variableGen } from './variables.js'
 import { generateActions } from './actions.js'
+import { generateFeedbacks } from './feedbacks.js'
 import { findPreviousPlayableEvent, formatTime } from './utilities.js'
 
 /**
@@ -31,6 +32,7 @@ export default class OntimeState {
 
 	private hasPendingActionDefinition: boolean = false
 	private hasPendingVariableDefinition: boolean = false
+	private hasPendingFeedbackDefinition: boolean = false
 
 	public helper = {
 		offset: 0,
@@ -41,12 +43,21 @@ export default class OntimeState {
 	public applyPendingVariableDefinition(force = false): void {
 		if (this.hasPendingVariableDefinition || force) {
 			this.module.setVariableDefinitions(generateVariables(this._customFields))
+			this.hasPendingVariableDefinition = false
 		}
 	}
 
 	public applyPendingActionDefinition(force = false): void {
 		if (this.hasPendingActionDefinition || force) {
 			this.module.setActionDefinitions(generateActions(this.module))
+			this.hasPendingActionDefinition = false
+		}
+	}
+
+	public applyPendingFeedbackDefinition(force = false): void {
+		if (this.hasPendingFeedbackDefinition || force) {
+			this.module.setFeedbackDefinitions(generateFeedbacks(this.module))
+			this.hasPendingFeedbackDefinition = false
 		}
 	}
 
@@ -221,7 +232,9 @@ export default class OntimeState {
 
 	/** Event Next */
 	get eventNext(): OntimeEvent | null {
-		return this.state.eventNow
+		// used to return eventNow by mistake, which made the change action and the custom
+		// field feedback target the current event when "next" was selected
+		return this.state.eventNext
 	}
 	set eventNext(val: OntimeEvent | null | undefined) {
 		if (val === undefined) return
@@ -287,6 +300,7 @@ export default class OntimeState {
 		this._customFields = val
 		this.hasPendingActionDefinition = true
 		this.hasPendingVariableDefinition = true
+		this.hasPendingFeedbackDefinition = true
 	}
 
 	/** Events */

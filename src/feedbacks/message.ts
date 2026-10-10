@@ -143,7 +143,13 @@ export function createMessageFeedbacks(state: OntimeState): CompanionFeedbackDef
 							if (options.secondary != state.message.secondary) return false
 							break
 						case 'secondarySource':
-							if (options.secondarySource.length === 0 && state.message.timer.secondarySource !== null) return false
+							// an empty selection means "no secondary source visible".
+							// without the break the list check below always failed for an empty selection,
+							// so this case could never match even when no source was visible
+							if (options.secondarySource.length === 0) {
+								if (state.message.timer.secondarySource !== null) return false
+								break
+							}
 							if (options.secondarySource.findIndex((e) => e === state.message.timer.secondarySource) === -1)
 								return false
 							break

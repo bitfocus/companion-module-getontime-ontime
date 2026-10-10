@@ -66,12 +66,13 @@ export function strictTimerStringToMs(str: string): number | null {
 	if (hh === undefined || mm === undefined || ss === undefined) return null
 
 	const isNegative = hh.startsWith('-') ? -1 : 1
-	hh.replace('-', '')
-	hh.replace('+', '')
+	// strip the sign so it is only applied once below.
+	// previously the result of replace() was discarded, so '-01:30:00' became -1h + 30min = +30min
+	const unsignedHH = hh.replace(/^[-+]/, '')
 
 	const maybeSS = Number(ss)
 	const maybeMM = Number(mm)
-	const maybeHH = Number(hh)
+	const maybeHH = Number(unsignedHH)
 	if (isNaN(maybeSS) || isNaN(maybeMM) || isNaN(maybeHH)) return null
 
 	return isNegative * hmsValuesToMs(maybeHH, maybeMM, maybeSS)
@@ -83,10 +84,12 @@ export function hmsValuesToMs(h: number, m: number, s: number): number {
 
 export function formatTime(value: number): { sign: '-' | ''; HH: string; mm: string; ss: string; hms: string } {
 	const sign = value < 0 ? '-' : ''
-	const absolute = Math.abs(value)
-	const ss = (Math.round(absolute / SecondsMs) % 60).toString().padStart(2, '0')
-	const mm = (Math.floor(absolute / MinutesMs) % 60).toString().padStart(2, '0')
-	const HH = Math.floor(absolute / HoursMs)
+	// round to whole seconds first and derive all parts from that.
+	// rounding only the seconds while flooring minutes/hours gave e.g. 00:04:00 for 4:59.6
+	const totalSeconds = Math.round(Math.abs(value) / SecondsMs)
+	const ss = (totalSeconds % 60).toString().padStart(2, '0')
+	const mm = (Math.floor(totalSeconds / 60) % 60).toString().padStart(2, '0')
+	const HH = Math.floor(totalSeconds / 3600)
 		.toString()
 		.padStart(2, '0')
 
