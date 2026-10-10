@@ -8,15 +8,16 @@ function ensureTrailingSlash(url: URL): URL {
 }
 
 export function makeURL(host: string, path = '', ws = false): URL | undefined {
-	let url: URL | undefined
+	const trimmed = host.trim()
 
-	if (URL.canParse(host)) {
-		url = new URL(host)
-	} else if (URL.canParse(`http://${host}`)) {
-		url = new URL(`http://${host}`)
-	}
+	// only treat the input as a full URL when it has an explicit scheme like http:// or https://.
+	// checking with URL.canParse(host) is not enough: a hostname with port like 'ontime.local:4001'
+	// is valid URL syntax with the scheme 'ontime.local:' and was then rejected as not http(s).
+	// IP addresses were not affected because a scheme has to start with a letter
+	const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(trimmed) ? trimmed : `http://${trimmed}`
 
-	if (url === undefined) return
+	if (!URL.canParse(withScheme)) return
+	let url = new URL(withScheme)
 	if (url.protocol !== 'http:' && url.protocol !== 'https:') return
 
 	url = ensureTrailingSlash(url)
