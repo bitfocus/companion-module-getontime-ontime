@@ -72,9 +72,15 @@ function update5(
 	}
 
 	if ('ssl' in _context.currentConfig) {
-		const host = new URL(_context.currentConfig.host)
-		host.protocol = _context.currentConfig.ssl ? 'https' : 'http'
-		result.updatedConfig = { host: _context.currentConfig.host }
+		// v4 stored host, port and ssl as separate fields, v5 uses a single address.
+		// the previous version built a URL object but then discarded it and kept the bare host,
+		// and new URL() threw for a host without scheme (e.g. '192.168.1.10'), which aborted the
+		// whole upgrade. build the address by hand instead
+		const { host, port, ssl } = _context.currentConfig
+		const bareHost = (host ?? '').replace(/^[a-z][a-z0-9+.-]*:\/\//i, '')
+		const portString = typeof port === 'string' || typeof port === 'number' ? String(port) : ''
+		const hostWithPort = portString && !/:\d+$/.test(bareHost) ? `${bareHost}:${portString}` : bareHost
+		result.updatedConfig = { host: `${ssl ? 'https' : 'http'}://${hostWithPort}` }
 	}
 
 	return result

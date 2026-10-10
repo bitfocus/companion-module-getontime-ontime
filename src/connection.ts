@@ -4,9 +4,8 @@ import type { OntimeModule } from './index.js'
 import OntimeState from './state.js'
 import type { ApiResponse, CustomFields, OntimeEvent, RuntimeStore, SocketSender } from '@getontime/resolver'
 import { isWsPacketToClient, MessageTag, RefetchKey } from '@getontime/resolver'
-import { generateFeedbacks } from './feedbacks.js'
 import { generatePresets } from './presets.js'
-import { fetchAllEvents, fetchCustomFields } from './http.js'
+import { fetchAllEvents, fetchCustomFields, resetEtags } from './http.js'
 
 export class OntimeConnection {
 	private socket?: WS
@@ -56,6 +55,9 @@ export class OntimeConnection {
 									if (maybeCustom) this.state.customFields = maybeCustom
 									this.state.applyPendingVariableDefinition()
 									this.state.applyPendingActionDefinition()
+									// the custom field feedback builds its dropdown from the custom fields,
+									// so its definition has to be refreshed as well
+									this.state.applyPendingFeedbackDefinition()
 								})
 								.catch((err) => this.module.log('error', err))
 							break
@@ -93,7 +95,7 @@ export class OntimeConnection {
 			.finally(() => {
 				this.state.applyPendingActionDefinition(true)
 				this.state.applyPendingVariableDefinition(true)
-				this.module.setFeedbackDefinitions(generateFeedbacks(this.module))
+				this.state.applyPendingFeedbackDefinition(true)
 				this.sendSocket('poll', undefined)
 			})
 	}
@@ -101,6 +103,8 @@ export class OntimeConnection {
 	public initConnection(): void {
 		if (this.socket) this.socket?.close()
 		delete this.socket
+		// the host may have changed (configUpdated), so cached etags of the old server must not be reused
+		resetEtags()
 
 		this.socket = new WS(
 			this.module.config.host,
