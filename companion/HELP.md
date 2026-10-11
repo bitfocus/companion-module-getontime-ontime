@@ -28,7 +28,9 @@ Read the docs at [http://docs.getontime.no](https://docs.getontime.no/) \
 Follow Ontime's development on [GitHub](https://github.com/cpvalente/ontime) \
 Join the [discord community](https://discord.com/invite/eje3CSUEXm)
 
-### New for module version 5.4.2
+### New for module version 5.4.2-beta.1
+
+> Beta release: please report any issues on GitHub before this is promoted to a stable release.
 
 - Connection no longer silently dies after hours: dead connections are detected by a heartbeat and reconnected
 - Changing the server address in the config now reconnects without restarting the module

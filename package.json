@@ -1,6 +1,6 @@
 {
 	"name": "getontime-ontime",
-	"version": "5.4.2",
+	"version": "5.4.2-beta.1",
 	"main": "/dist/index.js",
 	"license": "MIT",
 	"repository": {
