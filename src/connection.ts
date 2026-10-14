@@ -29,6 +29,11 @@ export class OntimeConnection {
 		this.module.log('error', msg)
 	}
 
+	private onWsBadVersion(msg: string): void {
+		this.module.log('error', msg)
+		this.module.updateStatus(InstanceStatus.BadConfig, msg)
+	}
+
 	private onWsMessage(data: object): void {
 		if (isWsPacketToClient(data)) {
 			const { tag, payload } = data
@@ -111,6 +116,7 @@ export class OntimeConnection {
 			{
 				ondisconnect: this.onWsDisconnect.bind(this),
 				onerror: this.onWsError.bind(this),
+				onbadversion: this.onWsBadVersion.bind(this),
 				onmessage: this.onWsMessage.bind(this),
 				onopen: this.onWsOpen.bind(this),
 			},
@@ -121,8 +127,7 @@ export class OntimeConnection {
 			this.socket.init()
 		} catch (e) {
 			console.error(e)
-			// init() only throws for an address that can not be parsed, no reconnect is scheduled in that case,
-			// so show it as a config problem instead of leaving the status on Connecting
+			// init() throws for an address that can not be parsed, no reconnect is scheduled in that case
 			this.module.updateStatus(InstanceStatus.BadConfig, `Invalid server address: ${this.module.config.host}`)
 		}
 	}

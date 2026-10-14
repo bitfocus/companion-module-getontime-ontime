@@ -232,8 +232,6 @@ export default class OntimeState {
 
 	/** Event Next */
 	get eventNext(): OntimeEvent | null {
-		// used to return eventNow by mistake, which made the change action and the custom
-		// field feedback target the current event when "next" was selected
 		return this.state.eventNext
 	}
 	set eventNext(val: OntimeEvent | null | undefined) {

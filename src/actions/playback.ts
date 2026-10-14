@@ -90,7 +90,6 @@ export function createPlaybackActions(module: OntimeModule): CompanionActionDefi
 				module.connection.sendSocket('pause', undefined)
 				return
 			case Playback.Roll:
-				// was sending 'pause' by mistake, so toggling into roll mode paused the timer instead
 				module.connection.sendSocket('roll', undefined)
 				return
 			default:

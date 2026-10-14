@@ -10,11 +10,9 @@ function ensureTrailingSlash(url: URL): URL {
 export function makeURL(host: string, path = '', ws = false): URL | undefined {
 	const trimmed = host.trim()
 
-	// only treat the input as a full URL when it has an explicit scheme like http:// or https://.
-	// checking with URL.canParse(host) is not enough: a hostname with port like 'ontime.local:4001'
-	// is valid URL syntax with the scheme 'ontime.local:' and was then rejected as not http(s).
-	// IP addresses were not affected because a scheme has to start with a letter
-	const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(trimmed) ? trimmed : `http://${trimmed}`
+	// an input with a scheme (http://, https://) is used as is, everything else is treated as host[:port][/path].
+	// 'host:port' alone can not be given to URL directly, it would take 'host:' as the scheme
+	const withScheme = trimmed.includes('://') ? trimmed : `http://${trimmed}`
 
 	if (!URL.canParse(withScheme)) return
 	let url = new URL(withScheme)
@@ -66,8 +64,7 @@ export function strictTimerStringToMs(str: string): number | null {
 	if (hh === undefined || mm === undefined || ss === undefined) return null
 
 	const isNegative = hh.startsWith('-') ? -1 : 1
-	// strip the sign so it is only applied once below.
-	// previously the result of replace() was discarded, so '-01:30:00' became -1h + 30min = +30min
+	// the sign is applied to the total below, so it is stripped from the hours here
 	const unsignedHH = hh.replace(/^[-+]/, '')
 
 	const maybeSS = Number(ss)
@@ -84,8 +81,7 @@ export function hmsValuesToMs(h: number, m: number, s: number): number {
 
 export function formatTime(value: number): { sign: '-' | ''; HH: string; mm: string; ss: string; hms: string } {
 	const sign = value < 0 ? '-' : ''
-	// round to whole seconds first and derive all parts from that.
-	// rounding only the seconds while flooring minutes/hours gave e.g. 00:04:00 for 4:59.6
+	// round to whole seconds first and derive all parts from that
 	const totalSeconds = Math.round(Math.abs(value) / SecondsMs)
 	const ss = (totalSeconds % 60).toString().padStart(2, '0')
 	const mm = (Math.floor(totalSeconds / 60) % 60).toString().padStart(2, '0')

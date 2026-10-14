@@ -50,8 +50,6 @@ function generateCustomFieldVariables(
 	if (customFields) {
 		for (const customId in customFields) {
 			const { label } = customFields[customId]
-			// the item has to be passed through, it was hardcoded to 'event' before so the
-			// group_now_custom_* variables were set by the state but never defined
 			customVariables[variableGen(item, infix, 'custom', customId)] = {
 				name: `Custom value "${label}" value of ${name} ${item}`,
 			}
