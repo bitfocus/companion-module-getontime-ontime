@@ -28,11 +28,11 @@ Read the docs at [http://docs.getontime.no](https://docs.getontime.no/) \
 Follow Ontime's development on [GitHub](https://github.com/cpvalente/ontime) \
 Join the [discord community](https://discord.com/invite/eje3CSUEXm)
 
-### New for module version 5.4.2-beta.1
+### New for module version 5.4.2-beta.2
 
 > Beta release: please report any issues on GitHub before this is promoted to a stable release.
 
-- Connection no longer silently dies after hours: dead connections are detected by a heartbeat and reconnected
+- Connection no longer silently dies after hours: dead connections are detected within a few seconds and reconnected
 - Changing the server address in the config now reconnects without restarting the module
 - Hostnames with port (e.g. `ontime.local:4001`) are accepted as server address
 - Fixed "Next Event" targeting the current event in the change action and custom field feedback
