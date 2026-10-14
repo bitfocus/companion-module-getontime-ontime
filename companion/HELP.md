@@ -28,6 +28,22 @@ Read the docs at [http://docs.getontime.no](https://docs.getontime.no/) \
 Follow Ontime's development on [GitHub](https://github.com/cpvalente/ontime) \
 Join the [discord community](https://discord.com/invite/eje3CSUEXm)
 
+### New for module version 5.4.2-beta.2
+
+> Beta release: please report any issues on GitHub before this is promoted to a stable release.
+
+- Connection no longer silently dies after hours: dead connections are detected within a few seconds and reconnected
+- Changing the server address in the config now reconnects without restarting the module
+- Hostnames with port (e.g. `ontime.local:4001`) are accepted as server address
+- Fixed "Next Event" targeting the current event in the change action and custom field feedback
+- Fixed negative times with an hour part (e.g. `-01:30:00`) being parsed with the wrong sign
+- Fixed `timer_current_hms` showing a wrong value for one second at every minute change
+- Added missing `group_now_custom_*` variables
+- Fixed playback toggle into roll mode pausing the timer instead
+- Fixed message feedback never matching when no secondary source is selected
+- Fixed migration of configs from module version 4 and of message actions from before 5.2
+- Custom field feedback picks up changes to custom fields without reconnecting
+
 ### New for module version 5.4.1
 
 - Colour and duration variables from event and group

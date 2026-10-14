@@ -4,6 +4,17 @@ import type { OntimeModule } from './index.js'
 import { makeURL } from './utilities.js'
 
 let customFieldsEtag: string = ''
+let rundownEtag: string = ''
+
+/**
+ * the etags are module global so they survive a reconnect to the same server, which is wanted.
+ * after switching to a different server they must be cleared, otherwise a matching etag would
+ * give a 304 and the rundown of the new server would never be loaded
+ */
+export function resetEtags(): void {
+	customFieldsEtag = ''
+	rundownEtag = ''
+}
 
 export async function fetchCustomFields(self: OntimeModule): Promise<false | CustomFields> {
 	const serverHttp = makeURL(self.config.host, 'data/custom-fields')
@@ -33,7 +44,6 @@ export async function fetchCustomFields(self: OntimeModule): Promise<false | Cus
 	}
 }
 
-let rundownEtag: string = ''
 export async function fetchAllEvents(self: OntimeModule): Promise<false | OntimeEvent[]> {
 	const serverHttp = makeURL(self.config.host, 'data/rundowns/current')
 	if (!serverHttp) {

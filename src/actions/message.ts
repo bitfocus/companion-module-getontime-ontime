@@ -206,15 +206,19 @@ export function upgrade_ensureMessageActionDefaultValues(action: CompanionMigrat
  * For v5.2.0 collet all message actions into on selectable with a dropdown
  */
 export function upgrade_collectMessageActions(action: CompanionMigrationAction): boolean {
+	// an option that was never touched by the user is not stored by companion, so `value`/`source`
+	// can be missing. the previous version renamed the actionId first and then returned false,
+	// which left a "Message control" action without any properties that does nothing when pressed.
+	// missing options now fall back to the old defaults so the action keeps working
+	const oldValue = action.options.value?.value
+
 	if (action.actionId === 'setMessageSecondarySource') {
 		action.actionId = ActionId.MessageAction
-		if (!action.options.source) return false
-		if (!action.options.value) return false
 		action.options.properties = { isExpression: false, value: ['secondarySource'] }
-		action.options.secondaryToggle = { isExpression: false, value: action.options.value.value }
+		action.options.secondaryToggle = { isExpression: false, value: oldValue ?? ToggleOnOff.On }
 		action.options.secondarySource = {
 			isExpression: false,
-			value: action.options.source.value === 'aux' ? 'aux1' : 'secondary',
+			value: action.options.source?.value === 'aux' ? 'aux1' : 'secondary',
 		}
 		delete action.options.source
 		delete action.options.value
@@ -223,45 +227,40 @@ export function upgrade_collectMessageActions(action: CompanionMigrationAction):
 
 	if (action.actionId === 'TimerBlink') {
 		action.actionId = ActionId.MessageAction
-		if (!action.options.value) return false
 		action.options.properties = { isExpression: false, value: ['blink'] }
-		action.options.blink = { isExpression: false, value: action.options.value.value }
+		action.options.blink = { isExpression: false, value: oldValue ?? ToggleOnOff.On }
 		delete action.options.value
 		return true
 	}
 
 	if (action.actionId === 'TimerBlackout') {
 		action.actionId = ActionId.MessageAction
-		if (!action.options.value) return false
 		action.options.properties = { isExpression: false, value: ['blackout'] }
-		action.options.blackout = { isExpression: false, value: action.options.value.value }
+		action.options.blackout = { isExpression: false, value: oldValue ?? ToggleOnOff.On }
 		delete action.options.value
 		return true
 	}
 
 	if (action.actionId === 'setMessageVisibilityAndText') {
 		action.actionId = ActionId.MessageAction
-		if (!action.options.value) return false
 		action.options.properties = { isExpression: false, value: ['text', 'visible'] }
-		action.options.visible = { isExpression: false, value: action.options.value.value }
+		action.options.visible = { isExpression: false, value: oldValue ?? ToggleOnOff.On }
 		delete action.options.value
 		return true
 	}
 
 	if (action.actionId === 'setMessage') {
 		action.actionId = ActionId.MessageAction
-		if (!action.options.value) return false
 		action.options.properties = { isExpression: false, value: ['text'] }
-		action.options.text = { isExpression: false, value: action.options.value.value }
+		action.options.text = { isExpression: false, value: oldValue ?? '' }
 		delete action.options.value
 		return true
 	}
 
 	if (action.actionId === 'setMessageVisibility') {
 		action.actionId = ActionId.MessageAction
-		if (!action.options.value) return false
 		action.options.properties = { isExpression: false, value: ['visible'] }
-		action.options.visible = { isExpression: false, value: action.options.value.value }
+		action.options.visible = { isExpression: false, value: oldValue ?? ToggleOnOff.On }
 		delete action.options.value
 		return true
 	}

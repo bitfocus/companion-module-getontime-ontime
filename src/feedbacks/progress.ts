@@ -28,6 +28,16 @@ export type ProgressFeedbackSchema = {
 	}
 }
 
+/**
+ * progress of the main timer in percent (0 = not started, 100 = finished).
+ * a duration of 0 (e.g. count-up or clock timers) would give Infinity/NaN, which is
+ * not a valid value for the bar graphic, so it is treated as "no progress"
+ */
+function progressPercent(current: number | null, duration: number | null): number {
+	if (current === null || duration === null || duration <= 0) return 0
+	return (1 - current / duration) * 100
+}
+
 function generateProgressBar(
 	feedback: CompanionFeedbackAdvancedEvent<
 		ProgressFeedbackSchema[feedbackId.TimerProgressBar | feedbackId.TimerProgressBarMulti]['options']
@@ -92,7 +102,7 @@ export function createProgressFeedbacks(state: OntimeState): CompanionFeedbackDe
 			],
 			callback: (feedback) => {
 				const { current, duration, phase } = state.timer
-				const value = current !== null && duration !== null ? (1 - current / duration) * 100 : 0
+				const value = progressPercent(current, duration)
 				return generateProgressBar(feedback, phase, value)
 			},
 		},
@@ -122,7 +132,7 @@ export function createProgressFeedbacks(state: OntimeState): CompanionFeedbackDe
 				const { current, duration, phase } = state.timer
 				const amount = feedback.options.amount
 				const index = feedback.options.index - 1
-				const val = current !== null && duration !== null ? (1 - current / duration) * 100 : 0
+				const val = progressPercent(current, duration)
 				const scaledVal = val * amount - 100 * index
 				return generateProgressBar(feedback, phase, scaledVal)
 			},

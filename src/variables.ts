@@ -38,9 +38,10 @@ const offsetVariables: CompanionVariableDefinitions = {
 }
 
 /**
- * CustomField variables for an event `event_[infix]_custom_[data]`
+ * CustomField variables for an event or group `[item]_[infix]_custom_[data]`
  */
 function generateCustomFieldVariables(
+	item: 'event' | 'group',
 	name: string,
 	infix: string,
 	customFields: CustomFields,
@@ -49,8 +50,8 @@ function generateCustomFieldVariables(
 	if (customFields) {
 		for (const customId in customFields) {
 			const { label } = customFields[customId]
-			customVariables[variableGen('event', infix, 'custom', customId)] = {
-				name: `Custom value "${label}" value of ${name} event`,
+			customVariables[variableGen(item, infix, 'custom', customId)] = {
+				name: `Custom value "${label}" value of ${name} ${item}`,
 			}
 		}
 	}
@@ -68,7 +69,7 @@ function generateEventVariables(name: string, infix: string, customFields: Custo
 		[variableGen('event', infix, 'cue')]: { name: `Cue of ${name} event` },
 		[variableGen('event', infix, 'colour')]: { name: `Colour of ${name} event` },
 		[variableGen('event', infix, 'duration')]: { name: `Duration of ${name} event` },
-		...generateCustomFieldVariables(name, infix, customFields),
+		...generateCustomFieldVariables('event', name, infix, customFields),
 	}
 }
 
@@ -83,7 +84,7 @@ function generateGroupVariables(name: string, infix: string, customFields: Custo
 		[variableGen('group', infix, 'colour')]: { name: `Colour of ${name} group` },
 		[variableGen('group', infix, 'duration')]: { name: `Duration of ${name} group` },
 		[variableGen('group', infix, 'targetDuration')]: { name: `Target duration of ${name} group` },
-		...generateCustomFieldVariables(name, infix, customFields),
+		...generateCustomFieldVariables('group', name, infix, customFields),
 	}
 }
 

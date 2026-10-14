@@ -90,7 +90,7 @@ export function createPlaybackActions(module: OntimeModule): CompanionActionDefi
 				module.connection.sendSocket('pause', undefined)
 				return
 			case Playback.Roll:
-				module.connection.sendSocket('pause', undefined)
+				module.connection.sendSocket('roll', undefined)
 				return
 			default:
 				goToState satisfies never | Playback.Stop // going to a stop state would leave the user unable to toggle back

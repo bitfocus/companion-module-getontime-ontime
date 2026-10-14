@@ -35,6 +35,10 @@ export class OntimeModule extends InstanceBase<OntimeTypes> {
 	async configUpdated(config: OntimeConfig): Promise<void> {
 		this.config = config
 		this.log('debug', 'config update')
+		// re-initialise so a changed server address is applied without restarting the module.
+		// initConnection() closes the previous socket including its timers before connecting again
+		this.updateStatus(InstanceStatus.Connecting)
+		this.connection.initConnection()
 	}
 
 	getConfigFields(): SomeCompanionConfigField[] {
