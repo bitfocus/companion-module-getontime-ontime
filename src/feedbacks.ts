@@ -5,6 +5,7 @@ import { createOffsetFeedbacks, type OffsetFeedbackSchema } from './feedbacks/of
 import { type AuxTimerFeedbacksSchema, createAuxTimerFeedbacks } from './feedbacks/auxTimer.js'
 import { createProgressFeedbacks, type ProgressFeedbackSchema } from './feedbacks/progress.js'
 import { createCustomFieldsFeedbacks, type CustomFieldsFeedbacksSchema } from './feedbacks/customFields.js'
+import { createTeleprompterFeedbacks, type TeleprompterFeedbackSchema } from './feedbacks/teleprompter.js'
 import type { OntimeModule } from './index.js'
 import type { CompanionFeedbackDefinitions } from '@companion-module/base'
 
@@ -14,7 +15,8 @@ export type FeedbackSchema = PlaybackFeedbackSchema &
 	ProgressFeedbackSchema &
 	OffsetFeedbackSchema &
 	AuxTimerFeedbacksSchema &
-	CustomFieldsFeedbacksSchema
+	CustomFieldsFeedbacksSchema &
+	TeleprompterFeedbackSchema
 
 /**
  * Returns all implemented feedbacks.
@@ -28,5 +30,6 @@ export function generateFeedbacks(module: OntimeModule): CompanionFeedbackDefini
 		...createOffsetFeedbacks(module.connection.state),
 		...createAuxTimerFeedbacks(module.connection.state),
 		...createCustomFieldsFeedbacks(module.connection.state),
+		...createTeleprompterFeedbacks(module.connection.state),
 	}
 }
