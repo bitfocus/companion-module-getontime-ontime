@@ -53,6 +53,10 @@ export enum feedbackId {
 
 	AuxTimerPlayback = 'auxTimerPlayback',
 	AuxTimerNegative = 'auxTimerNegativePlayback',
+
+	TeleprompterPlayback = 'teleprompterPlayback',
+	TeleprompterMode = 'teleprompterMode',
+	TeleprompterHoldingAtEnd = 'teleprompterHoldEnd',
 }
 
 export enum variableId {

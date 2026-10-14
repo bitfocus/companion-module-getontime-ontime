@@ -38,6 +38,13 @@ const offsetVariables: CompanionVariableDefinitions = {
 	[variableId.ExpectedFlagStart]: { name: 'Expected start time of next flagged event (milliseconds)' },
 }
 
+const teleprompterVariables: CompanionVariableDefinitions = {
+	[variableId.TeleprompterPlayback]: { name: 'Teleprompter Playback state' },
+	[variableId.TeleprompterMode]: { name: 'Teleprompter hold mode' },
+	[variableId.TeleprompterSpeed]: { name: 'Teleprompter speed (Lines per minute)' },
+	[variableId.TeleprompterEnded]: { name: 'Teleprompter is holding at end of' },
+}
+
 /**
  * CustomField variables for an event or group `[item]_[infix]_custom_[data]`
  */
@@ -122,6 +129,7 @@ export function generateVariables(customFields: CustomFields): CompanionVariable
 		...generateAuxTimerVariables('1'),
 		...generateAuxTimerVariables('2'),
 		...generateAuxTimerVariables('3'),
+		...teleprompterVariables,
 	}
 }
 

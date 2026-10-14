@@ -92,6 +92,7 @@ export class OntimeConnection {
 						case RefetchKey.Translation: //ignore
 						case RefetchKey.UrlPresets: //ignore
 						case RefetchKey.ViewSettings: //ignore
+						case RefetchKey.Teleprompter: //ignore
 							break
 						default: {
 							target satisfies never
@@ -100,19 +101,12 @@ export class OntimeConnection {
 					}
 					break
 				}
-				// @ts-expect-error - beta feature
-				case 'teleprompter': {
-					// case MessageTag.TeleprompterCommand: {
-					break
-				}
 				default: {
 					const { payload, tag } = data as unknown as ApiResponse
 					if (tag === 'poll') {
 						this.applyDataPatch(payload)
 						break
 					}
-					console.log('WS tag:', tag)
-					console.log('WS payload:', payload)
 					break
 				}
 			}
@@ -185,6 +179,7 @@ export class OntimeConnection {
 		this.state.auxtimer1 = payload.auxtimer1
 		this.state.auxtimer2 = payload.auxtimer2
 		this.state.auxtimer3 = payload.auxtimer3
+		this.state.teleprompter = payload.teleprompter
 
 		this.state.applyPendingVariables()
 	}
