@@ -27,6 +27,12 @@ export enum ActionId {
 	AuxTimerPlayState = 'auxTimerPlayState',
 	AuxTimerDirection = 'auxTimerDirection',
 	AuxTimerAdd = 'auxTimerAdd',
+
+	TeleprompterTogglePlay = 'teleprompterTogglePlay',
+	TeleprompterSetSpeed = 'teleprompterSpeed',
+	TeleprompterChangeSpeed = 'teleprompterChangeSpeed',
+	TeleprompterScroll = 'teleprompterScroll',
+	TeleprompterMode = 'teleprompterMode',
 }
 
 export enum feedbackId {
@@ -47,6 +53,10 @@ export enum feedbackId {
 
 	AuxTimerPlayback = 'auxTimerPlayback',
 	AuxTimerNegative = 'auxTimerNegativePlayback',
+
+	TeleprompterPlayback = 'teleprompterPlayback',
+	TeleprompterMode = 'teleprompterMode',
+	TeleprompterHoldingAtEnd = 'teleprompterHoldEnd',
 }
 
 export enum variableId {
@@ -86,6 +96,11 @@ export enum variableId {
 	AuxTimerPlayback = 'aux_playback',
 	AuxTimerCurrent = 'aux_current',
 	AuxTimerDirection = 'aux_direction',
+
+	TeleprompterPlayback = 'teleprompter_playback',
+	TeleprompterMode = 'teleprompter_mode',
+	TeleprompterSpeed = 'teleprompter_speed',
+	TeleprompterEnded = 'teleprompter_ended',
 }
 
 export enum ToggleOnOff {

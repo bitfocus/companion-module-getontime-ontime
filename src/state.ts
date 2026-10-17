@@ -17,6 +17,7 @@ import { generateVariables, variableGen } from './variables.js'
 import { generateActions } from './actions.js'
 import { generateFeedbacks } from './feedbacks.js'
 import { findPreviousPlayableEvent, formatTime } from './utilities.js'
+import type { TeleprompterState } from '@getontime/resolver/dist/packages/types/src/definitions/runtime/Teleprompter.type.mjs'
 
 /**
  * state handles all changes to ontime state and any side effects arising form that
@@ -119,6 +120,20 @@ export default class OntimeState {
 			[variableGen('aux', infix, 'name')]: val.name,
 		})
 		this.module.checkFeedbacks(feedbackId.AuxTimerNegative, feedbackId.AuxTimerPlayback)
+	}
+
+	private updateTeleprompter(val: TeleprompterState) {
+		this.appendVariableUpdate({
+			[variableId.TeleprompterPlayback]: val.playback,
+			[variableId.TeleprompterMode]: val.mode,
+			[variableId.TeleprompterSpeed]: val.speed,
+			[variableId.TeleprompterEnded]: val.ended,
+		})
+		this.module.checkFeedbacks(
+			feedbackId.TeleprompterPlayback,
+			feedbackId.TeleprompterMode,
+			feedbackId.TeleprompterHoldingAtEnd,
+		)
 	}
 
 	/** Wall Clock */
@@ -310,5 +325,15 @@ export default class OntimeState {
 		this.hasPendingActionDefinition = true
 		this._previousEvent = findPreviousPlayableEvent(this)
 		this.updateEvent(this._previousEvent, 'prev')
+	}
+
+	get teleprompter(): TeleprompterState {
+		return this.state.teleprompter
+	}
+
+	set teleprompter(val: TeleprompterState | undefined) {
+		if (val === undefined) return
+		this.state.teleprompter = val
+		this.updateTeleprompter(val)
 	}
 }

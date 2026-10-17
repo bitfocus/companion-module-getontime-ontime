@@ -45,6 +45,21 @@ export class OntimeConnection {
 				case MessageTag.Refetch: {
 					const { target } = payload
 					switch (target) {
+						case RefetchKey.All: {
+							fetchCustomFields(this.module)
+								.then((maybeCustom) => {
+									if (maybeCustom) this.state.customFields = maybeCustom
+									fetchAllEvents(this.module)
+										.then((maybeEvents) => {
+											if (maybeEvents) this.state.events = maybeEvents
+											this.state.applyPendingActionDefinition()
+											this.state.applyPendingVariableDefinition()
+										})
+										.catch((err) => this.module.log('error', err))
+								})
+								.catch((err) => this.module.log('error', err))
+							break
+						}
 						case RefetchKey.Rundown: {
 							fetchAllEvents(this.module)
 								.then((maybeEvents) => {
@@ -67,6 +82,20 @@ export class OntimeConnection {
 								.catch((err) => this.module.log('error', err))
 							break
 						}
+						case RefetchKey.CssOverride: //ignore
+						case RefetchKey.ProjectData: //ignore
+						case RefetchKey.ProjectRundowns: //ignore
+						case RefetchKey.Report: //ignore
+						case RefetchKey.Settings: //ignore
+						case RefetchKey.Translation: //ignore
+						case RefetchKey.UrlPresets: //ignore
+						case RefetchKey.ViewSettings: //ignore
+						case RefetchKey.Teleprompter: //ignore
+							break
+						default: {
+							target satisfies never
+							break
+						}
 					}
 					break
 				}
@@ -76,13 +105,11 @@ export class OntimeConnection {
 						this.applyDataPatch(payload)
 						break
 					}
-					console.log('WS tag:', tag)
-					console.log('WS payload:', payload)
 					break
 				}
 			}
 		} else {
-			console.log('onmessage', data)
+			console.log('onmessage', 'unused message', data)
 		}
 	}
 	private onWsOpen(): void {
@@ -149,6 +176,7 @@ export class OntimeConnection {
 		this.state.auxtimer1 = payload.auxtimer1
 		this.state.auxtimer2 = payload.auxtimer2
 		this.state.auxtimer3 = payload.auxtimer3
+		this.state.teleprompter = payload.teleprompter
 
 		this.state.applyPendingVariables()
 	}
