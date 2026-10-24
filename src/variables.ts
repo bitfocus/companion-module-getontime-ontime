@@ -10,6 +10,7 @@ const timerVariables: CompanionVariableDefinitions = {
 	[variableId.TimerCurrentM]: { name: 'Current timer (mm)' },
 	[variableId.TimerCurrentS]: { name: 'Current timer (ss)' },
 	[variableId.TimerDuration]: { name: 'Timer duration (milliseconds)' },
+	[variableId.TimerElapsed]: { name: 'Active elapsed time since timer started (milliseconds)' },
 	[variableId.TimerAdded]: { name: 'User added time to current timer (milliseconds)' },
 	[variableId.TimerPhase]: { name: 'Current timer phase (None/Default/Warning/Danger/Overtime/Pending)' },
 	[variableId.PlayState]: { name: 'Playback state (Running, Paused, Stopped, Roll)' },
@@ -33,8 +34,13 @@ const rundownVariables: CompanionVariableDefinitions = {
 const offsetVariables: CompanionVariableDefinitions = {
 	[variableId.Offset]: { name: 'Offset aka Over/Under (milliseconds)' },
 	[variableId.ExpectedGroupEnd]: { name: 'Expected end time of current group (milliseconds)' },
+	[variableId.PlannedTimeToGroupEnd]: { name: 'Planned time until end of current group (milliseconds)' },
+	[variableId.ExpectedTimeToGroupEnd]: { name: 'Expected time until end of current group (milliseconds)' },
 	[variableId.ExpectedRundownEnd]: { name: 'Expected end time of rundown (milliseconds)' },
+	[variableId.ExpectedTimeToRundownEnd]: { name: 'Expected time until end of rundown (milliseconds)' },
 	[variableId.ExpectedFlagStart]: { name: 'Expected start time of next flagged event (milliseconds)' },
+	[variableId.PlannedTimeToFlagStart]: { name: 'Planned time until start of next flagged event (milliseconds)' },
+	[variableId.ExpectedTimeToFlagStart]: { name: 'Expected time until start of next flagged event (milliseconds)' },
 }
 
 /**

@@ -79,8 +79,13 @@ export enum variableId {
 
 	Offset = 'offset',
 	ExpectedGroupEnd = 'expected_group_end',
+	PlannedTimeToGroupEnd = 'planned_time_to_group_end',
+	ExpectedTimeToGroupEnd = 'expected_time_to_group_end',
 	ExpectedRundownEnd = 'expected_rundown_end',
+	ExpectedTimeToRundownEnd = 'expected_time_to_rundown_end',
 	ExpectedFlagStart = 'expected_flag_start',
+	PlannedTimeToFlagStart = 'planned_time_to_flag_start',
+	ExpectedTimeToFlagStart = 'expected_time_to_flag_start',
 
 	AuxTimerDuration = 'aux_duration',
 	AuxTimerPlayback = 'aux_playback',
