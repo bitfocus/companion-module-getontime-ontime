@@ -1,4 +1,4 @@
-import { OffsetMode, Playback, runtimeStorePlaceholder, TimerPhase } from '@getontime/resolver'
+import { OffsetMode, runtimeStorePlaceholder } from '@getontime/resolver'
 import type {
 	CustomFields,
 	MessageState,
@@ -11,14 +11,12 @@ import type {
 	TimerState,
 } from '@getontime/resolver'
 import type { OntimeModule } from './index.js'
-import { feedbackId, HoursMs, variableId } from './enums.js'
+import { feedbackId, variableId } from './enums.js'
 import type { CompanionVariableValues } from '@companion-module/base'
 import { generateVariables, variableGen } from './variables.js'
 import { generateActions } from './actions.js'
 import { generateFeedbacks } from './feedbacks.js'
 import { findPreviousPlayableEvent, formatTime } from './utilities.js'
-
-const DayMs = 24 * HoursMs
 
 /**
  * state handles all changes to ontime state and any side effects arising form that
@@ -65,45 +63,6 @@ export default class OntimeState {
 
 	private appendVariableUpdate(values: CompanionVariableValues): void {
 		Object.assign(this.pendingVariables, values)
-	}
-
-	private updateGroupAndFlagTimes(): void {
-		const { clock, eventFlag, groupNow, offset, rundown, timer } = this.state
-		const timerIsActive =
-			timer.phase !== TimerPhase.Pending &&
-			(timer.playback === Playback.Play || timer.playback === Playback.Pause || timer.playback === Playback.Roll)
-
-		let plannedTimeToGroupEnd: number | undefined
-		if (timerIsActive && groupNow !== null && groupNow.timeStart !== null && rundown.currentDay !== null) {
-			const normalisedClock = clock + rundown.currentDay * DayMs
-			if (offset.mode === OffsetMode.Absolute) {
-				plannedTimeToGroupEnd = groupNow.timeStart + groupNow.duration - normalisedClock
-			} else if (rundown.actualGroupStart !== null) {
-				plannedTimeToGroupEnd = rundown.actualGroupStart + groupNow.duration - normalisedClock
-			}
-		}
-
-		let plannedTimeToFlagStart: number | undefined
-		if (timerIsActive && eventFlag !== null && rundown.currentDay !== null) {
-			const normalisedClock = clock + rundown.currentDay * DayMs
-			const normalisedFlagStart = eventFlag.timeStart + eventFlag.dayOffset * DayMs
-			if (offset.mode === OffsetMode.Absolute) {
-				plannedTimeToFlagStart = normalisedFlagStart - normalisedClock
-			} else if (rundown.actualStart !== null && rundown.plannedStart !== null) {
-				plannedTimeToFlagStart = normalisedFlagStart + rundown.actualStart - rundown.plannedStart - normalisedClock
-			}
-		}
-
-		this.appendVariableUpdate({
-			[variableId.PlannedTimeToGroupEnd]: plannedTimeToGroupEnd,
-			[variableId.ExpectedTimeToGroupEnd]:
-				timerIsActive && offset.expectedGroupEnd !== null ? offset.expectedGroupEnd - clock : undefined,
-			[variableId.ExpectedTimeToRundownEnd]:
-				timerIsActive && offset.expectedRundownEnd !== null ? offset.expectedRundownEnd - clock : undefined,
-			[variableId.PlannedTimeToFlagStart]: plannedTimeToFlagStart,
-			[variableId.ExpectedTimeToFlagStart]:
-				timerIsActive && offset.expectedFlagStart !== null ? offset.expectedFlagStart - clock : undefined,
-		})
 	}
 
 	public applyPendingVariables(): void {
@@ -170,7 +129,6 @@ export default class OntimeState {
 		if (val === undefined) return
 		this.state.clock = val
 		this.appendVariableUpdate({ [variableId.Clock]: val })
-		this.updateGroupAndFlagTimes()
 	}
 
 	/** Event Timer */
@@ -204,7 +162,6 @@ export default class OntimeState {
 			feedbackId.TimerProgressBar,
 			feedbackId.TimerProgressBarMulti,
 		)
-		this.updateGroupAndFlagTimes()
 	}
 
 	/** Message controller */
@@ -238,7 +195,6 @@ export default class OntimeState {
 			[variableId.TotalEvents]: val.numEvents,
 			[variableId.SelectedIndex]: val.selectedEventIndex ?? undefined,
 		})
-		this.updateGroupAndFlagTimes()
 	}
 
 	/** Offset */
@@ -255,7 +211,6 @@ export default class OntimeState {
 			[variableId.ExpectedRundownEnd]: val.expectedRundownEnd ?? undefined,
 			[variableId.ExpectedFlagStart]: val.expectedFlagStart ?? undefined,
 		})
-		this.updateGroupAndFlagTimes()
 		this.module.checkFeedbacks(feedbackId.RundownOffset)
 	}
 
@@ -294,7 +249,6 @@ export default class OntimeState {
 		if (val === undefined) return
 		this.state.eventFlag = val
 		this.updateEvent(val, 'flag')
-		this.updateGroupAndFlagTimes()
 	}
 
 	/** Group Now */
@@ -305,7 +259,6 @@ export default class OntimeState {
 		if (val === undefined) return
 		this.state.groupNow = val
 		this.updateGroup(val, 'now')
-		this.updateGroupAndFlagTimes()
 	}
 
 	/** Auxtimer 1 */

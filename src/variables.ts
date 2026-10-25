@@ -34,13 +34,8 @@ const rundownVariables: CompanionVariableDefinitions = {
 const offsetVariables: CompanionVariableDefinitions = {
 	[variableId.Offset]: { name: 'Offset aka Over/Under (milliseconds)' },
 	[variableId.ExpectedGroupEnd]: { name: 'Expected end time of current group (milliseconds)' },
-	[variableId.PlannedTimeToGroupEnd]: { name: 'Planned time until end of current group (milliseconds)' },
-	[variableId.ExpectedTimeToGroupEnd]: { name: 'Expected time until end of current group (milliseconds)' },
 	[variableId.ExpectedRundownEnd]: { name: 'Expected end time of rundown (milliseconds)' },
-	[variableId.ExpectedTimeToRundownEnd]: { name: 'Expected time until end of rundown (milliseconds)' },
 	[variableId.ExpectedFlagStart]: { name: 'Expected start time of next flagged event (milliseconds)' },
-	[variableId.PlannedTimeToFlagStart]: { name: 'Planned time until start of next flagged event (milliseconds)' },
-	[variableId.ExpectedTimeToFlagStart]: { name: 'Expected time until start of next flagged event (milliseconds)' },
 }
 
 /**
