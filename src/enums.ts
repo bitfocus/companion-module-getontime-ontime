@@ -81,11 +81,6 @@ export enum variableId {
 	ExpectedGroupEnd = 'expected_group_end',
 	ExpectedRundownEnd = 'expected_rundown_end',
 	ExpectedFlagStart = 'expected_flag_start',
-
-	AuxTimerDuration = 'aux_duration',
-	AuxTimerPlayback = 'aux_playback',
-	AuxTimerCurrent = 'aux_current',
-	AuxTimerDirection = 'aux_direction',
 }
 
 export enum ToggleOnOff {

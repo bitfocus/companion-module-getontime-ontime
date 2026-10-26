@@ -35,11 +35,6 @@ interface WsCallbacks {
 	onbadversion: onBadVersion
 }
 
-export interface Subscription {
-	path: string
-	method: 'full' | 'changes'
-}
-
 /** delay before a new connection attempt after the socket was closed */
 const RECONNECT_INTERVAL = 5000
 /** time Ontime has to answer the initial version request */
