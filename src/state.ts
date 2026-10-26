@@ -148,6 +148,7 @@ export default class OntimeState {
 			[variableId.TimerCurrentM]: t.mm,
 			[variableId.TimerCurrentS]: t.ss,
 			[variableId.TimerDuration]: val.duration ?? undefined,
+			[variableId.TimerElapsed]: val.elapsed ?? undefined,
 			[variableId.TimerAdded]: val.addedTime,
 			[variableId.TimerPhase]: val.phase,
 			[variableId.PlayState]: val.playback,

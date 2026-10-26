@@ -7,7 +7,7 @@ import { feedbackId } from '../enums.js'
 import { DangerRed, White } from '../assets/colours.js'
 import type OntimeState from '../state.js'
 
-enum OffsetState {
+export enum OffsetState {
 	On = 'on',
 	Under = 'under',
 	Over = 'Over',

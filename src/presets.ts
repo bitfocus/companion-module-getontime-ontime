@@ -20,23 +20,16 @@ import {
 	WarningOrange,
 	White,
 } from './assets/colours.js'
-import { Playback, SimplePlayback } from '@getontime/resolver'
+import { Playback, SimpleDirection, SimplePlayback, TimerPhase, type CustomFields } from '@getontime/resolver'
 import type { ActionsSchema } from './actions.js'
 import type { OntimeTypes } from './index.js'
 import { patchEventPickerOptions } from './actions/eventPicker.js'
 import { patchMessageAction } from './actions/message.js'
 import { patchAuxAddTimeAction } from './actions/auxTimer.js'
 import { patchMessageFeedback } from './feedbacks/message.js'
+import { OffsetState } from './feedbacks/offset.js'
 import { patchAddTimeAction } from './actions/playback.js'
-
-//TODO: Actions missing presets:
-// - Aux timer direction
-
-//TODO: Feedback missing presets:
-// - TimerPhase
-// - TimerProgressBarMulti
-// - RundownOffset
-// - CustomFieldsValue - might be difficult when we dont know the fields of the users project
+import { variableGen } from './variables.js'
 
 function singleActionStep<K extends keyof ActionsSchema>(
 	actionId: K,
@@ -46,11 +39,18 @@ function singleActionStep<K extends keyof ActionsSchema>(
 	return [{ down: [action], up: [] }]
 }
 
-export function generatePresets(): [
-	structure: CompanionPresetSection[],
-	presets: CompanionPresetDefinitions<OntimeTypes>,
-] {
-	const presets = { ...wallClockPresets, ...messagePresets, ...timerPresets, ...auxTimerPresets, ...playbackPresets }
+export function generatePresets(
+	customFields: CustomFields = {},
+): [structure: CompanionPresetSection[], presets: CompanionPresetDefinitions<OntimeTypes>] {
+	const customFieldPresets = generateCustomFieldPresets(customFields)
+	const presets = {
+		...wallClockPresets,
+		...messagePresets,
+		...timerPresets,
+		...auxTimerPresets,
+		...playbackPresets,
+		...customFieldPresets,
+	}
 
 	const structure: CompanionPresetSection<OntimeTypes>[] = [
 		{
@@ -79,6 +79,13 @@ export function generatePresets(): [
 			definitions: Object.keys(auxTimerPresets),
 		},
 	]
+	if (Object.keys(customFieldPresets).length > 0) {
+		structure.push({
+			id: 'custom-fields',
+			name: 'Custom Fields',
+			definitions: Object.keys(customFieldPresets),
+		})
+	}
 
 	return [structure, presets]
 }
@@ -98,6 +105,48 @@ const defaultWithIconStyle: CompanionButtonStyleProps = {
 	bgcolor: Black,
 	text: '',
 	alignment: 'center:bottom',
+}
+
+type SimplePresetFeedbacks = Extract<CompanionPresetDefinition<OntimeTypes>, { type: 'simple' }>['feedbacks']
+
+function timerPhaseColourFeedbacks(): SimplePresetFeedbacks {
+	return [
+		{
+			feedbackId: feedbackId.TimerPhase,
+			options: { phase: [TimerPhase.Warning] },
+			style: { color: Black },
+		},
+		{
+			feedbackId: feedbackId.TimerPhase,
+			options: { phase: [TimerPhase.Danger, TimerPhase.Overtime, TimerPhase.Pending] },
+			style: { color: White },
+		},
+	]
+}
+
+function timerPhaseBackgroundFeedbacks(): SimplePresetFeedbacks {
+	return [
+		{
+			feedbackId: feedbackId.TimerPhase,
+			options: { phase: [TimerPhase.None, TimerPhase.Default] },
+			style: { bgcolor: NormalGray, color: Black },
+		},
+		{
+			feedbackId: feedbackId.TimerPhase,
+			options: { phase: [TimerPhase.Warning] },
+			style: { bgcolor: WarningOrange, color: Black },
+		},
+		{
+			feedbackId: feedbackId.TimerPhase,
+			options: { phase: [TimerPhase.Danger, TimerPhase.Overtime] },
+			style: { bgcolor: DangerRed, color: White },
+		},
+		{
+			feedbackId: feedbackId.TimerPhase,
+			options: { phase: [TimerPhase.Pending] },
+			style: { bgcolor: RollBlue, color: White },
+		},
+	]
 }
 
 function generateWallClockPreset(name: string, format: string): CompanionPresetDefinition<OntimeTypes> {
@@ -128,6 +177,59 @@ function generateTimerComponentPreset(name: string, format: string): CompanionPr
 		steps: [],
 		feedbacks: [],
 	}
+}
+
+function generateMultiProgressPreset(index: 1 | 2 | 3): CompanionPresetDefinition<OntimeTypes> {
+	return {
+		type: 'simple',
+		name: `Multi progress bar ${index} of 3`,
+		style: {
+			...defaultStyle,
+			size: '14',
+			text: index === 1 ? '$(ontime:timer_current_hms)' : '',
+		},
+		steps: [],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.TimerProgressBarMulti,
+				options: {
+					big: true,
+					normal: NormalGray,
+					warning: WarningOrange,
+					danger: DangerRed,
+					index,
+					amount: 3,
+				},
+			},
+		],
+	}
+}
+
+function generateCustomFieldPresets(customFields: CustomFields): CompanionPresetDefinitions<OntimeTypes> {
+	const presets: CompanionPresetDefinitions<OntimeTypes> = {}
+	for (const [field, definition] of Object.entries(customFields)) {
+		for (const target of ['now', 'next'] as const) {
+			const eventName = target === 'now' ? 'Current' : 'Next'
+			presets[`custom_field_${target}_${field}`] = {
+				type: 'simple',
+				name: `${eventName} event custom field: ${definition.label}`,
+				style: {
+					...defaultStyle,
+					size: 'auto',
+					text: `${eventName}:\n${definition.label}\n$(ontime:${variableGen('event', target, 'custom', field)})`,
+				},
+				steps: [],
+				feedbacks: [
+					{
+						feedbackId: feedbackId.CustomFieldsValue,
+						options: { target, field, requireValue: false, match: '' },
+						style: { bgcolor: ActiveBlue, color: White },
+					},
+				],
+			}
+		}
+	}
+	return presets
 }
 
 function generateAddRemoveTimePreset(
@@ -534,11 +636,69 @@ const timerPresets: CompanionPresetDefinitions<OntimeTypes> = {
 					big: false,
 				},
 			},
+			...timerPhaseColourFeedbacks(),
 		],
+	},
+	current_timer_phase_colour: {
+		type: 'simple',
+		name: 'Timer with phase colour',
+		style: {
+			...defaultStyle,
+			size: '14',
+			text: 'Current:\n$(ontime:timer_current_hms)',
+		},
+		steps: [],
+		feedbacks: timerPhaseBackgroundFeedbacks(),
+	},
+	timer_progress_multi_1: generateMultiProgressPreset(1),
+	timer_progress_multi_2: generateMultiProgressPreset(2),
+	timer_progress_multi_3: generateMultiProgressPreset(3),
+	rundown_offset_indicator: {
+		type: 'simple',
+		name: 'Over/under indicator',
+		style: {
+			...defaultStyle,
+			size: 'auto',
+			textExpression: true,
+			text: 'msToTimestamp($(ontime:offset), "HH:mm:ss")',
+		},
+		steps: [],
+		feedbacks: [
+			{
+				feedbackId: feedbackId.RundownOffset,
+				options: { state: OffsetState.On, margin: 10 },
+				style: { bgcolor: PlaybackGreen, color: White },
+			},
+			{
+				feedbackId: feedbackId.RundownOffset,
+				options: { state: OffsetState.Over, margin: 10 },
+				style: { bgcolor: DangerRed, color: White },
+			},
+			{
+				feedbackId: feedbackId.RundownOffset,
+				options: { state: OffsetState.Under, margin: 10 },
+				style: { bgcolor: ActiveBlue, color: White },
+			},
+		],
+	},
+	timer_phase_status: {
+		type: 'simple',
+		name: 'Timer phase status',
+		style: {
+			...defaultStyle,
+			size: '14',
+			text: 'TIMER\n$(ontime:timer_phase)',
+		},
+		steps: [],
+		feedbacks: timerPhaseBackgroundFeedbacks(),
 	},
 }
 
 const AUX_INDICES = ['1', '2', '3'] as const
+
+function auxTimerTextExpression(index: (typeof AUX_INDICES)[number], secondLineExpression: string): string {
+	return `concat($(ontime:aux_${index}_name) ? substr($(ontime:aux_${index}_name), 0, 8) : "AUX ${index}", "\\n", ${secondLineExpression})`
+}
 
 function indexToAuxTimerName(index: (typeof AUX_INDICES)[number]): 'auxtimer1' | 'auxtimer2' | 'auxtimer3' {
 	return `auxtimer${index}`
@@ -550,8 +710,8 @@ function generateAuxTime(index: (typeof AUX_INDICES)[number]): CompanionPresetDe
 		name: `Aux ${index}`,
 		style: {
 			...defaultStyle,
-			text: '`AUX ' + index + '\n${msToTimestamp($(ontime:aux_' + index + '_current),"HH:mm:ss")}`',
-			size: '14',
+			text: auxTimerTextExpression(index, `msToTimestamp($(ontime:aux_${index}_current), "mm:ss")`),
+			size: 'auto',
 			alignment: 'center:center',
 			textExpression: true,
 		},
@@ -581,7 +741,8 @@ function generateAuxStartPause(index: (typeof AUX_INDICES)[number]): CompanionPr
 		name: 'Start/Pause Aux Timer ' + index,
 		style: {
 			...defaultWithIconStyle,
-			text: `AUX ${index}`,
+			text: auxTimerTextExpression(index, '"START"'),
+			textExpression: true,
 			png64: icons.PlaybackStart,
 			bgcolor: PlaybackGreen,
 		},
@@ -596,7 +757,8 @@ function generateAuxStartPause(index: (typeof AUX_INDICES)[number]): CompanionPr
 				style: {
 					bgcolor: PauseOrange,
 					png64: icons.PlaybackPause,
-					text: `AUX ${index}`,
+					text: auxTimerTextExpression(index, '"PAUSE"'),
+					textExpression: true,
 				},
 			},
 		],
@@ -609,7 +771,8 @@ function generateAuxStop(index: (typeof AUX_INDICES)[number]): CompanionPresetDe
 		name: 'Stop Aux Timer ' + index,
 		style: {
 			...defaultWithIconStyle,
-			text: `AUX ${index}`,
+			text: auxTimerTextExpression(index, '"STOP"'),
+			textExpression: true,
 			png64: icons.PlaybackStop,
 		},
 		steps: singleActionStep(ActionId.AuxTimerPlayState, { value: SimplePlayback.Stop, destination: index }),
@@ -624,7 +787,8 @@ function generateAuxStop(index: (typeof AUX_INDICES)[number]): CompanionPresetDe
 				style: {
 					bgcolor: PlaybackRed,
 					png64: icons.PlaybackStop,
-					text: `AUX ${index}`,
+					text: auxTimerTextExpression(index, '"STOP"'),
+					textExpression: true,
 				},
 			},
 		],
@@ -637,8 +801,9 @@ function generateAuxAddTime(index: (typeof AUX_INDICES)[number]): CompanionPrese
 		name: 'Add timer to Aux Timer ' + index,
 		style: {
 			...defaultStyle,
-			size: '18',
-			text: `AUX ${index}\\n+5m`,
+			size: 'auto',
+			text: auxTimerTextExpression(index, '"+5m"'),
+			textExpression: true,
 		},
 		steps: singleActionStep(
 			ActionId.AuxTimerAdd,
@@ -654,10 +819,30 @@ function generateAuxSetTime(index: (typeof AUX_INDICES)[number]): CompanionPrese
 		name: 'Set Aux Duration ' + index,
 		style: {
 			...defaultStyle,
-			size: '18',
-			text: `AUX ${index}\\n5m`,
+			size: 'auto',
+			text: auxTimerTextExpression(index, '"5m"'),
+			textExpression: true,
 		},
 		steps: singleActionStep(ActionId.AuxTimerDuration, { destination: index, duration: '00:05:00' }),
+		feedbacks: [],
+	}
+}
+
+function generateAuxDirection(
+	index: (typeof AUX_INDICES)[number],
+	direction: SimpleDirection.CountUp | SimpleDirection.CountDown,
+): CompanionPresetDefinition<OntimeTypes> {
+	const label = direction === SimpleDirection.CountUp ? 'COUNT UP' : 'COUNT DOWN'
+	return {
+		type: 'simple',
+		name: `Set Aux Timer ${index} to ${label.toLowerCase()}`,
+		style: {
+			...defaultStyle,
+			size: 'auto',
+			text: auxTimerTextExpression(index, `"${label}"`),
+			textExpression: true,
+		},
+		steps: singleActionStep(ActionId.AuxTimerDirection, { destination: index, direction }),
 		feedbacks: [],
 	}
 }
@@ -670,6 +855,8 @@ function buildAuxTimerPresets(): CompanionPresetDefinitions<OntimeTypes> {
 		presets[`stop_auxtimer${index}`] = generateAuxStop(index)
 		presets[`add_auxtimer${index}`] = generateAuxAddTime(index)
 		presets[`set_auxtimer${index}`] = generateAuxSetTime(index)
+		presets[`count_up_auxtimer${index}`] = generateAuxDirection(index, SimpleDirection.CountUp)
+		presets[`count_down_auxtimer${index}`] = generateAuxDirection(index, SimpleDirection.CountDown)
 	}
 	return presets
 }

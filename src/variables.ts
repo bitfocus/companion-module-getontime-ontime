@@ -10,6 +10,7 @@ const timerVariables: CompanionVariableDefinitions = {
 	[variableId.TimerCurrentM]: { name: 'Current timer (mm)' },
 	[variableId.TimerCurrentS]: { name: 'Current timer (ss)' },
 	[variableId.TimerDuration]: { name: 'Timer duration (milliseconds)' },
+	[variableId.TimerElapsed]: { name: 'Active elapsed time since timer started (milliseconds)' },
 	[variableId.TimerAdded]: { name: 'User added time to current timer (milliseconds)' },
 	[variableId.TimerPhase]: { name: 'Current timer phase (None/Default/Warning/Danger/Overtime/Pending)' },
 	[variableId.PlayState]: { name: 'Playback state (Running, Paused, Stopped, Roll)' },

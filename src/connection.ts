@@ -60,9 +60,10 @@ export class OntimeConnection {
 									if (maybeCustom) this.state.customFields = maybeCustom
 									this.state.applyPendingVariableDefinition()
 									this.state.applyPendingActionDefinition()
-									// the custom field feedback builds its dropdown from the custom fields,
-									// so its definition has to be refreshed as well
+									// The custom-field feedback builds its dropdown from the custom fields,
+									// so its definition has to be refreshed as well.
 									this.state.applyPendingFeedbackDefinition()
+									this.module.setPresetDefinitions(...generatePresets(this.state.customFields))
 								})
 								.catch((err) => this.module.log('error', err))
 							break
@@ -101,6 +102,7 @@ export class OntimeConnection {
 				this.state.applyPendingActionDefinition(true)
 				this.state.applyPendingVariableDefinition(true)
 				this.state.applyPendingFeedbackDefinition(true)
+				this.module.setPresetDefinitions(...generatePresets(this.state.customFields))
 				this.sendSocket('poll', undefined)
 			})
 	}
