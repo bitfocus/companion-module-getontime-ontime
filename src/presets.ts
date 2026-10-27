@@ -6,7 +6,7 @@ import type {
 	CompanionPresetSection,
 } from '@companion-module/base'
 import * as icons from './assets/icons.js'
-import { ActionId, feedbackId, ToggleOnOff } from './enums.js'
+import { ActionId, feedbackId, ToggleOnOff, variableId } from './enums.js'
 import {
 	ActiveBlue,
 	Black,
@@ -39,16 +39,22 @@ function singleActionStep<K extends keyof ActionsSchema>(
 	return [{ down: [action], up: [] }]
 }
 
+//TODO: https://companion.free/for-developers/module-development/api-changes/v2.0/#preset-templating
+//TODO: https://companion.free/for-developers/module-development/api-changes/v2.1#composite-elements
+
 export function generatePresets(
 	customFields: CustomFields = {},
+	label: string,
 ): [structure: CompanionPresetSection[], presets: CompanionPresetDefinitions<OntimeTypes>] {
 	const customFieldPresets = generateCustomFieldPresets(customFields)
+	const teleprompterPresets = generateTeleprompterPresets(label)
 	const presets = {
 		...wallClockPresets,
 		...messagePresets,
 		...timerPresets,
 		...auxTimerPresets,
 		...playbackPresets,
+		...teleprompterPresets,
 		...customFieldPresets,
 	}
 
@@ -77,6 +83,11 @@ export function generatePresets(
 			id: 'auxtimer',
 			name: 'Aux Timer',
 			definitions: Object.keys(auxTimerPresets),
+		},
+		{
+			id: 'teleprompter',
+			name: 'Teleprompter',
+			definitions: Object.keys(teleprompterPresets),
 		},
 	]
 	if (Object.keys(customFieldPresets).length > 0) {
@@ -862,3 +873,100 @@ function buildAuxTimerPresets(): CompanionPresetDefinitions<OntimeTypes> {
 }
 
 const auxTimerPresets = buildAuxTimerPresets()
+
+function generateTeleprompterPresets(label: string): CompanionPresetDefinitions<OntimeTypes> {
+	return {
+		play: {
+			type: 'simple',
+			name: 'Start/Pause Teleprompter',
+			style: {
+				...defaultStyle,
+				text: 'Start/Pause',
+				size: 'auto',
+			},
+			steps: singleActionStep(ActionId.TeleprompterTogglePlay, { value: 'toggle' }),
+			feedbacks: [
+				{
+					headline: 'Teleprompter Paused',
+					feedbackId: feedbackId.TeleprompterPlayback,
+					options: { playback: 'pause' },
+					style: {
+						bgcolor: PauseOrange,
+					},
+				},
+				{
+					headline: 'Teleprompter Playing',
+					feedbackId: feedbackId.TeleprompterPlayback,
+					options: { playback: 'play' },
+
+					style: {
+						bgcolor: ActiveBlue,
+					},
+				},
+			],
+		},
+		scroll: {
+			type: 'simple',
+			name: 'Scroll Teleprompter',
+			style: { ...defaultStyle, text: 'Scroll', size: 'auto' },
+			steps: [
+				{
+					up: [],
+					down: [],
+					rotate_left: [
+						{
+							actionId: ActionId.TeleprompterScroll,
+							options: {
+								scroll: -4,
+							},
+						},
+					],
+					rotate_right: [
+						{
+							actionId: ActionId.TeleprompterScroll,
+							options: {
+								scroll: 1,
+							},
+						},
+					],
+				},
+			],
+			feedbacks: [],
+		},
+		jog: {
+			type: 'simple',
+			name: 'Change Teleprompter Speed',
+			style: {
+				...defaultStyle,
+				text: `concat('Speed\\n',$(${label}:${variableId.TeleprompterSpeed}))`,
+				size: 'auto',
+				textExpression: true,
+			},
+			steps: [
+				{
+					up: [],
+					down: [],
+					rotate_left: [
+						{
+							actionId: ActionId.TeleprompterSetSpeed,
+							options: {
+								speed: { isExpression: true, value: '$(custom:ContourShuttleRing)' },
+								autoStart: true,
+							},
+						},
+					],
+					rotate_right: [
+						{
+							actionId: ActionId.TeleprompterSetSpeed,
+							options: {
+								speed: { isExpression: true, value: '$(custom:ContourShuttleRing)' },
+								autoStart: true,
+							},
+						},
+					],
+				},
+			],
+			feedbacks: [],
+		},
+	}
+}

@@ -10,6 +10,7 @@ import { fetchAllEvents, fetchCustomFields, resetEtags } from './http.js'
 export class OntimeConnection {
 	private socket?: WS
 	public state: OntimeState
+	public label: string = ''
 
 	constructor(private module: OntimeModule) {
 		this.state = new OntimeState(module)
@@ -78,7 +79,7 @@ export class OntimeConnection {
 									// The custom-field feedback builds its dropdown from the custom fields,
 									// so its definition has to be refreshed as well.
 									this.state.applyPendingFeedbackDefinition()
-									this.module.setPresetDefinitions(...generatePresets(this.state.customFields))
+									this.module.setPresetDefinitions(...generatePresets(this.state.customFields, this.label))
 								})
 								.catch((err) => this.module.log('error', err))
 							break
@@ -116,7 +117,7 @@ export class OntimeConnection {
 	}
 	private onWsOpen(): void {
 		this.module.updateStatus(InstanceStatus.Ok)
-		this.module.setPresetDefinitions(...generatePresets())
+		this.module.setPresetDefinitions(...generatePresets({}, this.label))
 
 		const pendingFetch: FetchPromiseArray = [fetchAllEvents(this.module), fetchCustomFields(this.module)]
 
@@ -130,12 +131,13 @@ export class OntimeConnection {
 				this.state.applyPendingActionDefinition(true)
 				this.state.applyPendingVariableDefinition(true)
 				this.state.applyPendingFeedbackDefinition(true)
-				this.module.setPresetDefinitions(...generatePresets(this.state.customFields))
+				this.module.setPresetDefinitions(...generatePresets(this.state.customFields, this.label))
 				this.sendSocket('poll', undefined)
 			})
 	}
 
-	public initConnection(): void {
+	public initConnection(label: string): void {
+		this.label = label
 		if (this.socket) this.socket?.close()
 		delete this.socket
 		// the host may have changed (configUpdated), so cached etags of the old server must not be reused
