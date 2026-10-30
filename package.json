@@ -9,7 +9,7 @@
 	},
 	"type": "module",
 	"scripts": {
-		"prepare": "husky install",
+		"postinstall": "husky",
 		"dev": "yarn build:watch",
 		"build": "rimraf dist && yarn build:main",
 		"build:main": "tsc -p tsconfig.json",
