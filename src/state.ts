@@ -176,8 +176,7 @@ export default class OntimeState {
 			[variableId.MessageVisible]: val.timer.visible,
 			[variableId.MessageBlink]: val.timer.blink,
 			[variableId.MessageBlackout]: val.timer.blackout,
-			[variableId.MessageSecondarySource]:
-				val.timer.secondarySource === null ? undefined : (val.timer.secondarySource as string),
+			[variableId.MessageSecondarySource]: val.timer.secondarySource === null ? undefined : val.timer.secondarySource,
 			[variableId.MessageSecondary]: val.secondary,
 		})
 
