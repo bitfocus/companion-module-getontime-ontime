@@ -67,7 +67,7 @@ export function createAuxTimerActions(module: OntimeModule): CompanionActionDefi
 			return
 		}
 
-		module.connection.sendSocket('auxtimer', { [id]: action.options.value as SimplePlayback })
+		module.connection.sendSocket('auxtimer', { [id]: action.options.value })
 	}
 
 	function duration(action: CompanionActionEvent<AuxDurationValues>): void {

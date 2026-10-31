@@ -20,6 +20,8 @@ Ontime provides an interface to generate these links:
 
 5. Back to Companion, you can now insert the copied address in the `Ontime server address` field
 
+> in the case of "Bad configuration" error the module will stop retying the connection, manually restart it to try again
+
 ## Links
 
 Download ontime or try our cloud service from the website [www.getontime.no](https://www.getontime.no/) \

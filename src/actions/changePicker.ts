@@ -156,7 +156,7 @@ export function changePicker(
 			minSelection: 1,
 			default: [],
 			choices: allProps.map((p) => ({ id: p.id, label: p.label })).filter((p) => p.id !== 'linkStart'),
-		} as SomeCompanionActionInputField<StringKeys<ChangePickerOptions>>,
+		},
 		...allProps,
 	]
 }

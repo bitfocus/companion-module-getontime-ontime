@@ -24,12 +24,12 @@
 	],
 	"legacyIds": [],
 	"runtime": {
-		"type": "node22",
+		"type": "node26",
 		"api": "nodejs-ipc",
 		"apiVersion": "0.0.0",
 		"entrypoint": "../dist/index.js"
 	},
 	"manufacturer": "GetOntime",
 	"products": ["Ontime"],
-	"keywords": ["ontime", "companion"]
+	"keywords": ["ontime", "timer", "stage timer", "rundown", "automation"]
 }
