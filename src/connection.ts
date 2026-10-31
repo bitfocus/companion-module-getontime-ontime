@@ -10,6 +10,7 @@ import { fetchAllEvents, fetchCustomFields, resetEtags } from './http.js'
 export class OntimeConnection {
 	private socket?: WS
 	public state: OntimeState
+	public label: string = ''
 
 	constructor(private module: OntimeModule) {
 		this.state = new OntimeState(module)
@@ -45,6 +46,21 @@ export class OntimeConnection {
 				case MessageTag.Refetch: {
 					const { target } = payload
 					switch (target) {
+						case RefetchKey.All: {
+							fetchCustomFields(this.module)
+								.then((maybeCustom) => {
+									if (maybeCustom) this.state.customFields = maybeCustom
+									fetchAllEvents(this.module)
+										.then((maybeEvents) => {
+											if (maybeEvents) this.state.events = maybeEvents
+											this.state.applyPendingActionDefinition()
+											this.state.applyPendingVariableDefinition()
+										})
+										.catch((err) => this.module.log('error', err))
+								})
+								.catch((err) => this.module.log('error', err))
+							break
+						}
 						case RefetchKey.Rundown: {
 							fetchAllEvents(this.module)
 								.then((maybeEvents) => {
@@ -63,9 +79,24 @@ export class OntimeConnection {
 									// The custom-field feedback builds its dropdown from the custom fields,
 									// so its definition has to be refreshed as well.
 									this.state.applyPendingFeedbackDefinition()
-									this.module.setPresetDefinitions(...generatePresets(this.state.customFields))
+									this.module.setPresetDefinitions(...generatePresets(this.state.customFields, this.label))
 								})
 								.catch((err) => this.module.log('error', err))
+							break
+						}
+						case RefetchKey.Automation: //ignore
+						case RefetchKey.CssOverride: //ignore
+						case RefetchKey.ProjectData: //ignore
+						case RefetchKey.ProjectRundowns: //ignore
+						case RefetchKey.Report: //ignore
+						case RefetchKey.Settings: //ignore
+						case RefetchKey.Translation: //ignore
+						case RefetchKey.UrlPresets: //ignore
+						case RefetchKey.ViewSettings: //ignore
+						case RefetchKey.Teleprompter: //ignore
+							break
+						default: {
+							target satisfies never
 							break
 						}
 					}
@@ -77,18 +108,16 @@ export class OntimeConnection {
 						this.applyDataPatch(payload)
 						break
 					}
-					console.log('WS tag:', tag)
-					console.log('WS payload:', payload)
 					break
 				}
 			}
 		} else {
-			console.log('onmessage', data)
+			console.log('onmessage', 'unused message', data)
 		}
 	}
 	private onWsOpen(): void {
 		this.module.updateStatus(InstanceStatus.Ok)
-		this.module.setPresetDefinitions(...generatePresets())
+		this.module.setPresetDefinitions(...generatePresets({}, this.label))
 
 		const pendingFetch: FetchPromiseArray = [fetchAllEvents(this.module), fetchCustomFields(this.module)]
 
@@ -102,12 +131,13 @@ export class OntimeConnection {
 				this.state.applyPendingActionDefinition(true)
 				this.state.applyPendingVariableDefinition(true)
 				this.state.applyPendingFeedbackDefinition(true)
-				this.module.setPresetDefinitions(...generatePresets(this.state.customFields))
+				this.module.setPresetDefinitions(...generatePresets(this.state.customFields, this.label))
 				this.sendSocket('poll', undefined)
 			})
 	}
 
-	public initConnection(): void {
+	public initConnection(label: string): void {
+		this.label = label
 		if (this.socket) this.socket?.close()
 		delete this.socket
 		// the host may have changed (configUpdated), so cached etags of the old server must not be reused
@@ -151,6 +181,7 @@ export class OntimeConnection {
 		this.state.auxtimer1 = payload.auxtimer1
 		this.state.auxtimer2 = payload.auxtimer2
 		this.state.auxtimer3 = payload.auxtimer3
+		this.state.teleprompter = payload.teleprompter
 
 		this.state.applyPendingVariables()
 	}

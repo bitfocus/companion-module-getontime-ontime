@@ -45,6 +45,7 @@ Join the [discord community](https://discord.com/invite/eje3CSUEXm)
 - Fixed message feedback never matching when no secondary source is selected
 - Fixed migration of configs from module version 4 and of message actions from before 5.2
 - Custom field feedback picks up changes to custom fields without reconnecting
+- testing teleprompter feature
 
 ### New for module version 5.4.1
 

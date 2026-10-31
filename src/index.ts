@@ -24,7 +24,7 @@ export class OntimeModule extends InstanceBase<OntimeTypes> {
 		this.log('debug', 'init')
 		this.config = config
 		this.updateStatus(InstanceStatus.Connecting)
-		this.connection.initConnection()
+		this.connection.initConnection(this.label)
 	}
 
 	async destroy(): Promise<void> {
@@ -38,7 +38,7 @@ export class OntimeModule extends InstanceBase<OntimeTypes> {
 		// re-initialise so a changed server address is applied without restarting the module.
 		// initConnection() closes the previous socket including its timers before connecting again
 		this.updateStatus(InstanceStatus.Connecting)
-		this.connection.initConnection()
+		this.connection.initConnection(this.label)
 	}
 
 	getConfigFields(): SomeCompanionConfigField[] {
