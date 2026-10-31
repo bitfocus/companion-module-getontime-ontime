@@ -30,6 +30,13 @@ Read the docs at [http://docs.getontime.no](https://docs.getontime.no/) \
 Follow Ontime's development on [GitHub](https://github.com/cpvalente/ontime) \
 Join the [discord community](https://discord.com/invite/eje3CSUEXm)
 
+### New for module version 5.5.0-beta.1
+
+- Teleprompter actions: play/pause/toggle, set and change speed, scroll, stop mode
+- Teleprompter feedbacks: playback state, hold mode, holding at end
+- Teleprompter variables: playback, mode, speed, holding at end
+- New variable for the elapsed time since the active timer started
+
 ### New for module version 5.4.2-beta.2
 
 > Beta release: please report any issues on GitHub before this is promoted to a stable release.
@@ -45,7 +52,6 @@ Join the [discord community](https://discord.com/invite/eje3CSUEXm)
 - Fixed message feedback never matching when no secondary source is selected
 - Fixed migration of configs from module version 4 and of message actions from before 5.2
 - Custom field feedback picks up changes to custom fields without reconnecting
-- testing teleprompter feature
 
 ### New for module version 5.4.1
 
