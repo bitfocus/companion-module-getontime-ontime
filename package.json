@@ -1,7 +1,7 @@
 {
 	"name": "getontime-ontime",
 	"version": "5.4.2-beta.2",
-	"main": "/dist/index.js",
+	"main": "dist/index.js",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
@@ -10,20 +10,21 @@
 	"type": "module",
 	"scripts": {
 		"postinstall": "husky",
-		"dev": "yarn build:watch",
-		"build": "rimraf dist && yarn build:main",
-		"build:main": "tsc -p tsconfig.json",
-		"build:watch": "tsc -p tsconfig.json --watch",
-		"lint": "eslint ./src --ext .ts",
-		"lint:raw": "eslint --ext .ts --ext .js --ignore-pattern dist --ignore-pattern pkg",
 		"format": "prettier -w .",
-		"package": "yarn build && companion-module-build"
+		"package": "run build && companion-module-build",
+		"build": "rimraf dist && run build:main",
+		"build:main": "tsc -p tsconfig.build.json",
+		"build:watch": "tsc -p tsconfig.build.json --watch",
+		"dev": "tsc -p tsconfig.build.json --watch",
+		"lint:raw": "eslint",
+		"lint": "run lint:raw"
 	},
 	"engines": {
-		"node": "^26"
+		"node": "^26",
+		"yarn": "^4"
 	},
 	"dependencies": {
-		"@companion-module/base": "2.2.1",
+		"@companion-module/base": "~2.1.3",
 		"@getontime/resolver": "4.15.1",
 		"companion-module-utils": "0.5.0",
 		"semver": "^7.7.2",
@@ -43,11 +44,11 @@
 		"typescript-eslint": "^8.71.0"
 	},
 	"lint-staged": {
-		"*.{js,json,md}": [
-			"run prettier --write"
+		"*.{css,json,md,scss}": [
+			"prettier --write"
 		],
-		"*.ts": [
-			"run lint --fix"
+		"*.{ts,tsx,js,jsx}": [
+			"yarn lint:raw --fix"
 		]
 	},
 	"prettier": "@companion-module/tools/.prettierrc.json",
