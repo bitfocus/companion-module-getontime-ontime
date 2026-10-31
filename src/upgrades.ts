@@ -186,3 +186,5 @@ export const upgradeScripts: CompanionStaticUpgradeScript<OntimeConfig>[] = [
 	ActionUpdater(upgrade_ensurePlaybackActionDefaultValues),
 	ActionUpdater(upgrade_ensureAddRemoveTimeDefaultValue),
 ]
+
+// TODO: https://companion.free/for-developers/module-development/api-changes/v2.0#recommended-cleanup-for-expressions

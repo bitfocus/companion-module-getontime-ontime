@@ -5,6 +5,9 @@ import { TimerPhase } from '@getontime/resolver'
 import { DangerRed, NormalGray, WarningOrange } from '../assets/colours.js'
 import type OntimeState from '../state.js'
 
+//TODO: switch to Gauge  https://companion.free/user-guide/v5.1/config/buttons/creating/button-styling/gauge/
+// and https://companion.free/for-developers/module-development/api-changes/v2.1/#composite-elements
+
 export type ProgressFeedbackSchema = {
 	[feedbackId.TimerProgressBar]: {
 		type: 'advanced'
