@@ -12,6 +12,7 @@ export type TeleprompterActionsSchema = {
 	[ActionId.TeleprompterChangeSpeed]: { options: { speedBy: number } }
 	[ActionId.TeleprompterScroll]: { options: { scroll: number } }
 	[ActionId.TeleprompterMode]: { options: { mode: 'event' | 'script' | 'toggle' } }
+	[ActionId.TeleprompterBlackout]: { options: { blackout: 'on' | 'off' | 'toggle' } }
 }
 
 export function createTeleprompterActions(module: OntimeModule): CompanionActionDefinitions<TeleprompterActionsSchema> {
@@ -121,6 +122,26 @@ export function createTeleprompterActions(module: OntimeModule): CompanionAction
 			callback: (action) => {
 				const { mode } = action.options
 				connection.sendSocket('teleprompter', { mode })
+			},
+		},
+		[ActionId.TeleprompterBlackout]: {
+			name: 'Blackout Teleprompter',
+			options: [
+				{
+					type: 'dropdown',
+					choices: [
+						{ id: 'on', label: 'On' },
+						{ id: 'off', label: 'Off' },
+						{ id: 'toggle', label: 'Toggle' },
+					],
+					default: 'toggle',
+					id: 'blackout',
+					label: 'Teleprompter Blackout',
+				},
+			],
+			callback: (action) => {
+				const { blackout } = action.options
+				connection.sendSocket('teleprompter', { blackout })
 			},
 		},
 	}

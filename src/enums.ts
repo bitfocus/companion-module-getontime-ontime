@@ -33,6 +33,7 @@ export enum ActionId {
 	TeleprompterChangeSpeed = 'teleprompterChangeSpeed',
 	TeleprompterScroll = 'teleprompterScroll',
 	TeleprompterMode = 'teleprompterMode',
+	TeleprompterBlackout = 'teleprompterBlackout',
 }
 
 export enum feedbackId {
@@ -57,6 +58,7 @@ export enum feedbackId {
 	TeleprompterPlayback = 'teleprompterPlayback',
 	TeleprompterMode = 'teleprompterMode',
 	TeleprompterHoldingAtEnd = 'teleprompterHoldEnd',
+	TeleprompterBlackout = 'teleprompterBlackout',
 }
 
 export enum variableId {

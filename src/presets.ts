@@ -876,6 +876,26 @@ const auxTimerPresets = buildAuxTimerPresets()
 
 function generateTeleprompterPresets(label: string): CompanionPresetDefinitions<OntimeTypes> {
 	return {
+		blackout: {
+			type: 'simple',
+			name: 'Blackout Teleprompter',
+			style: {
+				...defaultStyle,
+				text: 'Blackout',
+				size: 'auto',
+			},
+			steps: singleActionStep(ActionId.TeleprompterBlackout, { blackout: 'toggle' }),
+			feedbacks: [
+				{
+					headline: 'Teleprompter Blackout',
+					feedbackId: feedbackId.TeleprompterBlackout,
+					options: {},
+					style: {
+						bgcolor: ActiveBlue,
+					},
+				},
+			],
+		},
 		play: {
 			type: 'simple',
 			name: 'Start/Pause Teleprompter',

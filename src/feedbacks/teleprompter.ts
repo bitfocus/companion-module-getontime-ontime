@@ -1,4 +1,4 @@
-import type { CompanionFeedbackDefinitions } from '@companion-module/base'
+import type { CompanionFeedbackDefinitions, CompanionOptionValues } from '@companion-module/base'
 import { ActiveBlue, White } from '../assets/colours.js'
 import { feedbackId } from '../enums.js'
 import type OntimeState from '../state.js'
@@ -15,6 +15,10 @@ export type TeleprompterFeedbackSchema = {
 	[feedbackId.TeleprompterHoldingAtEnd]: {
 		type: 'boolean'
 		options: { mode: 'event' | 'script' | 'any' }
+	}
+	[feedbackId.TeleprompterBlackout]: {
+		type: 'boolean'
+		options: CompanionOptionValues
 	}
 }
 
@@ -99,6 +103,19 @@ export function createTeleprompterFeedbacks(
 					return state.teleprompter.ended !== null
 				}
 				return state.teleprompter.ended === mode
+			},
+		},
+		[feedbackId.TeleprompterBlackout]: {
+			type: 'boolean',
+			name: 'Teleprompter is holding at end',
+			description: 'Indicator colour for teleprompter hold mode',
+			defaultStyle: {
+				color: White,
+				bgcolor: ActiveBlue,
+			},
+			options: [],
+			callback: () => {
+				return state.teleprompter.blackout === 'on'
 			},
 		},
 	}
